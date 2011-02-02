@@ -1,0 +1,22 @@
+# Serve static content directly
+<VirtualHost *:80>
+  Servername api.daac.asf.alaska.edu
+  ServerAlias api
+  DocumentRoot  /usr/asf/eng/ursa2/root
+  Alias /static /usr/asf/eng/ursa2/root/static
+  CustomLog logs/api.daac.asf.alaska.edu/access_log combined
+  ErrorLog logs/api.daac.asf.alaska.edu/error_log
+
+  <Location /static>
+      SetHandler default-handler
+  </Location>
+
+  Alias / /usr/asf/eng/ursa2/bin/ursa2_fastcgi.pl/
+
+  <Location />
+    Options ExecCGI
+    Order allow,deny
+    Allow from all
+    AddHandler fcgid-script .pl
+  </Location>
+</VirtualHost>
