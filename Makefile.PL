@@ -20,6 +20,6 @@ requires 'Config::General'; # This should reflect the config file format you've 
 test_requires 'Test::More' => '0.88';
 catalyst;
 
-install_script glob('script/*.pl');
+install_script 'script/ursa2_fastcgi.pl'
 auto_install;
 WriteAll;
