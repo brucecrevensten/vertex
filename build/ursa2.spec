@@ -64,7 +64,7 @@ perl Makefile.PL INSTALL_BASE=${RPM_BUILD_ROOT}%{inst_dir}
 make test
 make install
 
-ln -s %{inst_dir}/ursa2.conf ${RPM_BUILD_ROOT}%{inst_dir}/lib/perl5/ursa2/ursa2.conf
+ln -s %{inst_dir}/ursa2.conf ${RPM_BUILD_ROOT}%{inst_dir}/lib/perl5/URSA2/ursa2.conf
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
