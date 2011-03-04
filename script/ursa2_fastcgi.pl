@@ -1,5 +1,11 @@
 #!/usr/bin/env perl
 
+BEGIN {
+  use FindBin;
+  use lib "$FindBin::Bin/../lib/perl5";
+  use lib "/usr/asf/eng/common/lib/perl5";
+}
+
 use Catalyst::ScriptRunner;
 Catalyst::ScriptRunner->run('URSA2', 'FastCGI');
 

@@ -9,17 +9,10 @@ use Module::Install::Catalyst; # Complain loudly if you don't have
 name 'URSA2';
 all_from 'lib/URSA2.pm';
 
-requires 'Catalyst::Runtime' => '5.80029';
-requires 'Catalyst::Plugin::ConfigLoader';
-requires 'Catalyst::Plugin::Static::Simple';
-requires 'Catalyst::Action::RenderView';
-requires 'Moose';
-requires 'namespace::autoclean';
-requires 'Config::General'; # This should reflect the config file format you've chosen
-                 # See Catalyst::Plugin::ConfigLoader for supported formats
-test_requires 'Test::More' => '0.88';
+# DO NOT MANAGE PACKAGE DEPENDENCIES IN THIS FILE!
+# Instead, manage dependencies in the specfile, we need
+# to package RPMs of any perl modules we want.
 catalyst;
 
 install_script 'script/ursa2_fastcgi.pl';
-auto_install;
 WriteAll;

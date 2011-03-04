@@ -1,6 +1,11 @@
 package URSA2;
+
+use strict;
+use warnings;
+
 use Moose;
 use namespace::autoclean;
+use Log::Log4perl::Catalyst;
 
 use Catalyst::Runtime 5.80;
 
@@ -13,15 +18,12 @@ use Catalyst::Runtime 5.80;
 #                 directory
 
 use Catalyst qw/
-    -Debug
     ConfigLoader
-    Static::Simple
 /;
 
 extends 'Catalyst';
 
-our $VERSION = '0.01';
-$VERSION = eval $VERSION;
+our $VERSION = 'DEV-VERSION-PLACEHOLDER';
 
 # Configure the application.
 #
@@ -33,10 +35,12 @@ $VERSION = eval $VERSION;
 # local deployment.
 
 __PACKAGE__->config(
-    name => 'URSA2',
+   name => 'URSA2',
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
 );
+
+__PACKAGE__->log(Log::Log4perl::Catalyst->new());
 
 # Start the application
 __PACKAGE__->setup();

@@ -1,6 +1,8 @@
 package URSA2::Controller::Root;
 use Moose;
 use namespace::autoclean;
+use Catalyst::Exception;
+use URSA2::Exceptions;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -31,6 +33,17 @@ sub index :Path :Args(0) {
 
     # Hello World
     $c->response->body( $c->welcome_message );
+}
+
+=head2 error
+
+Generate an internal server error.
+
+=cut
+
+sub error :Local {
+  my ($self, $c) = @_;
+  Catalyst::Exception->throw(URSA2::Exception->new('Oh no! Something bad has happened.'));
 }
 
 =head2 default

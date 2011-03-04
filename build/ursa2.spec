@@ -17,18 +17,29 @@ Source0: ursa2.tgz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: perl  
+BuildRequires: perl(Apache2::Const)
 Requires: perl
 Requires: perl(DBD::Oracle)
+Requires: perl(DateTime)
+Requires: perl(DateTime::Format::Strptime)
 Requires: perl(DateTime::Format::DateParse)
 Requires: perl(FCGI)
 Requires: perl(Log::Log4perl)
 Requires: perl(Catalyst::Runtime)
 Requires: perl(Catalyst::Model::DBI)
+Requires: perl(Catalyst::Model::Proxy)
 Requires: perl(Catalyst::Action::RenderView)
 Requires: perl(Catalyst::Plugin::Static::Simple)
 Requires: perl(Catalyst::Plugin::ConfigLoader)
 Requires: perl(Config::General)
-Requires: perl(XML::Generator::PerlData)
+Requires: perl(Exception::Class)
+Requires: perl(Exception::Class::Base)
+Requires: perl(XML::LibXML) <= 1.69
+Requires: perl(XML::LibXSLT)
+Requires: perl(JSON)
+Requires: perl(Catalyst::View::TT)
+Requires: perl(CGI::Session)
+Requires: perl(CGI::Cookie)
 Requires: mod_fcgid
 
 %define inst_dir /usr/asf/eng/ursa2
@@ -73,9 +84,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %dir %attr(0775,root,root) /etc/httpd/logs/api.daac.asf.alaska.edu
 %defattr(0644,root,root,2755)
 %attr(0755,root,root) %{inst_dir}/bin/ursa2_fastcgi.pl
-%config %attr(0644,root,root) %{inst_dir}/ursa2.conf
-%config %attr(0644,root,root) /etc/httpd/conf.d/api.daac.asf.alaska.edu.conf
-%config %attr(0644,root,root) %{inst_dir}/root
+%config(noreplace) %attr(0644,root,root) %{inst_dir}/ursa2.conf
+%config(noreplace) %attr(0644,root,root) /etc/httpd/conf.d/api.daac.asf.alaska.edu.conf
+%{inst_dir}/root
 %{inst_dir}/lib
 %{inst_dir}/man
 

@@ -1,3 +1,22 @@
-# rename this file to ursa2.yml and put a ':' after 'name' if
-# you want to use YAML like in old versions of Catalyst
 name URSA2
+
+<Model::DBI>
+   # Database connection string. Should be in the format:
+   # dbi:DriverName:database_name
+   # Valid database_names for ASF are: DAACDEV, DAACTEST, and DAACPROD
+   dsn dbi:Oracle:CHANGEME
+   password changeme
+   username changeme
+   <options>
+    AutoCommit 0
+   </options>
+</Model::DBI>
+
+<Model::User>
+  # Cookie configuration for the User Model.
+  <cookie>
+    name datapool
+    expires +12M
+    domain localhost.local
+  </cookie>
+</Model::User>
