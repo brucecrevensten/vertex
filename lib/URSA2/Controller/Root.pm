@@ -3,6 +3,7 @@ use Moose;
 use namespace::autoclean;
 use Catalyst::Exception;
 use URSA2::Exceptions;
+use Data::Dumper;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -31,8 +32,8 @@ The root page (/)
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
-    # Hello World
-    $c->response->body( $c->welcome_message );
+    $c->response->redirect($c->config->{'api_user_information_url'});
+
 }
 
 =head2 error

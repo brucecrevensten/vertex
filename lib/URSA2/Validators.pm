@@ -1,6 +1,7 @@
 package URSA2::Validators;
 use Scalar::Util qw(looks_like_number);
 use List::Util qw(min max);
+use List::MoreUtils qw(firstidx);
 use DateTime::Format::DateParse;
 use Data::Dumper;
 use warnings;
@@ -59,6 +60,14 @@ sub platform {
   return $self->validateArray($platform, 'platform', @platforms);
 }
 
+=item validateArray
+
+Accepts an array to test contents against a reference array of valid
+values, and a field name.  If a value is found in the provided contents
+that isn't present in the reference array, it throws an InvalidParameter
+exception.
+
+=cut
 sub validateArray {
   my($self, $arr, $field, @ref) = @_;
 
@@ -87,8 +96,11 @@ sub beam {
 sub processing {
 
   my ($self, $processing) = @_;
-  my @a = qw(L0 L1 L1.1 L1.0 L1.5 browse);
-  return $self->validateArray($processing, 'processingType', @a);
+  my @a = qw(L0 L1 L1.1 L1.0 L1.5 BROWSE);
+  if( -1 != firstidx { $_ eq 'any' } @{$processing} ) {
+    return \@a;
+  }
+  return $self->validateArray($processing, 'processing', @a, 'any');
 
 }
 
@@ -209,7 +221,7 @@ throws: InvalidParameter
 sub format {
 
   my ($self, $format) = @_;
-  my @a = qw(csv metalink raw list);
+  my @a = qw(csv metalink raw list kml json jsonp count);
 
   if (!defined($format)) { $format = 'metalink'; }
 
@@ -219,6 +231,17 @@ sub format {
 
   InvalidParameter->throw("Unknown format specified ($format)");
   
+}
+
+sub limit {
+  my ($self, $limit) = @_;
+  if ( !defined($limit) ) {
+    return undef;
+  }
+  if ( looks_like_number($limit) ) {
+    return $limit;
+  }
+  InvalidParameter->throw("Limit does not look like a number ($limit)");
 }
 
 sub direction { 

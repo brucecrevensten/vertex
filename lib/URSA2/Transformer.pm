@@ -27,11 +27,32 @@ sub new {
       contentType => 'text/xml; charset=utf-8',
       fileExtension => 'xml'
     },
+    count => {
+      xsl => 'count.xsl',
+      contentType => 'text/plain; charset=utf-8',
+      fileExtension => 'txt'
+    },
     list => {
       xsl => 'list.xsl',
       contentType => 'text/plain; charset=utf-8',
       fileExtension => 'txt'
+    },
+    kml => {
+      xsl => 'kml.xsl',
+      contentType => 'application/vnd.google-earth.kml+xml; charset=utf-8',
+      fileExtension => 'kmz'
+    },
+    json => {
+      xsl => 'xml2json.xslt',
+      contentType => 'application/json; charset=utf-8',
+      fileExtension => 'json'
+    },
+    jsonp => {
+      xsl => 'xml2json.xslt',
+      contentType => 'text/javascript; charset=utf-8',
+      fileExtension => 'jsonp'
     }
+
   };
 
   return $self;
@@ -62,14 +83,8 @@ sub transform {
 
     $self->{output} = $stylesheet->output_string($results);
   };
-  my $e = $@;
-  #TODO: $e will almost certainly NOT be an exception object
-  #if it's triggered by any of the libxml stuff, so we need to
-  #account for that and handle this error approrpriately -- 
-  #rethrow as catalyst or ursa2 exception
-  if ($e) {
-    #TODO: handle exception properly here
-    $c->log->fatal(Dumper($e));
+  if ($@) {
+    TransformerError->throw( message => $@ );
   }
 }
 

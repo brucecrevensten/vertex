@@ -89,21 +89,14 @@ Precondition: $granuleList is a comma-separated list of granule names, validated
 
 sub getResultsByGranuleList {
 
-  my ($self, $granuleList) = @_;
-  my $fragment = $self->buildListQuery( 'granuleName', $granuleList);
+  my ($self, $r) = @_;
+  my $fragment = $self->buildListQuery( 'granuleName', $r->granule_list) . 
+  $self->buildListQuery('processingType', $r->processing);
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelectXml . $fragment;
   return $self->doQuery($sql);
 
 }
-
-=item getResultsByGranuleList
-
-Given a list of known granule names (bulk search), provide links to those granules.
-
-Precondition: $granuleList is a comma-separated list of granule names, validated by the controller.
-
-=cut
 
 sub getResultsByProductList {
 
@@ -115,16 +108,9 @@ sub getResultsByProductList {
 
 }
 
-=item getResults
+sub getResultsCount {
+  my ($self, $r) = @_;
 
-=cut
-
-sub getResults {
-
-  my ( $self, $r ) = @_;
-  URSA2->log->debug( 'frame: '.Dumper($r->frame));
-  URSA2->log->debug( 'path: '.Dumper($r->path));
-  $DB::single=1;
   my $fragment = $self->buildListQuery('platformType', $r->platform).
   $self->buildDateQuery($r->start, $r->end).
   $self->buildListQuery('processingType', $r->processing).
@@ -134,9 +120,42 @@ sub getResults {
   $self->buildListQuery('pathnumber', $r->path).
   $self->buildSpatialQuery($r);
   $fragment =~ s/^\s+AND\s//;
-  my $sql = $self->getSelectXml . $fragment; 
+  my $sql = "SELECT COUNT(*) FROM data_product WHERE ".$fragment;
   return $self->doQuery($sql);
 
+}
+
+=item getResults
+
+=cut
+
+sub getResults {
+
+  my ( $self, $r ) = @_;
+  my $fragment = $self->buildListQuery('platformType', $r->platform).
+  $self->buildDateQuery($r->start, $r->end).
+  $self->buildListQuery('processingType', $r->processing).
+  $self->buildListQuery('beammodetype', $r->beam).
+  $self->buildDirectionQuery($r->direction).
+  $self->buildListQuery('framenumber', $r->frame).
+  $self->buildListQuery('pathnumber', $r->path).
+  $self->buildSpatialQuery($r);
+  $fragment =~ s/^\s+AND\s//;
+  my $sql = $self->getSelectXml . $fragment . $self->buildLimitQuery($r->limit) . $self->buildOrderQuery(); 
+  return $self->doQuery($sql);
+
+}
+
+sub buildOrderQuery {
+  return ' ORDER BY startTime DESC';
+}
+
+sub buildLimitQuery {
+  my ( $self, $limit ) = @_;
+  if ( defined($limit) ) {
+    return " AND rownum <= $limit";
+  } 
+  return '';
 }
 
 sub buildDirectionQuery {
@@ -170,31 +189,19 @@ sub doQuery {
 
   my $res;
   eval {
-    URSA2->log->debug( 'sql:'.Dumper($sql) );
     $res = $dbh->selectall_arrayref($sql);
-#    URSA2->log->debug( 'res:'.Dumper($res) );
-#    URSA2->log->debug( 'str:'.Dumper($DBI::errstr) );
-#    URSA2->log->debug( 'no:'.Dumper($DBI::errno) );
-#    URSA2->log->debug( 'dbh->err:'.Dumper($dbh->err) );
-#    URSA2->log->debug( 'dbh->errstr:'.Dumper($dbh->errstr) );
-#    URSA2->log->debug( 'dbh:'.Dumper($dbh) );
   };
   if( $dbh->err ) {
-    URSA2->log->fatal( 'DB error: '.Dumper($DBI::errstr));
     DbException->throw(
       message => $DBI::errstr,
       error => $DBI::errno,
     );
   } elsif ($@) {
-    URSA2->log->fatal( 'uncaught database error: '.Dumper($@));
      DbException->throw(
       message => Dumper($@)
     );
-  } elsif ( !defined($res) || 0 == scalar @{$res} ) {
-    DbNoResults->throw();
-  } else {
-    return $res;
-  }
+  } 
+  return $res;
 }
 
 sub dbQuote {
@@ -257,7 +264,7 @@ sub buildSpatialQuery {
       AND centerLat BETWEEN $bbox->[1] AND $bbox->[3]
     );
   }
-  return;
+  return '';
 }
 
 sub buildListQuery {

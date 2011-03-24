@@ -1,12 +1,16 @@
 name URSA2
 
+# URL to where users will be directed for information on how
+# to use the API.
+api_user_information_url http://www.asf.alaska.edu/program/sdc/asf_api
+
 <Model::DBI>
    # Database connection string. Should be in the format:
    # dbi:DriverName:database_name
    # Valid database_names for ASF are: DAACDEV, DAACTEST, and DAACPROD
    dsn dbi:Oracle:CHANGEME
-   password changeme
-   username changeme
+   password password-placeholder
+   username username-placeholder
    <options>
     AutoCommit 0
    </options>

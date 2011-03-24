@@ -45,7 +45,10 @@ text formats (.metalink, .csv).
 sub search :Path {
 
   my ( $self, $c ) = @_;
+  $c->stats->profile( begin => 'search' );
   my $t = URSA2::Transformer->new();
+
+  $c->stats->profile('preparing to perform search...');
 
   eval {
     # decode and validate the request, throws Invalid/Missing exceptions if needed
@@ -53,20 +56,19 @@ sub search :Path {
     $r->decode();
     $r->validate();
       
-    if ( $r->isProductList() ) {
+    if ( $r->isCountRequest() ) {
+      $t->{results} = $c->model('Search')->getResultsCount($r);
+    } elsif ( $r->isProductList() ) {
 
-      $c->log->debug('doing product file list retrieval...');
       $t->{results} = $c->model('Search')->getResultsByProductList($r->products);
 
     } elsif ( $r->isGranuleList() ) {
       # fetch a specific list of granules
-      $c->log->debug('doing granule list retrieval...');
-      $t->{results} = $c->model('Search')->getResultsByGranuleList($r->granule_list);
+      $t->{results} = $c->model('Search')->getResultsByGranuleList($r);
 
     } else {
       # search based on spatial + other criteria
-      $c->log->debug('searching based on provided criteria...');
-     
+      $c->stats->profile('starting search...');
       eval {
         $t->{results} = $c->model('Search')->getResults( $r );
       };
@@ -75,63 +77,47 @@ sub search :Path {
     my $e;
     if ( $e = Exception::Class->caught('DbException')) {
       $e->rethrow;
-    } elsif ( $e = Exception::Class->caught('DbNoResults')) {
-      $e->rethrow;
     } elsif ( $@ ) {
       $c->log->fatal( 'uncaught error after search block: '.Dumper($@) );
-      $c->response->status(500);
+      $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
       $c->detach();
     }
 
-    #TODO: remove if this is redundant
-    if ( !defined($t->{results}) || 0 == scalar $t->{results} ) {
+    if ( !defined($t->{results}) || 0 == scalar( @{$t->{results}} )) {
+        $c->log->debug("results=".Dumper($t->{results}));
       DbNoResults->throw();
     }
 
-    $c->log->debug( 'format: '.$r->format );
+    $c->stats->profile('finished search, starting performing transformation...'); 
     $t->{format} = $r->format;
     $t->transform( $c );
+    $c->stats->profile('finished transformation.');
   };
 
   my $e;
   
-  if( $e = Exception::Class->caught('MissingParameter') ) {
-    $c->response->status(400);
-    $c->response->headers->header('Exception' => $e->message.' ('.$e->parameter.')');
-    $c->stash( 
-      message => $e->message,
-      parameter => $e->parameter
-    );
-    $c->forward('URSA2::View::HTML');
-  } elsif ( $e = Exception::Class->caught('InvalidParameter') ) {
-    $c->response->status(400);
-    $c->response->headers->header('Exception' => $e->description);
-    $c->stash( 
-      message => $e->message,
-      parameter => $e->parameter
-    );
-    $c->forward('URSA2::View::HTML');
-  } elsif ( $e = Exception::Class->caught('DbNoResults') ) {
-    $c->response->headers->header('Exception' => $e->description);
-    $c->response->status(204);
-  } elsif ( $e = Exception::Class->caught('DbException')) {
-    $c->response->status(500);
-    $c->response->headers->header('Exception' => $e->description);
-    $c->response->headers->header('Error' => $e->message);
-    $c->stash( 
-      message => $e->message,
-    );
+  if ( 
+    ($e = Exception::Class->caught('MissingParameter'))
+    || ($e = Exception::Class->caught('InvalidParameter'))
+    || ($e = Exception::Class->caught('DbNoResults')) 
+    || ($e = Exception::Class->caught('DbException')) 
+  ) {
+    $e->dispatch($c);
   } elsif( ( $@ && ref($@) ne 'Catalyst::Exception::Detach') || @{ $c->error }  ) {
     $c->log->fatal( 'Unhandled exception in services controller: '.Dumper($@) );
-    $c->response->status(500);
+    $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
   } else {
     # processed ok
-    $c->response->body( $t->getOutput() );
+
+    #TODO: make this cleaner/wrap it up in SearchRequest/Transformer
+    if( defined($c->request->param('format')) && 'jsonp' eq $c->request->param('format') ) {
+      $c->response->body( $c->request->param('callback').'('.$t->getOutput().')' );
+    } else {
+      $c->response->body( $t->getOutput() );
+    }
     $c->response->content_type( $t->getContentType() );
     $c->response->header('Content-Disposition' => 'attachment; filename='.$t->getFilename);
   }
-
-  $c->detach();
 }
 
 =head2 Authentication
@@ -157,32 +143,17 @@ sub authentication :Local {
     }
   };
   my $e = $@;
-  if ( $e = Exception::Class->caught('AuthorizationFailed') ) {
-    $c->response->headers->header('Exception' => $e->description);
-    $c->response->status(401);
-    $c->detach();
-  } elsif ( $e = Exception::Class->caught('MissingParameter') ) {
-    $c->response->headers->header('Exception' => $e->description);
-    $c->response->status(400);
-    $c->detach();
-  } elsif ( $e = Exception::Class->caught('UnknownParameter') ) {
-    $c->response->headers->header('Exception' => $e->description);
-    $c->response->status(400);
-    $c->detach();
-  } elsif ( $e = Exception::Class->caught('BadMethodException') ){
-    $c->response->headers->header('Exception' => $e->description);
-    $c->response->status(405);
-    $c->detach();
-  } elsif ($e = Exception::Class->caught('CookieException') ) {
-    $c->response->headers->header('Exception' => $e->description);
-    $c->response->status(500);
-    $c->detach();
-  } elsif ($e = Exception::Class->caught('SessionException') ) {
-    $c->response->headers->header('Exception' => $e->description);
-    $c->response->status(500);
-    $c->detach();
+  if ( 
+    ( $e = Exception::Class->caught('AuthorizationFailed') ) 
+    || ( $e = Exception::Class->caught('MissingParameter') ) 
+    || ( $e = Exception::Class->caught('UnknownParameter') ) 
+    || ( $e = Exception::Class->caught('BadMethod') )
+    || ( $e = Exception::Class->caught('CookieException') ) 
+    || ( $e = Exception::Class->caught('SessionException') ) ) {
+    $e->dispatch($c);
   } elsif ( $@ ) {
-    $c->log->fatal($@);
+    $c->log->fatal( 'Unhandled exception in services controller: '.Dumper($@) );
+    $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
     $c->detach();
   } else {
     $c->res->body('authentication succeeded!  cookies being set...');
@@ -201,7 +172,7 @@ sub end : Private {
   my ($self, $c) = @_;
   if($@) {
     $c->log->fatal( Dumper($@) );
-    $c->response->status(500);
+    $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
   }
 
 }

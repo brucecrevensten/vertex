@@ -23,6 +23,11 @@ sub beam {
   return $self->{beam};
 }
 
+sub limit {
+  my $self = shift;
+  return $self->{limit};
+}
+
 sub processing {
   my $self = shift;
   return $self->{processing};
@@ -81,6 +86,7 @@ sub decode {
   $self->{start} = $self->{requests}->param('start');
   $self->{end} = $self->{requests}->param('end');
   $self->{processing} = $self->csvToArr( $self->{requests}->param('processing'));
+  $self->{limit} = $self->{requests}->param('limit');
   $self->{bbox} = $self->{requests}->param('bbox');
   $self->{format} = $self->{requests}->param('format');
   $self->{granule_list} = $self->csvToArr( $self->{requests}->param('granule_list'));
@@ -108,6 +114,7 @@ sub validate {
   $self->{direction} = URSA2::Validators->direction( $self->{direction} );
   $self->{frame} = URSA2::Validators->frame( $self->{frame} );
   $self->{path} = URSA2::Validators->path( $self->{path} );
+  $self->{limit} = URSA2::Validators->limit( $self->{limit} );
 
   $self->validateRequiredFields();
 
@@ -153,6 +160,14 @@ for specific granules, otherwise false (0).
 sub isGranuleList {
   my $self = shift;
   if ( defined($self->{granule_list}) && scalar @{$self->{granule_list}} ) {
+    return 1;
+  }
+  return 0;
+}
+
+sub isCountRequest {
+  my $self = shift;
+  if ( defined($self->{format}) && 'count' eq $self->{format} ) {
     return 1;
   }
   return 0;

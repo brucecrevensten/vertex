@@ -37,26 +37,7 @@ $mech->post($surn);
 is($mech->status(), Apache2::Const::HTTP_BAD_REQUEST, '3.3: get HTTP 400 for missing userid & password fields');
 
 SKIP: {
-  skip 'lower priority (harder!) tests, skipping until later...', 4;
-#3.4
-#FIXME: do some magic to break the server temporarily, and then:
-$mech->post($surn);
-is($mech->status(), Apache2::Const::HTTP_INTERNAL_SERVER_ERROR, '3.4: get HTTP 500 for server freaking out');
-#FIXME: and then bring it back up somehow, so we can:
-$mech->post($surn);
-isnt($mech->status(), Apache2::Const::HTTP_INTERNAL_SERVER_ERROR, '3.4: do NOT get HTTP 500 for server NOT freaking out');
-
-#3.5 - will need to examine testing options
-#FIXME: do some magic to make the DB unreachable, and then:
-$mech->post($surn);
-is($mech->status(), Apache2::Const::HTTP_SERVICE_UNAVAILABLE, '3.5: get HTTP 503 for inaccessible DB');
-#FIXME: and then bring it back up somehow, so we can:
-$mech->post($surn);
-isnt($mech->status(), Apache2::Const::HTTP_SERVICE_UNAVAILABLE, '3.5: do NOT get HTTP 503 for accessible DB');
-}
-
-SKIP: {
-  skip 'skipping tests requiring database connection', 6 unless $ENV{TEST_DATABASE};
+  skip 'skipping tests requiring database connection and/or broken package resolution', 6 unless $ENV{TEST_DATABASE};
 
 #2.3
 $mech->post($surn, {userid=>$user, password=>$pass.'a'});
@@ -74,4 +55,5 @@ like($mech->cookie_jar->as_string(), qr/datapool/,
 $mech->post($surn, {userid=>'badUser', password=>'badPass'});
 is($mech->status(), Apache2::Const::HTTP_UNAUTHORIZED, '3.6: get HTTP 401 for authentication failures');
 }
+
 done_testing();

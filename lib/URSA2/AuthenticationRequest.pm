@@ -41,12 +41,9 @@ sub validate {
     UnknownParameter->throw();
   }
 
-  URSA2->log->debug( 'userid: '.Dumper($self->{userid}) );
-  URSA2->log->debug( 'password: '.Dumper($self->{password}) );
-
   # 2.5: reject GET requests
   if( $self->{requests}->method ne 'POST' ) {
-    BadMethodException->throw();  
+    BadMethod->throw();  
   }
 
   URSA2::Validators->required($self->{userid});
@@ -90,7 +87,6 @@ sub new {
 sub decode {
   my $self = shift;
   my $r = from_json( $self->{requests}->param('query'), { utf8  => 1 } );
-  URSA2->log->debug( 'decoded JSON: '.Dumper($r) );
 
   $self->{parameters} = $r;
   $self->{userid} = $r->{userid};
