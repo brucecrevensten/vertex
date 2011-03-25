@@ -14,6 +14,15 @@ our( $E1_assets, $E2_J1_assets, $file_list1, $file_list2, $file_list_json, $brok
 # test descriptions can be found in spreadsheet linked at http://wiki.asf.alaska.edu/asf/Ursa2SearchApiSpec
 #
 
+#
+# Note!  These tests are pretty stupid-simple -- they compare returns
+# from the database against hardcoded strings.  This works,
+# but is sensitive to changes in the database.
+#
+# If tests blow up when you run them fresh from svn, or if Jenkins starts
+# to freak out, check to see what the actual database results are.
+#
+
 my $surn = 'services/search/param'; # urn of the service were testing
 my $jurn = 'services/search/json'; # urn of the service were testing
 
@@ -219,9 +228,6 @@ SKIP: {
   unlike($mech->content(), qr/zip/, '2.9.2: processing level parameter can be provided with granule list');
 
 }
-
-sub test_results_1 {
-  return }
 
 BEGIN {
 

@@ -3,6 +3,8 @@ use URSA2::Validators;
 use warnings;
 use strict;
 use Data::Dumper;
+use URSA2::SearchRequest::JSON;
+use URSA2::SearchRequest::Plain;
 
 sub new {
   my ($this, $r) = @_;
@@ -78,6 +80,30 @@ sub path {
   return $self->{path};
 }
 
+=item
+
+This function (and its implementation in child classes) "decodes" the requests
+from the incoming parameters.  The purpose here is to have a single place
+that handles the logic of "turn the request into something I can process further."
+
+This also ensures that we're developing against an _explicit_ API of incoming
+requests, and that extra / missing junk is handled explicitly.
+
+Parameters we're interested in are:
+ * platform: code name for the platform, as stored in PLATFORM table
+ * beam: code term for the beam mode, as stored in the BEAM_MODE table
+ * start: start date/time 
+ * end: end date/time
+ * processing: processing level of product, L0, L1.1, etc
+ * limit: limit count of returned results
+ * bbox: bounding box in W,S,E,N format (lon/lat/lon/lat)
+ * format: format to process the results into -- metalink, csv, etc
+ * granule_list: list of granules to fetch
+ * products: explicit list of product filenames to fetch.
+ * direction: ascending/descending, refers to the orbital direction of the platform
+ * frame: frame #s, in a list-of-ranges-or-integers format (see buildListFromRanges)
+ * path: path #s, in a list-of-ranges-or-integers format (see buildListFromRanges)
+=cut
 sub decode {
   my $self = shift;
   
@@ -181,6 +207,17 @@ sub isProductList {
   return 0;
 }
 
+=item buildListFromRanges
+This subroutine creates a list of integers from a comma-separated list
+of integers and integer ranges, so, for example:
+
+3,4,5-7,12
+
+becomes
+
+3,4,5,6,7,12
+
+=cut
 sub buildListFromRanges {
   my ($self, $rangeList) = @_;
   my @output;
@@ -189,6 +226,7 @@ sub buildListFromRanges {
   }
   my ($first, $last, @derivedRange);
   foreach my $range ( @{$rangeList} ) {
+    # check for a range, and if it IS a range, expand it into a list of integers
     if ( $range =~ /^[0-9]+-[0-9]+$/ ) {
       ($first, $last) = split('-', $range);
       @derivedRange = ($first..$last);
@@ -200,6 +238,20 @@ sub buildListFromRanges {
   return \@output;
 }
 
+=item csvToArr
+
+Takes a comma-separated list and explodes it after trimming whitespace and checking
+for empty elements.  So:
+ 
+  4,5, 123, R1_1234,4,6
+
+becomes
+ 
+  [ 4, 5, 123, 'R1_1234', 4, 6 ]
+
+Returns: arrayref.
+
+=cut
 sub csvToArr {
   my ($self, $csv) = @_;
   if ( !defined($csv) ) { return undef; }
@@ -208,6 +260,7 @@ sub csvToArr {
   @a = split(',',$csv);
   my $value;
   foreach $value (@a) {
+    # trim whitespace
     $value =~ s/^\s+|\s+$//g;
     if ($value) {
       push @b, $value; 
@@ -224,66 +277,6 @@ sub factory {
     # default = comma-separated values
     return URSA2::SearchRequest::Plain->new( $r ); 
   }
-}
-
-package URSA2::SearchRequest::JSON;
-use base qw(URSA2::SearchRequest);
-use warnings;
-use strict;
-use JSON;
-use Data::Dumper;
-
-sub new {
-  my ($this, $r) = @_;
-  my $class = ref($this) || $this;
-  my $self = {};
-  bless $self, $class;
-  $self->{requests} = $r;
-  return $self;
-}
-
-sub decode {
-  my $self = shift;
-  my $r;
-
-  eval {
-    $r = from_json( $self->{requests}->param('query'), { utf8  => 1 } );
-  };
-
-  if( $@) {
-    InvalidParameter->throw(
-      parameter => 'json',
-      message => 'malformed json cannot be decoded'
-    );     
-  }
-
-  $self->{platform} = $r->{platform};
-  $self->{beam} = $r->{beam};
-  $self->{start} = $r->{start};
-  $self->{end} = $r->{end};
-  $self->{processing} = $r->{processing};
-  $self->{bbox} = $r->{bbox};
-  $self->{format} = $r->{format};
-  $self->{granule_list} = $r->{granule_list};
-  $self->{products} = $r->{products};
-  $self->{path} = $r->{path};
-  $self->{frame} = $r->{frame};
-  $self->{direction} = $r->{direction};
-
-}
-
-package URSA2::SearchRequest::Plain;
-use base qw(URSA2::SearchRequest);
-use warnings;
-use strict;
-
-sub new {
-  my ($this, $r) = @_;
-  my $class = ref($this) || $this;
-  my $self = {};
-  bless $self, $class;
-  $self->{requests} = $r;
-  return $self;
 }
 
 1;

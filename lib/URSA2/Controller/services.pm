@@ -56,35 +56,35 @@ sub search :Path {
     $r->decode();
     $r->validate();
       
+    # TODO: move these into a shallow object hierarchy
     if ( $r->isCountRequest() ) {
       $t->{results} = $c->model('Search')->getResultsCount($r);
     } elsif ( $r->isProductList() ) {
-
       $t->{results} = $c->model('Search')->getResultsByProductList($r->products);
-
     } elsif ( $r->isGranuleList() ) {
-      # fetch a specific list of granules
       $t->{results} = $c->model('Search')->getResultsByGranuleList($r);
-
     } else {
       # search based on spatial + other criteria
       $c->stats->profile('starting search...');
-      eval {
-        $t->{results} = $c->model('Search')->getResults( $r );
-      };
+      $t->{results} = $c->model('Search')->getResults( $r );
+      $c->stats->profile('...finished search.');
     }
 
     my $e;
     if ( $e = Exception::Class->caught('DbException')) {
       $e->rethrow;
     } elsif ( $@ ) {
-      $c->log->fatal( 'uncaught error after search block: '.Dumper($@) );
-      $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
-      $c->detach();
+      $e = Exception::Class->caught();
+      if ( ref $e ) {
+        $e->rethrow;
+      } else {
+        $c->log->fatal( 'uncaught error after search block: '.Dumper($@) );
+        $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
+        $c->detach();
+      }
     }
 
     if ( !defined($t->{results}) || 0 == scalar( @{$t->{results}} )) {
-        $c->log->debug("results=".Dumper($t->{results}));
       DbNoResults->throw();
     }
 
@@ -103,9 +103,15 @@ sub search :Path {
     || ($e = Exception::Class->caught('DbException')) 
   ) {
     $e->dispatch($c);
-  } elsif( ( $@ && ref($@) ne 'Catalyst::Exception::Detach') || @{ $c->error }  ) {
-    $c->log->fatal( 'Unhandled exception in services controller: '.Dumper($@) );
+  } elsif( ( $@ && ref($@) ne 'Catalyst::Exception::Detach') || @{ $c->error } || $@ ) {
+  $e = Exception::Class->caught();
+    if ( ref $e ) {
+      $c->log->fatal( 'Uncaught exception in services controller: '.$e->description );
+    } else {
+      $c->log->fatal( 'Unhandled error in services controller: '.Dumper($@) );
+    }
     $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
+    $c->detach();
   } else {
     # processed ok
 
@@ -152,7 +158,12 @@ sub authentication :Local {
     || ( $e = Exception::Class->caught('SessionException') ) ) {
     $e->dispatch($c);
   } elsif ( $@ ) {
-    $c->log->fatal( 'Unhandled exception in services controller: '.Dumper($@) );
+    $e = Exception::class->caught();
+    if ( ref $e ) {
+      $c->log->fatal( 'Uncaught exception in services controller: '.$e->description );
+    } else {
+      $c->log->fatal( 'Unhandled error in services controller: '.Dumper($@) );
+    }
     $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
     $c->detach();
   } else {

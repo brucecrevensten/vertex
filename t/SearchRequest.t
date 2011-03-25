@@ -50,20 +50,18 @@ is_deeply( $s->processing, ['BROWSE','L1','L1.0'], 'json decode processing OK');
 #TODO add tests for decoding granule_list and products
 
 SKIP: {
-  skip 'need to implement general date parsing', 2;
 
   ($response, $c) = ctx_request(qq(services/search/json?query={"start":"2005-01-01","end":"2007-01-01 8:35AM"}));
   $s = URSA2::SearchRequest->factory( $c->request );
-  $s->decode();
-  $s->validate();
-  #TODO
+  eval {
+    $s->decode();
+    $s->validate();
+  };
+  if ($@) { fail('decode/validation error when parsing dates'); }
 
-  #$dt = $d->parse_datetime('2005-01-01T00:00:00Z');
-  #$dt->set_time_zone('UTC');
+  $dt = DateTime::Format::DateParse->parse_datetime('2005-01-01T00:00:00Z', 'UTC');
+  is_deeply( $s->start, $dt, 'json decode start time ok');
+  $dt = DateTime::Format::DateParse->parse_datetime('2007-01-01T08:35:00Z', 'UTC');
   is_deeply( $s->end, $dt, 'plain decode nonstandard end time ok');
 
-  #$dt = $d->parse_datetime('2007-01-01T08:39:00Z');
-  #$dt->set_time_zone('UTC');
-  is_deeply( $s->end, $dt, 'plain decode end time ok');
 }
-

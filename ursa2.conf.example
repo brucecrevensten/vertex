@@ -9,8 +9,8 @@ api_user_information_url http://www.asf.alaska.edu/program/sdc/asf_api
    # dbi:DriverName:database_name
    # Valid database_names for ASF are: DAACDEV, DAACTEST, and DAACPROD
    dsn dbi:Oracle:CHANGEME
-   password password-placeholder
-   username username-placeholder
+   username CHANGEME
+   password CHANGEME
    <options>
     AutoCommit 0
    </options>

@@ -85,29 +85,6 @@ sub datapool_session_cookie {
   return($cookie);
 }
 
-=head1 NAME
-
-URSA2::Model::User - DBI Model Class
-
-=head1 SYNOPSIS
-
-See L<URSA2>
-
-=head1 DESCRIPTION
-
-DBI Model Class.
-
-=head1 AUTHOR
-
-Bruce Crevensten
-
-=head1 LICENSE
-
-This library is free software, you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
-
 __PACKAGE__->meta->make_immutable(
 inline_constructor => 0
 );

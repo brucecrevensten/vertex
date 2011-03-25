@@ -44,7 +44,7 @@ sub getSelectXml {
     platform,
     sensor,
     beamModeType,
-    beamModeDesc,
+    TRIM(beamModeDesc) beamModeDesc,
     orbit,
     pathNumber,
     frameNumber,
@@ -108,9 +108,8 @@ sub getResultsByProductList {
 
 }
 
-sub getResultsCount {
+sub getApiQuery {
   my ($self, $r) = @_;
-
   my $fragment = $self->buildListQuery('platformType', $r->platform).
   $self->buildDateQuery($r->start, $r->end).
   $self->buildListQuery('processingType', $r->processing).
@@ -120,8 +119,14 @@ sub getResultsCount {
   $self->buildListQuery('pathnumber', $r->path).
   $self->buildSpatialQuery($r);
   $fragment =~ s/^\s+AND\s//;
-  my $sql = "SELECT COUNT(*) FROM data_product WHERE ".$fragment;
-  return $self->doQuery($sql);
+  return $fragment; 
+
+}
+
+sub getResultsCount {
+  my ($self, $r) = @_;
+
+  return $self->doQuery("SELECT COUNT(*) FROM data_product WHERE ".$self->getApiQuery($r));
 
 }
 
@@ -132,17 +137,7 @@ sub getResultsCount {
 sub getResults {
 
   my ( $self, $r ) = @_;
-  my $fragment = $self->buildListQuery('platformType', $r->platform).
-  $self->buildDateQuery($r->start, $r->end).
-  $self->buildListQuery('processingType', $r->processing).
-  $self->buildListQuery('beammodetype', $r->beam).
-  $self->buildDirectionQuery($r->direction).
-  $self->buildListQuery('framenumber', $r->frame).
-  $self->buildListQuery('pathnumber', $r->path).
-  $self->buildSpatialQuery($r);
-  $fragment =~ s/^\s+AND\s//;
-  my $sql = $self->getSelectXml . $fragment . $self->buildLimitQuery($r->limit) . $self->buildOrderQuery(); 
-  return $self->doQuery($sql);
+  return $self->doQuery( $self->getSelectXml . $self->getApiQuery($r) . $self->buildLimitQuery($r->limit) . $self->buildOrderQuery); 
 
 }
 
@@ -153,7 +148,7 @@ sub buildOrderQuery {
 sub buildLimitQuery {
   my ( $self, $limit ) = @_;
   if ( defined($limit) ) {
-    return " AND rownum <= $limit";
+    return " AND rownum <= ".$self->dbQuote($limit);
   } 
   return '';
 }
@@ -215,28 +210,6 @@ sub dbQuote {
   return $dbh->quote($p);
 }
 
-sub buildDateQuery {
-  my ($self, $start, $end) = @_;
-
-  # no dates = no restriction query
-  if( !$start && !$end ) { return ''; }
-
-  my $fieldRef = "startTime";
-
-  # before end date 
-  if( !$start && $end ) {
-    return ' AND '.$fieldRef." <= TO_DATE('".$end->ymd."','YYYY-MM-DD')";
-  }
-
-  # after start date
-  if( !$end ) {
-    return ' AND '.$fieldRef." >= TO_DATE('".$start->ymd."','YYYY-MM-DD')";
-  }
-
-  # between two dates
-  return ' AND '.$fieldRef." BETWEEN TO_DATE('".$start->ymd."','YYYY-MM-DD') AND TO_DATE('".$end->ymd."','YYYY-MM-DD')";
-}
-
 =item BuildDateQuery
 
 Takes two dates and creates an SQL fragment to restrict results returned by date.
@@ -247,6 +220,27 @@ Params:
   $end - end date
 
 =cut
+sub buildDateQuery {
+  my ($self, $start, $end) = @_;
+
+  # no dates = no restriction query
+  if( !$start && !$end ) { return ''; }
+
+  my $fieldRef = "startTime";
+
+  # before end date 
+  if( !$start && $end ) {
+    return ' AND '.$fieldRef." <= TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
+  }
+
+  # after start date
+  if( !$end ) {
+    return ' AND '.$fieldRef." >= TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD')";
+  }
+
+  # between two dates
+  return ' AND '.$fieldRef." BETWEEN TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD') AND TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
+}
 
 sub buildSpatialQuery {
   my ($self, $r) = @_;

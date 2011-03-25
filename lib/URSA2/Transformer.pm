@@ -69,7 +69,6 @@ sub transform {
 
   eval {
 
-    #TODO: need to trap these bits for exceptions in case the xml is malformed
     $dom = $parser->parse_string( $self->{xml} );
     my $xsl = $c->path_to( 'doc', 'xslt', $self->{formats}->{$self->{format}}->{xsl} );
     my $xslPath = $xsl->stringify;
