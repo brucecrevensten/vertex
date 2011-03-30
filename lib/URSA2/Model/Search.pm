@@ -171,9 +171,11 @@ for debugging.
 Throws: DBException, DbNoResults
 
 =cut
-
 sub doQuery {
   my ($self, $sql) = @_;
+
+  URSA2->log->debug($sql);
+
   my $dbh = $self->dbh;
 
   if (!defined($dbh)) {
