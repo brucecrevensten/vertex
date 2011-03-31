@@ -174,8 +174,6 @@ Throws: DBException, DbNoResults
 sub doQuery {
   my ($self, $sql) = @_;
 
-  URSA2->log->debug($sql);
-
   my $dbh = $self->dbh;
 
   if (!defined($dbh)) {
@@ -256,9 +254,14 @@ sub buildSpatialQuery {
     $bbox->[3] = $self->dbQuote($bbox->[3]);
 
     return qq(
-      AND centerLon BETWEEN $bbox->[0] AND $bbox->[2]
-      AND centerLat BETWEEN $bbox->[1] AND $bbox->[3]
-    );
+      AND
+        sdo_filter(shape,
+        sdo_geometry(
+        2003,
+        8307,
+        NULL,
+        sdo_elem_info_array(1, 1003, 3),
+        sdo_ordinate_array($bbox->[0],$bbox->[1],$bbox->[2],$bbox->[3]))) = 'TRUE');
   }
   return '';
 }

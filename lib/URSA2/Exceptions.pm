@@ -54,7 +54,7 @@ use Exception::Class (
   {
     description => 'A provided parameter was invalid',
     isa => 'URSA2::Exception::Http::InvalidParameter',
-    fields => [ 'param', 'value' ],
+    fields => [ 'parameter', 'value' ],
   },
 
   'MissingParameter' =>

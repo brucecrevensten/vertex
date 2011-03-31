@@ -9,8 +9,8 @@ use Apache2::Const qw(:http);
 #
 
 my $surn = 'services/authentication'; # urn of the service were testing
-my $user = 'CHANGEME'; # should be a valid userid
-my $pass = 'CHANGEME'; # should be the above user's password
+my $user = 'guest'; # should be a valid userid
+my $pass = 'guest'; # should be the above user's password
 
 BEGIN { use_ok 'URSA2::Controller::services' }
 use ok "Test::WWW::Mechanize::Catalyst" => "URSA2";
