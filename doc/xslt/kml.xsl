@@ -5,7 +5,7 @@
     <kml xmlns="http://www.opengis.net/kml/2.2">
       <Document>
         <name>ASF Datapool Search Results</name>
-        <description>This section could have a description of the search query that the user made.</description>
+        <description></description>
         <Style id="yellowLineGreenPoly">
           <LineStyle>
             <color>30ff8800</color>
