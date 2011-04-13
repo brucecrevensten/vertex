@@ -6,7 +6,7 @@
   <xsl:param name="delim" select="string(',')" />
 
   <xsl:template match="/">
-    <xsl:apply-templates select="rows/ROW" />
+    <xsl:apply-templates select="results/rows/ROW" />
   </xsl:template>
 
   <xsl:template match="ROW">

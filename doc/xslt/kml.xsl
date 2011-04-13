@@ -5,7 +5,7 @@
     <kml xmlns="http://www.opengis.net/kml/2.2">
       <Document>
         <name>ASF Datapool Search Results</name>
-        <description></description>
+        <description>Search Performed: <xsl:value-of select="resultsDate" /></description>
         <Style id="yellowLineGreenPoly">
           <LineStyle>
             <color>30ff8800</color>

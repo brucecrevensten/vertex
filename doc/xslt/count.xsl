@@ -3,6 +3,6 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="text" encoding="utf-8"/>
   <xsl:template match="/">
-    <xsl:value-of select="normalize-space(rows)" />
+    <xsl:value-of select="normalize-space(results/rows)" />
   </xsl:template>
 </xsl:stylesheet>

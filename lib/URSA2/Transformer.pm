@@ -99,7 +99,9 @@ sub getFilename {
 sub formatResultsAsXml {
   my $self = shift;
 
-  my $x = '<?xml version="1.0" encoding="utf-8" ?><rows>';
+  my $x = '<?xml version="1.0" encoding="utf-8" ?><results><resultsDate>'
+    . localtime()
+    . '</resultsDate><rows>';
 
   foreach $result ( $self->{results} ) {
     foreach $row ( @{$result} ) {
@@ -107,7 +109,7 @@ sub formatResultsAsXml {
     }
   }
 
-  $self->{xml} = $x.'</rows>';
+  $self->{xml} = $x.'</rows></results>';
 
 }
 

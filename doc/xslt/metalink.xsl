@@ -9,7 +9,7 @@
         <url>http://www.asf.alaska.edu/</url>
       </publisher>
       <files>
-      <xsl:for-each select="rows/ROW">
+      <xsl:for-each select="results/rows/ROW">
         <file>
           <xsl:attribute name="name">
             <xsl:value-of select="FILENAME" />
