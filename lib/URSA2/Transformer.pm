@@ -100,7 +100,7 @@ sub formatResultsAsXml {
   my $self = shift;
 
   my $x = '<?xml version="1.0" encoding="utf-8" ?><results><resultsDate>'
-    . localtime()
+    . 'UTM ' . localtime()
     . '</resultsDate><rows>';
 
   foreach $result ( $self->{results} ) {
