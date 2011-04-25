@@ -18,6 +18,8 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: perl  
 BuildRequires: perl(Apache2::Const)
+BuildRequires: perl(Test::WWW::Mechanize::Catalyst)
+BuildRequires: perl(Test::More)
 Requires: perl
 Requires: perl(DBD::Oracle)
 Requires: perl(DateTime)
@@ -31,8 +33,6 @@ Requires: perl(Catalyst::Model::Proxy)
 Requires: perl(Catalyst::Action::RenderView)
 Requires: perl(Catalyst::Plugin::Static::Simple)
 Requires: perl(Catalyst::Plugin::ConfigLoader)
-Requires: perl(Test::WWW::Mechanize::Catalyst)
-Requires: perl(Test::More)
 Requires: perl(Data::Dumper)
 Requires: perl(Config::General)
 Requires: perl(Exception::Class)
