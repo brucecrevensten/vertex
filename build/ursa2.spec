@@ -17,10 +17,10 @@ Source0: ursa2.tgz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: perl  
-BuildRequires: perl(Apache2::Const)
 BuildRequires: perl(Test::WWW::Mechanize::Catalyst)
 BuildRequires: perl(Test::More)
 Requires: perl
+Requires: perl(Apache2::Const)
 Requires: perl(DBD::Oracle)
 Requires: perl(DateTime)
 Requires: perl(DateTime::Format::Strptime)
