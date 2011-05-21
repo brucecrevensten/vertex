@@ -5,7 +5,7 @@
     <kml xmlns="http://www.opengis.net/kml/2.2">
       <Document>
         <name>ASF Datapool Search Results</name>
-        <description>Search Performed: <xsl:value-of select="resultsDate" /></description>
+        <description>Search Performed: <xsl:value-of select="results/resultsDate" /></description>
         <Style id="yellowLineGreenPoly">
           <LineStyle>
             <color>30ff8800</color>
@@ -15,7 +15,7 @@
             <color>7f00ff00</color>
           </PolyStyle>
         </Style>
-        <xsl:for-each select="rows/ROW">
+        <xsl:for-each select="results/rows/ROW">
           <Placemark>
             <name><xsl:value-of select="GRANULENAME"/></name>
             <description>

@@ -35,6 +35,7 @@ sub decode {
   $self->{end} = $r->{end};
   $self->{processing} = $r->{processing};
   $self->{bbox} = $r->{bbox};
+  $self->{polygon} = $r->{polygon};
   $self->{format} = $r->{format};
   $self->{granule_list} = $r->{granule_list};
   $self->{products} = $r->{products};

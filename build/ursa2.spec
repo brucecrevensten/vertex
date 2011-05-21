@@ -19,6 +19,7 @@ BuildArch: noarch
 BuildRequires: perl  
 BuildRequires: perl(Test::WWW::Mechanize::Catalyst)
 BuildRequires: perl(Test::More)
+BuildRequires: perl(URI::Escape)
 Requires: perl
 Requires: perl(Apache2::Const)
 Requires: perl(DBD::Oracle)
@@ -43,6 +44,8 @@ Requires: perl(JSON)
 Requires: perl(Catalyst::View::TT)
 Requires: perl(CGI::Session)
 Requires: perl(CGI::Cookie)
+Requires: perl(Math::Polygon)
+Requires: perl(URI::Escape)
 Requires: mod_fcgid
 
 %define inst_dir /usr/asf/eng/ursa2

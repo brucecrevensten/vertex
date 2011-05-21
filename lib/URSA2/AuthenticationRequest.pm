@@ -1,5 +1,6 @@
 package URSA2::AuthenticationRequest;
 use URSA2::Validators;
+use URI::Escape;
 use warnings;
 use strict;
 use Data::Dumper;
@@ -23,6 +24,11 @@ sub password {
   return $self->{password};
 }
 
+sub redirect {
+  my $self = shift;
+  return $self->{redirect};
+}
+
 sub decode {
   my $self = shift;
  
@@ -30,16 +36,12 @@ sub decode {
   $self->{parameters} = $self->{requests}->params;
   $self->{userid} = $self->{parameters}->{userid};
   $self->{password} = $self->{parameters}->{password};
+  $self->{redirect} = uri_unescape($self->{parameters}->{redirect});
 
 }
 
 sub validate {
   my $self = shift;
-
-  # 2.1: reject extra parameters
-  if( $self->extraParametersExist() ) {
-    UnknownParameter->throw();
-  }
 
   # 2.5: reject GET requests
   if( $self->{requests}->method ne 'POST' ) {
@@ -49,14 +51,6 @@ sub validate {
   URSA2::Validators->required($self->{userid});
   URSA2::Validators->required($self->{password});
 
-}
-
-sub extraParametersExist() {
-  my $self = shift;
-  delete $self->{parameters}->{userid};
-  delete $self->{parameters}->{password};
-  my $c = scalar(keys(%{$self->{parameters}}));
-  return $c;
 }
 
 sub factory {
@@ -91,6 +85,7 @@ sub decode {
   $self->{parameters} = $r;
   $self->{userid} = $r->{userid};
   $self->{password} = $r->{password};
+  $self->{redirect} = $r->{redirect};
 
 }
 

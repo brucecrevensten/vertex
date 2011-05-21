@@ -98,9 +98,13 @@ sub getFilename {
 
 sub formatResultsAsXml {
   my $self = shift;
+  my $formatter = DateTime::Format::Strptime->new(
+    pattern => '%F %T'
+  );
+  my $now = DateTime->now( formatter=>$formatter );
 
   my $x = '<?xml version="1.0" encoding="utf-8" ?><results><resultsDate>'
-    . localtime() . ' UTM'
+    . $now . ' UTM'
     . '</resultsDate><rows>';
 
   foreach $result ( $self->{results} ) {

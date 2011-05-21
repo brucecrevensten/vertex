@@ -4,6 +4,8 @@ use List::Util qw(min max);
 use List::MoreUtils qw(firstidx);
 use DateTime::Format::DateParse;
 use Data::Dumper;
+use URSA2::Exceptions qw(InvalidParameter);
+use Math::Polygon;
 use warnings;
 use strict;
 
@@ -93,6 +95,12 @@ sub beam {
   return $self->validateArray($beam, 'beam', @beams);
 }
 
+sub offnadir {
+  my ($self, $offnadir) = @_;
+  my @angles = (9.7, 9.9, 13.8, 18.0, 20.5, 21.5, 23.1, 24.6, 25.8, 25.9, 26.2, 27.1, 28.8, 30.8, 34.3, 36.9, 38.8, 41.5, 45.2, 50.8);
+  return $self->validateArray($offnadir, 'offnadir', @angles);
+}
+
 sub processing {
 
   my ($self, $processing) = @_;
@@ -163,7 +171,7 @@ sub bbox {
 
   if( 0 == URSA2::Validators->validatePoint($bbox_arr[0], $bbox_arr[1])
     || 0 == URSA2::Validators->validatePoint($bbox_arr[2], $bbox_arr[3])) {
-    InvalidParameter->throw( param=>'bbox', message=>'derived lat/long boundary point(s) invalid');
+    InvalidParameter->throw( parameter=>'bbox', message=>'derived lat/long boundary point(s) invalid');
   }
 
   my $t;
@@ -186,6 +194,77 @@ sub bbox {
 
   return [$bbox_arr[0], $bbox_arr[1], $bbox_arr[2], $bbox_arr[3]];
 
+}
+
+=item polygon
+
+Validates that the provided points are valid and that there are enough points
+to form a polygon.
+
+=cut
+sub polygon {
+  my ($self, $polygon) = @_;
+  my @points;
+  my @coords;
+
+  if(!defined($polygon)) {
+    # Return undef in the event that no polygon is defined.
+    return undef;
+  }
+
+  @coords= split(/,/, $polygon);
+
+  # check that we have an even number of arguments for the coordinates.
+  if(!scalar(@coords) || scalar(@coords) % 2 ne 0) {
+    InvalidParameter->throw(
+      'parameter' => 'polygon',
+      'message'   => 'Point list must contain an even number of arguments.'
+    );
+  }
+
+  # If the last point isn't the same as the first point. Close the polygon.
+  if(($coords[0] != $coords[-2]) && ($coords[1] != $coords[-1])) {
+    push(@coords, $coords[0], $coords[1]);
+  }
+
+  # put all the points in a format that Math::Polygon will like.
+  # validate the points while we're looping over them also. Saves us from
+  # having to do another loop later.
+  my $ii = 0;
+  while($ii < scalar(@coords)) {
+    if(URSA2::Validators->validatePoint($coords[$ii], $coords[$ii+1])) {
+      push(@points, [$coords[$ii], $coords[$ii+1]]);
+    } else {
+      InvalidParameter->throw(
+        parameter=>'polygon',
+        message=>'derived lat/long boundary point(s) invalid'
+      );
+    }
+    $ii += 2;
+  }
+
+  my $poly;
+  $poly = Math::Polygon->new(@points);
+
+  # Need at least 4 points including the poing that closes the polygon.
+  if($poly->nrPoints < 4) {
+    InvalidParameter->throw(
+      'parameter' => 'polygon',
+      'message'   => 'At least 4 points are needed to make a polygon.'
+    );
+  }
+
+  # We expect the points for polygons to be in clockwise order.
+  # Points given in a counterclockwise order define an area of interest that
+  # is everything BUT the area covered by the polygon.
+  if(!$poly->isClockwise) {
+    InvalidParameter->throw(
+      'parameter' => 'polygon',
+      'message'   => 'Points must be listed in a clockwise order.'
+    );
+  }
+
+  return(\@coords);
 }
 
 =item validatePoint

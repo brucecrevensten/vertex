@@ -40,7 +40,9 @@ __PACKAGE__->config(
     disable_component_resolution_regex_fallback => 1,
 );
 
-__PACKAGE__->log(Log::Log4perl::Catalyst->new());
+__PACKAGE__->log(Log::Log4perl::Catalyst->new(
+  __PACKAGE__->path_to('Log4perl.conf')->stringify
+));
 
 # Start the application
 __PACKAGE__->setup();

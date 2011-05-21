@@ -80,6 +80,16 @@ sub path {
   return $self->{path};
 }
 
+sub polygon {
+  my $self = shift;
+  return $self->{'polygon'};
+}
+
+sub offnadir {
+  my $self = shift;
+  return $self->{'offnadir'};
+}
+
 =item
 
 This function (and its implementation in child classes) "decodes" the requests
@@ -103,6 +113,8 @@ Parameters we're interested in are:
  * direction: ascending/descending, refers to the orbital direction of the platform
  * frame: frame #s, in a list-of-ranges-or-integers format (see buildListFromRanges)
  * path: path #s, in a list-of-ranges-or-integers format (see buildListFromRanges)
+ * polygon: A polygon defined by 3 or more points.
+ * offnadir: a specific off-nadir angle (only applies to palsar)
 =cut
 sub decode {
   my $self = shift;
@@ -114,6 +126,7 @@ sub decode {
   $self->{processing} = $self->csvToArr( $self->{requests}->param('processing'));
   $self->{limit} = $self->{requests}->param('limit');
   $self->{bbox} = $self->{requests}->param('bbox');
+  $self->{polygon} = $self->{requests}->param('polygon');
   $self->{format} = $self->{requests}->param('format');
   $self->{granule_list} = $self->csvToArr( $self->{requests}->param('granule_list'));
   $self->{products} = $self->csvToArr( $self->{requests}->param('products'));
@@ -122,6 +135,7 @@ sub decode {
   $self->{frame} = $self->buildListFromRanges($self->{frame});
   $self->{path} = $self->csvToArr( $self->{requests}->param('path'));
   $self->{path} = $self->buildListFromRanges($self->{path});
+  $self->{offnadir} = $self->csvToArr( $self->{requests}->param('offnadir'));
 
 }
 
@@ -129,6 +143,7 @@ sub validate {
   my $self = shift;
 
   $self->{bbox} = URSA2::Validators->bbox( $self->{bbox} );
+  $self->{polygon} = URSA2::Validators->polygon($self->{polygon} );
   $self->{beam} = URSA2::Validators->beam( $self->{beam} );
   $self->{start} = URSA2::Validators->start( $self->{start} );
   $self->{end} = URSA2::Validators->end( $self->{end} );
@@ -141,6 +156,7 @@ sub validate {
   $self->{frame} = URSA2::Validators->frame( $self->{frame} );
   $self->{path} = URSA2::Validators->path( $self->{path} );
   $self->{limit} = URSA2::Validators->limit( $self->{limit} );
+  $self->{offnadir} = URSA2::Validators->offnadir( $self->{offnadir} );
 
   $self->validateRequiredFields();
 
@@ -165,12 +181,18 @@ sub validateRequiredFields {
   } elsif ( $self->{path} ) {
     # if path is present, nothing else is required.
     return;
+  } elsif ( $self->{bbox} && $self->{polygon} ) {
+    # A bbox and a polygon may not be used in the same query.
+    InvalidParameter->throw(
+      'parameter' => 'bbox, polygon',
+      'message'   => 'The bbox and polygon parameters may not be used in the same query.'
+    );
   } else {
     # default case is spatial search, requires bbox.
-    if ( !defined( $self->{bbox} ) ) {
+    if ( !defined( $self->{bbox} ) && !defined( $self->{polygon} ) ) {
       MissingParameter->throw(
-        parameter=>'bbox',
-        message => 'Missing spatial search box'
+        parameter=>'bbox, polygon',
+        message => 'Missing bbox or polygon parameter'
       );
     }
   } 

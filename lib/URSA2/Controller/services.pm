@@ -145,7 +145,12 @@ sub authentication :Local {
     if ( $user->authenticate($r->userid, $r->password) ) {
       $cookie = $user->datapool_session_cookie($r->userid, $c->req->address);
     } else {
-      AuthorizationFailed->throw(); 
+      if($r->redirect) {
+        # Redirect authorization failures also.
+        $c->response->redirect($r->redirect);
+      } else {
+        AuthorizationFailed->throw(); 
+      }
     }
   };
   my $e = $@;
@@ -167,8 +172,12 @@ sub authentication :Local {
     $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
     $c->detach();
   } else {
-    $c->res->body('authentication succeeded!  cookies being set...');
     $c->res->cookies->{datapool} = $cookie if $cookie;
+    if($r->redirect) {
+      $c->response->redirect($r->redirect);
+    } else {
+      $c->res->body('authentication succeeded!  cookies being set...');
+    }
   }
 
 }

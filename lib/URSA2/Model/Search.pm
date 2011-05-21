@@ -74,8 +74,9 @@ sub getSelectXml {
     granuleType,
     fileName,
     shape
-  )).getStringVal() FROM data_product WHERE 
-
+  )).getStringVal() FROM
+    data_product
+  WHERE
   );
 }
 
@@ -117,6 +118,7 @@ sub getApiQuery {
   $self->buildDirectionQuery($r->direction).
   $self->buildListQuery('framenumber', $r->frame).
   $self->buildListQuery('pathnumber', $r->path).
+  $self->buildListQuery('offnadirangle', $r->offnadir).
   $self->buildSpatialQuery($r);
   $fragment =~ s/^\s+AND\s//;
   return $fragment; 
@@ -126,7 +128,17 @@ sub getApiQuery {
 sub getResultsCount {
   my ($self, $r) = @_;
 
-  return $self->doQuery("SELECT COUNT(*) FROM data_product WHERE ".$self->getApiQuery($r));
+  my $sql = q(
+    select
+      count(*)
+    from
+      data_product
+  WHERE
+  );
+
+  $sql .= $self->getApiQuery($r);
+
+  return $self->doQuery($sql);
 
 }
 
@@ -173,6 +185,8 @@ Throws: DBException, DbNoResults
 =cut
 sub doQuery {
   my ($self, $sql) = @_;
+
+  URSA2->log->debug($sql);
 
   my $dbh = $self->dbh;
 
@@ -245,6 +259,7 @@ sub buildDateQuery {
 sub buildSpatialQuery {
   my ($self, $r) = @_;
   my $bbox = $r->bbox;
+  my $polygon = $r->polygon;
 
   if( defined($bbox) && scalar @{$bbox} ) {
 
@@ -254,14 +269,20 @@ sub buildSpatialQuery {
     $bbox->[3] = $self->dbQuote($bbox->[3]);
 
     return qq(
-      AND
-        sdo_filter(shape,
+      AND centerLon BETWEEN $bbox->[0] AND $bbox->[2]
+      AND centerLat BETWEEN $bbox->[1] AND $bbox->[3]
+    );
+  } elsif( defined($polygon && scalar @{$polygon})) {
+    foreach my $coord (@{$polygon}) {
+      $coord = $self->dbQuote($coord);
+    }
+    my $cstring = join(',', @{$polygon});
+    return qq(
+      AND sdo_anyinteract(shape,
         sdo_geometry(
-        2003,
-        8307,
-        NULL,
-        sdo_elem_info_array(1, 1003, 3),
-        sdo_ordinate_array($bbox->[0],$bbox->[1],$bbox->[2],$bbox->[3]))) = 'TRUE');
+          2003, 8307, NULL, sdo_elem_info_array(1, 1003, 1),
+          sdo_ordinate_array($cstring))) = 'TRUE'
+    );
   }
   return '';
 }
