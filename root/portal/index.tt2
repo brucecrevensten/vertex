@@ -23,9 +23,9 @@
 <script type="text/javascript">
   var map;
   function initialize_map() {
-    var latlng = new google.maps.LatLng(0, 0);
+    var latlng = new google.maps.LatLng(30, 0);
     var myOptions = {
-      zoom: 7,
+      zoom: 1,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -39,6 +39,7 @@
   
   function browserGeolocationSuccess(position) {
     map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+    map.setZoom(7);
   }
 </script>
 
