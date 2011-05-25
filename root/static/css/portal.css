@@ -27,3 +27,8 @@ header {
 footer {
   border: 1px solid #aaa;
 }
+
+#search_map {
+  width: 600px;
+  height: 400px;
+}
