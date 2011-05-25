@@ -58,6 +58,7 @@ $(document).ready(function() {
 });
 </script>
 
+[% IF c.config.include_google_analytics == 'true' %]
 <!-- Begin Google Analytics Code -->
 <script type="text/javascript">
 
@@ -73,7 +74,9 @@ $(document).ready(function() {
 
 </script>
 <!-- End Google Analytics Code -->
+[% END %]
 
+[% IF c.config.include_ems_tracker == 'true' %]
 <!-- BEGIN: EMS Page Tag -->
 <script language="JavaScript">
 // var NTPT_PGEXTRA = '';
@@ -88,6 +91,7 @@ $(document).ready(function() {
 vspace="0" alt="">
 </noscript>
 <!-- END: EMS Page Tag No Script -->
+[% END %]
 
 </body>
 </html>
