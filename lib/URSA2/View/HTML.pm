@@ -8,29 +8,9 @@ use base 'Catalyst::View::TT';
 __PACKAGE__->config(
     TEMPLATE_EXTENSION => '.tt',
     render_die => 1,
+    INCLUDE_PATH => [
+      URSA2->path_to( 'root', 'portal' ),
+    ],
 );
-
-=head1 NAME
-
-URSA2::View::HTML - TT View for URSA2
-
-=head1 DESCRIPTION
-
-TT View for URSA2.
-
-=head1 SEE ALSO
-
-L<URSA2>
-
-=head1 AUTHOR
-
-Bruce Crevensten
-
-=head1 LICENSE
-
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
 
 1;

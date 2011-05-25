@@ -19,6 +19,8 @@ use Catalyst::Runtime 5.80;
 
 use Catalyst qw/
     ConfigLoader
+    -Debug
+    Static::Simple
 /;
 
 extends 'Catalyst';
@@ -46,33 +48,5 @@ __PACKAGE__->log(Log::Log4perl::Catalyst->new(
 
 # Start the application
 __PACKAGE__->setup();
-
-
-=head1 NAME
-
-URSA2 - Catalyst based application
-
-=head1 SYNOPSIS
-
-    script/ursa2_server.pl
-
-=head1 DESCRIPTION
-
-[enter your description here]
-
-=head1 SEE ALSO
-
-L<URSA2::Controller::Root>, L<Catalyst>
-
-=head1 AUTHOR
-
-Davin Simmons
-
-=head1 LICENSE
-
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
 
 1;

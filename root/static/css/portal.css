@@ -1,0 +1,29 @@
+header {
+  border: 1px solid #aaa;
+  height: 3em;
+}
+
+#content {
+  margin: 1em 0;
+  min-height: 10em;
+  border: 1px solid #aaa;
+  position: relative;
+}
+
+#leftColumn {
+  border: 1px solid #aaa;
+  width: 20%;
+}
+
+#rightColumn {
+  border: 1px solid #aaa;
+  width: 80%;
+  position: absolute;
+  top: 0;
+  left: 20%;
+  margin: 0 1em;
+}
+
+footer {
+  border: 1px solid #aaa;
+}
