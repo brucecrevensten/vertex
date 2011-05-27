@@ -10,3 +10,14 @@ var DataProductView = Backbone.View.extend(
     }
   }
 );
+
+var DataProductController = Backbone.Controller.extend(
+  {
+    download: function() {
+    
+    },
+    displayOnMap: function() {
+    
+    }
+  }
+);

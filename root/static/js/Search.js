@@ -18,3 +18,9 @@ var SearchResults = Backbone.Collection.extend(
     }
   }
 );
+
+var SearchController = Backbone.Controller.extend(
+  {
+    
+  }
+);

@@ -19,8 +19,9 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/map.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/SearchMap.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/DataProduct.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/SearchApp.js') %]"></script>
 
 </head>
 <body>
@@ -33,31 +34,12 @@
 </nav>
 </header>
 
-<div id="content">
-<div id="leftColumn">
-<div id="filters">
-filter accordion goes here
-</div>
-</div>
-<div id="rightColumn">
-<div id="search_map">
-Loading...
-</div>
+<div id="SearchApp"></div>
 
-<div id="results">
-results table is here
-</div>
-</div>
-</div>
 <footer>
 footer
 </footer>
 
-<script type="text/javascript">
-$(document).ready(function() {
-  initMap();
-});
-</script>
 [% IF c.config.include_google_analytics == 'true' %]
 <!-- Begin Google Analytics Code -->
 <script type="text/javascript">

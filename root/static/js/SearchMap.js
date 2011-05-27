@@ -1,12 +1,12 @@
 var searchMap;
 
-function initMap() {
+function initMap(mapContainer) {
   var myOptions = {
     zoom: 1,
     center: new google.maps.LatLng(30, 0),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
-  searchMap = new google.maps.Map(document.getElementById("search_map"),
+  searchMap = new google.maps.Map(document.getElementById(mapContainer),
     {
       zoom: 1,
       center: new google.maps.LatLng(30, 0),
