@@ -26,25 +26,25 @@ describe("Search components", function() {
   it("should have a SearchParameter object that knows search params", function() {
     sp = new SearchParameters({granule_list:"ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360"});
     expect(sp.get('granule_list')).toEqual('ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360');
-    expect(sp.toJSON()).toEqual({ format: 'json', granule_list : 'ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360' });
+    expect(sp.toJSON()).toEqual({ format: 'jsonp', granule_list : 'ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360' });
   });
 
   it("should be able to use refresh() to bootstrap from a known list of model data represented as JSON", function() {
-    sp = new SearchResults();
-    sp.refresh( granules );
-    expect( sp.length ).toEqual(4);
+    sr = new SearchResults();
+    sr.refresh( granules );
+    expect( sr.length ).toEqual(4);
 
     dp = new DataProduct( {"GRANULENAME":"ALPSRP234721390","PRODUCTNAME":"ALPSRP234721390","PLATFORM":"ALOS","SENSOR":"SAR","BEAMMODETYPE":"FBD","BEAMMODEDESC":"ALOS PALSAR sensor: High Resolution Observation Mode (dual polarization)","ORBIT":23472,"PATHNUMBER":158,"FRAMENUMBER":1390,"ACQUISITIONDATE":"2010-06-21 04:27:26","PROCESSINGDATE":"2011-01-11 22:25:08","PROCESSINGTYPE":"L1.0","STARTTIME":"2010-06-21 04:27:22","ENDTIME":"2010-06-21 04:27:26","CENTERLAT":69.52,"CENTERLON":-98.4504,"NEARSTARTLAT":69.207,"NEARSTARTLON":-99.103,"NEARENDLAT":69.699,"NEARENDLON":-99.437,"FARSTARTLAT":69.336,"FARSTARTLON":-97.48,"FARENDLAT":69.83,"FARENDLON":-97.778,"FARADAYROTATION":3.091217,"ASCENDINGDESCENDING":"ASCENDING","URL":"http://testdatapool.daac.asf.alaska.edu:80/L1.0/A3/ALPSRP234721390-L1.0.zip","BYTES":371233566,"FILESIZE":354.04,"OFFNADIRANGLE":34.3,"MD5SUM":"0a9e1ead0734236c67f8d57d71fe2451","GRANULEDESC":"ALOS PALSAR scene","GRANULETYPE":"ALOS_PALSAR_SCENE","FILENAME":"ALPSRP234721390-L1.0.zip","SHAPE":{"SDO_GTYPE":2003,"SDO_SRID":8307,"SDO_ELEM_INFO":[1,1003,1],"SDO_ORDINATES":[-99.103,69.207,-97.48,69.336,-97.778,69.83,-99.437,69.699,-99.103,69.207]}});
-    expect( sp.first().toJSON() ).toEqual( dp.toJSON() );
+    expect( sr.first().toJSON() ).toEqual( dp.toJSON() );
   });
-
 
   it("should have a SearchResults object that can perform a search against the API", function() {
 
-    sp = new SearchParameters({granule_list:"ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360"});
+    sp = new SearchParameters( {"bbox":"-135,64,-133,66","start":"1998-06-01T00:00:00Z","end":"1998-06-30T11:59:59Z","processing":["L0","L1"],"format":"list","platform":["E2","R1"]} );
     sr = new SearchResults();
-    sr.setParameters(sp);
-    expect(sr.getQueryString()).toEqual('http://testapi.daac.asf.alaska.edu/services/search/json?query={"format":"json","granule_list":"ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360"}');  
+    sr.fetchSearchResults(sp);
+    expect( sr.error ).toEqual("");
+    expect( sr.length ).toEqual(16); // FAILS because of the timeout, need to use spyOn or other Jasmine trick
 
   });
 
