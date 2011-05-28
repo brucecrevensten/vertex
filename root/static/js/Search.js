@@ -1,10 +1,37 @@
 var SearchParameters = Backbone.Model.extend(
   {
     defaults: {
-      format:"jsonp"
+      format:"jsonp",
+      bbox:"-135,64,-133,66",
+      start:"1998-06-01T00:00:00Z",
+      end:"1998-06-30T11:59:59Z",
+      processing:["L0","L1"],
+      platform:["E2","R1"]
     }
   }
 );
+
+var SearchParametersView = Backbone.View.extend(
+{
+  events : {
+  "change input" :"changed",
+  },
+
+  changed: function(evt) {
+    var target = $(evt.currentTarget),
+    data = {};
+    data[target.attr('name')] = target.attr('value');
+    console.log("Set "+target.attr('name')+"="+target.attr('value'));
+    this.model.set(data);
+  },
+
+  render: function() {
+    // in future, this should delegate to each specific parameter
+    $(this.el).html( 
+      _.template('<label>format<input type="text" name="format" value="<%= format %>" /></label> <label>bbox<input type="text" name="bbox" value="<%= bbox %>" /></label> <label>start<input type="text" name="start" value="<%= start %>" /></label> <label>end<input type="text" name="end" value="<%= end %>" /></label> <label>processing<input type="text" name="processing" value="<%= processing %>" /></label> <label>platform<input type="text" name="platform" value="<%= platform %>" /></label>', this.model.attributes)
+    );
+  }
+});
 
 var SearchResults = Backbone.Collection.extend(
   {
@@ -26,7 +53,6 @@ var SearchResults = Backbone.Collection.extend(
         }
         a.push( inner);
       }
-      console.log(a);
       return a;
     },
     fetchSearchResults: function(sp) {
@@ -42,24 +68,6 @@ var SearchResults = Backbone.Collection.extend(
         success: function(data, textStatus, jqXHR) {
           this.data = data;
           this.refresh( this.data.results.rows );
-          
-          $('#searchResults').dataTable(
-            {
-            "bJQueryUI": true,
-            "aaData": this.parseObjectsToArrays(data.results.rows, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","ACQUISITIONDATE","CENTERLAT","CENTERLON"]),
-            "aoColumns": [
-              { "sTitle": "Granule Name" },
-              { "sTitle": "Processing" },
-              { "sTitle": "Platform" },
-              { "sTitle": "Orbit" },
-              { "sTitle": "Frame" },
-              { "sTitle": "Acquisiton Date" },
-              { "sTitle": "Center Lat" },
-              { "sTitle": "Center Lon" }
-            ]
-            }
-            );
-
         },
         error: function(jqXHR, textStatus, errorThrown) {
           //todo: fix this to be meaningful
@@ -71,8 +79,56 @@ var SearchResults = Backbone.Collection.extend(
   }
 );
 
+var SearchResultsView = Backbone.View.extend(
+{
+
+  dataTable: null,
+  hasRendered: false,
+  initialize: function() {
+    _.bindAll(this, "render");
+
+    var searchResults = this.collection;
+    searchResults.bind("refresh", this.render);
+
+  },
+
+  renderLength: function() {
+    return _.template('<h3><%= length %> results found</h3>', this.collection);
+  },
+
+  render: function() {
+
+    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","ACQUISITIONDATE","CENTERLAT","CENTERLON"]);
+
+    if ( false == this.hasRendered ) {
+      this.hasRendered = true;
+      this.dataTable = $(this.el).dataTable(
+      {
+        "bJQueryUI": true,
+        "aaData": preparedData,
+        "aoColumns": [
+        { "sTitle": "Granule Name" },
+        { "sTitle": "Processing" },
+        { "sTitle": "Platform" },
+        { "sTitle": "Orbit" },
+        { "sTitle": "Frame" },
+        { "sTitle": "Acquisiton Date" },
+        { "sTitle": "Center Lat" },
+        { "sTitle": "Center Lon" }
+        ]
+      }
+      );
+    } else {
+      this.dataTable.fnClearTable();
+      this.dataTable.fnAddData(preparedData);
+    }
+  }
+
+}
+);
+
 var SearchController = Backbone.Controller.extend(
   {
-    
+     
   }
 );
