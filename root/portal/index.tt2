@@ -6,6 +6,8 @@
 
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/reset.css') %]" />
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/portal.css') %]" />
+<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/demo_table_jui.css') %]" />
+<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/ui-darkness/jquery-ui-1.8.13.custom.css') %]" />
 
 
 <!-- enable html5 element formatting with older IE versions -->
@@ -16,6 +18,8 @@
 <![endif]-->
 
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.6.1.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-ui-1.8.13.custom.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.dataTables.min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
@@ -35,7 +39,20 @@
 </nav>
 </header>
 
-<div id="SearchApp"></div>
+<div>
+<table id="searchResults" width="100%"></table>
+<script>
+$(document).ready(function() {
+
+    sp = new SearchParameters( {"bbox":"-135,64,-133,66","start":"1998-06-01T00:00:00Z","end":"1998-06-30T11:59:59Z","processing":["L0","L1"],"format":"jsonp","platform":["E2","R1"]} );
+
+    var sr = new SearchResults();
+    sr.fetchSearchResults(sp);
+
+} );
+
+</script>
+</div>
 
 <footer>
 footer

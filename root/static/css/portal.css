@@ -1,3 +1,6 @@
+body, * {
+  font:15px arial,sans-serif;
+}
 header {
   border: 1px solid #aaa;
   height: 3em;
