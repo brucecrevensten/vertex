@@ -22,6 +22,19 @@ describe("DataProduct", function() {
   
 });
 
+describe("ProcessingFilter and ProcessingWidget", function() {
+  it("should manage a json array of processing levels", function() {
+    pf = new ProcessingFilter({ processing: ["L1","L1.5"] });
+    expect(pf.toJSON()).toEqual( { "processing":["L1","L1.5"] });
+  });
+
+  it("should render a template containing actively checked items if they are selected", function() {
+    pf = new ProcessingFilter({ processing: ["L1","L1.5"] });
+    pw = new ProcessingWidget({model:pf});
+    expect($(pw.render()).html()).toMatch('<input id="filter_processing_L1" value="L1" checked="checked" type="checkbox">');
+  });
+});
+
 describe("SearchResultsView", function() {
   it("should be able to display the count of a result set", function() {
     sr = new SearchResults();
