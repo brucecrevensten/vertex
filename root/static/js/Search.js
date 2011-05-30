@@ -4,7 +4,8 @@ var SearchParameters = Backbone.Model.extend(
     filters: [],
     initialize: function() {
       this.filters = [
-        new ProcessingFilter()
+        new ProcessingFilter(),
+        new BboxFilter()
       ];
 
     self = this;
@@ -49,30 +50,49 @@ var SearchParametersView = Backbone.View.extend(
     }
   },
 
-    /*
-    changed: function(evt) {
+  render: function() {
+    for ( var i in this.widgets ) {
+      $(this.el).append( this.widgets[i].render() );
+    }
+  }
+});
+
+var BboxFilter = Backbone.Model.extend(
+{
+  name: "BboxFilter",
+  defaults: {
+    bbox:"-135,64,-133,66",
+  },
+  getWidget: function() {
+    return new BboxWidget({model:this});
+  }
+}
+);
+
+var BboxWidget = Backbone.View.extend(
+{
+  events : {
+    "change input" : "changed"
+  },
+  changed: function(evt) {
       var target = $(evt.currentTarget),
       data = {};
-      console.log(evt);
       data[target.attr('name')] = target.attr('value');
       console.log("Set "+target.attr('name')+"="+target.attr('value'));
       this.model.set(data);
-    },
-    */
-
+  },
   render: function() {
-    for ( var i in this.widgets ) {
-      $(this.el).html( this.widgets[i].render() );
-    }
-
+    $(this.el).html(
+      _.template('<div><label for="filter_bbox">BBOX: <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>"<label></div>', this.model.toJSON())
+    );
+    return this.el;
   }
-});
+}
+);
 
 var ProcessingFilter = Backbone.Model.extend(
   {
     name: "ProcessingFilter",
-    initialize: function() {
-    },
     defaults: {
       processing: ["L0","L1","BROWSE"]
     },
