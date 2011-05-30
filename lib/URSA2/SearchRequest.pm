@@ -118,25 +118,43 @@ Parameters we're interested in are:
 =cut
 sub decode {
   my $self = shift;
-  
-  $self->{platform} = $self->csvToArr( $self->{requests}->param('platform'));
-  $self->{beam} = $self->csvToArr( $self->{requests}->param('beam'));
+
+  $self->{platform} = $self->handleMultipleValues('platform');
+  $self->{beam} = $self->handleMultipleValues('beam');
+  $self->{granule_list} = $self->handleMultipleValues('granule_list');
+  $self->{frame} = $self->handleMultipleValues('frame');
+  $self->{path} = $self->handleMultipleValues('path');
+  $self->{offnadir} = $self->handleMultipleValues('offnadir');
+  $self->{processing} = $self->handleMultipleValues('processing');
+
   $self->{start} = $self->{requests}->param('start');
   $self->{end} = $self->{requests}->param('end');
-  $self->{processing} = $self->csvToArr( $self->{requests}->param('processing'));
   $self->{limit} = $self->{requests}->param('limit');
   $self->{bbox} = $self->{requests}->param('bbox');
   $self->{polygon} = $self->{requests}->param('polygon');
   $self->{format} = $self->{requests}->param('format');
-  $self->{granule_list} = $self->csvToArr( $self->{requests}->param('granule_list'));
   $self->{products} = $self->csvToArr( $self->{requests}->param('products'));
   $self->{direction} = $self->{requests}->param('direction');
-  $self->{frame} = $self->csvToArr( $self->{requests}->param('frame'));
   $self->{frame} = $self->buildListFromRanges($self->{frame});
-  $self->{path} = $self->csvToArr( $self->{requests}->param('path'));
   $self->{path} = $self->buildListFromRanges($self->{path});
-  $self->{offnadir} = $self->csvToArr( $self->{requests}->param('offnadir'));
 
+}
+
+sub handleMultipleValues {
+  my ( $self, $field ) = @_;
+  if( $self->{requests}->param($field) ) {
+    # field is a string, possibly in csv format, that needs parsing
+    return $self->csvToArr( $self->{requests}->param($field));
+  } else {
+    # field contains multiple values in a list; convert to array, here.
+    # TODO fix this hack that changes the list to an array
+    my @values = $self->{requests}->param($field.'[]');
+    my @a;
+    foreach my $v ( @values ) {
+      push( @a, $v );
+    }
+    return \@a;
+  }
 }
 
 sub validate {
@@ -294,8 +312,10 @@ sub csvToArr {
 sub factory {
   my ($self, $r) = @_;
   if ( $r->param('query') ) {
+    URSA2->log->debug('doing a JSON decode');
     return URSA2::SearchRequest::JSON->new( $r );
   } else {
+    URSA2->log->debug('doing a plain decode');
     # default = comma-separated values
     return URSA2::SearchRequest::Plain->new( $r ); 
   }
