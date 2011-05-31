@@ -16,19 +16,18 @@ header {
 #leftColumn {
   border: 1px solid #aaa;
   width: 20%;
+  float: left;
 }
 
 #rightColumn {
+  float: right;
   border: 1px solid #aaa;
-  width: 80%;
-  position: absolute;
-  top: 0;
-  left: 20%;
-  margin: 0 1em;
+  width: 78%;
 }
 
 footer {
   border: 1px solid #aaa;
+  clear: both;
 }
 
 #search_map {

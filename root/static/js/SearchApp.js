@@ -13,16 +13,6 @@ $(function() {
     },
     
     initialize: function() {
-      console.log('Building search app html structure...');
-      var lcol = '<div id="leftColumn"></div>';
-      var rcol = '<div id="rightColumn"></div>';
-      var filters = '<div id="filters">filters</div>';
-      var map = '<div id="searchmap">map</div>';
-      var results = '<div id="results">results</div>';
-      $('#SearchApp').append(lcol);
-      $('#SearchApp').append(rcol);
-      $('#leftColumn').append(filters);
-      $('#rightColumn').append(map + results);
       /*
       initMap('SearchMap');
       */

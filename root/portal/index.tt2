@@ -39,36 +39,39 @@
 </nav>
 </header>
 
-<div>
-<div id="searchForm"></div>
-<table id="searchResults" width="100%"></table>
+<div id="contents">
+<div id="leftColumn">
+<div id="filters"></div>
+</div>
+<div id="rightColumn">
+<table id="results" width="100%"></table>
+
+</div>
 
 <script>
-$(document).ready(function() {
 
-    sp = new SearchParameters();
-    spv = new SearchParametersView( { model: sp, el: $("#searchForm") });
-    spv.render();
+      // init search behaviors
+      sp = new SearchParameters();
+      spv = new SearchParametersView( { model: sp, el: $("#filters") });
+      spv.render();
 
-    var sr = new SearchResults();
-    srv = new SearchResultsView(
-      {
-        collection: sr,
-        el: $("#searchResults")
-      }
-    );
+      var sr = new SearchResults();
+      srv = new SearchResultsView(
+        {
+          collection: sr,
+          el: $("#results")
+        }
+      );
 
-    // change when the form changes
-    sp.bind("change",function() {
+      // change when the form changes
+      sp.bind("change",function() {
+        sr.fetchSearchResults(sp); // initial population
+      });
+
       sr.fetchSearchResults(sp); // initial population
-    });
 
-    sr.fetchSearchResults(sp); // initial population
-
-} );
 
 </script>
-</div>
 
 <footer>
 footer

@@ -4,8 +4,10 @@ var SearchParameters = Backbone.Model.extend(
     filters: [],
     initialize: function() {
       this.filters = [
+        new BboxFilter(),
         new ProcessingFilter(),
-        new BboxFilter()
+        new PlatformFilter(),
+        new DateFilter()
       ];
 
     self = this;
@@ -16,22 +18,22 @@ var SearchParameters = Backbone.Model.extend(
     }
 
     this.bind("change:filter", function(filter) {
-      console.log('a change:filter event was noticed!');
-      console.log('filter name: '+filter.name);
-      console.log(filter);
-      console.log(this.name);
+//      console.log('a change:filter event was noticed!');
+//     console.log('filter name: '+filter.name);
+//      console.log(filter);
+//      console.log(this.name);
       this.set( filter.toJSON() );
-      console.log(this.toJSON() );
+//      console.log(this.toJSON() );
     });
 
       },
       defaults: {
       format:"jsonp",
       bbox:"-135,64,-133,66",
-      start:"1998-06-01T00:00:00Z",
-      end:"1998-06-30T11:59:59Z",
-      processing:["L0","L1"],
-      platform:["E2","R1"]
+      start:"2009-06-01",
+      end:"2009-06-30",
+      processing:["L0","L1","L1.0","L1.1","L1.5"],
+      platform:["E2","R1","E1","J1","A3"]
     },
   }
 );
@@ -40,7 +42,13 @@ var SearchParametersView = Backbone.View.extend(
 {
   widgets: [],
 
+  // Bind to the existing filters element in the skeleton html.
+  el: $("#filters"),
+
   initialize: function() {
+
+    _.bindAll(this, "render");
+
     //todo: we depend on the SearchParameters model being defined first,
     // so we have access to its list of filters.  Check that condition &
     // fail if we don't.
@@ -51,11 +59,22 @@ var SearchParametersView = Backbone.View.extend(
   },
 
   render: function() {
+    
+    console.log('rendering SearchParametersView');
     for ( var i in this.widgets ) {
-      $(this.el).append( this.widgets[i].render() );
+      console.log('rendering '+this.widgets[i].model.name);
+      $(this.el).append( this.widgets[i].render().el );
     }
+    return this;
+ 
   }
 });
+
+var BaseWidget = Backbone.View.extend(
+{
+  tagName: "div"
+}
+);
 
 var BboxFilter = Backbone.Model.extend(
 {
@@ -69,7 +88,7 @@ var BboxFilter = Backbone.Model.extend(
 }
 );
 
-var BboxWidget = Backbone.View.extend(
+var BboxWidget = BaseWidget.extend(
 {
   events : {
     "change input" : "changed"
@@ -85,16 +104,109 @@ var BboxWidget = Backbone.View.extend(
     $(this.el).html(
       _.template('<div><label for="filter_bbox">BBOX: <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>"<label></div>', this.model.toJSON())
     );
-    return this.el;
+    return this;
   }
 }
 );
+
+var DateFilter = Backbone.Model.extend(
+{ name: "DateFilter",
+  defaults: {
+      start:"2009-06-01",
+      end:"2009-06-30",
+  },
+  getWidget: function() { 
+    return new DateWidget({model:this});
+  }
+});
+
+var DateWidget = BaseWidget.extend(
+{
+  initialize: function() {
+    _.bindAll(this, "render");
+  },
+  events : {
+    "change input" : "changed"
+  },
+  changed: function(evt) {
+      var target = $(evt.currentTarget),
+      data = {};
+      data[target.attr('name')] = target.attr('value');
+      console.log("Set "+target.attr('name')+"="+target.attr('value'));
+      this.model.set(data);
+  },
+  render: function() {
+    $(this.el).html(
+      _.template('<label for="filter_start">Start date <input type="text" id="filter_start" name="start" value="<%= start %>"\
+      <label for="filter_end">End date <input type="text" id="filter_end" name="end" value="<%= end %>"\
+      ', this.model.toJSON())
+    );
+    console.log( $(this.el).find("#filter_start"));
+    return this;
+  }
+});
+
+var PlatformFilter = Backbone.Model.extend(
+  {
+    name: "ProcessingFilter",
+    defaults: {
+      processing: ["E1","E2","J1","J2","A3","R1"]
+    },
+    getWidget: function() {
+      return new PlatformWidget({model:this});
+    },
+  }
+  );
+
+var PlatformWidget = BaseWidget.extend(
+  {
+    id: "filter_platform",
+    platformTypes: {
+      // value : display name
+      "R1" : "Radarsat-1",
+      "E1" : "ERS-1",
+      "E2" : "ERS-2",
+      "J1" : "JERS-1",
+      "A3" : "ALOS"
+    },
+
+    events : {
+      "change input" : "changed",
+    },
+
+    changed: function(evt) {
+
+      //TODO: this is ugly -- there's gotta be a better way to 
+      // construct the jquery selector there.
+      var a = $("#"+this.id+" input").serializeArray();
+      this.model.clear({silent:true});
+      this.model.set( { platform: _.pluck(a,"value") } );
+
+    },
+
+    render: function() {
+      var f = "";
+      var checked = this.model.toJSON()["platform"];
+      for( var key in this.platformTypes ) {
+         rowData = {
+          name: this.platformTypes[key],
+          value: key,
+          ifChecked: ( _.indexOf(checked, key) > -1 ) ? 'checked="checked"' : ''
+         };
+         f = f + _.template('<label for="filter_platform_<%= name %>"><%= name %><input type="checkbox" id="filter_platform_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>></label>', rowData);
+      }
+      $(this.el).html( f );
+      return this;
+    }
+  }
+);
+
 
 var ProcessingFilter = Backbone.Model.extend(
   {
     name: "ProcessingFilter",
     defaults: {
-      processing: ["L0","L1","BROWSE"]
+      processing: ["L0","L1","BROWSE","L1.5","L1.0","L1.1"]
     },
     getWidget: function() {
       return new ProcessingWidget({model:this});
@@ -102,14 +214,17 @@ var ProcessingFilter = Backbone.Model.extend(
   }
   );
 
-var ProcessingWidget = Backbone.View.extend(
+var ProcessingWidget = BaseWidget.extend(
   {
     id: "filter_processing",
     processingTypes: {
       // value : display name
       "BROWSE" : "Browse",
       "L0" : "L0",
-      "L1" : "L1"
+      "L1" : "L1",
+      "L1.0" : "L1.0",
+      "L1.1" : "L1.1",
+      "L1.5" : "L1.5"
     },
 
     events : {
@@ -138,7 +253,8 @@ var ProcessingWidget = Backbone.View.extend(
          f = f + _.template('<label for="filter_processing_<%= name %>"><%= name %><input type="checkbox" id="filter_processing_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>></label>', rowData);
       }
       $(this.el).html( f );
-      return this.el;
+    
+      return this;
     }
   }
 );
