@@ -152,11 +152,25 @@ var DateWidget = BaseWidget.extend(
       <label for="filter_end">End date <input type="text" id="filter_end" name="end" value="<%= end %>"></label>\
       ', this.model.toJSON())
     );
-    $(this.el).find('input').datepicker({
-       dateFormat: 'yy-mm-dd',
-       changeMonth: true,
-       changeYear: true
-   });
+    $(this.el).find('#filter_start').datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeMonth: true,
+        changeYear: true
+    });
+    start_date = $(this.el).find('#filter_start').datepicker().val();
+    $(this.el).find('#filter_start').datepicker("setDate", start_date);
+
+    $(this.el).find('#filter_end').datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeMonth: true,
+        changeYear: true
+    });
+    end_date = $(this.el).find('#filter_end').datepicker().val();
+    $(this.el).find('#filter_end').datepicker("setDate", end_date);
+
+    console.log("start_date: " + start_date);
+    console.log("end_date: " + end_date);
+    console.log( $(this.el).find("#filter_start"));
     return this;
   }
 });
@@ -282,7 +296,7 @@ var ProcessingWidget = BaseWidget.extend(
 
 var SearchResults = Backbone.Collection.extend(
   {
-    url:"http://localhost:3000/services/search/json",
+    url:"http://testapi.daac.asf.alaska.edu/services/search/json",
     model:DataProduct,
     error:"",
     setParameters: function(sp) {
