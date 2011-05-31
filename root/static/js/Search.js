@@ -341,6 +341,8 @@ var SearchResults = Backbone.Collection.extend(
         },
         error: function(jqXHR, textStatus, errorThrown) {
           //todo: fix this to be meaningful
+          $("#results_wrapper").unmask();
+          $("#errorDiv").html("<p>There was an error: " + textStatus + " " + errorThrown).css("background-color","red").show();
           console.log(JSON.stringify(jqXHR) + ' ' + textStatus + ' ' +errorThrown); 
         }
       }).results;
