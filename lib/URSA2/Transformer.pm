@@ -109,7 +109,7 @@ sub formatResultsAsXml {
 
   foreach $result ( $self->{results} ) {
     foreach $row ( @{$result} ) {
-      $x = join("\n", $x, $row->[0]);
+      $x .= $row->[0];
     }
   }
 
