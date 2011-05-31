@@ -66,7 +66,7 @@ sub search :Path {
     } else {
       # search based on spatial + other criteria
 
-      if( !defined($r->bbox) && ( !$r->frame && !$r->path)) {
+      if( (!defined($r->polygon) && !defined($r->bbox)) && ( !$r->frame && !$r->path)) {
         MissingParameter->throw();
       }
 
