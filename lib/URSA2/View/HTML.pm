@@ -1,4 +1,5 @@
 package URSA2::View::HTML;
+use URSA2;
 
 use strict;
 use warnings;
