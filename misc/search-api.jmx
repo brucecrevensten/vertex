@@ -6,7 +6,23 @@
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-        <collectionProp name="Arguments.arguments"/>
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="server" elementType="Argument">
+            <stringProp name="Argument.name">server</stringProp>
+            <stringProp name="Argument.value">testapi.daac.asf.alaska.edu</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="port" elementType="Argument">
+            <stringProp name="Argument.name">port</stringProp>
+            <stringProp name="Argument.value">80</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="protocol" elementType="Argument">
+            <stringProp name="Argument.name">protocol</stringProp>
+            <stringProp name="Argument.value">http</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
       </elementProp>
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
@@ -17,7 +33,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">25</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <longProp name="ThreadGroup.start_time">1297450605000</longProp>
         <longProp name="ThreadGroup.end_time">1297450605000</longProp>
@@ -26,15 +42,21 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+          <collectionProp name="CookieManager.cookies"/>
+          <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+          <stringProp name="CookieManager.policy">rfc2109</stringProp>
+        </CookieManager>
+        <hashTree/>
         <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">testapi.daac.asf.alaska.edu</stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.domain">${server}</stringProp>
+          <stringProp name="HTTPSampler.port">${port}</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout">60000</stringProp>
-          <stringProp name="HTTPSampler.protocol">http</stringProp>
+          <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">services/search/param</stringProp>
         </ConfigTestElement>
@@ -106,6 +128,92 @@
           <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
             <stringProp name="ConstantTimer.delay">5000</stringProp>
             <stringProp name="RandomTimer.range">2500</stringProp>
+          </GaussianRandomTimer>
+          <hashTree/>
+        </hashTree>
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="spec 2.1" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="bbox" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${west},${south},${__V(__intSum(${west},2))},65</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">bbox</stringProp>
+              </elementProp>
+              <elementProp name="platform" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">R1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">platform</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSampler>
+        <hashTree>
+          <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="west" enabled="true">
+            <stringProp name="maximumValue">-160</stringProp>
+            <stringProp name="minimumValue">-165</stringProp>
+            <stringProp name="outputFormat">000</stringProp>
+            <boolProp name="perThread">true</boolProp>
+            <stringProp name="randomSeed"></stringProp>
+            <stringProp name="variableName">west</stringProp>
+          </RandomVariableConfig>
+          <hashTree/>
+          <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="south" enabled="true">
+            <stringProp name="variableName">south</stringProp>
+            <stringProp name="outputFormat">00</stringProp>
+            <stringProp name="minimumValue">60</stringProp>
+            <stringProp name="maximumValue">65</stringProp>
+            <stringProp name="randomSeed"></stringProp>
+            <boolProp name="perThread">true</boolProp>
+          </RandomVariableConfig>
+          <hashTree/>
+          <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="east" enabled="true">
+            <stringProp name="variableName">east</stringProp>
+            <stringProp name="outputFormat">000</stringProp>
+            <stringProp name="minimumValue">${__evalVar(${west})}</stringProp>
+            <stringProp name="maximumValue">${__evalVar(${west}+5)}</stringProp>
+            <stringProp name="randomSeed"></stringProp>
+            <boolProp name="perThread">true</boolProp>
+          </RandomVariableConfig>
+          <hashTree/>
+          <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="north" enabled="true">
+            <stringProp name="variableName">north</stringProp>
+            <stringProp name="outputFormat">00</stringProp>
+            <stringProp name="minimumValue">${__evalVar(${south}+1)}</stringProp>
+            <stringProp name="maximumValue">${__evalVar(${south}+5)}</stringProp>
+            <stringProp name="randomSeed"></stringProp>
+            <boolProp name="perThread">true</boolProp>
+          </RandomVariableConfig>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="49586">200</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_code</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">8</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+            <stringProp name="ConstantTimer.delay">300</stringProp>
+            <stringProp name="RandomTimer.range">100.0</stringProp>
           </GaussianRandomTimer>
           <hashTree/>
         </hashTree>

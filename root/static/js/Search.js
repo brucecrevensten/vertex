@@ -59,7 +59,6 @@ var SearchParametersView = Backbone.View.extend(
   },
 
   render: function() {
-    
     console.log('rendering SearchParametersView');
     for ( var i in this.widgets ) {
       $(this.el).append( '<h3><a href="#'+this.widgets[i].model.name+'">'+this.widgets[i].title+'</a></h3>' );
@@ -301,7 +300,7 @@ var ProcessingWidget = BaseWidget.extend(
 
 var SearchResults = Backbone.Collection.extend(
   {
-    url:"http://localhost:3000/services/search/json",
+    url:"http://testapi.daac.asf.alaska.edu/services/search/json",
     model:DataProduct,
     error:"",
     setParameters: function(sp) {
@@ -331,9 +330,13 @@ var SearchResults = Backbone.Collection.extend(
         processData: true,
         dataType: "jsonp",
         context: this,
+        beforeSend: function(){
+          $('#results_wrapper').mask("Loading...");
+        },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
           this.refresh( this.data.results.rows );
+          $('#results_wrapper').unmask();
         },
         error: function(jqXHR, textStatus, errorThrown) {
           //todo: fix this to be meaningful
