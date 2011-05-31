@@ -331,7 +331,7 @@ var SearchResults = Backbone.Collection.extend(
         dataType: "jsonp",
         context: this,
         beforeSend: function(){
-          $('#results_wrapper').mask("Loading...");
+          $('#results').mask("Loading...");
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
