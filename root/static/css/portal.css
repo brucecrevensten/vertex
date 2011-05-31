@@ -39,3 +39,7 @@ footer {
 display: block;
 margin: 0 0 1em 0;
 }
+
+label.hover {
+  cursor: pointer;
+}

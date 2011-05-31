@@ -296,7 +296,7 @@ var ProcessingWidget = BaseWidget.extend(
 
 var SearchResults = Backbone.Collection.extend(
   {
-    url:"http://testapi.daac.asf.alaska.edu/services/search/json",
+    url:"http://localhost:3000/services/search/json",
     model:DataProduct,
     error:"",
     setParameters: function(sp) {
@@ -359,7 +359,7 @@ var SearchResultsView = Backbone.View.extend(
 
   render: function() {
 
-    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","ACQUISITIONDATE","CENTERLAT","CENTERLON"]);
+    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE"]);
 
     if ( false == this.hasRendered ) {
       this.hasRendered = true;
@@ -373,9 +373,9 @@ var SearchResultsView = Backbone.View.extend(
         { "sTitle": "Platform" },
         { "sTitle": "Orbit" },
         { "sTitle": "Frame" },
-        { "sTitle": "Acquisiton Date" },
         { "sTitle": "Center Lat" },
-        { "sTitle": "Center Lon" }
+        { "sTitle": "Center Lon" },
+        { "sTitle": "Acquisition Date" }
         ]
       }
       );
