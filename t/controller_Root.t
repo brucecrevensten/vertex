@@ -9,6 +9,7 @@ use ok "Test::WWW::Mechanize::Catalyst" => "URSA2";
 
 my $mech = Test::WWW::Mechanize::Catalyst->new(catalyst_app => 'URSA2', autolint => 0);
 
+$mech->requests_redirectable([]);
 $mech->get('/');
 is($mech->status(), Apache2::Const::REDIRECT, 'request to root controller should redirect to ASF API information URL');
 
