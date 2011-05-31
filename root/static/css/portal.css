@@ -34,3 +34,8 @@ footer {
   width: 600px;
   height: 400px;
 }
+
+#date_widget label {
+display: block;
+margin: 0 0 1em 0;
+}

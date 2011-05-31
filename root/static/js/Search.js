@@ -62,9 +62,13 @@ var SearchParametersView = Backbone.View.extend(
     
     console.log('rendering SearchParametersView');
     for ( var i in this.widgets ) {
-      console.log('rendering '+this.widgets[i].model.name);
+      $(this.el).append( '<h3><a href="#'+this.widgets[i].model.name+'">'+this.widgets[i].title+'</a></h3>' );
       $(this.el).append( this.widgets[i].render().el );
     }
+    $(this.el).accordion({
+      autoHeight: false,
+      navigation: true
+    });
     return this;
  
   }
@@ -90,6 +94,9 @@ var BboxFilter = Backbone.Model.extend(
 
 var BboxWidget = BaseWidget.extend(
 {
+  title: "Geographic region",
+  titleId: "bbox_widget_title",
+  tagName: "div",
   events : {
     "change input" : "changed"
   },
@@ -122,6 +129,10 @@ var DateFilter = Backbone.Model.extend(
 
 var DateWidget = BaseWidget.extend(
 {
+  title: "Date",
+  titleId: "date_widget_title",
+  tagName: "div",
+  id: "date_widget",
   initialize: function() {
     _.bindAll(this, "render");
   },
@@ -141,7 +152,11 @@ var DateWidget = BaseWidget.extend(
       <label for="filter_end">End date <input type="text" id="filter_end" name="end" value="<%= end %>"\
       ', this.model.toJSON())
     );
-    console.log( $(this.el).find("#filter_start"));
+    $(this.el).find('input').datepicker({
+       dateFormat: 'yy-mm-dd',
+       changeMonth: true,
+       changeYear: true
+   });
     return this;
   }
 });
@@ -160,6 +175,9 @@ var PlatformFilter = Backbone.Model.extend(
 
 var PlatformWidget = BaseWidget.extend(
   {
+    title: "Platforms &amp; products",
+    titleId: "platform_widget_title",
+    tagName: "div",
     id: "filter_platform",
     platformTypes: {
       // value : display name
@@ -193,9 +211,9 @@ var PlatformWidget = BaseWidget.extend(
           value: key,
           ifChecked: ( _.indexOf(checked, key) > -1 ) ? 'checked="checked"' : ''
          };
-         f = f + _.template('<label for="filter_platform_<%= name %>"><%= name %><input type="checkbox" id="filter_platform_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>></label>', rowData);
+         f = f + _.template('<li><label for="filter_platform_<%= name %>"><input type="checkbox" id="filter_platform_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>>&nbsp;<%= name %></label></li>', rowData);
       }
-      $(this.el).html( f );
+      $(this.el).html( '<ul>'+f+'</ul>' );
       return this;
     }
   }
@@ -216,6 +234,9 @@ var ProcessingFilter = Backbone.Model.extend(
 
 var ProcessingWidget = BaseWidget.extend(
   {
+    title: "Processing type",
+    titleId: "processing_widget_title",
+    tagName: "div",
     id: "filter_processing",
     processingTypes: {
       // value : display name
@@ -250,9 +271,9 @@ var ProcessingWidget = BaseWidget.extend(
           value: key,
           ifChecked: ( _.indexOf(checked, key) > -1 ) ? 'checked="checked"' : ''
          };
-         f = f + _.template('<label for="filter_processing_<%= name %>"><%= name %><input type="checkbox" id="filter_processing_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>></label>', rowData);
+         f = f + _.template('<li><label for="filter_processing_<%= name %>"><input type="checkbox" id="filter_processing_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>>&nbsp;<%= name %></label></li>', rowData);
       }
-      $(this.el).html( f );
+      $(this.el).html( '<ul>'+f+'</ul>' );
     
       return this;
     }
@@ -348,6 +369,7 @@ var SearchResultsView = Backbone.View.extend(
       this.dataTable.fnClearTable();
       this.dataTable.fnAddData(preparedData);
     }
+    return this;
   }
 
 }
