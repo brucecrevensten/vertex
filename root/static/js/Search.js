@@ -147,6 +147,7 @@ var DateWidget = BaseWidget.extend(
       this.model.set(data);
   },
   render: function() {
+    today = new Date();
     $(this.el).html(
       _.template('<label for="filter_start">Start date <input type="text" id="filter_start" name="start" value="<%= start %>"></label>\
       <label for="filter_end">End date <input type="text" id="filter_end" name="end" value="<%= end %>"></label>\
@@ -155,7 +156,9 @@ var DateWidget = BaseWidget.extend(
     $(this.el).find('#filter_start').datepicker({
         dateFormat: 'yy-mm-dd',
         changeMonth: true,
-        changeYear: true
+        changeYear: true,
+        minDate: new Date(1990, 1 - 1, 1),
+        yearRange: '1990:'+today.getFullYear()
     });
     start_date = $(this.el).find('#filter_start').datepicker().val();
     $(this.el).find('#filter_start').datepicker("setDate", start_date);
@@ -163,7 +166,9 @@ var DateWidget = BaseWidget.extend(
     $(this.el).find('#filter_end').datepicker({
         dateFormat: 'yy-mm-dd',
         changeMonth: true,
-        changeYear: true
+        changeYear: true,
+        minDate: new Date(1990, 1 - 1, 1),
+        yearRange: '1990:'+today.getFullYear()
     });
     end_date = $(this.el).find('#filter_end').datepicker().val();
     $(this.el).find('#filter_end').datepicker("setDate", end_date);
