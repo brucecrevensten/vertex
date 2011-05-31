@@ -4,7 +4,7 @@ var SearchParameters = Backbone.Model.extend(
     filters: [],
     initialize: function() {
       this.filters = [
-        new BboxFilter(),
+        new GeographicFilter(),
         new ProcessingFilter(),
         new PlatformFilter(),
         new DateFilter()
@@ -79,22 +79,22 @@ var BaseWidget = Backbone.View.extend(
 }
 );
 
-var BboxFilter = Backbone.Model.extend(
+var GeographicFilter = Backbone.Model.extend(
 {
-  name: "BboxFilter",
+  name: "GeographicFilter",
   defaults: {
     bbox:"-135,64,-133,66",
   },
   getWidget: function() {
-    return new BboxWidget({model:this});
+    return new GeographicWidget({model:this});
   }
 }
 );
 
-var BboxWidget = BaseWidget.extend(
+var GeographicWidget = BaseWidget.extend(
 {
   title: "Geographic region",
-  titleId: "bbox_widget_title",
+  titleId: "geographic_widget_title",
   tagName: "div",
   events : {
     "change input" : "changed"
@@ -190,6 +190,7 @@ var PlatformFilter = Backbone.Model.extend(
     },
   }
   );
+
 
 var PlatformWidget = BaseWidget.extend(
   {
