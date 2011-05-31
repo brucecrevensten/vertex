@@ -148,8 +148,8 @@ var DateWidget = BaseWidget.extend(
   },
   render: function() {
     $(this.el).html(
-      _.template('<label for="filter_start">Start date <input type="text" id="filter_start" name="start" value="<%= start %>"\
-      <label for="filter_end">End date <input type="text" id="filter_end" name="end" value="<%= end %>"\
+      _.template('<label for="filter_start">Start date <input type="text" id="filter_start" name="start" value="<%= start %>"></label>\
+      <label for="filter_end">End date <input type="text" id="filter_end" name="end" value="<%= end %>"></label>\
       ', this.model.toJSON())
     );
     $(this.el).find('input').datepicker({
