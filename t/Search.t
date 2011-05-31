@@ -173,11 +173,9 @@ SKIP: {
   
   $mech->post($surn, { granule_list=>'R1_65186_ST3_F291', format=>'csv'});
   is($mech->status(), Apache2::Const::HTTP_OK, '3: get HTTP 200 for successful search');
-  is($mech->content(), q~"Granule Name","Platform","Sensor","Beam Mode","Beam Mode Description","Orbit","Path Number","Frame Number","Acquisition Date","Processing Date","Processing Level","Start Time","End Time","Center Lat","Center Lon","Near Start Lat","Near Start Lon","Far Start Lat","Far Start Lon","Near End Lat","Near End Lon","Far End Lat","Far End Lon","Faraday Rotation","Ascending or Descending?","URL","Size (MB)","Off Nadir Angle",
-"R1_65186_ST3_F291","RADARSAT-1","SAR","ST3","Radarsat-1 Standard Beam 3 SAR","65186","NA","291","2008-04-30 16:24:27","2010-11-06 11:47:31","L0","2008-04-30 16:24:11","2008-04-30 16:24:27","63.5168","-148.9877","63.9072","-147.7297","62.9501","-148.2432","64.078","-149.7645","63.1172","-150.2114","NA","DESCENDING","http://testdatapool.daac.asf.alaska.edu:80/L0/R1/R1_65186_ST3_L0_F291.zip","136.91","NA",
-"R1_65186_ST3_F291","RADARSAT-1","SAR","ST3","Radarsat-1 Standard Beam 3 SAR","65186","NA","291","2008-04-30 16:24:27","2010-11-06 11:48:50","BROWSE","2008-04-30 16:24:11","2008-04-30 16:24:27","63.5168","-148.9877","63.9072","-147.7297","62.9501","-148.2432","64.078","-149.7645","63.1172","-150.2114","NA","DESCENDING","http://testdatapool.daac.asf.alaska.edu:80/BROWSE/R1/R1_65186_ST3_F291.jpg",".4","NA",
-"R1_65186_ST3_F291","RADARSAT-1","SAR","ST3","Radarsat-1 Standard Beam 3 SAR","65186","NA","291","2008-04-30 16:24:27","2010-11-06 11:49:34","L1","2008-04-30 16:24:11","2008-04-30 16:24:27","63.5168","-148.9877","63.9072","-147.7297","62.9501","-148.2432","64.078","-149.7645","63.1172","-150.2114","NA","DESCENDING","http://testdatapool.daac.asf.alaska.edu:80/L1/R1/R1_65186_ST3_F291.zip","50.5","NA",~
-, '3: get expected results for specific granule list, test explicit CSV format structure');
+
+  like($mech->content(), qr/.+/, '3.2.1: if granule_list is provided, no other parameters are required');
+  like($mech->content(), qr/"Granule Name","Platform","Sensor","Beam Mode","Beam Mode Description","Orbit","Path Number","Frame Number","Acquisition Date","Processing Date","Processing Level","Start Time","End Time","Center Lat","Center Lon","Near Start Lat","Near Start Lon","Far Start Lat","Far Start Lon","Near End Lat","Near End Lon","Far End Lat","Far End Lon","Faraday Rotation","Ascending or Descending\?","URL","Size \(MB\)","Off Nadir Angle",/, '3: get expected results for specific granule list, test explicit CSV column format structure');
 
   $mech->post($surn, { granule_list=>',R1_65186_ST3_F291, E1_00404_STD_F161,,', format=>'list'});
   is($mech->status(), Apache2::Const::HTTP_OK, '3: get HTTP 200 for successful search');

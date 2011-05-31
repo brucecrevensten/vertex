@@ -146,7 +146,7 @@ sub end {
 
 Validates bbox as a comma-separated list of w, s, e, n lat/lons
 
-Throws: InvalidParameter if the provided bbox 
+Throws: InvalidParameter if the provided bbox is invalid
 
 =cut
 

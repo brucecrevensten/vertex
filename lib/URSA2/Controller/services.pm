@@ -65,6 +65,11 @@ sub search :Path {
       $t->{results} = $c->model('Search')->getResultsByGranuleList($r);
     } else {
       # search based on spatial + other criteria
+
+      if( !defined($r->bbox) && ( !$r->frame && !$r->path)) {
+        MissingParameter->throw();
+      }
+
       $c->stats->profile('starting search...');
       $t->{results} = $c->model('Search')->getResults( $r );
       $c->stats->profile('...finished search.');
