@@ -72,6 +72,7 @@ mkdir -p ${RPM_BUILD_ROOT}/%{inst_dir}
 mkdir -p ${RPM_BUILD_ROOT}/%{inst_dir}/root
 
 mv ursa2.conf.example ${RPM_BUILD_ROOT}/%{inst_dir}/ursa2.conf
+mv Log4perl.conf.example ${RPM_BUILD_ROOT}/%{inst_dir}/Log4perl.conf
 mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/conf.d
 mv etc/httpd/conf.d/api.daac.asf.alaska.edu.conf ${RPM_BUILD_ROOT}/etc/httpd/conf.d
 rm -rf etc/
@@ -82,6 +83,7 @@ make test
 make install
 
 ln -s %{inst_dir}/ursa2.conf ${RPM_BUILD_ROOT}%{inst_dir}/lib/perl5/URSA2/ursa2.conf
+ln -s %{inst_dir}/Log4perl.conf ${RPM_BUILD_ROOT}%{inst_dir}/lib/perl5/URSA2/Log4perl.conf
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -91,6 +93,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %defattr(0644,root,root,2755)
 %attr(0755,root,root) %{inst_dir}/bin/ursa2_fastcgi.pl
 %config(noreplace) %attr(0644,root,root) %{inst_dir}/ursa2.conf
+%config(noreplace) %attr(0644,root,root) %{inst_dir}/Log4perl.conf
 %config(noreplace) %attr(0644,root,root) /etc/httpd/conf.d/api.daac.asf.alaska.edu.conf
 %{inst_dir}/root
 %{inst_dir}/lib
