@@ -93,7 +93,6 @@ rm -rf ${RPM_BUILD_ROOT}
 %defattr(0644,root,root,2755)
 %attr(0755,root,root) %{inst_dir}/bin/ursa2_fastcgi.pl
 %config(noreplace) %attr(0644,root,root) %{inst_dir}/ursa2.conf
-%config(noreplace) %attr(0644,root,root) %{inst_dir}/Log4perl.conf
 %config(noreplace) %attr(0644,root,root) /etc/httpd/conf.d/api.daac.asf.alaska.edu.conf
 %{inst_dir}/root
 %{inst_dir}/lib
