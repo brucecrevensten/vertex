@@ -336,6 +336,9 @@ var SearchResults = Backbone.Collection.extend(
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
+          for ( var i in data.results.rows ) {
+            data.results.rows[i].id = data.results.rows[i].ID;
+          }
           this.refresh( this.data.results.rows );
           $('#results_wrapper').unmask();
         },
@@ -384,13 +387,41 @@ var SearchResultsView = Backbone.View.extend(
         { "sTitle": "Platform" },
         { "sTitle": "Orbit" },
         { "sTitle": "Frame" },
-        { "sTitle": "Center Lat" },
-        { "sTitle": "Center Lon" },
-        { "sTitle": "Acquisition Date" }
-        ]
+        { "sTitle": "Center Latitude/Longitude",
+          "fnRender": function(o) {
+            return o.aData[5]+', '+o.aData[6];
+          }
+        },
+        { "sTitle": "Acquisition Date",
+          "fnRender": function(o) { 
+            return o.aData[7];
+          }
+        },
+        { "bVisible" : false }
+        ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+          gid = aData[0]+"_"+aData[1];
+
+          // TODO: ensure that this depenency on a global object is mediated properly (probably through a SearchApp.getSearchResults() call).
+          v = new DataProductView( { model: sr.get(gid) } );
+          console.log(v);
+          $(nRow).bind( "click", { id: aData[0], view: v }, function(e) {
+              $("#product_profile").html( e.data.view.render().el );
+              $("#product_profile").dialog(
+                {
+                  modal: true,
+                  width: 600,
+                  draggable: false,
+                  resizable: false,
+                  title: e.data.id
+                }
+              );
+          });
+          return nRow;
+        }
       }
       );
-    } else {
+        } else {
       this.dataTable.fnClearTable();
       this.dataTable.fnAddData(preparedData);
     }

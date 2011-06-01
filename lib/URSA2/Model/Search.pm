@@ -73,7 +73,8 @@ sub getSelectXml {
     granuleDesc,
     granuleType,
     fileName,
-    shape
+    shape,
+    granuleName || '_' || processingType AS id
   )).getStringVal() FROM
     data_product
   WHERE

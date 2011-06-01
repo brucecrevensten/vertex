@@ -4,9 +4,24 @@ var DataProductView = Backbone.View.extend(
   {
     render: function() {
       $(this.el).html(
-        _.template('<span><%= name %></span>', this.model.toJSON())
+        _.template('\
+<img src="http://datapool.daac.asf.alaska.edu/BROWSE512/A3/ALPSRP247560270_512.jpg" />\
+<ul>\
+<a style="float: right;" href="<%= URL %>">Download</a>\
+<li>Processing type: <%= PROCESSINGTYPE %></li>\
+<li>Beam mode: <%= BEAMMODEDESC %></li>\
+<li>Frame: <%= FRAMENUMBER %></li>\
+<li>Path/Orbit: <%= PATHNUMBER %> / <%= ORBIT %></li>\
+<li>Start time: <%= STARTTIME %></li>\
+<li>End time: <%= ENDTIME %></li>\
+<li>Faraday rotation: <%= FARADAYROTATION %></li>\
+<li>Ascending/Descending: <%= ASCENDINGDESCENDING %></li>\
+<li>Off Nadir Angle: <%= OFFNADIRANGLE %></li>\
+</ul>\
+        ', this.model.toJSON())
       );
-      return this.el;
+      $(this.el).find('a').button();
+      return this;
     }
   }
 );

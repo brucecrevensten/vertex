@@ -5,10 +5,10 @@
 <title>Alaska Satellite Facility Data Portal</title>
 
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/reset.css') %]" />
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/portal.css') %]" />
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/demo_table_jui.css') %]" />
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/ui-darkness/jquery-ui-1.8.13.custom.css') %]" />
 <link rel="stylesheet" type="text/css" href="../static/css/jquery.loadmask.css" />
+<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/portal.css') %]" />
 
 
 <!-- enable html5 element formatting with older IE versions -->
@@ -43,12 +43,19 @@
 </header>
 
 <div id="contents">
+
+<div id="product_profile" title="some more title action">
+<h3>some content here</h3>
+<p>here is a bunch more text about a granule<p>
+</div>
+
 <div id="leftColumn">
 <div id="filters"></div>
 </div>
 <div id="rightColumn">
 <table id="results" width="100%"></table>
 
+</div>
 </div>
 
 <script>

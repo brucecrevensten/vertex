@@ -43,3 +43,30 @@ margin: 0 0 1em 0;
 label.hover {
   cursor: pointer;
 }
+
+tbody td {
+  padding: 1ex;
+}
+
+tbody tr:hover {
+  background-color: #FFF88E !important; 
+}
+
+/* this rule is specific to highlighting the DataTable active sorting column */
+tbody tr:hover td.sorting_1 { 
+  background-color: #FFF940 !important;
+}
+
+tbody td:nth-child(1) {
+  cursor: pointer;
+}
+
+.even {
+  background-color: #f2f2f2;
+}
+
+#product_profile img {
+  display: block;
+  margin: 1em auto;
+}
+
