@@ -72,7 +72,7 @@ mkdir -p ${RPM_BUILD_ROOT}/%{inst_dir}
 mkdir -p ${RPM_BUILD_ROOT}/%{inst_dir}/root
 
 cp ursa2.conf.example ${RPM_BUILD_ROOT}/%{inst_dir}/ursa2.conf
-cp Log4perl.conf.example ${RPM_BUILD_ROOT}/%{inst_dir}/Log4perl.conf
+mv Log4perl.conf.example Log4perl.conf
 
 mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/conf.d
 mv etc/httpd/conf.d/api.daac.asf.alaska.edu.conf ${RPM_BUILD_ROOT}/etc/httpd/conf.d
@@ -84,7 +84,6 @@ make test
 make install
 
 ln -s %{inst_dir}/ursa2.conf ${RPM_BUILD_ROOT}%{inst_dir}/lib/perl5/URSA2/ursa2.conf
-ln -s %{inst_dir}/Log4perl.conf ${RPM_BUILD_ROOT}%{inst_dir}/lib/perl5/URSA2/Log4perl.conf
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
