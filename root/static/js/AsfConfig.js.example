@@ -1,0 +1,3 @@
+var AsfDataportalConfig = {
+  apiUrl : "http://testapi.daac.asf.alaska.edu/services/search/json"
+};

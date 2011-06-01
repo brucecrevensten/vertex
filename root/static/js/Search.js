@@ -183,7 +183,7 @@ var PlatformFilter = Backbone.Model.extend(
   {
     name: "ProcessingFilter",
     defaults: {
-      processing: ["E1","E2","J1","J2","A3","R1"]
+      platform: ["E1","E2","J1","J2","A3","R1"]
     },
     getWidget: function() {
       return new PlatformWidget({model:this});
@@ -301,7 +301,7 @@ var ProcessingWidget = BaseWidget.extend(
 
 var SearchResults = Backbone.Collection.extend(
   {
-    url:"http://testapi.daac.asf.alaska.edu/services/search/json",
+    url: AsfDataportalConfig.apiUrl,
     model:DataProduct,
     error:"",
     setParameters: function(sp) {
