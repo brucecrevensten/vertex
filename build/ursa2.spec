@@ -71,10 +71,8 @@ echo build root: ${RPM_BUILD_ROOT}
 mkdir -p ${RPM_BUILD_ROOT}/%{inst_dir}
 mkdir -p ${RPM_BUILD_ROOT}/%{inst_dir}/root
 
-mv ursa2.conf.example ursa2.conf
-mv Log4perl.conf.example Log4perl.conf
-cp ursa2.conf ${RPM_BUILD_ROOT}/%{inst_dir}/ursa2.conf
-cp Log4perl.conf ${RPM_BUILD_ROOT}/%{inst_dir}/Log4perl.conf
+cp ursa2.conf.example ${RPM_BUILD_ROOT}/%{inst_dir}/ursa2.conf
+cp Log4perl.conf.example ${RPM_BUILD_ROOT}/%{inst_dir}/Log4perl.conf
 
 mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/conf.d
 mv etc/httpd/conf.d/api.daac.asf.alaska.edu.conf ${RPM_BUILD_ROOT}/etc/httpd/conf.d
