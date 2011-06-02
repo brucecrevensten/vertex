@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset=utf-8" />
+<meta charset="utf-8" />
 <title>Alaska Satellite Facility Data Portal</title>
 
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/reset.css') %]" />
@@ -51,7 +51,7 @@
 <div id="filters"></div>
 </div>
 <div id="rightColumn">
-<table id="results" width="100%"></table>
+<table id="results" style="width: 100%"></table>
 
 </div>
 </div>
@@ -128,7 +128,7 @@ Email: uso@asf.alaska.edu<br/>
 
 </div>
 </footer>
-</wrapper>
+</div>
 
 [% IF c.config.include_google_analytics == 'true' %]
 <!-- Begin Google Analytics Code -->
