@@ -67,7 +67,7 @@ sub search :Path {
       # search based on spatial + other criteria
 
       if( (!defined($r->polygon) && !defined($r->bbox)) && ( !$r->frame && !$r->path)) {
-        MissingParameter->throw();
+        MissingParameter->throw( parameter=>'Spatial constraint (bbox or polygon)' );
       }
 
       $c->stats->profile('starting search...');

@@ -9,26 +9,26 @@ var SearchParameters = Backbone.Model.extend(
         new PlatformFilter(),
         new DateFilter()
       ];
+  
+      // initialize default values from the widgets
+      for( var i in this.filters ) {
+        this.set( this.filters[i].toJSON() );
+      }
 
-    self = this;
-    for( var i in this.filters ) {
-      this.filters[i].bind( "change", function(filter) {
-        self.trigger("change:filter", filter);
+      // bind change events in filters to update this object's attributes
+      self = this;
+      for( var i in this.filters ) {
+        this.filters[i].bind( "change", function(filter) {
+          self.trigger("change:filter", filter);
+        });
+      }
+      this.bind("change:filter", function(filter) {
+        this.set( filter.toJSON() );
       });
-    }
 
-    this.bind("change:filter", function(filter) {
-      this.set( filter.toJSON() );
-    });
-
-      },
+    },
       defaults: {
-      format:"jsonp",
-      bbox:"-135,64,-133,66",
-      start:"2009-06-01",
-      end:"2009-06-30",
-      processing:["L0","L1","L1.0","L1.1","L1.5"],
-      platform:["E2","R1","E1","J1","A3"]
+        format:"jsonp"
     },
   }
 );
@@ -190,7 +190,7 @@ var PlatformFilter = Backbone.Model.extend(
   {
     name: "ProcessingFilter",
     defaults: {
-      platform: ["E1","E2","J1","J2","A3","R1"]
+      platform: ["E1","E2","J1","A3","R1"]
     },
     getWidget: function() {
       return new PlatformWidget({model:this});
@@ -237,7 +237,7 @@ var PlatformWidget = BaseWidget.extend(
           value: key,
           ifChecked: ( _.indexOf(checked, key) > -1 ) ? 'checked="checked"' : ''
          };
-         f = f + _.template('<li><label for="filter_platform_<%= name %>"><input type="checkbox" id="filter_platform_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>>&nbsp;<%= name %></label></li>', rowData);
+         f = f + _.template('<li><label for="filter_platform_<%= name %>"><input type="checkbox" id="filter_platform_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>/>&nbsp;<%= name %></label></li>', rowData);
       }
       $(this.el).html( '<ul>'+f+'</ul>' );
       return this;

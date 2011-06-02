@@ -308,7 +308,7 @@ sub format {
     return $format;
   } 
 
-  InvalidParameter->throw("Unknown format specified ($format)");
+  InvalidParameter->throw( parameter=>"format", message=>"Unknown format specified ($format)");
   
 }
 

@@ -16,6 +16,9 @@ sub dispatch {
   $c->log->debug('caught HttpException, HTTP'.$self->responseCode.': '.$self->description);
   $c->response->status($self->responseCode);
   $c->response->headers->header('Exception' => $self->description);
+  $c->response->headers->header('Message' => $self->message);
+  $c->response->headers->header('Parameter' => $self->parameter);
+  $c->response->headers->header('Value' => $self->value);
   $c->stash( 
     message => $self->description,
     template => 'exception.tt',
