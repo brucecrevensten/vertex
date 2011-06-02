@@ -66,6 +66,8 @@ sub getSelectXml {
     faradayRotation,
     ascendingDescending,
     url,
+    (select url from data_product where granulename = dp.granulename
+     and processingtype = 'THUMBNAIL') thumbnail,
     bytes,
     ROUND( bytes/1024/1024, 2 ) AS fileSize,
     offNadirAngle,
@@ -76,7 +78,7 @@ sub getSelectXml {
  --   shape,
     granuleName || '_' || processingType AS id
   )).getStringVal() FROM
-    data_product
+    data_product dp
   WHERE
   );
 }
