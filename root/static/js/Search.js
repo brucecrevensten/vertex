@@ -343,8 +343,8 @@ var SearchResults = Backbone.Collection.extend(
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
-          for ( var i in data.results.rows ) {
-            data.results.rows[i].id = data.results.rows[i].ID;
+          for ( var i in data.results.rows.ROW ) {
+            data.results.rows.ROW[i].id = data.results.rows.ROW[i].ID;
           }
           this.refresh( this.data.results.rows );
           $('#results_wrapper').unmask();
@@ -379,8 +379,7 @@ var SearchResultsView = Backbone.View.extend(
 
   render: function() {
 
-    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE"]);
-
+    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows.ROW, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE"]);
     if ( false == this.hasRendered ) {
       this.hasRendered = true;
       this.dataTable = $(this.el).dataTable(
