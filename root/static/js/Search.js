@@ -18,12 +18,7 @@ var SearchParameters = Backbone.Model.extend(
     }
 
     this.bind("change:filter", function(filter) {
-//      console.log('a change:filter event was noticed!');
-//     console.log('filter name: '+filter.name);
-//      console.log(filter);
-//      console.log(this.name);
       this.set( filter.toJSON() );
-//      console.log(this.toJSON() );
     });
 
       },
@@ -59,7 +54,6 @@ var SearchParametersView = Backbone.View.extend(
   },
 
   render: function() {
-    console.log('rendering SearchParametersView');
     for ( var i in this.widgets ) {
       $(this.el).append( '<h3><a href="#'+this.widgets[i].model.name+'">'+this.widgets[i].title+'</a></h3>' );
       $(this.el).append( this.widgets[i].render().el );
@@ -103,7 +97,6 @@ var GeographicWidget = BaseWidget.extend(
       var target = $(evt.currentTarget),
       data = {};
       data[target.attr('name')] = target.attr('value');
-      console.log("Set "+target.attr('name')+"="+target.attr('value'));
       this.model.set(data);
   },
   render: function() {
@@ -142,7 +135,6 @@ var DateWidget = BaseWidget.extend(
       var target = $(evt.currentTarget),
       data = {};
       data[target.attr('name')] = target.attr('value');
-      console.log("Set "+target.attr('name')+"="+target.attr('value'));
       this.model.set(data);
   },
   render: function() {
@@ -172,9 +164,6 @@ var DateWidget = BaseWidget.extend(
     end_date = $(this.el).find('#filter_end').datepicker().val();
     $(this.el).find('#filter_end').datepicker("setDate", end_date);
 
-    console.log("start_date: " + start_date);
-    console.log("end_date: " + end_date);
-    console.log( $(this.el).find("#filter_start"));
     return this;
   }
 });
@@ -346,7 +335,6 @@ var SearchResults = Backbone.Collection.extend(
           //todo: fix this to be meaningful
           $("#results_wrapper").unmask();
           $("#errorDiv").html("<p>There was an error: " + textStatus + " " + errorThrown).css("background-color","red").show();
-          console.log(JSON.stringify(jqXHR) + ' ' + textStatus + ' ' +errorThrown); 
         }
       }).results;
 
@@ -404,7 +392,6 @@ var SearchResultsView = Backbone.View.extend(
 
           // TODO: ensure that this depenency on a global object is mediated properly (probably through a SearchApp.getSearchResults() call).
           v = new DataProductView( { model: sr.get(gid) } );
-          console.log(v);
           $(nRow).bind( "click", { id: aData[0], view: v }, function(e) {
               $("#product_profile").html( e.data.view.render().el );
               $("#product_profile").dialog(
