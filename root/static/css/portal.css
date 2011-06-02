@@ -1,33 +1,89 @@
-body, * {
-  font:15px arial,sans-serif;
+body {
+  background: url(../images/satellitebackground.png);
 }
+
+a {
+color: #888;
+text-decoration: none;
+}
+
+a:hover {
+color: black;
+text-decoration: underline;
+}
+
+#wrapper {
+  font:12pt arial,sans-serif;
+  background: white;
+  border: 1px solid #333;
+  padding: 1.5em;
+  margin: 2em;
+}
+
+header h1 {
+  height: 27px;
+  width: 232px;
+  background: url(../images/asf-logo.png);
+}
+
+header h1 span {
+  display: none;
+}
+
 header {
-  border: 1px solid #aaa;
   height: 3em;
 }
 
 #SearchApp {
   margin: 1em 0;
   min-height: 10em;
-  border: 1px solid #aaa;
   position: relative;
 }
 
 #leftColumn {
-  border: 1px solid #aaa;
   width: 20%;
   float: left;
 }
 
 #rightColumn {
   float: right;
-  border: 1px solid #aaa;
   width: 78%;
 }
 
 footer {
-  border: 1px solid #aaa;
+  font-color: #878787 !important;
+  font-size: smaller;
   clear: both;
+  margin: 0;
+  border: 1px solid #ccc;
+  height: 12em;
+  padding: 2em 1em 1em;
+  background: #efefef;
+}
+
+footer h2 { 
+  font-color: #878787 !important;
+  font-weight: bold;
+}
+
+footer div#centerer {
+  width: 1000px;
+  margin: 0 auto;
+  background: #efefef url(../images/asflogo-footer.png) no-repeat top right;
+}
+
+nav {
+display: none;
+}
+
+footer p {
+line-height: 110%;
+}
+
+footer div div {
+margin: 0;
+width: 23%;
+float: left;
 }
 
 #search_map {
