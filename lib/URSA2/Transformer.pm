@@ -43,12 +43,12 @@ sub new {
       fileExtension => 'kmz'
     },
     json => {
-      xsl => 'xml2json.xslt',
+      xsl => 'xml2json.xsl',
       contentType => 'application/json; charset=utf-8',
       fileExtension => 'json'
     },
     jsonp => {
-      xsl => 'xml2json.xslt',
+      xsl => 'xml2json.xsl',
       contentType => 'text/javascript; charset=utf-8',
       fileExtension => 'jsonp'
     }
