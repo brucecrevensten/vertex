@@ -86,8 +86,8 @@ width: 23%;
 float: left;
 }
 
-#search_map {
-  width: 600px;
+#searchMap {
+  width: 100%;
   height: 400px;
 }
 

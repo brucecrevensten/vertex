@@ -97,14 +97,32 @@ var GeographicWidget = BaseWidget.extend(
       var target = $(evt.currentTarget),
       data = {};
       data[target.attr('name')] = target.attr('value');
+      var bbox = target.attr('value').split(/,/);
+      this.mapOverlay.setBounds(new google.maps.LatLngBounds(
+        new google.maps.LatLng(Math.min(bbox[1], bbox[3]), Math.min(bbox[0], bbox[2])),
+        new google.maps.LatLng(Math.max(bbox[1], bbox[3]), Math.max(bbox[0], bbox[2]))
+      ));
       this.model.set(data);
   },
   render: function() {
     $(this.el).html(
       _.template('<div><label for="filter_bbox">BBOX: <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>"<label></div>', this.model.toJSON())
     );
+    initMap('searchMap'); //it's safe to call this willy-nilly just in case the map isn't up yet
+    this.mapOverlay.setMap(searchMap);
     return this;
-  }
+  },
+  mapOverlay: new google.maps.Rectangle({
+    bounds: new google.maps.LatLngBounds(
+      new google.maps.LatLng(64, -135),
+      new google.maps.LatLng(66, -133)
+    ),
+    strokeColor: '#0000FF',
+    strokeOpacity: 0.8,
+    strokeWeight: 1,
+    fillColor: '#0066CC',
+    fillOpacity: 0.5
+  }),
 }
 );
 

@@ -1,6 +1,8 @@
 var searchMap;
 
 function initMap(mapContainer) {
+  if(searchMap)
+    return;
   var myOptions = {
     zoom: 1,
     center: new google.maps.LatLng(30, 0),
@@ -8,14 +10,15 @@ function initMap(mapContainer) {
   };
   searchMap = new google.maps.Map(document.getElementById(mapContainer),
     {
-      zoom: 1,
-      center: new google.maps.LatLng(30, 0),
+      zoom: 2,
+      center: new google.maps.LatLng(40, 0),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(browserGeolocationSuccess);
-  }
+  //it's neat, but it serves no practical purpose
+  //if(navigator.geolocation){
+  //  navigator.geolocation.getCurrentPosition(browserGeolocationSuccess);
+  //}
 }
 
 function browserGeolocationSuccess(position) {
