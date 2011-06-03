@@ -7,7 +7,8 @@ var SearchParameters = Backbone.Model.extend(
         new GeographicFilter(),
         new ProcessingFilter(),
         new PlatformFilter(),
-        new DateFilter()
+        new DateFilter(),
+        new PathFrameFilter()
       ];
   
       // initialize default values from the widgets
@@ -72,6 +73,42 @@ var BaseWidget = Backbone.View.extend(
   tagName: "div"
 }
 );
+
+var PathFrameFilter = Backbone.Model.extend({
+  name: "PathFrameFilter",
+  defaults: {
+    path:" ",
+    frame:" "
+  },
+  getWidget: function(){
+    return new PathFrameWidget({model:this});
+  }
+}
+);
+
+var PathFrameWidget = BaseWidget.extend({
+  title: "Path/Frame",
+  titleId: "path_frame_widget_title",
+  events: {
+    "change input" : "changed"
+  },
+  changed: function(evt){
+    var target = $(evt.currentTarget),
+    data = {};
+    data[target.attr('name')] = target.attr('value');
+    this.model.set(data);
+  },
+  render: function(){
+    $(this.el).html(
+      _.template('<div>\
+      <label for="filter_path">PATH: <input type="text" id="filter_path" name="path" value="<%= path %>"></label>\
+      <label for="filter_frame">FRAME: <input type="text" id="filter_frame" name="frame" value="<%= frame %>"></label>\
+      </div>', this.model.toJSON())
+    );
+    return this;
+  }
+
+});
 
 var GeographicFilter = Backbone.Model.extend(
 {
@@ -319,13 +356,13 @@ var SearchResults = Backbone.Collection.extend(
     },
     parseObjectsToArrays: function(d, c) {
       var a = [];
-      for ( var i=0, iLen=d.length; i < iLen; i++ ) {
-        var inner = [];
-        for ( var j=0, jLen=c.length; j < jLen; j++ ) {
-          inner.push( d[i][c[j]] );
-        }
-        a.push( inner);
-      }
+      //for ( var i=0, iLen=d.length; i < iLen; i++ ) {
+      //  var inner = [];
+      //  for ( var j=0, jLen=c.length; j < jLen; j++ ) {
+      //    inner.push( d[i][c[j]] );
+      //  }
+      //  a.push( inner);
+      //}
       return a;
     },
     fetchSearchResults: function(sp) {
