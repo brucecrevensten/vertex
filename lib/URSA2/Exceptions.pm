@@ -43,6 +43,7 @@ use Exception::Class (
   {
     description => 'No results found for the specified criteria.',
     isa => 'URSA2::Exception::Http::DbNoResults',
+    fields => [ 'parameter', 'value' ],
   },
 
   'UnknownParameter' =>
