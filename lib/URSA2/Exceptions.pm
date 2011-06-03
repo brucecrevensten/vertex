@@ -29,6 +29,7 @@ use Exception::Class (
   {
     description => 'An internal server error occurred.',
     isa => 'URSA2::Exception::Http::InternalServerError',
+    fields => ['parameter', 'value']
   },
 
   'DbException' => 
@@ -61,7 +62,7 @@ use Exception::Class (
   {
     description => 'A required parameter was missing',
     isa => 'URSA2::Exception::Http::MissingParameter',
-    fields => [ 'parameter', 'message' ],
+    fields => [ 'parameter', 'message', 'value' ],
   },
 
   'TransformerError' => 
@@ -75,24 +76,28 @@ use Exception::Class (
   {
     description => 'The authentication service requires POST',
     isa => 'URSA2::Exception::Http::BadMethod',
+    fields => [ 'parameter', 'value' ],
   },
 
   'AuthorizationFailed' =>
   {
     description => 'Authorization failed.',
     isa => 'URSA2::Exception::Http::AuthorizationFailed',
+    fields => [ 'parameter', 'value' ],
   },
 
   'SessionException' =>
   {
     description => 'Error creating user session.',
     isa => 'URSA2::Exception::Http::SessionException',
+    fields => [ 'parameter', 'value' ],
   },
 
   'CookieException' =>
   {
     description => 'Error creating cookie.',
     isa => 'URSA2::Exception::Http::CookieException',
+    fields => [ 'parameter', 'value' ],
   }
 
 );
