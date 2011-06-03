@@ -8,7 +8,8 @@ var SearchParameters = Backbone.Model.extend(
         new ProcessingFilter(),
         new PlatformFilter(),
         new DateFilter(),
-        new PathFrameFilter()
+        new PathFrameFilter(),
+        new OffNadirFilter()
       ];
   
       // initialize default values from the widgets
@@ -74,6 +75,40 @@ var BaseWidget = Backbone.View.extend(
 }
 );
 
+var OffNadirFilter = Backbone.Model.extend(
+{
+  name: "OffNadirFilter",
+  defaults: {
+    offnadir: 0
+  },
+  getWidget: function() {
+    return new OffNadirWidget({model:this});
+  }
+}
+);
+
+var OffNadirWidget = BaseWidget.extend(
+{
+  title: "Off Nadir",
+  titleId: "offnadir_widget_title",
+  events : {
+    "change input" : "changed"
+  },
+  changed: function(evt) {
+    var target = $(evt.currentTarget),
+    data = {};
+    data[target.attr('name')] = target.attr('value');
+    this.model.set(data);
+  },
+  render: function() {
+    $(this.el).html(
+      _.template('<label for="filter_offnadir">Off nadir angle: <input type="text" id="filter_offnadir" name="offnadir" value="<%= offnadir %>"</label>', this.model.toJSON())
+    );
+    return this;
+  }
+}
+);
+
 var PathFrameFilter = Backbone.Model.extend({
   name: "PathFrameFilter",
   defaults: {
@@ -114,7 +149,7 @@ var GeographicFilter = Backbone.Model.extend(
 {
   name: "GeographicFilter",
   defaults: {
-    bbox:"-135,64,-133,66",
+    bbox:"-135,64,-133,66"
   },
   getWidget: function() {
     return new GeographicWidget({model:this});
@@ -126,7 +161,6 @@ var GeographicWidget = BaseWidget.extend(
 {
   title: "Geographic region",
   titleId: "geographic_widget_title",
-  tagName: "div",
   events : {
     "change input" : "changed"
   },
@@ -143,7 +177,7 @@ var GeographicWidget = BaseWidget.extend(
   },
   render: function() {
     $(this.el).html(
-      _.template('<div><label for="filter_bbox">BBOX: <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>"<label></div>', this.model.toJSON())
+      _.template('<div><label for="filter_bbox">BBOX: <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>"</label></div>', this.model.toJSON())
     );
     initMap('searchMap'); //it's safe to call this willy-nilly just in case the map isn't up yet
     this.mapOverlay.setMap(searchMap);
@@ -356,13 +390,13 @@ var SearchResults = Backbone.Collection.extend(
     },
     parseObjectsToArrays: function(d, c) {
       var a = [];
-      //for ( var i=0, iLen=d.length; i < iLen; i++ ) {
-      //  var inner = [];
-      //  for ( var j=0, jLen=c.length; j < jLen; j++ ) {
-      //    inner.push( d[i][c[j]] );
-      //  }
-      //  a.push( inner);
-      //}
+      for ( var i=0, iLen=d.length; i < iLen; i++ ) {
+        var inner = [];
+        for ( var j=0, jLen=c.length; j < jLen; j++ ) {
+          inner.push( d[i][c[j]] );
+        }
+        a.push( inner);
+      }
       return a;
     },
     fetchSearchResults: function(sp) {

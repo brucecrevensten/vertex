@@ -100,24 +100,24 @@ label.hover {
   cursor: pointer;
 }
 
-tbody td {
+#results tbody td {
   padding: 1ex;
 }
 
-tbody tr:hover {
+#results tbody tr:hover {
   background-color: #FFF88E !important; 
 }
 
 /* this rule is specific to highlighting the DataTable active sorting column */
-tbody tr:hover td.sorting_1 { 
+#results tbody tr:hover td.sorting_1 { 
   background-color: #FFF940 !important;
 }
 
-tbody td:nth-child(1) {
+#results tbody td:nth-child(1) {
   cursor: pointer;
 }
 
-.even {
+#results .even {
   background-color: #f2f2f2;
 }
 
