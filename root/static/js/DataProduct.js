@@ -5,7 +5,7 @@ var DataProductView = Backbone.View.extend(
     render: function() {
       $(this.el).html(
         _.template('\
-<img src="http://datapool.daac.asf.alaska.edu/BROWSE512/A3/ALPSRP247560270_512.jpg" />\
+<img src="<%= BROWSE %>" />\
 <ul>\
 <a style="float: right;" href="<%= URL %>">Download</a>\
 <li>Processing type: <%= PROCESSINGTYPE %></li>\

@@ -41,7 +41,7 @@ $(function() {
 
     // change when the form changes
     this.searchParameters.bind("change",function() {
-      sr.fetchSearchResults(this.searchParameters); // initial population
+      SearchApp.searchResults.fetchSearchResults(SearchApp.searchParameters); // initial population
     });
 
     this.searchResults.fetchSearchResults(this.searchParameters); // initial population
