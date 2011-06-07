@@ -57,33 +57,6 @@
 </div>
 </div>
 
-<script>
-
-  // init search behaviors
-  sp = new SearchParameters();
-  spv = new SearchParametersView( { model: sp, el: $("#filters") });
-  spv.render();
-
-  var sr = new SearchResults();
-  srv = new SearchResultsView(
-    {
-      collection: sr,
-      el: $("#results")
-    }
-  );
-
-  // change when the form changes
-  sp.bind("change",function() {
-    sr.fetchSearchResults(sp); // initial population
-  });
-
-  sr.fetchSearchResults(sp); // initial population
-
-  //fire up the map
-  initMap('searchMap');
-
-</script>
-
 <footer>
 <div id="centerer">
 <div>

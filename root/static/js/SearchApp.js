@@ -11,11 +11,44 @@ $(function() {
     events: {
       //bind any events here...a good example would be for triggering requestResults when the filters change
     },
+
+    // The SearchAppView scopes and manages the objects noted below,
+    // defined in the initialize() function.
+    searchResults: null,
+    searchView: null,
+    searchParameters: null,
+    searchParametersView: null,
     
     initialize: function() {
-      /*
-      initMap('SearchMap');
-      */
+
+    // init search behaviors
+    this.searchParameters = new SearchParameters();
+    this.searchParametersView = new SearchParametersView( 
+      { 
+        model: this.searchParameters, 
+        el: $("#filters") 
+      }
+    );
+    this.searchParametersView.render();
+
+    this.searchResults = new SearchResults();
+    this.searchResultsView = new SearchResultsView(
+      {
+        collection: this.searchResults,
+        el: $("#results")
+      }
+    );
+
+    // change when the form changes
+    this.searchParameters.bind("change",function() {
+      sr.fetchSearchResults(this.searchParameters); // initial population
+    });
+
+    this.searchResults.fetchSearchResults(this.searchParameters); // initial population
+
+    //fire up the map
+    initMap('searchMap');
+
     },
     
     render: function () {

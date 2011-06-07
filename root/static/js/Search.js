@@ -479,7 +479,7 @@ var SearchResultsView = Backbone.View.extend(
           gid = aData[0]+"_"+aData[1];
 
           // TODO: ensure that this depenency on a global object is mediated properly (probably through a SearchApp.getSearchResults() call).
-          v = new DataProductView( { model: sr.get(gid) } );
+          v = new DataProductView( { model: SearchApp.searchResults.get(gid) } );
           $(nRow).bind( "click", { id: aData[0], view: v }, function(e) {
               $("#product_profile").html( e.data.view.render().el );
               $("#product_profile").dialog(
