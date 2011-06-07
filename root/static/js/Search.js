@@ -417,7 +417,7 @@ var SearchResults = Backbone.Collection.extend(
           for ( var i in data.results.rows.ROW ) {
             data.results.rows.ROW[i].id = data.results.rows.ROW[i].ID;
           }
-          this.refresh( this.data.results.rows );
+          this.refresh( this.data.results.rows.ROW );
           $('#results_wrapper').unmask();
         },
         error: function(jqXHR, textStatus, errorThrown) {
