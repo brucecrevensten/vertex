@@ -272,7 +272,7 @@ var PlatformFilter = Backbone.Model.extend(
 
 var PlatformWidget = BaseWidget.extend(
   {
-    title: "Platforms &amp; products",
+    title: "Platforms",
     titleId: "platform_widget_title",
     tagName: "div",
     id: "filter_platform",
