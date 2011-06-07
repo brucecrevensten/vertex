@@ -113,7 +113,7 @@ label.hover {
   background-color: #FFF940 !important;
 }
 
-#results tbody td:nth-child(1) {
+#results tbody tr {
   cursor: pointer;
 }
 
