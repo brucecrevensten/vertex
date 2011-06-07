@@ -488,7 +488,8 @@ var SearchResultsView = Backbone.View.extend(
                   width: 600,
                   draggable: false,
                   resizable: false,
-                  title: e.data.id
+                  title: e.data.id,
+                  position: "center"
                 }
               );
           });
