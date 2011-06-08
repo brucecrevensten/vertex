@@ -45,13 +45,13 @@
         <stringProp name="username">asfadm</stringProp>
       </JDBCDataSource>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Variable Geospatial BBox" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Alaska BBox 1x1" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1297450605000</longProp>
         <longProp name="ThreadGroup.end_time">1297450605000</longProp>
@@ -65,7 +65,7 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
-        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="HTTP BBox 5x5" enabled="true">
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="AK API BBox 1x1" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="bbox" elementType="HTTPArgument">
@@ -123,130 +123,38 @@
         <hashTree>
           <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="west_deg" elementType="Argument">
-                <stringProp name="Argument.name">west_deg</stringProp>
-                <stringProp name="Argument.value">${__Random(-160,-140,west_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="east_deg" elementType="Argument">
-                <stringProp name="Argument.name">east_deg</stringProp>
-                <stringProp name="Argument.value">${__intSum(${west_deg},5,east_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="south_deg" elementType="Argument">
-                <stringProp name="Argument.name">south_deg</stringProp>
-                <stringProp name="Argument.value">${__Random(60,70, south_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="north_deg" elementType="Argument">
-                <stringProp name="Argument.name">north_deg</stringProp>
-                <stringProp name="Argument.value">${__intSum(${south_deg},5,north_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="west_min" elementType="Argument">
-                <stringProp name="Argument.name">west_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,west_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="east_min" elementType="Argument">
-                <stringProp name="Argument.name">east_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,east_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="south_min" elementType="Argument">
-                <stringProp name="Argument.name">south_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,south_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="north_min" elementType="Argument">
-                <stringProp name="Argument.name">north_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99, north_min)}</stringProp>
+              <elementProp name="west" elementType="Argument">
+                <stringProp name="Argument.name">west</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,west)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="east" elementType="Argument">
                 <stringProp name="Argument.name">east</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${east_deg}&apos; + &apos;.&apos; + &apos;${east_min}&apos;, east)}</stringProp>
+                <stringProp name="Argument.value">${__intSum(${west},1,east)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="south" elementType="Argument">
                 <stringProp name="Argument.name">south</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${south_deg}&apos; + &apos;.&apos; + &apos;${south_min}&apos;, south)}</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70, south)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="north" elementType="Argument">
                 <stringProp name="Argument.name">north</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${north_deg}&apos; + &apos;.&apos; + &apos;${north_min}&apos;, north)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="west" elementType="Argument">
-                <stringProp name="Argument.name">west</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${west_deg}&apos; + &apos;.&apos; + &apos;${west_min}&apos;, west)}</stringProp>
+                <stringProp name="Argument.value">${__intSum(${south},1,north)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </Arguments>
           <hashTree/>
         </hashTree>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="BBox" enabled="false">
-          <stringProp name="dataSource"></stringProp>
-          <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
-  XMLForest(
-    granuleName,
-    productName,
-    platform,
-    sensor,
-    beamModeType,
-    TRIM(beamModeDesc) beamModeDesc,
-    orbit,
-    pathNumber,
-    frameNumber,
-    TO_CHAR(acquisitionDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS acquisitionDate,
-    TO_CHAR(processingDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS processingDate,
-    processingType,
-    TO_CHAR(startTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS startTime,
-    TO_CHAR(endTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS endTime,
-    centerLat,
-    centerLon,
-    nearStartLat,
-    nearStartLon,
-    nearEndLat,
-    nearEndLon,
-    farStartLat,
-    farStartLon,
-    farEndLat,
-    farEndLon,
-    faradayRotation,
-    ascendingDescending,
-    url, 
-    bytes,
-    ROUND( bytes/1024/1024, 2 ) AS fileSize,
-    offNadirAngle,
-    md5sum,
-    granuleDesc,
-    granuleType,
-    fileName,
-    shape
-  )).getStringVal() FROM 
-    data_product
-  WHERE
-  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1998-07-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
-      AND centerLon BETWEEN ${west} AND ${east}
-      AND centerLat BETWEEN ${south} AND ${north}
-     ORDER BY startTime DESC</stringProp>
-          <stringProp name="queryArguments"></stringProp>
-          <stringProp name="queryArgumentsTypes"></stringProp>
-          <stringProp name="queryType">Select Statement</stringProp>
-          <stringProp name="variableNames"></stringProp>
-        </JDBCSampler>
-        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Variable Geospatial BBox" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Alaska BBox 5x5" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1297450605000</longProp>
         <longProp name="ThreadGroup.end_time">1297450605000</longProp>
@@ -260,7 +168,7 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
-        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="HTTP BBox 10x10" enabled="true">
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="AK API BBox 5x5" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="bbox" elementType="HTTPArgument">
@@ -318,130 +226,38 @@
         <hashTree>
           <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="west_deg" elementType="Argument">
-                <stringProp name="Argument.name">west_deg</stringProp>
-                <stringProp name="Argument.value">${__Random(-160,-140,west_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="east_deg" elementType="Argument">
-                <stringProp name="Argument.name">east_deg</stringProp>
-                <stringProp name="Argument.value">${__intSum(${west_deg},10,east_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="south_deg" elementType="Argument">
-                <stringProp name="Argument.name">south_deg</stringProp>
-                <stringProp name="Argument.value">${__Random(60,70, south_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="north_deg" elementType="Argument">
-                <stringProp name="Argument.name">north_deg</stringProp>
-                <stringProp name="Argument.value">${__intSum(${south_deg},10,north_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="west_min" elementType="Argument">
-                <stringProp name="Argument.name">west_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,west_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="east_min" elementType="Argument">
-                <stringProp name="Argument.name">east_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,east_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="south_min" elementType="Argument">
-                <stringProp name="Argument.name">south_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,south_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="north_min" elementType="Argument">
-                <stringProp name="Argument.name">north_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99, north_min)}</stringProp>
+              <elementProp name="west" elementType="Argument">
+                <stringProp name="Argument.name">west</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,west)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="east" elementType="Argument">
                 <stringProp name="Argument.name">east</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${east_deg}&apos; + &apos;.&apos; + &apos;${east_min}&apos;, east)}</stringProp>
+                <stringProp name="Argument.value">${__intSum(${west},1,east)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="south" elementType="Argument">
                 <stringProp name="Argument.name">south</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${south_deg}&apos; + &apos;.&apos; + &apos;${south_min}&apos;, south)}</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70, south)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="north" elementType="Argument">
                 <stringProp name="Argument.name">north</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${north_deg}&apos; + &apos;.&apos; + &apos;${north_min}&apos;, north)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="west" elementType="Argument">
-                <stringProp name="Argument.name">west</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${west_deg}&apos; + &apos;.&apos; + &apos;${west_min}&apos;, west)}</stringProp>
+                <stringProp name="Argument.value">${__intSum(${south},1,north)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </Arguments>
           <hashTree/>
         </hashTree>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="BBox" enabled="false">
-          <stringProp name="dataSource"></stringProp>
-          <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
-  XMLForest(
-    granuleName,
-    productName,
-    platform,
-    sensor,
-    beamModeType,
-    TRIM(beamModeDesc) beamModeDesc,
-    orbit,
-    pathNumber,
-    frameNumber,
-    TO_CHAR(acquisitionDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS acquisitionDate,
-    TO_CHAR(processingDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS processingDate,
-    processingType,
-    TO_CHAR(startTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS startTime,
-    TO_CHAR(endTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS endTime,
-    centerLat,
-    centerLon,
-    nearStartLat,
-    nearStartLon,
-    nearEndLat,
-    nearEndLon,
-    farStartLat,
-    farStartLon,
-    farEndLat,
-    farEndLon,
-    faradayRotation,
-    ascendingDescending,
-    url, 
-    bytes,
-    ROUND( bytes/1024/1024, 2 ) AS fileSize,
-    offNadirAngle,
-    md5sum,
-    granuleDesc,
-    granuleType,
-    fileName,
-    shape
-  )).getStringVal() FROM 
-    data_product
-  WHERE
-  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1998-07-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
-      AND centerLon BETWEEN ${west} AND ${east}
-      AND centerLat BETWEEN ${south} AND ${north}
-     ORDER BY startTime DESC</stringProp>
-          <stringProp name="queryArguments"></stringProp>
-          <stringProp name="queryArgumentsTypes"></stringProp>
-          <stringProp name="queryType">Select Statement</stringProp>
-          <stringProp name="variableNames"></stringProp>
-        </JDBCSampler>
-        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Variable Geospatial BBox" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Alaska BBox 10x10" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1297450605000</longProp>
         <longProp name="ThreadGroup.end_time">1297450605000</longProp>
@@ -455,7 +271,7 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
-        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="HTTP BBox 15x15" enabled="true">
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="AK API BBox 10x10" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="bbox" elementType="HTTPArgument">
@@ -513,123 +329,913 @@
         <hashTree>
           <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="west_deg" elementType="Argument">
-                <stringProp name="Argument.name">west_deg</stringProp>
-                <stringProp name="Argument.value">${__Random(-160,-140,west_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="east_deg" elementType="Argument">
-                <stringProp name="Argument.name">east_deg</stringProp>
-                <stringProp name="Argument.value">${__intSum(${west_deg},15,east_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="south_deg" elementType="Argument">
-                <stringProp name="Argument.name">south_deg</stringProp>
-                <stringProp name="Argument.value">${__Random(60,70, south_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="north_deg" elementType="Argument">
-                <stringProp name="Argument.name">north_deg</stringProp>
-                <stringProp name="Argument.value">${__intSum(${south_deg},15,north_deg)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="west_min" elementType="Argument">
-                <stringProp name="Argument.name">west_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,west_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="east_min" elementType="Argument">
-                <stringProp name="Argument.name">east_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,east_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="south_min" elementType="Argument">
-                <stringProp name="Argument.name">south_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99,south_min)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="north_min" elementType="Argument">
-                <stringProp name="Argument.name">north_min</stringProp>
-                <stringProp name="Argument.value">${__Random(0,99, north_min)}</stringProp>
+              <elementProp name="west" elementType="Argument">
+                <stringProp name="Argument.name">west</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,west)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="east" elementType="Argument">
                 <stringProp name="Argument.name">east</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${east_deg}&apos; + &apos;.&apos; + &apos;${east_min}&apos;, east)}</stringProp>
+                <stringProp name="Argument.value">${__intSum(${west},1,east)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="south" elementType="Argument">
                 <stringProp name="Argument.name">south</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${south_deg}&apos; + &apos;.&apos; + &apos;${south_min}&apos;, south)}</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70, south)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="north" elementType="Argument">
                 <stringProp name="Argument.name">north</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${north_deg}&apos; + &apos;.&apos; + &apos;${north_min}&apos;, north)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="west" elementType="Argument">
-                <stringProp name="Argument.name">west</stringProp>
-                <stringProp name="Argument.value">${__javaScript(&apos;${west_deg}&apos; + &apos;.&apos; + &apos;${west_min}&apos;, west)}</stringProp>
+                <stringProp name="Argument.value">${__intSum(${south},1,north)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </Arguments>
           <hashTree/>
         </hashTree>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="BBox" enabled="false">
-          <stringProp name="dataSource"></stringProp>
-          <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
-  XMLForest(
-    granuleName,
-    productName,
-    platform,
-    sensor,
-    beamModeType,
-    TRIM(beamModeDesc) beamModeDesc,
-    orbit,
-    pathNumber,
-    frameNumber,
-    TO_CHAR(acquisitionDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS acquisitionDate,
-    TO_CHAR(processingDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS processingDate,
-    processingType,
-    TO_CHAR(startTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS startTime,
-    TO_CHAR(endTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS endTime,
-    centerLat,
-    centerLon,
-    nearStartLat,
-    nearStartLon,
-    nearEndLat,
-    nearEndLon,
-    farStartLat,
-    farStartLon,
-    farEndLat,
-    farEndLon,
-    faradayRotation,
-    ascendingDescending,
-    url, 
-    bytes,
-    ROUND( bytes/1024/1024, 2 ) AS fileSize,
-    offNadirAngle,
-    md5sum,
-    granuleDesc,
-    granuleType,
-    fileName,
-    shape
-  )).getStringVal() FROM 
-    data_product
-  WHERE
-  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1998-07-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
-      AND centerLon BETWEEN ${west} AND ${east}
-      AND centerLat BETWEEN ${south} AND ${north}
-     ORDER BY startTime DESC</stringProp>
-          <stringProp name="queryArguments"></stringProp>
-          <stringProp name="queryArgumentsTypes"></stringProp>
-          <stringProp name="queryType">Select Statement</stringProp>
-          <stringProp name="variableNames"></stringProp>
-        </JDBCSampler>
-        <hashTree/>
       </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="US BBox 1x1" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1297450605000</longProp>
+        <longProp name="ThreadGroup.end_time">1297450605000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">300</stringProp>
+          <stringProp name="RandomTimer.range">100.0</stringProp>
+        </GaussianRandomTimer>
+        <hashTree/>
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="US API BBox 1x1" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="bbox" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${west},${south},${east},${north}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">bbox</stringProp>
+              </elementProp>
+              <elementProp name="platform" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">E2,R1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">platform</stringProp>
+              </elementProp>
+              <elementProp name="start" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">1998-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">start</stringProp>
+              </elementProp>
+              <elementProp name="end" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">2008-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">end</stringProp>
+              </elementProp>
+              <elementProp name="processing" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">L0,L1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">processing</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="west" elementType="Argument">
+                <stringProp name="Argument.name">west</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,west)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="east" elementType="Argument">
+                <stringProp name="Argument.name">east</stringProp>
+                <stringProp name="Argument.value">${__intSum(${west},1,east)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="south" elementType="Argument">
+                <stringProp name="Argument.name">south</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70, south)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="north" elementType="Argument">
+                <stringProp name="Argument.name">north</stringProp>
+                <stringProp name="Argument.value">${__intSum(${south},1,north)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="US BBox 5x5" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1297450605000</longProp>
+        <longProp name="ThreadGroup.end_time">1297450605000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">300</stringProp>
+          <stringProp name="RandomTimer.range">100.0</stringProp>
+        </GaussianRandomTimer>
+        <hashTree/>
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="US API BBox 5x5" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="bbox" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${west},${south},${east},${north}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">bbox</stringProp>
+              </elementProp>
+              <elementProp name="platform" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">E2,R1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">platform</stringProp>
+              </elementProp>
+              <elementProp name="start" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">1998-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">start</stringProp>
+              </elementProp>
+              <elementProp name="end" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">2008-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">end</stringProp>
+              </elementProp>
+              <elementProp name="processing" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">L0,L1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">processing</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="west" elementType="Argument">
+                <stringProp name="Argument.name">west</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,west)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="east" elementType="Argument">
+                <stringProp name="Argument.name">east</stringProp>
+                <stringProp name="Argument.value">${__intSum(${west},5,east)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="south" elementType="Argument">
+                <stringProp name="Argument.name">south</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70, south)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="north" elementType="Argument">
+                <stringProp name="Argument.name">north</stringProp>
+                <stringProp name="Argument.value">${__intSum(${south},5,north)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="US BBox 10x10" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1297450605000</longProp>
+        <longProp name="ThreadGroup.end_time">1297450605000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">300</stringProp>
+          <stringProp name="RandomTimer.range">100.0</stringProp>
+        </GaussianRandomTimer>
+        <hashTree/>
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="US API BBox 10x10" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="bbox" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${west},${south},${east},${north}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">bbox</stringProp>
+              </elementProp>
+              <elementProp name="platform" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">E2,R1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">platform</stringProp>
+              </elementProp>
+              <elementProp name="start" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">1998-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">start</stringProp>
+              </elementProp>
+              <elementProp name="end" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">2008-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">end</stringProp>
+              </elementProp>
+              <elementProp name="processing" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">L0,L1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">processing</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="west" elementType="Argument">
+                <stringProp name="Argument.name">west</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,west)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="east" elementType="Argument">
+                <stringProp name="Argument.name">east</stringProp>
+                <stringProp name="Argument.value">${__intSum(${west},10,east)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="south" elementType="Argument">
+                <stringProp name="Argument.name">south</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70, south)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="north" elementType="Argument">
+                <stringProp name="Argument.name">north</stringProp>
+                <stringProp name="Argument.value">${__intSum(${south},10,north)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="US BBox 15x15" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1297450605000</longProp>
+        <longProp name="ThreadGroup.end_time">1297450605000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">300</stringProp>
+          <stringProp name="RandomTimer.range">100.0</stringProp>
+        </GaussianRandomTimer>
+        <hashTree/>
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="US API BBox 15x15" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="bbox" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${west},${south},${east},${north}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">bbox</stringProp>
+              </elementProp>
+              <elementProp name="platform" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">E2,R1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">platform</stringProp>
+              </elementProp>
+              <elementProp name="start" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">1998-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">start</stringProp>
+              </elementProp>
+              <elementProp name="end" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">2008-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">end</stringProp>
+              </elementProp>
+              <elementProp name="processing" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">L0,L1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">processing</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="west" elementType="Argument">
+                <stringProp name="Argument.name">west</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,west)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="east" elementType="Argument">
+                <stringProp name="Argument.name">east</stringProp>
+                <stringProp name="Argument.value">${__intSum(${west},15,east)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="south" elementType="Argument">
+                <stringProp name="Argument.name">south</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70, south)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="north" elementType="Argument">
+                <stringProp name="Argument.name">north</stringProp>
+                <stringProp name="Argument.value">${__intSum(${south},15,north)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Alaska Poly 1x1" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1306955430000</longProp>
+        <longProp name="ThreadGroup.end_time">1306955430000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">300</stringProp>
+          <stringProp name="RandomTimer.range">100.0</stringProp>
+        </GaussianRandomTimer>
+        <hashTree/>
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="AK API Poly 4 points 1x1" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="start" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">1998-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">start</stringProp>
+              </elementProp>
+              <elementProp name="end" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">2008-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">end</stringProp>
+              </elementProp>
+              <elementProp name="polygon" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${p1_lon},${p1_lat},${p2_lon},${p2_lat},${p3_lon},${p3_lat},${p4_lon},${p4_lat},${p1_lon},${p1_lat}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">polygon</stringProp>
+              </elementProp>
+              <elementProp name="platform" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">E2,R1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">platform</stringProp>
+              </elementProp>
+              <elementProp name="processing" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">L0,L1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">processing</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="latitudes" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="center_lat" elementType="Argument">
+                <stringProp name="Argument.name">center_lat</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70,center_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p1_lat" elementType="Argument">
+                <stringProp name="Argument.name">p1_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${center_lat}+0,p1_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p2_lat" elementType="Argument">
+                <stringProp name="Argument.name">p2_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+1,p2_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p3_lat" elementType="Argument">
+                <stringProp name="Argument.name">p3_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+1,p3_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p4_lat" elementType="Argument">
+                <stringProp name="Argument.name">p4_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0,p4_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="longitudes" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="center_lon" elementType="Argument">
+                <stringProp name="Argument.name">center_lon</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,center_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p1_lon" elementType="Argument">
+                <stringProp name="Argument.name">p1_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${center_lon}+0,p1_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p2_lon" elementType="Argument">
+                <stringProp name="Argument.name">p2_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0,p2_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p3_lon" elementType="Argument">
+                <stringProp name="Argument.name">p3_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+1,p3_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p4_lon" elementType="Argument">
+                <stringProp name="Argument.name">p4_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+1,p4_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="US Poly 1x1" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1306955430000</longProp>
+        <longProp name="ThreadGroup.end_time">1306955430000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">300</stringProp>
+          <stringProp name="RandomTimer.range">100.0</stringProp>
+        </GaussianRandomTimer>
+        <hashTree/>
+        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="US API Poly 4 points 1x1" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="start" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">1998-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">start</stringProp>
+              </elementProp>
+              <elementProp name="end" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">2008-06-01T00:00:00Z</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">end</stringProp>
+              </elementProp>
+              <elementProp name="polygon" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">${p1_lon},${p1_lat},${p2_lon},${p2_lat},${p3_lon},${p3_lat},${p4_lon},${p4_lat},${p1_lon},${p1_lat}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">polygon</stringProp>
+              </elementProp>
+              <elementProp name="platform" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">E2,R1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">platform</stringProp>
+              </elementProp>
+              <elementProp name="processing" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                <stringProp name="Argument.value">L0,L1</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+                <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                <stringProp name="Argument.name">processing</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="latitudes" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="center_lat" elementType="Argument">
+                <stringProp name="Argument.name">center_lat</stringProp>
+                <stringProp name="Argument.value">${__Random(30,50,center_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p1_lat" elementType="Argument">
+                <stringProp name="Argument.name">p1_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${center_lat}+0,p1_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p2_lat" elementType="Argument">
+                <stringProp name="Argument.name">p2_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+1,p2_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p3_lat" elementType="Argument">
+                <stringProp name="Argument.name">p3_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+1,p3_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p4_lat" elementType="Argument">
+                <stringProp name="Argument.name">p4_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0,p4_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="longitudes" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="center_lon" elementType="Argument">
+                <stringProp name="Argument.name">center_lon</stringProp>
+                <stringProp name="Argument.value">${__Random(-120,-80,center_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p1_lon" elementType="Argument">
+                <stringProp name="Argument.name">p1_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${center_lon}+0,p1_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p2_lon" elementType="Argument">
+                <stringProp name="Argument.name">p2_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0,p2_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p3_lon" elementType="Argument">
+                <stringProp name="Argument.name">p3_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+1,p3_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p4_lon" elementType="Argument">
+                <stringProp name="Argument.name">p4_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+1,p4_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="SplineVisualizer" testclass="ResultCollector" testname="Spline Visualizer" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+        <boolProp name="ResultCollector.error_logging">false</boolProp>
+        <objProp>
+          <name>saveConfig</name>
+          <value class="SampleSaveConfiguration">
+            <time>true</time>
+            <latency>true</latency>
+            <timestamp>true</timestamp>
+            <success>true</success>
+            <label>true</label>
+            <code>true</code>
+            <message>true</message>
+            <threadName>true</threadName>
+            <dataType>true</dataType>
+            <encoding>false</encoding>
+            <assertions>true</assertions>
+            <subresults>true</subresults>
+            <responseData>false</responseData>
+            <samplerData>false</samplerData>
+            <xml>true</xml>
+            <fieldNames>false</fieldNames>
+            <responseHeaders>false</responseHeaders>
+            <requestHeaders>false</requestHeaders>
+            <responseDataOnError>false</responseDataOnError>
+            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+            <assertionsResultsToSave>0</assertionsResultsToSave>
+            <bytes>true</bytes>
+          </value>
+        </objProp>
+        <stringProp name="filename"></stringProp>
+      </ResultCollector>
+      <hashTree/>
+      <DebugPostProcessor guiclass="TestBeanGUI" testclass="DebugPostProcessor" testname="Debug PostProcessor" enabled="true"/>
+      <hashTree/>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Variable Spatial Poly" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
@@ -937,465 +1543,7 @@
           </Arguments>
           <hashTree/>
         </hashTree>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Poly" enabled="false">
-          <stringProp name="dataSource"></stringProp>
-          <stringProp name="queryType">Select Statement</stringProp>
-          <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
-  XMLForest(
-    granuleName,
-    productName,
-    platform,
-    sensor,
-    beamModeType,
-    TRIM(beamModeDesc) beamModeDesc,
-    orbit,
-    pathNumber,
-    frameNumber,
-    TO_CHAR(acquisitionDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS acquisitionDate,
-    TO_CHAR(processingDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS processingDate,
-    processingType,
-    TO_CHAR(startTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS startTime,
-    TO_CHAR(endTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS endTime,
-    centerLat,
-    centerLon,
-    nearStartLat,
-    nearStartLon,
-    nearEndLat,
-    nearEndLon,
-    farStartLat,
-    farStartLon,
-    farEndLat,
-    farEndLon,
-    faradayRotation,
-    ascendingDescending,
-    url, 
-    bytes,
-    ROUND( bytes/1024/1024, 2 ) AS fileSize,
-    offNadirAngle,
-    md5sum,
-    granuleDesc,
-    granuleType,
-    fileName,
-    shape
-  )).getStringVal()
-    from
-      data_product
-  WHERE
-  startTime BETWEEN TO_DATE(&apos;1997-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1997-06-30&apos;,&apos;YYYY-MM-DD&apos;)
-      AND sdo_anyinteract(shape,
-        sdo_geometry(
-          2003, 8307, NULL, sdo_elem_info_array(1, 1003, 1),
-          sdo_ordinate_array(
-&apos;${p1_lon}&apos;,&apos;${p1_lat}&apos;,
-&apos;${p2_lon}&apos;,&apos;${p2_lat}&apos;,
-&apos;${p3_lon}&apos;,&apos;${p3_lat}&apos;,
-&apos;${p4_lon}&apos;,&apos;${p4_lat}&apos;,
-&apos;${p5_lon}&apos;,&apos;${p5_lat}&apos;,
-&apos;${p6_lon}&apos;,&apos;${p6_lat}&apos;,
-&apos;${p7_lon}&apos;,&apos;${p7_lat}&apos;,
-&apos;${p1_lon}&apos;,&apos;${p1_lat}&apos;
-))) = &apos;TRUE&apos;</stringProp>
-          <stringProp name="queryArguments"></stringProp>
-          <stringProp name="queryArgumentsTypes"></stringProp>
-          <stringProp name="variableNames"></stringProp>
-        </JDBCSampler>
-        <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Variable Spatial Poly" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
-        </elementProp>
-        <stringProp name="ThreadGroup.num_threads">10</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <longProp name="ThreadGroup.start_time">1306955430000</longProp>
-        <longProp name="ThreadGroup.end_time">1306955430000</longProp>
-        <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration"></stringProp>
-        <stringProp name="ThreadGroup.delay"></stringProp>
-      </ThreadGroup>
-      <hashTree>
-        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
-          <stringProp name="ConstantTimer.delay">300</stringProp>
-          <stringProp name="RandomTimer.range">100.0</stringProp>
-        </GaussianRandomTimer>
-        <hashTree/>
-        <HTTPSampler guiclass="HttpTestSampleGui" testclass="HTTPSampler" testname="HTTP Polygon 4 points 5x5" enabled="true">
-          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="start" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">1998-06-01T00:00:00Z</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">start</stringProp>
-              </elementProp>
-              <elementProp name="end" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">2008-06-01T00:00:00Z</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">end</stringProp>
-              </elementProp>
-              <elementProp name="polygon" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">${p1_lon},${p1_lat},${p2_lon},${p2_lat},${p3_lon},${p3_lat},${p4_lon},${p4_lat},${p1_lon},${p1_lat}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">polygon</stringProp>
-              </elementProp>
-              <elementProp name="platform" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">E2,R1</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">platform</stringProp>
-              </elementProp>
-              <elementProp name="processing" elementType="HTTPArgument">
-                <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">L0,L1</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-                <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                <stringProp name="Argument.name">processing</stringProp>
-              </elementProp>
-            </collectionProp>
-          </elementProp>
-          <stringProp name="HTTPSampler.domain"></stringProp>
-          <stringProp name="HTTPSampler.port"></stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol"></stringProp>
-          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path"></stringProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
-          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
-          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-        </HTTPSampler>
-        <hashTree>
-          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="latitudes" enabled="true">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="center_lat" elementType="Argument">
-                <stringProp name="Argument.name">center_lat</stringProp>
-                <stringProp name="Argument.value">${__Random(60,70,center_lat)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="p1_lat" elementType="Argument">
-                <stringProp name="Argument.name">p1_lat</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${center_lat}+0,p1_lat)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="p2_lat" elementType="Argument">
-                <stringProp name="Argument.name">p2_lat</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lat}+5,p2_lat)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="p3_lat" elementType="Argument">
-                <stringProp name="Argument.name">p3_lat</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lat}+5,p3_lat)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="p4_lat" elementType="Argument">
-                <stringProp name="Argument.name">p4_lat</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0,p4_lat)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </Arguments>
-          <hashTree/>
-          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="longitudes" enabled="true">
-            <collectionProp name="Arguments.arguments">
-              <elementProp name="center_lon" elementType="Argument">
-                <stringProp name="Argument.name">center_lon</stringProp>
-                <stringProp name="Argument.value">${__Random(-160,-140,center_lon)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="p1_lon" elementType="Argument">
-                <stringProp name="Argument.name">p1_lon</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${center_lon}+0,p1_lon)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="p2_lon" elementType="Argument">
-                <stringProp name="Argument.name">p2_lon</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0,p2_lon)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="p3_lon" elementType="Argument">
-                <stringProp name="Argument.name">p3_lon</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lon}+5,p3_lon)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-              <elementProp name="p4_lon" elementType="Argument">
-                <stringProp name="Argument.name">p4_lon</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lon}+5,p4_lon)}</stringProp>
-                <stringProp name="Argument.metadata">=</stringProp>
-              </elementProp>
-            </collectionProp>
-          </Arguments>
-          <hashTree/>
-        </hashTree>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Poly" enabled="false">
-          <stringProp name="dataSource"></stringProp>
-          <stringProp name="queryType">Select Statement</stringProp>
-          <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
-  XMLForest(
-    granuleName,
-    productName,
-    platform,
-    sensor,
-    beamModeType,
-    TRIM(beamModeDesc) beamModeDesc,
-    orbit,
-    pathNumber,
-    frameNumber,
-    TO_CHAR(acquisitionDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS acquisitionDate,
-    TO_CHAR(processingDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS processingDate,
-    processingType,
-    TO_CHAR(startTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS startTime,
-    TO_CHAR(endTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS endTime,
-    centerLat,
-    centerLon,
-    nearStartLat,
-    nearStartLon,
-    nearEndLat,
-    nearEndLon,
-    farStartLat,
-    farStartLon,
-    farEndLat,
-    farEndLon,
-    faradayRotation,
-    ascendingDescending,
-    url, 
-    bytes,
-    ROUND( bytes/1024/1024, 2 ) AS fileSize,
-    offNadirAngle,
-    md5sum,
-    granuleDesc,
-    granuleType,
-    fileName,
-    shape
-  )).getStringVal()
-    from
-      data_product
-  WHERE
-  startTime BETWEEN TO_DATE(&apos;1997-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1997-06-30&apos;,&apos;YYYY-MM-DD&apos;)
-      AND sdo_anyinteract(shape,
-        sdo_geometry(
-          2003, 8307, NULL, sdo_elem_info_array(1, 1003, 1),
-          sdo_ordinate_array(
-&apos;${p1_lon}&apos;,&apos;${p1_lat}&apos;,
-&apos;${p2_lon}&apos;,&apos;${p2_lat}&apos;,
-&apos;${p3_lon}&apos;,&apos;${p3_lat}&apos;,
-&apos;${p4_lon}&apos;,&apos;${p4_lat}&apos;,
-&apos;${p5_lon}&apos;,&apos;${p5_lat}&apos;,
-&apos;${p6_lon}&apos;,&apos;${p6_lat}&apos;,
-&apos;${p7_lon}&apos;,&apos;${p7_lat}&apos;,
-&apos;${p1_lon}&apos;,&apos;${p1_lat}&apos;
-))) = &apos;TRUE&apos;</stringProp>
-          <stringProp name="queryArguments"></stringProp>
-          <stringProp name="queryArgumentsTypes"></stringProp>
-          <stringProp name="variableNames"></stringProp>
-        </JDBCSampler>
-        <hashTree/>
-      </hashTree>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>true</xml>
-            <fieldNames>false</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-          </value>
-        </objProp>
-        <stringProp name="filename"></stringProp>
-      </ResultCollector>
-      <hashTree/>
-      <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>true</xml>
-            <fieldNames>false</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-          </value>
-        </objProp>
-        <stringProp name="filename"></stringProp>
-      </ResultCollector>
-      <hashTree/>
-      <ResultCollector guiclass="SplineVisualizer" testclass="ResultCollector" testname="Spline Visualizer" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>true</xml>
-            <fieldNames>false</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-          </value>
-        </objProp>
-        <stringProp name="filename"></stringProp>
-      </ResultCollector>
-      <hashTree/>
-      <ResultCollector guiclass="StatVisualizer" testclass="ResultCollector" testname="Aggregate Report" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>true</xml>
-            <fieldNames>false</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-          </value>
-        </objProp>
-        <stringProp name="filename"></stringProp>
-      </ResultCollector>
-      <hashTree/>
-      <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>true</xml>
-            <fieldNames>false</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-          </value>
-        </objProp>
-        <stringProp name="filename"></stringProp>
-      </ResultCollector>
-      <hashTree/>
-      <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
-        <boolProp name="ResultCollector.error_logging">false</boolProp>
-        <objProp>
-          <name>saveConfig</name>
-          <value class="SampleSaveConfiguration">
-            <time>true</time>
-            <latency>true</latency>
-            <timestamp>true</timestamp>
-            <success>true</success>
-            <label>true</label>
-            <code>true</code>
-            <message>true</message>
-            <threadName>true</threadName>
-            <dataType>true</dataType>
-            <encoding>false</encoding>
-            <assertions>true</assertions>
-            <subresults>true</subresults>
-            <responseData>false</responseData>
-            <samplerData>false</samplerData>
-            <xml>true</xml>
-            <fieldNames>false</fieldNames>
-            <responseHeaders>false</responseHeaders>
-            <requestHeaders>false</requestHeaders>
-            <responseDataOnError>false</responseDataOnError>
-            <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
-            <assertionsResultsToSave>0</assertionsResultsToSave>
-            <bytes>true</bytes>
-          </value>
-        </objProp>
-        <stringProp name="filename"></stringProp>
-      </ResultCollector>
-      <hashTree/>
-      <DebugPostProcessor guiclass="TestBeanGUI" testclass="DebugPostProcessor" testname="Debug PostProcessor" enabled="true"/>
-      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
