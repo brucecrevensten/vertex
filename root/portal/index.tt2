@@ -53,11 +53,29 @@
 </div>
 <div id="rightColumn">
 <div id="searchMap"></div>
+
+<!-- loading async spinner -->
 <div class="ui-widget">
-<div id="async-spinner" class="ui-state-highlight ui-corner-all">
-Loading search results&hellip;
+  <div id="async-spinner" class="ui-state-highlight ui-corner-all">
+    <p>
+      <span class="ui-icon"></span>
+      <strong>Loading search results&hellip;</strong>
+    </p>
+  </div>
 </div>
+
+
+<!-- results banner -->
+<div class="ui-widget">
+  <div id="results-banner" class="ui-state-highlight ui-corner-all"> 
+    <p>
+      <span class="ui-icon ui-icon-info"></span>
+      <strong>No results were found</strong> for your current search criteria.
+    </p>
+  </div>
 </div>
+
+
 <div id="results-widget-wrapper" class="ui-widget">
 <table id="results"></table>
 </div>

@@ -134,7 +134,23 @@ label.hover {
 
 #async-spinner {
   margin: 1em 0;
-  background: url(../images/ajax-loader.gif) 17px 50% no-repeat;
-  padding: 1ex 0 1ex 3em;
-  display: nonehide;
+  padding: 1ex;
+  display: none;
+}
+
+#async-spinner span {
+  float: left;
+  margin: 7px 1ex;
+  background: transparent url(../images/ajax-loader.gif);
+}
+
+#results-banner {
+  margin: 1em 0;
+  padding: 1ex;
+  display: none;
+}
+
+#results-banner span {
+  float: left;
+  margin: 7px 1ex;
 }

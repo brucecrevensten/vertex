@@ -35,6 +35,7 @@ var SearchResults = Backbone.Collection.extend(
         dataType: "jsonp",
         context: this,
         beforeSend: function(){
+          $("#results-banner").hide();
           $('#async-spinner').show();
           $('#results-widget-wrapper').hide();
         },
@@ -53,7 +54,13 @@ var SearchResults = Backbone.Collection.extend(
         },
         error: function(jqXHR, textStatus, errorThrown) {
           //todo: fix this to be meaningful
-          $("#errorDiv").html("<p>There was an error: " + textStatus + " " + errorThrown).css("background-color","red").show();
+
+          switch(jqXHR.status) {
+            case 204:
+              $("#async-spinner").hide();
+              $("#results-banner").show();
+              break;
+          }
         }
       }).results;
 
