@@ -35,7 +35,8 @@ var SearchResults = Backbone.Collection.extend(
         dataType: "jsonp",
         context: this,
         beforeSend: function(){
-          $('#results').mask("Loading...");
+          $('#async-spinner').show();
+          $('#results-widget-wrapper').hide();
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
@@ -47,11 +48,11 @@ var SearchResults = Backbone.Collection.extend(
             data.results.rows.ROW[i].id = data.results.rows.ROW[i].ID;
           }
           this.refresh( this.data.results.rows.ROW );
-          $('#results_wrapper').unmask();
+          $('#async-spinner').hide();
+          $('#results-widget-wrapper').show();
         },
         error: function(jqXHR, textStatus, errorThrown) {
           //todo: fix this to be meaningful
-          $("#results_wrapper").unmask();
           $("#errorDiv").html("<p>There was an error: " + textStatus + " " + errorThrown).css("background-color","red").show();
         }
       }).results;
@@ -84,6 +85,7 @@ var SearchResultsView = Backbone.View.extend(
       this.hasRendered = true;
       this.dataTable = $(this.el).dataTable(
       {
+        "bAutoWidth" : false,
         "bJQueryUI": true,
         "aaData": preparedData,
         "aoColumns": [

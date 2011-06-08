@@ -53,8 +53,14 @@
 </div>
 <div id="rightColumn">
 <div id="searchMap"></div>
-<table id="results" style="width: 100%"></table>
-
+<div class="ui-widget">
+<div id="async-spinner" class="ui-state-highlight ui-corner-all">
+Loading search results&hellip;
+</div>
+</div>
+<div id="results-widget-wrapper" class="ui-widget">
+<table id="results"></table>
+</div>
 </div>
 </div>
 

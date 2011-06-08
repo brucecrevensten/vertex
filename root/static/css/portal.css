@@ -48,6 +48,7 @@ header {
 #rightColumn {
   float: right;
   width: 78%;
+  margin-bottom: 1em;
 }
 
 footer {
@@ -89,6 +90,7 @@ float: left;
 #searchMap {
   width: 100%;
   height: 400px;
+  margin: 0 0 1em 0;
 }
 
 #date_widget label {
@@ -98,6 +100,10 @@ margin: 0 0 1em 0;
 
 label.hover {
   cursor: pointer;
+}
+
+#results {
+  width: 100% !important;
 }
 
 #results tbody td {
@@ -126,3 +132,9 @@ label.hover {
   margin: 1em auto;
 }
 
+#async-spinner {
+  margin: 1em 0;
+  background: url(../images/ajax-loader.gif) 17px 50% no-repeat;
+  padding: 1ex 0 1ex 3em;
+  display: nonehide;
+}
