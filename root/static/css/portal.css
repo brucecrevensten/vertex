@@ -132,25 +132,18 @@ label.hover {
   margin: 1em auto;
 }
 
-#async-spinner {
+#async-spinner, #results-banner, #error-message {
   margin: 1em 0;
   padding: 1ex;
   display: none;
+}
+
+#async-spinner span, #results-banner span, #error-message span {
+  float: left;
+  margin: 7px 1ex;
 }
 
 #async-spinner span {
-  float: left;
   margin: 7px 1ex;
   background: transparent url(../images/ajax-loader.gif);
-}
-
-#results-banner {
-  margin: 1em 0;
-  padding: 1ex;
-  display: none;
-}
-
-#results-banner span {
-  float: left;
-  margin: 7px 1ex;
 }

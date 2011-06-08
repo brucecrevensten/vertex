@@ -35,9 +35,10 @@ var SearchResults = Backbone.Collection.extend(
         dataType: "jsonp",
         context: this,
         beforeSend: function(){
-          $("#results-banner").hide();
           $('#async-spinner').show();
+          $("#results-banner").hide();
           $('#results-widget-wrapper').hide();
+          $("#error-message").hide();
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
@@ -53,13 +54,18 @@ var SearchResults = Backbone.Collection.extend(
           $('#results-widget-wrapper').show();
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          //todo: fix this to be meaningful
 
           switch(jqXHR.status) {
             case 204:
               $("#async-spinner").hide();
               $("#results-banner").show();
+              $("#error-message").hide();
               break;
+            default:
+              $("#async-spinner").hide();
+              $("#results-banner").hide();
+              $("#error-message").show();
+              $("#error-message-code").text(jqXHR.status);
           }
         }
       }).results;

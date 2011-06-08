@@ -75,6 +75,16 @@
   </div>
 </div>
 
+<!-- error banner -->
+<div class="ui-widget">
+  <div id="error-message" class="ui-state-error ui-corner-all"> 
+    <p>
+      <span class="ui-icon ui-icon-alert"></span>
+      <strong>An error occurred</strong> while processing your current search (<code id="error-message-code"></code>).
+    </p>
+  </div>
+</div>
+
 
 <div id="results-widget-wrapper" class="ui-widget">
 <table id="results"></table>
