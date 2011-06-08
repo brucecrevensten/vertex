@@ -65,7 +65,7 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="BBox 5x5" enabled="true">
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DB BBox 5x5" enabled="true">
           <stringProp name="dataSource"></stringProp>
           <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
   XMLForest(
@@ -107,7 +107,7 @@
   )).getStringVal() FROM 
     data_product
   WHERE
-  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1998-07-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
+  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;2008-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
       AND centerLon BETWEEN ${west} AND ${east}
       AND centerLat BETWEEN ${south} AND ${north}
      ORDER BY startTime DESC</stringProp>
@@ -204,7 +204,7 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="BBox 10x10" enabled="true">
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DB BBox 10x10" enabled="true">
           <stringProp name="dataSource"></stringProp>
           <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
   XMLForest(
@@ -246,7 +246,7 @@
   )).getStringVal() FROM 
     data_product
   WHERE
-  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1998-07-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
+  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;2008-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
       AND centerLon BETWEEN ${west} AND ${east}
       AND centerLat BETWEEN ${south} AND ${north}
      ORDER BY startTime DESC</stringProp>
@@ -343,7 +343,7 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="BBox 15x15" enabled="true">
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DB BBox 15x15" enabled="true">
           <stringProp name="dataSource"></stringProp>
           <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
   XMLForest(
@@ -385,7 +385,7 @@
   )).getStringVal() FROM 
     data_product
   WHERE
-  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1998-07-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
+  platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;2008-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND processingType IN (&apos;L0&apos;,&apos;L1&apos;) 
       AND centerLon BETWEEN ${west} AND ${east}
       AND centerLat BETWEEN ${south} AND ${north}
      ORDER BY startTime DESC</stringProp>
@@ -462,7 +462,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Variable Spatial Poly" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Variable Spatial Poly 7 points" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -482,7 +482,7 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="Poly" enabled="true">
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DB Poly 7 points" enabled="true">
           <stringProp name="dataSource"></stringProp>
           <stringProp name="queryType">Select Statement</stringProp>
           <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
@@ -526,7 +526,7 @@
     from
       data_product
   WHERE
-  startTime BETWEEN TO_DATE(&apos;1997-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1997-06-30&apos;,&apos;YYYY-MM-DD&apos;)
+  startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;2008-06-01&apos;,&apos;YYYY-MM-DD&apos;)
       AND sdo_anyinteract(shape,
         sdo_geometry(
           2003, 8307, NULL, sdo_elem_info_array(1, 1003, 1),
@@ -777,7 +777,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="SDO Filter" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Variable Spatial Poly 4 points 5x5" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -797,7 +797,7 @@
           <stringProp name="RandomTimer.range">100.0</stringProp>
         </GaussianRandomTimer>
         <hashTree/>
-        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SDO Filter" enabled="true">
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DB Poly 4 points 5x5" enabled="true">
           <stringProp name="dataSource"></stringProp>
           <stringProp name="queryType">Select Statement</stringProp>
           <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
@@ -841,7 +841,149 @@
     from
       data_product
   WHERE
-  startTime BETWEEN TO_DATE(&apos;1997-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;1997-06-30&apos;,&apos;YYYY-MM-DD&apos;)
+  startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;2008-06-01&apos;,&apos;YYYY-MM-DD&apos;)
+      AND sdo_anyinteract(shape,
+        sdo_geometry(
+          2003, 8307, NULL, sdo_elem_info_array(1, 1003, 1),
+          sdo_ordinate_array(
+&apos;${p1_lon}&apos;,&apos;${p1_lat}&apos;,
+&apos;${p2_lon}&apos;,&apos;${p2_lat}&apos;,
+&apos;${p3_lon}&apos;,&apos;${p3_lat}&apos;,
+&apos;${p4_lon}&apos;,&apos;${p4_lat}&apos;,
+&apos;${p1_lon}&apos;,&apos;${p1_lat}&apos;
+))) = &apos;TRUE&apos;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+        </JDBCSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="latitudes" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="center_lat" elementType="Argument">
+                <stringProp name="Argument.name">center_lat</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70,center_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p1_lat" elementType="Argument">
+                <stringProp name="Argument.name">p1_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${center_lat}+0,p1_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p2_lat" elementType="Argument">
+                <stringProp name="Argument.name">p2_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+5,p2_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p3_lat" elementType="Argument">
+                <stringProp name="Argument.name">p3_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+5,p3_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p4_lat" elementType="Argument">
+                <stringProp name="Argument.name">p4_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0,p4_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="longitudes" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="center_lon_deg" elementType="Argument">
+                <stringProp name="Argument.name">center_lon_deg</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,center_lon_deg)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p1_lon" elementType="Argument">
+                <stringProp name="Argument.name">p1_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${center_lon}+0,p1_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p2_lon" elementType="Argument">
+                <stringProp name="Argument.name">p2_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0,p2_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p3_lon" elementType="Argument">
+                <stringProp name="Argument.name">p3_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+5,p3_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p4_lon" elementType="Argument">
+                <stringProp name="Argument.name">p4_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+5,p4_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="SDO Filter" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <longProp name="ThreadGroup.start_time">1306955430000</longProp>
+        <longProp name="ThreadGroup.end_time">1306955430000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">300</stringProp>
+          <stringProp name="RandomTimer.range">100.0</stringProp>
+        </GaussianRandomTimer>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SDO Filter 7 points" enabled="true">
+          <stringProp name="dataSource"></stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
+  XMLForest(
+    granuleName,
+    productName,
+    platform,
+    sensor,
+    beamModeType,
+    TRIM(beamModeDesc) beamModeDesc,
+    orbit,
+    pathNumber,
+    frameNumber,
+    TO_CHAR(acquisitionDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS acquisitionDate,
+    TO_CHAR(processingDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS processingDate,
+    processingType,
+    TO_CHAR(startTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS startTime,
+    TO_CHAR(endTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS endTime,
+    centerLat,
+    centerLon,
+    nearStartLat,
+    nearStartLon,
+    nearEndLat,
+    nearEndLon,
+    farStartLat,
+    farStartLon,
+    farEndLat,
+    farEndLon,
+    faradayRotation,
+    ascendingDescending,
+    url, 
+    bytes,
+    ROUND( bytes/1024/1024, 2 ) AS fileSize,
+    offNadirAngle,
+    md5sum,
+    granuleDesc,
+    granuleType,
+    fileName,
+    shape
+  )).getStringVal()
+    from
+      data_product
+  WHERE
+  startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;2008-06-01&apos;,&apos;YYYY-MM-DD&apos;)
       AND sdo_filter(shape,
         sdo_geometry(
           2003, 8307, NULL, sdo_elem_info_array(1, 1003, 1),
@@ -1085,6 +1227,148 @@
               <elementProp name="p7_lon" elementType="Argument">
                 <stringProp name="Argument.name">p7_lon</stringProp>
                 <stringProp name="Argument.value">${__javaScript(&apos;${p7_lon_deg}&apos; + &apos;.&apos; + &apos;${p7_lon_min}&apos;, p7_lon )}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="SDO Poly 4 points 5x5" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">5</stringProp>
+        <longProp name="ThreadGroup.start_time">1306955430000</longProp>
+        <longProp name="ThreadGroup.end_time">1306955430000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <GaussianRandomTimer guiclass="GaussianRandomTimerGui" testclass="GaussianRandomTimer" testname="Gaussian Random Timer" enabled="true">
+          <stringProp name="ConstantTimer.delay">300</stringProp>
+          <stringProp name="RandomTimer.range">100.0</stringProp>
+        </GaussianRandomTimer>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="SDO DB Poly 4 points 5x5" enabled="true">
+          <stringProp name="dataSource"></stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
+  XMLForest(
+    granuleName,
+    productName,
+    platform,
+    sensor,
+    beamModeType,
+    TRIM(beamModeDesc) beamModeDesc,
+    orbit,
+    pathNumber,
+    frameNumber,
+    TO_CHAR(acquisitionDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS acquisitionDate,
+    TO_CHAR(processingDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS processingDate,
+    processingType,
+    TO_CHAR(startTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS startTime,
+    TO_CHAR(endTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS endTime,
+    centerLat,
+    centerLon,
+    nearStartLat,
+    nearStartLon,
+    nearEndLat,
+    nearEndLon,
+    farStartLat,
+    farStartLon,
+    farEndLat,
+    farEndLon,
+    faradayRotation,
+    ascendingDescending,
+    url, 
+    bytes,
+    ROUND( bytes/1024/1024, 2 ) AS fileSize,
+    offNadirAngle,
+    md5sum,
+    granuleDesc,
+    granuleType,
+    fileName,
+    shape
+  )).getStringVal()
+    from
+      data_product
+  WHERE
+  startTime BETWEEN TO_DATE(&apos;1998-06-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;2008-06-01&apos;,&apos;YYYY-MM-DD&apos;)
+      AND sdo_filter(shape,
+        sdo_geometry(
+          2003, 8307, NULL, sdo_elem_info_array(1, 1003, 1),
+          sdo_ordinate_array(
+&apos;${p1_lon}&apos;,&apos;${p1_lat}&apos;,
+&apos;${p2_lon}&apos;,&apos;${p2_lat}&apos;,
+&apos;${p3_lon}&apos;,&apos;${p3_lat}&apos;,
+&apos;${p4_lon}&apos;,&apos;${p4_lat}&apos;,
+&apos;${p1_lon}&apos;,&apos;${p1_lat}&apos;
+))) = &apos;TRUE&apos;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+        </JDBCSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="latitudes" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="center_lat" elementType="Argument">
+                <stringProp name="Argument.name">center_lat</stringProp>
+                <stringProp name="Argument.value">${__Random(60,70,center_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p1_lat" elementType="Argument">
+                <stringProp name="Argument.name">p1_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${center_lat}+0,p1_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p2_lat" elementType="Argument">
+                <stringProp name="Argument.name">p2_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+5,p2_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p3_lat" elementType="Argument">
+                <stringProp name="Argument.name">p3_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+5,p3_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p4_lat" elementType="Argument">
+                <stringProp name="Argument.name">p4_lat</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0,p4_lat)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="longitudes" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="center_lon_deg" elementType="Argument">
+                <stringProp name="Argument.name">center_lon_deg</stringProp>
+                <stringProp name="Argument.value">${__Random(-160,-140,center_lon_deg)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p1_lon" elementType="Argument">
+                <stringProp name="Argument.name">p1_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${center_lon}+0,p1_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p2_lon" elementType="Argument">
+                <stringProp name="Argument.name">p2_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0,p2_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p3_lon" elementType="Argument">
+                <stringProp name="Argument.name">p3_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+5,p3_lon)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="p4_lon" elementType="Argument">
+                <stringProp name="Argument.name">p4_lon</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+5,p4_lon)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
