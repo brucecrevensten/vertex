@@ -1564,7 +1564,7 @@
               </elementProp>
               <elementProp name="bbox" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                <stringProp name="Argument.value">-124,33,-116,41</stringProp>
+                <stringProp name="Argument.value">-124,33,-122,35</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
                 <boolProp name="HTTPArgument.use_equals">true</boolProp>
                 <stringProp name="Argument.name">bbox</stringProp>
@@ -2002,7 +2002,7 @@
             <bytes>true</bytes>
           </value>
         </objProp>
-        <stringProp name="filename">search-api-results-june-7-2011</stringProp>
+        <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
       <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
