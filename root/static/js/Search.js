@@ -162,6 +162,7 @@ var GeographicWidget = BaseWidget.extend(
 {
   title: "Geographic Region",
   titleId: "geographic_widget_title",
+  id: "geographic_widget",
   events : {
     "change input" : "changed"
   },
@@ -178,7 +179,11 @@ var GeographicWidget = BaseWidget.extend(
   },
   render: function() {
     $(this.el).html(
-      _.template('<div><label for="filter_bbox">BBOX: <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>"</label></div>', this.model.toJSON())
+      _.template('\
+<p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South.  Example: -135,64,-133,66</p>\
+<label for="filter_bbox">Bounding box:</label>\
+<input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
+', this.model.toJSON())
     );
     initMap('searchMap'); //it's safe to call this willy-nilly just in case the map isn't up yet
     this.mapOverlay.setMap(searchMap);
@@ -230,8 +235,8 @@ var DateWidget = BaseWidget.extend(
   render: function() {
     today = new Date();
     $(this.el).html(
-      _.template('<label for="filter_start">Start date <input type="text" id="filter_start" name="start" value="<%= start %>"></label>\
-      <label for="filter_end">End date <input type="text" id="filter_end" name="end" value="<%= end %>"></label>\
+      _.template('<label for="filter_start">Start date (YYYY-MM-DD)<input type="text" id="filter_start" name="start" value="<%= start %>"></label>\
+      <label for="filter_end">End date (YYYY-MM-DD)<input type="text" id="filter_end" name="end" value="<%= end %>"></label>\
       ', this.model.toJSON())
     );
     $(this.el).find('#filter_start').datepicker({

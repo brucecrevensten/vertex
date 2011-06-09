@@ -108,7 +108,14 @@ var SearchResultsView = Backbone.View.extend(
         { "sTitle": "Granule Name",
           "bUseRendered": false,
           "fnRender": function(o) {
-            return '<img src="'+o.aData[8]+'"/>'+o.aData[0];
+            // We do a little mini-table here to get vertical centering
+            return _.template('\
+<div style="display:table">\
+  <img style="display:table-cell" src="<%= thumbnail %>"/>\
+  <span style="display:table-cell;vertical-align:middle;height: 100%;">\
+    <%= name %>\
+  </span>\
+</div', { thumbnail: o.aData[8], name: o.aData[0] });
           }
         },
         { "sTitle": "Processing" },
@@ -127,7 +134,6 @@ var SearchResultsView = Backbone.View.extend(
         "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
           gid = aData[0]+"_"+aData[1];
 
-          // TODO: ensure that this depenency on a global object is mediated properly (probably through a SearchApp.getSearchResults() call).
           v = new DataProductView( { model: SearchApp.searchResults.get(gid) } );
           $(nRow).bind( "click", { id: aData[0], view: v }, function(e) {
               $("#product_profile").html( e.data.view.render().el );
@@ -138,7 +144,7 @@ var SearchResultsView = Backbone.View.extend(
                   draggable: false,
                   resizable: false,
                   title: e.data.id,
-                  position: "center"
+                  position: "top"
                 }
               );
           });

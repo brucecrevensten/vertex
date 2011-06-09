@@ -108,6 +108,11 @@ label.hover {
 
 #results tbody td {
   padding: 1ex;
+  vertical-align: middle;
+}
+
+#results tbody td img {
+  margin-right: 1ex;
 }
 
 #results tbody tr:hover {
@@ -146,4 +151,8 @@ label.hover {
 #async-spinner span {
   margin: 7px 1ex;
   background: transparent url(../images/ajax-loader.gif);
+}
+
+#geographic_widget p {
+  margin: 0 0 1em;
 }
