@@ -160,7 +160,7 @@ var GeographicFilter = Backbone.Model.extend(
 
 var GeographicWidget = BaseWidget.extend(
 {
-  title: "Geographic region",
+  title: "Geographic Region",
   titleId: "geographic_widget_title",
   events : {
     "change input" : "changed"
@@ -332,7 +332,7 @@ var ProcessingFilter = Backbone.Model.extend(
 
 var ProcessingWidget = BaseWidget.extend(
   {
-    title: "Processing type",
+    title: "Processing Type",
     titleId: "processing_widget_title",
     tagName: "div",
     id: "filter_processing",
