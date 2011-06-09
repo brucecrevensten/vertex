@@ -98,6 +98,9 @@ var SearchResultsView = Backbone.View.extend(
       this.hasRendered = true;
       this.dataTable = $(this.el).dataTable(
       {
+        "oLanguage" : {
+          "sSearch" : "Filter results:"
+        },
         "bAutoWidth" : false,
         "bJQueryUI": true,
         "aaData": preparedData,
