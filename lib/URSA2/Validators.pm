@@ -325,7 +325,7 @@ sub limit {
 
 sub direction { 
   my ($self, $direction) = @_;
-  if( !defined($direction) ) { return; }
+  if( !defined($direction) || $direction eq 'any' ) { return; }
   if( $direction eq 'ascending' || $direction eq 'descending' ){
     return $direction;
   }

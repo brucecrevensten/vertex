@@ -9,7 +9,8 @@ var SearchParameters = Backbone.Model.extend(
         new PlatformFilter(),
         new DateFilter(),
         new PathFrameFilter(),
-        new OffNadirFilter()
+        new OffNadirFilter(),
+        new DirectionFilter()
       ];
   
       // initialize default values from the widgets
@@ -369,6 +370,55 @@ var ProcessingWidget = BaseWidget.extend(
           ifChecked: ( _.indexOf(checked, key) > -1 ) ? 'checked="checked"' : ''
          };
          f = f + _.template('<li><label for="filter_processing_<%= name %>"><input type="checkbox" id="filter_processing_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>>&nbsp;<%= name %></label></li>', rowData);
+      }
+      $(this.el).html( '<ul>'+f+'</ul>' );
+    
+      return this;
+    }
+  }
+);
+
+var DirectionFilter = Backbone.Model.extend(
+  {
+    name: "DirectionFilter",
+    defaults: { direction: "any" },
+    getWidget: function() {
+      return new DirectionWidget({model:this});
+    },
+  }
+  );
+
+var DirectionWidget = BaseWidget.extend(
+  {
+    title: "Direction",
+    titleId: "direction_widget_title",
+    tagName: "div",
+    id: "filter_direction",
+    directionTypes: {
+      // value : display name
+      "any":"Any",
+      "ascending":"Ascending",
+      "descending":"Descending"
+    },
+
+    events : {
+      "change input" : "changed",
+    },
+
+    changed: function(evt) {
+      this.model.set( { direction: evt.currentTarget.value } );
+    },
+
+    render: function() {
+      var f = "";
+      var checked = this.model.toJSON()["direction"];
+      for( var key in this.directionTypes ) {
+         rowData = {
+          name: this.directionTypes[key],
+          value: key,
+          ifChecked: ( checked == key ) ? 'checked="checked"' : ''
+         };
+         f = f + _.template('<li><label for="filter_direction_<%= name %>"><input type="radio" id="filter_direction_<%= name %>" value="<%= value %>" name="filter_direction" <%= ifChecked %>>&nbsp;<%= name %></label></li>', rowData);
       }
       $(this.el).html( '<ul>'+f+'</ul>' );
     
