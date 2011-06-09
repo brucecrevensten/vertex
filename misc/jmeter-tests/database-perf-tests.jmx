@@ -1046,12 +1046,12 @@ pathNumber BETWEEN ${path_start} AND ${path_end}
               </elementProp>
               <elementProp name="p2_lat" elementType="Argument">
                 <stringProp name="Argument.name">p2_lat</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0.5,p2_lat)}</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0.1,p2_lat)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="p3_lat" elementType="Argument">
                 <stringProp name="Argument.name">p3_lat</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0.5,p3_lat)}</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lat}+0.1,p3_lat)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="p4_lat" elementType="Argument">
@@ -1081,12 +1081,12 @@ pathNumber BETWEEN ${path_start} AND ${path_end}
               </elementProp>
               <elementProp name="p3_lon" elementType="Argument">
                 <stringProp name="Argument.name">p3_lon</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0.5,p3_lon)}</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0.1,p3_lon)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="p4_lon" elementType="Argument">
                 <stringProp name="Argument.name">p4_lon</stringProp>
-                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0.5,p4_lon)}</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${p1_lon}+0.1,p4_lon)}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
