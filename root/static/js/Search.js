@@ -186,20 +186,68 @@ var GeographicWidget = BaseWidget.extend(
 ', this.model.toJSON())
     );
     initMap('searchMap'); //it's safe to call this willy-nilly just in case the map isn't up yet
-    this.mapOverlay.setMap(searchMap);
+    this.searchAreaOverlay.setMap(searchMap);
+    this.searchAreaSWMarker.setMap(searchMap);
+    this.searchAreaNEMarker.setMap(searchMap);
+    var selfref = this; //needed for the events below, as 'this' does not obtain closure
+    google.maps.event.addListener(this.searchAreaSWMarker, 'drag', function() {
+      selfref.updateSearchAreaOverlay();
+    });
+    google.maps.event.addListener(this.searchAreaNEMarker, 'drag', function() {
+      selfref.updateSearchAreaOverlay();
+    });
+    google.maps.event.addListener(this.searchAreaSWMarker, 'dragend', function() {
+      selfref.updateWidgetFromOverlay();
+    });
+    google.maps.event.addListener(this.searchAreaNEMarker, 'dragend', function() {
+      selfref.updateWidgetFromOverlay();
+    });
+    searchMap.fitBounds(this.searchAreaOverlay.getBounds());
     return this;
   },
-  mapOverlay: new google.maps.Rectangle({
+  searchAreaOverlay: new google.maps.Rectangle({
     bounds: new google.maps.LatLngBounds(
       new google.maps.LatLng(64, -135),
       new google.maps.LatLng(66, -133)
     ),
     strokeColor: '#0000FF',
-    strokeOpacity: 0.8,
-    strokeWeight: 1,
+    strokeOpacity: 0.5,
+    strokeWeight: 2,
     fillColor: '#0066CC',
-    fillOpacity: 0.5
+    fillOpacity: 0.5,
+    zIndex: 500 //always be below the granule overlays, which start at 1000
   }),
+  searchAreaSWMarker: new google.maps.Marker({
+    position: new google.maps.LatLng(64, -135),
+    draggable: true
+  }),
+  searchAreaNEMarker: new google.maps.Marker({
+    position: new google.maps.LatLng(66, -133),
+    draggable: true
+  }),
+  updateSearchAreaOverlay: function() {
+    var sw = this.searchAreaSWMarker.getPosition();
+    var ne = this.searchAreaNEMarker.getPosition();
+    var w = Math.min(sw.lng(), ne.lng());
+    var s = Math.min(sw.lat(), ne.lat());
+    var e = Math.max(sw.lng(), ne.lng());
+    var n = Math.max(sw.lat(), ne.lat());
+    var latLngBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(s, w),
+      new google.maps.LatLng(n, e));
+    this.searchAreaOverlay.setBounds(latLngBounds);
+  },
+  updateWidgetFromOverlay: function() {
+    var bounds = this.searchAreaOverlay.getBounds();
+    var sw = bounds.getSouthWest();
+    var ne = bounds.getNorthEast();
+    $('#filter_bbox').val([
+      Math.min(sw.lng(), ne.lng()).toFixed(2),
+      Math.min(sw.lat(), ne.lat()).toFixed(2),
+      Math.max(sw.lng(), ne.lng()).toFixed(2),
+      Math.max(sw.lat(), ne.lat()).toFixed(2)
+    ].join(','));
+  }
 }
 );
 
