@@ -12,7 +12,8 @@ function initMap(mapContainer) {
     {
       zoom: 2,
       center: new google.maps.LatLng(40, 0),
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      scrollwheel: false
     });
 
   //it's neat, but it serves no practical purpose
