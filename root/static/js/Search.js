@@ -229,14 +229,16 @@ var GeographicWidget = BaseWidget.extend(
   updateSearchAreaOverlay: function() {
     var sw = this.searchAreaSWMarker.getPosition();
     var ne = this.searchAreaNEMarker.getPosition();
-    var w = Math.min(sw.lng(), ne.lng());
-    var s = Math.min(sw.lat(), ne.lat());
-    var e = Math.max(sw.lng(), ne.lng());
-    var n = Math.max(sw.lat(), ne.lat());
+    var w = Math.min(sw.lng(), ne.lng()).toFixed(2);
+    var s = Math.min(sw.lat(), ne.lat()).toFixed(2);
+    var e = Math.max(sw.lng(), ne.lng()).toFixed(2);
+    var n = Math.max(sw.lat(), ne.lat()).toFixed(2);
     var latLngBounds = new google.maps.LatLngBounds(
       new google.maps.LatLng(s, w),
       new google.maps.LatLng(n, e));
     this.searchAreaOverlay.setBounds(latLngBounds);
+    var target = $('#filter_bbox');
+    target.val([w, s, e, n].join(','));
   },
   updateWidgetFromOverlay: function() {
     var bounds = this.searchAreaOverlay.getBounds();
