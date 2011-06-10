@@ -84,7 +84,6 @@ var SearchResultsView = Backbone.View.extend(
 
     var searchResults = this.collection;
     searchResults.bind("refresh", this.render);
-
   },
 
   renderLength: function() {
@@ -156,9 +155,36 @@ var SearchResultsView = Backbone.View.extend(
       this.dataTable.fnClearTable();
       this.dataTable.fnAddData(preparedData);
     }
+    this.renderOnMap();
     return this;
-  }
-
+  },
+  renderOnMap: function() {
+//    console.dir(this.collection.data.results.rows);
+    var res = this.collection.data.results.rows.ROW;
+    for(var ii = 0; ii < res.length; ++ii) {
+      var path = new Array(
+        new google.maps.LatLng(res[ii].NEARSTARTLAT, res[ii].NEARSTARTLON),
+        new google.maps.LatLng(res[ii].FARSTARTLAT, res[ii].FARSTARTLON),
+        new google.maps.LatLng(res[ii].FARENDLAT, res[ii].FARENDLON),
+        new google.maps.LatLng(res[ii].NEARENDLAT, res[ii].NEARENDLON));
+      console.dir(path);
+      
+      var poly = new google.maps.Polygon({
+          paths: path,
+          fillColor: '#777777',
+          fillOpacity: 0.25,
+          strokeColor: '#333333',
+          strokeOpacity: 0.5,
+          strokeWeight: 2,
+          zIndex: 1000 + ii
+        });
+      poly.setMap(searchMap);
+    }
+  },
+  // use this array for clearing the overlays from the map when the results change(?)
+  // also for highlighting by changing the fillColor, strokeColor, etc.
+  // (this array is 1:1 with the results, so overlay [0] here is product [0] in the results)
+  mapOverlays: new Array()
 }
 );
 
