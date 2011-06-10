@@ -215,6 +215,7 @@ var GeographicWidget = BaseWidget.extend(
     strokeWeight: 2,
     fillColor: '#0066CC',
     fillOpacity: 0.5,
+    clickable: false,
     zIndex: 500 //always be below the granule overlays, which start at 1000
   }),
   searchAreaSWMarker: new google.maps.Marker({

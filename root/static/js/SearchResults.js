@@ -155,7 +155,7 @@ var SearchResultsView = Backbone.View.extend(
       this.dataTable.fnClearTable();
       this.dataTable.fnAddData(preparedData);
     }
-    this.clearOverlays();
+    this.clearOverlays(); // consider calling this at the same time we clear the datatable out?
     this.renderOnMap();
     return this;
   },
@@ -175,7 +175,8 @@ var SearchResultsView = Backbone.View.extend(
           strokeColor: '#333333',
           strokeOpacity: 0.5,
           strokeWeight: 2,
-          zIndex: 1000 + ii
+          zIndex: 1000 + ii,
+          clickable: true
         });
       poly.setMap(searchMap);
       this.mapOverlays.push(poly);
