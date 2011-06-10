@@ -242,12 +242,16 @@ var GeographicWidget = BaseWidget.extend(
     var bounds = this.searchAreaOverlay.getBounds();
     var sw = bounds.getSouthWest();
     var ne = bounds.getNorthEast();
-    $('#filter_bbox').val([
+    var target = $('#filter_bbox');
+    target.val([
       Math.min(sw.lng(), ne.lng()).toFixed(2),
       Math.min(sw.lat(), ne.lat()).toFixed(2),
       Math.max(sw.lng(), ne.lng()).toFixed(2),
       Math.max(sw.lat(), ne.lat()).toFixed(2)
     ].join(','));
+    var data = {};
+    data[target.attr('name')] = target.attr('value');
+    this.model.set(data);
   }
 }
 );
