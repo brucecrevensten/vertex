@@ -155,11 +155,11 @@ var SearchResultsView = Backbone.View.extend(
       this.dataTable.fnClearTable();
       this.dataTable.fnAddData(preparedData);
     }
+    this.clearOverlays();
     this.renderOnMap();
     return this;
   },
   renderOnMap: function() {
-//    console.dir(this.collection.data.results.rows);
     var res = this.collection.data.results.rows.ROW;
     for(var ii = 0; ii < res.length; ++ii) {
       var path = new Array(
@@ -167,7 +167,6 @@ var SearchResultsView = Backbone.View.extend(
         new google.maps.LatLng(res[ii].FARSTARTLAT, res[ii].FARSTARTLON),
         new google.maps.LatLng(res[ii].FARENDLAT, res[ii].FARENDLON),
         new google.maps.LatLng(res[ii].NEARENDLAT, res[ii].NEARENDLON));
-      console.dir(path);
       
       var poly = new google.maps.Polygon({
           paths: path,
@@ -179,7 +178,14 @@ var SearchResultsView = Backbone.View.extend(
           zIndex: 1000 + ii
         });
       poly.setMap(searchMap);
+      this.mapOverlays.push(poly);
     }
+  },
+  clearOverlays: function() {
+    for(var ii = 0; ii < this.mapOverlays.length; ++ii) {
+      this.mapOverlays[ii].setMap(null);
+    }
+    this.mapOverlays.length = 0;
   },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.
