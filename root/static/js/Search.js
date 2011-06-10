@@ -146,11 +146,12 @@ var PathFrameWidget = BaseWidget.extend({
 
 });
 
+// TODO: put in csv-to-coord array utility functions
 var GeographicFilter = Backbone.Model.extend(
 {
   name: "GeographicFilter",
   defaults: {
-    bbox:"-135,64,-133,66"
+    bbox:"-149.46,63.78,-145.96,65.56"
   },
   getWidget: function() {
     return new GeographicWidget({model:this});
@@ -205,10 +206,11 @@ var GeographicWidget = BaseWidget.extend(
     searchMap.fitBounds(this.searchAreaOverlay.getBounds());
     return this;
   },
+  // todo: derive these from the true defaults
   searchAreaOverlay: new google.maps.Rectangle({
     bounds: new google.maps.LatLngBounds(
-      new google.maps.LatLng(64, -135),
-      new google.maps.LatLng(66, -133)
+      new google.maps.LatLng(63.78, -149.46),
+      new google.maps.LatLng(65.56, -145.96)
     ),
     strokeColor: '#0000FF',
     strokeOpacity: 0.5,
@@ -218,12 +220,13 @@ var GeographicWidget = BaseWidget.extend(
     clickable: false,
     zIndex: 500 //always be below the granule overlays, which start at 1000
   }),
+  // todo: derive these from the true defaults
   searchAreaSWMarker: new google.maps.Marker({
-    position: new google.maps.LatLng(64, -135),
+    position: new google.maps.LatLng(63.78, -149.46),
     draggable: true
   }),
   searchAreaNEMarker: new google.maps.Marker({
-    position: new google.maps.LatLng(66, -133),
+    position: new google.maps.LatLng(65.56, -145.96),
     draggable: true
   }),
   updateSearchAreaOverlay: function() {
@@ -261,8 +264,8 @@ var GeographicWidget = BaseWidget.extend(
 var DateFilter = Backbone.Model.extend(
 { name: "DateFilter",
   defaults: {
-      start:"2009-06-01",
-      end:"2009-06-30",
+      start:"2010-10-01",
+      end:"2011-01-01",
   },
   getWidget: function() { 
     return new DateWidget({model:this});
@@ -382,7 +385,7 @@ var ProcessingFilter = Backbone.Model.extend(
   {
     name: "ProcessingFilter",
     defaults: {
-      processing: ["L0","L1","BROWSE","L1.5","L1.0","L1.1"]
+      processing: ["L0","L1","L1.5","L1.0","L1.1"]
     },
     getWidget: function() {
       return new ProcessingWidget({model:this});
@@ -398,7 +401,6 @@ var ProcessingWidget = BaseWidget.extend(
     id: "filter_processing",
     processingTypes: {
       // value : display name
-      "BROWSE" : "Browse",
       "L0" : "L0",
       "L1" : "L1",
       "L1.0" : "L1.0",

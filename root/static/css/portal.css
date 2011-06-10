@@ -156,3 +156,8 @@ label.hover {
 #geographic_widget p {
   margin: 0 0 1em;
 }
+
+#geographic_widget input[type="text"] {
+  width: 100%;
+  font-size: .9em;
+}
