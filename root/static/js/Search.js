@@ -171,7 +171,7 @@ var GeographicWidget = BaseWidget.extend(
       data = {};
       data[target.attr('name')] = target.attr('value');
       var bbox = target.attr('value').split(/,/);
-      this.mapOverlay.setBounds(new google.maps.LatLngBounds(
+      this.searchAreaOverlay.setBounds(new google.maps.LatLngBounds(
         new google.maps.LatLng(Math.min(bbox[1], bbox[3]), Math.min(bbox[0], bbox[2])),
         new google.maps.LatLng(Math.max(bbox[1], bbox[3]), Math.max(bbox[0], bbox[2]))
       ));
