@@ -24,7 +24,6 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.dataTables.min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.loadmask.js') %]"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchMap.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/DataProduct.js') %]"></script>

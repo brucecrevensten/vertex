@@ -323,7 +323,7 @@ var DateWidget = BaseWidget.extend(
 
 var PlatformFilter = Backbone.Model.extend(
   {
-    name: "ProcessingFilter",
+    name: "PlatformFilter",
     defaults: {
       platform: ["E1","E2","J1","A3","R1"]
     },

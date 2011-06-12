@@ -199,7 +199,7 @@ var SearchResultsView = Backbone.View.extend(
       fillColor: '#777777',
       strokeColor: '#333333'
     });
-  }
+  },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.
   // (this array is 1:1 with the results, so overlay [0] here is product [0] in the results)
