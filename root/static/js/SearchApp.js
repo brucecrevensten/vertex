@@ -48,10 +48,34 @@ $(function() {
 
     // Initialize the download queue
     this.downloadQueue = new DownloadQueue();
-    this.downloadQueueView = new DownloadQueueView( { collection: this.downloadQueue } );
-    // initialize the download queue summary button
-    $('#queue_summary').html( this.downloadQueueView.renderSummaryButton() );
-    $('#queue_summary').button();
+    this.downloadQueueView = new DownloadQueueView( 
+      { 
+        collection: this.downloadQueue,
+        el: $("#download_queue")
+      } 
+    );
+    this.downloadQueueSummaryView = new DownloadQueueSummaryView( 
+      { 
+        collection: this.downloadQueue,
+        el: $("#queue_summary")
+      }
+    );
+    this.downloadQueueSummaryView.render();
+    $("#queue_summary").bind("click", { dqv: this.downloadQueueView }, function(e) {
+      $("#download_queue").html(
+        e.data.dqv.render().el.innerHTML
+      );
+      $("#download_queue").dialog(
+       {
+          modal: true,
+          width: 800,
+          draggable: false,
+          resizable: false,
+          title: "Download queue",
+          position: "top"
+        }
+      );
+    });
 
     //fire up the map
     initMap('searchMap');
