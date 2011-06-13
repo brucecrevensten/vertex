@@ -6,9 +6,6 @@ var SearchResults = Backbone.Collection.extend(
     setParameters: function(sp) {
       this.searchParameters = sp;
     },
-    getQueryString: function() {
-      return this.url + JSON.stringify(this.searchParameters.toJSON());
-    },
 
     // Purpose of this function is to build the array of data that will be provided to the DataTable.
     // The DataTable expects an array of arrays, so we've gotta do a little bit of munging
@@ -81,18 +78,19 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
-
-    var searchResults = this.collection;
-    searchResults.bind("refresh", this.render);
+    this.collection.bind("refresh", this.render);
   },
 
   renderLength: function() {
     return _.template('<h3><%= length %> results found</h3>', this.collection);
   },
 
+
+// todo: fix this to not use the mess of arrays -- datatables v1.8 should fix that with mDataProp in aoColumns
   render: function() {
 
-    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows.ROW, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE","THUMBNAIL"]);
+    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows.ROW, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE","THUMBNAIL","URL"]);
+
     if ( false == this.hasRendered ) {
       this.hasRendered = true;
       this.dataTable = $(this.el).dataTable(
@@ -104,31 +102,47 @@ var SearchResultsView = Backbone.View.extend(
         "bJQueryUI": true,
         "aaData": preparedData,
         "aoColumns": [
-        { "sTitle": "Granule Name",
-          "bUseRendered": false,
-          "fnRender": function(o) {
-            // We do a little mini-table here to get vertical centering
-            return _.template('\
-<div style="display:table">\
-  <img style="display:table-cell" src="<%= thumbnail %>"/>\
-  <span style="display:table-cell;vertical-align:middle;height: 100%;">\
-    <%= name %>\
-  </span>\
-</div', { thumbnail: o.aData[8], name: o.aData[0] });
+          { 
+            
+            "sTitle": "Granule Name",
+            "bUseRendered": false, // preserve the original granule name (don't replace with the html internally) so sorting works as expected
+            "fnRender": function(o) {
+              // We do a little mini-table here to get vertical centering
+              return _.template('\
+  <div style="display:table">\
+    <img style="display:table-cell" src="<%= thumbnail %>"/>\
+    <span style="display:table-cell;vertical-align:middle;height: 100%;">\
+      <%= name %>\
+    </span>\
+  </div', { thumbnail: o.aData[8], name: o.aData[0] });
+            }
+          },
+          { "sTitle": "Processing" },
+          { "sTitle": "Platform" },
+          { "sTitle": "Orbit" },
+          { "sTitle": "Frame" },
+          { "sTitle": "Center Latitude/Longitude",
+            "fnRender": function(o) {
+              return o.aData[5]+', '+o.aData[6];
+            }
+          },
+          { "bVisible" : false }, // suspend display of CenterLon distinct from the prior column
+          { "sTitle": "Acquisition Date" },
+          { "bVisible" : false }, // suspend display of thumbnail
+          { 
+            "sTitle": "Tools",
+            "fnRender": function(o) {
+      
+              return _.template('\
+<button product="<%= product %>" class="tool_download">Download</button>\
+<button product="<%= product %>" class="tool_enqueue">Add to queue</button>\
+', { product: o.aData[0]+"_"+o.aData[1] } );
+
+            },
+            "bUseRendered": false, // keep the URl here for convenience for direct download link
+            "bSearchable": false,
+            "bSortable": false
           }
-        },
-        { "sTitle": "Processing" },
-        { "sTitle": "Platform" },
-        { "sTitle": "Orbit" },
-        { "sTitle": "Frame" },
-        { "sTitle": "Center Latitude/Longitude",
-          "fnRender": function(o) {
-            return o.aData[5]+', '+o.aData[6];
-          }
-        },
-        { "bVisible" : false }, // suspend display of CenterLon distinct from the prior column
-        { "sTitle": "Acquisition Date" },
-        { "bVisible" : false } // suspend display of thumbnail
         ],
         "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
           gid = aData[0]+"_"+aData[1];
@@ -151,7 +165,33 @@ var SearchResultsView = Backbone.View.extend(
         }
       }
       );
-        } else {
+
+      $('.tool_download').button(
+        {
+          icons: {
+            primary: "ui-icon-circle-arrow-s"
+          },
+          text: 'Download' 
+        }
+      );
+      
+      $('.tool_enqueue').click( function(e) {
+        e.stopPropagation();
+        SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product')));
+        $(this).button( { disabled: true } );
+      }
+      );
+
+      $('.tool_enqueue').button(
+        {
+          icons: {
+            primary: "ui-icon-circle-plus"
+          },
+          text: 'Add to queue'
+        }
+      );
+
+    } else {
       this.dataTable.fnClearTable();
       this.dataTable.fnAddData(preparedData);
     }

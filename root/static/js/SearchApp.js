@@ -46,6 +46,13 @@ $(function() {
 
     this.searchResults.fetchSearchResults(this.searchParameters); // initial population
 
+    // Initialize the download queue
+    this.downloadQueue = new DownloadQueue();
+    this.downloadQueueView = new DownloadQueueView( { collection: this.downloadQueue } );
+    // initialize the download queue summary button
+    $('#queue_summary').html( this.downloadQueueView.renderSummaryButton() );
+    $('#queue_summary').button();
+
     //fire up the map
     initMap('searchMap');
 

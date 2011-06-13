@@ -30,6 +30,7 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/Search.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchResults.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchApp.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/DownloadQueue.js') %]"></script>
 
 </head>
 <body>
@@ -41,11 +42,13 @@
 <li>Home</li>
 </ul>
 </nav>
+<div id="queue_summary" style="float: right; position: relative; top: -1em;"></div>
 </header>
 
 <div id="contents">
 
 <div id="product_profile" style="display: none;"></div>
+<div id="download_queue" style="display: none;"></div>
 
 <div id="leftColumn">
 <div id="filters"></div>
