@@ -99,7 +99,7 @@ var DownloadQueueView = Backbone.View.extend(
         {
           return memo + _.template('\
 <li>\
-<input type="hidden" name="granule_list" value="<%= GRANULENAME %>" />\
+<input type="hidden" name="granule_list[]" value="<%= GRANULENAME %>" />\
 <%= GRANULENAME %>\
 </li>\
 ', dp.toJSON() )
@@ -120,7 +120,6 @@ var DownloadQueueView = Backbone.View.extend(
 ', { queue: list, url: AsfDataportalConfig.apiUrl } ));
 
       $(this.el).find("#download_queue_formats").buttonset();
-
       $(this.el).find("#do_queue_download").button( { icons: { primary: "ui-icon-circle-arrow-s" }}).focus();
 
       return this;
