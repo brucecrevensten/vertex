@@ -34,6 +34,9 @@
 
 </head>
 <body>
+
+<div id="queue_summary"></div>
+
 <div id="wrapper">
 <header>
 <h1><span>ASF DataPortal</span></h1>
@@ -42,7 +45,6 @@
 <li>Home</li>
 </ul>
 </nav>
-<div id="queue_summary" style="float: right; position: relative; top: -1em;"></div>
 </header>
 
 <div id="contents">

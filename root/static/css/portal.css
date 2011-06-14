@@ -177,3 +177,9 @@ label.hover {
 #download queue li {
   margin: .5ex 1em;
 }
+
+#queue_summary {
+  position: absolute;
+  top: 3em;
+  right: 3em;
+}
