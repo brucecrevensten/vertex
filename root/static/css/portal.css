@@ -2,6 +2,10 @@ body {
   background: url(../images/satellitebackground.png);
 }
 
+body * {
+  font-size: 12px !important;
+}
+
 a {
 color: #888;
 text-decoration: none;
