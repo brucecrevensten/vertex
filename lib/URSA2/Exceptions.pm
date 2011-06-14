@@ -35,7 +35,7 @@ use Exception::Class (
   'DbException' => 
   {
     description => 'Database exception occurred.',
-    fields => [ 'error', 'message' ],
+    fields => [ 'error', 'message', 'parameter', 'value' ],
     isa => 'URSA2::Exception::Http::DbException',
   },
 
