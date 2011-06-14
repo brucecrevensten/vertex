@@ -10,7 +10,21 @@ describe("Download Queue", function() {
     expect( dq.get(1).toJSON().GRANULENAME ).toEqual( 'ALPSRP234721390' );
   });
 
-  it("should know the size of the queue", function() {
+  it("should allow you to remove items from the queue", function() {
+    dq = new DownloadQueue();
+    dp1 = new DataProduct();
+    dp2 = new DataProduct();
+    dp3 = new DataProduct();
+    dq.add( [ dp1, dp2, dp3 ] );
+    expect( dq.length).toEqual( 3 );
+    dq.remove( dp1 );
+    expect( dq.length).toEqual( 2 );
+    dq.remove( [ dp2, dp3 ] );
+    expect( dq.length).toEqual( 0 ) ;
+
+  });
+
+  it("should know the size (in bytes) of the queue, and show that as a nicely formatted string", function() {
     dq = new DownloadQueue();
     expect( dq.length ).toEqual( 0 );
     expect( dq.getSizeInBytes() ).toEqual( 0 );

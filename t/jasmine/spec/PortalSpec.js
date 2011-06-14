@@ -75,7 +75,7 @@ describe("Search components", function() {
     sp = new SearchParameters({granule_list:"ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360"});
     expect(sp.get('granule_list')).toEqual('ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360');
     expect(sp.toJSON()).toEqual(
-  { format : 'jsonp', granule_list : 'ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360', bbox : '-149.46,63.78,-145.96,65.56', processing : [ 'L0', 'L1', 'L1.5', 'L1.0', 'L1.1' ], platform : [ 'E1', 'E2', 'J1', 'A3', 'R1' ], start : '2010-10-01', end : '2011-01-01', path : ' ', frame : ' ', offnadir : 0, direction : 'any' }  
+  { format : 'jsonp', granule_list : 'ALPSRP234721390,ALPSRP234721380,ALPSRP234721370,ALPSRP234721360', bbox : '-149.46,63.78,-145.96,65.56', processing : [ 'L0', 'L1', 'L1.5', 'L1.0', 'L1.1' ], platform : [ 'E1', 'E2', 'J1', 'A3', 'R1' ], start : '2010-12-01', end : '2011-01-01', path : ' ', frame : ' ', offnadir : 0, direction : 'any' }  
     );
   });
 
