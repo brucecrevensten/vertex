@@ -148,6 +148,22 @@ label.hover {
   background-color: #d8d8d8;
 }
 
+#results tr.selected.even {
+  background-color: #399ec2; 
+}
+
+#results tr.selected {
+  background-color: #288db1;
+}
+
+#results tr.selected.even td.sorting_1 {
+  background-color: #399ec2;
+}
+
+#results tr.selected.odd td.sorting_1 {
+  background-color: #288db1;
+}
+
 #product_profile img {
   display: block;
   margin: 1em auto;
@@ -195,3 +211,4 @@ label.hover {
   top: 3em;
   right: 3em;
 }
+

@@ -183,7 +183,13 @@ var SearchResultsView = Backbone.View.extend(
       $('.tool_enqueue').click( function(e) {
         e.stopPropagation();
         SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product')));
+
+        // change the "enqueue" to "remove"
         $(this).button( { disabled: true } );
+
+        // highlight the row
+        $(e.currentTarget.parentNode.parentNode).addClass("selected");
+
       }
       );
 
