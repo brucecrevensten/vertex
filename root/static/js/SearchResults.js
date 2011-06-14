@@ -138,7 +138,7 @@ var SearchResultsView = Backbone.View.extend(
       
               return _.template('\
 <button product="<%= product %>" class="tool_download">Download</button>\
-<button product="<%= product %>" class="tool_enqueue">Add to queue</button>\
+<button product="<%= product %>" class="tool_enqueuer">Add to queue</button>\
 ', { product: o.aData[0]+"_"+o.aData[1] } );
 
             },
@@ -180,25 +180,28 @@ var SearchResultsView = Backbone.View.extend(
         }
       );
       
-      $('.tool_enqueue').click( function(e) {
+      $('.tool_enqueuer').click( function(e) {
         e.stopPropagation();
-        SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product')));
+        if ( $(this).prop('selected') == 'selected' ) {
+          $(this).prop('selected','false');
+          SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product')));
+          $(this).button( "option", "label", "Add to queue" );
+          $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+        } else {
+          $(this).prop('selected','selected');
+          SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product')));
+          $(this).button( "option", "label", "Remove from queue" );
+          $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
+        }
+        $(e.currentTarget.parentNode.parentNode).toggleClass("selected");
+      });
 
-        // change the "enqueue" to "remove"
-        $(this).button( { disabled: true } );
-
-        // highlight the row
-        $(e.currentTarget.parentNode.parentNode).addClass("selected");
-
-      }
-      );
-
-      $('.tool_enqueue').button(
+      $('.tool_enqueuer').button(
         {
           icons: {
             primary: "ui-icon-circle-plus"
           },
-          text: 'Add to queue'
+          label: 'Add to queue'
         }
       );
 

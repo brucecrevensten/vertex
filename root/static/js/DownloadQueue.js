@@ -47,6 +47,7 @@ var DownloadQueueSummaryView = Backbone.View.extend(
     initialize: function() {
       _.bindAll(this, "render");
       this.collection.bind("add", this.render);
+      this.collection.bind("remove", this.render);
     },
 
     // Creates a button that can pop the real DownloadQueue
