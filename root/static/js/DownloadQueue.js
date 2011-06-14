@@ -70,12 +70,17 @@ var DownloadQueueSummaryView = Backbone.View.extend(
 
       $(this.el).button(
         {
+          disabled: ( 0 == this.collection.length ) ? true : false,
           icons: {
             primary: 'ui-icon-folder-open'
           },
           label: _.template('Download queue <span class="<%= class %>">(<%= summary %>)</span>', { summary: t, class: c })
         }
       );
+
+      if( 0 != this.collection.length ) {
+        $(this.el).effect('highlight');
+      }
 
       return this;
 
