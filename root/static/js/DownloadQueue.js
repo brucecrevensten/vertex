@@ -111,6 +111,7 @@ var DownloadQueueView = Backbone.View.extend(
 <form id="download_queue_form" action="<%= url %>">\
 <ul><%= queue %></ul>\
 <div id="download_queue_formats">\
+Format:&nbsp;\
 <input checked="checked" type="radio" name="format" value="metalink" id="download_type_metalink" /><label for="download_type_metalink">Bulk Download (.metalink)</label>\
 <input type="radio" name="format" value="csv" id="download_type_csv" /><label for="download_type_csv">Spreadsheet (.csv)</label>\
 <input type="radio" name="format" value="kml" id="download_type_kml" /><label for="download_type_kml">Google Earth (.kml)</label>\

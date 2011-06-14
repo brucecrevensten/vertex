@@ -264,7 +264,7 @@ var GeographicWidget = BaseWidget.extend(
 var DateFilter = Backbone.Model.extend(
 { name: "DateFilter",
   defaults: {
-      start:"2010-10-01",
+      start:"2010-12-01",
       end:"2011-01-01",
   },
   getWidget: function() { 

@@ -98,12 +98,15 @@ var SearchResultsView = Backbone.View.extend(
         "oLanguage" : {
           "sSearch" : "Filter results:"
         },
-        "bAutoWidth" : false,
+        "bFilter" : false,
+        "bLengthChange" : false,
+        "sScrollY" : "20em",
+        "bPaginate" : false,
         "bJQueryUI": true,
         "aaData": preparedData,
         "aoColumns": [
           { 
-            
+                      
             "sTitle": "Granule Name",
             "bUseRendered": false, // preserve the original granule name (don't replace with the html internally) so sorting works as expected
             "fnRender": function(o) {
@@ -165,6 +168,8 @@ var SearchResultsView = Backbone.View.extend(
         }
       }
       );
+      
+      this.dataTable.fnAdjustColumnSizing();
 
       $('.tool_download').button(
         {

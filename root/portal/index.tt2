@@ -88,9 +88,8 @@
 </div>
 
 
-<div id="results-widget-wrapper" class="ui-widget">
 <table id="results"></table>
-</div>
+
 </div>
 </div>
 

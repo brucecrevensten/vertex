@@ -103,7 +103,7 @@ label.hover {
 }
 
 #results {
-  width: 100% !important;
+  width: inherit;
 }
 
 #results tbody td {
@@ -162,4 +162,14 @@ label.hover {
   font-size: .9em;
 }
 
+#download_queue div {
+  margin: 1ex 0;
+}
 
+#download_queue ul {
+  margin: 1ex 0;
+}
+
+#download queue li {
+  margin: .5ex 1em;
+}
