@@ -102,10 +102,12 @@ var DownloadQueueView = Backbone.View.extend(
 
       var table = '';
       this.collection.each( function(m) {
-        console.log(m.toJSON());
         table = table + _.template('\
 <tr>\
-  <td><%= GRANULENAME %></td>\
+  <td>\
+    <%= GRANULENAME %>\
+    <input type="hidden" name="granule_list[]" value="<%= GRANULENAME %>" />\
+  </td>\
   <td><%= PROCESSINGTYPE %></td>\
   <td><%= PLATFORM %></td>\
   <td><%= ACQUISITIONDATE %></td>\
