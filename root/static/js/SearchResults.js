@@ -135,9 +135,9 @@ var SearchResultsView = Backbone.View.extend(
             "fnRender": function(o) {
       
               return _.template('\
-<button product="<%= product %>" class="tool_download">Download</button>\
+<a href="<%= url %>" product="<%= product %>" class="tool_download">Download</a>\
 <button product="<%= product %>" class="tool_enqueuer">Add to queue</button>\
-', { product: o.aData[0]+"_"+o.aData[1] } );
+', { product: o.aData[0]+"_"+o.aData[1], url: o.aData[9] } );
 
             },
             "bUseRendered": false, // keep the URl here for convenience for direct download link
@@ -182,6 +182,10 @@ var SearchResultsView = Backbone.View.extend(
         text: 'Download' 
       }
     );
+
+    $('.tool_download').click( function(e) {
+      e.stopPropagation();
+    });
     
     $('.tool_enqueuer').click( function(e) {
       e.stopPropagation();
