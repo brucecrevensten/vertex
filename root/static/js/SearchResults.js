@@ -128,7 +128,13 @@ var SearchResultsView = Backbone.View.extend(
             }
           },
           { "bVisible" : false }, // suspend display of CenterLon distinct from the prior column
-          { "sTitle": "Acquisition Date" },
+          { 
+            "sTitle": "Acquisition Date",
+            "fnRender" : function(o) {
+              // truncate the date to yyyy-mm-dd format
+              return $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', o.aData[7]));
+            }
+          },
           { "bVisible" : false }, // suspend display of thumbnail
           { 
             "sTitle": "Tools",
