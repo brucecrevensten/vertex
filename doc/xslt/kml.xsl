@@ -22,18 +22,25 @@
               <xsl:text disable-output-escaping="yes"><![CDATA[ <![CDATA[  ]]></xsl:text>
               <h1><xsl:value-of select="PLATFORM" /> (<xsl:value-of select="BEAMMODEDESC" />), acquired <xsl:value-of select="ACQUISITIONDATE" /></h1>
               <h2><xsl:value-of select="URL"/></h2>
-              <h3>Metadata</h3>
-              <ul>
-                <li>Processing type: <xsl:value-of select="PROCESSINGTYPE" /></li>
-                <li>Frame: <xsl:value-of select="FRAMENUMBER" /></li>
-                <li>Path: <xsl:value-of select="PATHNUMBER" /></li>
-                <li>Orbit: <xsl:value-of select="ORBIT" /></li>
-                <li>Start time: <xsl:value-of select="STARTTIME" /></li>
-                <li>End time: <xsl:value-of select="ENDTIME" /></li>
-                <li>Faraday Rotation: <xsl:value-of select="FARADAYROTATION" /></li>
-                <li>Ascending/Descending: <xsl:value-of select="ASCENDINGDESCENDING" /></li>
-                <li>Off Nadir Angle: <xsl:value-of select="OFFNADIRANGLE" /></li>
-              </ul>
+              <div style="position:absolute;left:20px;top:200px">
+                <h3>Metadata</h3>
+                <ul>
+                  <li>Processing type: <xsl:value-of select="PROCESSINGTYPE" /></li>
+                  <li>Frame: <xsl:value-of select="FRAMENUMBER" /></li>
+                  <li>Path: <xsl:value-of select="PATHNUMBER" /></li>
+                  <li>Orbit: <xsl:value-of select="ORBIT" /></li>
+                  <li>Start time: <xsl:value-of select="STARTTIME" /></li>
+                  <li>End time: <xsl:value-of select="ENDTIME" /></li>
+                  <li>Faraday Rotation: <xsl:value-of select="FARADAYROTATION" /></li>
+                  <li>Ascending/Descending: <xsl:value-of select="ASCENDINGDESCENDING" /></li>
+                  <li>Off Nadir Angle: <xsl:value-of select="OFFNADIRANGLE" /></li>
+                </ul>
+              </div>
+              <div style="position:absolute;left:300px;top:250px">
+                <a href="{BROWSE}">
+                  <img src="{THUMBNAIL}" />
+		</a>
+              </div>
             </description>
             <styleUrl>#yellowLineGreenPoly</styleUrl>
             <Polygon>
