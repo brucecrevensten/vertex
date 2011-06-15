@@ -103,7 +103,7 @@ var OffNadirWidget = BaseWidget.extend(
   },
   render: function() {
     $(this.el).html(
-      _.template('<label for="filter_offnadir">Off nadir angle: <input type="text" id="filter_offnadir" name="offnadir" value="<%= offnadir %>"</label>', this.model.toJSON())
+      _.template('<label for="filter_offnadir">Off nadir angle:</label><input type="text" id="filter_offnadir" name="offnadir" value="<%= offnadir %>">', this.model.toJSON())
     );
     return this;
   }
@@ -137,8 +137,8 @@ var PathFrameWidget = BaseWidget.extend({
   render: function(){
     $(this.el).html(
       _.template('<div>\
-      <label for="filter_path">PATH: <input type="text" id="filter_path" name="path" value="<%= path %>"></label>\
-      <label for="filter_frame">FRAME: <input type="text" id="filter_frame" name="frame" value="<%= frame %>"></label>\
+      <label for="filter_path">Path</label><input type="text" id="filter_path" name="path" value="<%= path %>">\
+      <label for="filter_frame">Frame</label><input type="text" id="filter_frame" name="frame" value="<%= frame %>">\
       </div>', this.model.toJSON())
     );
     return this;
@@ -293,8 +293,8 @@ var DateWidget = BaseWidget.extend(
   render: function() {
     today = new Date();
     $(this.el).html(
-      _.template('<label for="filter_start">Start date (YYYY-MM-DD)<input type="text" id="filter_start" name="start" value="<%= start %>"></label>\
-      <label for="filter_end">End date (YYYY-MM-DD)<input type="text" id="filter_end" name="end" value="<%= end %>"></label>\
+      _.template('<label for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
+      <label for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>">\
       ', this.model.toJSON())
     );
     $(this.el).find('#filter_start').datepicker({
