@@ -89,15 +89,13 @@ var SearchResultsView = Backbone.View.extend(
 // todo: fix this to not use the mess of arrays -- datatables v1.8 should fix that with mDataProp in aoColumns
   render: function() {
 
+//todo: remove this nonsense
     var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows.ROW, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE","THUMBNAIL","URL"]);
 
     if ( false == this.hasRendered ) {
       this.hasRendered = true;
       this.dataTable = $(this.el).dataTable(
       {
-        "oLanguage" : {
-          "sSearch" : "Filter results:"
-        },
         "bFilter" : false,
         "bLengthChange" : false,
         "sScrollY" : "20em",

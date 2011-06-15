@@ -106,62 +106,68 @@ label.hover {
   cursor: pointer;
 }
 
-#results {
+.datatable {
   width: inherit;
 }
 
-#results tbody td {
+.datatable tbody td {
   padding: 1ex;
   vertical-align: middle;
 }
 
-#results tbody td img {
+.datatable tbody td img {
   margin-right: 1ex;
 }
 
-#results tbody tr:hover {
+.datatable tbody tr:hover {
   background-color: #FFF88E !important; 
 }
 
 /* this rule is specific to highlighting the DataTable active sorting column */
-#results tbody tr:hover td.sorting_1 { 
+.datatable tbody tr:hover td.sorting_1 { 
   background-color: #FFF940 !important;
 }
 
-#results tbody tr {
+.datatable tbody tr {
   cursor: pointer;
 }
 
-#results tr.even {
+.datatable tr.even {
   background-color: #f2f2f2;
 }
 
-#results tr.odd {
+.datatable tr.odd {
   background-color: #e2e2e2;
 }
 
-#results tr.even td.sorting_1 {
+.datatable tr.even td.sorting_1 {
   background-color: #e8e8e8;
 }
 
-#results tr.odd td.sorting_1 {
+.datatable tr.odd td.sorting_1 {
   background-color: #d8d8d8;
 }
 
-#results tr.selected.even {
+.datatable tr.selected.even {
   background-color: #399ec2; 
 }
 
-#results tr.selected {
+.datatable tr.selected {
   background-color: #288db1;
 }
 
-#results tr.selected.even td.sorting_1 {
+.datatable tr.selected.even td.sorting_1 {
   background-color: #399ec2;
 }
 
-#results tr.selected.odd td.sorting_1 {
+.datatable tr.selected.odd td.sorting_1 {
   background-color: #288db1;
+}
+
+.datatable { 
+  width: 100%;
+  color: black !important;
+  height: auto;
 }
 
 #product_profile img {
@@ -194,21 +200,26 @@ label.hover {
   font-size: .9em;
 }
 
-#download_queue div {
-  margin: 1ex 0;
-}
-
-#download_queue ul {
-  margin: 1ex 0;
-}
-
-#download queue li {
-  margin: .5ex 1em;
-}
-
 #queue_summary {
   position: absolute;
   top: 3em;
   right: 3em;
 }
 
+/* override the min-height property here */
+#download_queue .dataTables_wrapper {
+  min-height: 0;
+}
+
+#download_queue_formats {
+  float: right;
+}
+
+#do_queue_download {
+  float: right;
+  margin-left: 1em;
+}
+
+.footer_controls {
+  padding: 2em 0;
+}

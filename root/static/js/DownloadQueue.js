@@ -100,31 +100,51 @@ var DownloadQueueView = Backbone.View.extend(
     // Renders the main download queue
     render: function() {
 
-      var list = this.collection.reduce( 
-        function(memo, dp)
-        {
-          return memo + _.template('\
-<li>\
-<input type="hidden" name="granule_list[]" value="<%= GRANULENAME %>" />\
-<%= GRANULENAME %>\
-</li>\
-', dp.toJSON() )
-        },
-        ''
-      );
+      var table = '';
+      this.collection.each( function(m) {
+        console.log(m.toJSON());
+        table = table + _.template('\
+<tr>\
+  <td><%= GRANULENAME %></td>\
+  <td><%= PROCESSINGTYPE %></td>\
+  <td><%= PLATFORM %></td>\
+  <td><%= ACQUISITIONDATE %></td>\
+</tr>\
+', m.toJSON());
+      });
+
       $(this.el).html(
         _.template('\
 <form id="download_queue_form" action="<%= url %>">\
-<ul><%= queue %></ul>\
+<table class="datatable" id="download_queue_table">\
+<thead>\
+<tr>\
+<th>Granule Name</th>\
+<th>Processing</th>\
+<th>Platform</th>\
+<th>Acquisition Date</th>\
+</tr>\
+</thead>\
+<tbody> <%= table %> </tbody>\
+</table>\
+<div class="footer_controls">\
+<button type="submit" id="do_queue_download" name="Download">Download</button>\
 <div id="download_queue_formats">\
-Format:&nbsp;\
 <input checked="checked" type="radio" name="format" value="metalink" id="download_type_metalink" /><label for="download_type_metalink">Bulk Download (.metalink)</label>\
 <input type="radio" name="format" value="csv" id="download_type_csv" /><label for="download_type_csv">Spreadsheet (.csv)</label>\
 <input type="radio" name="format" value="kml" id="download_type_kml" /><label for="download_type_kml">Google Earth (.kml)</label>\
 </div>\
-<button type="submit" id="do_queue_download" name="Download">Download</button>\
+</div>\
 </form>\
-', { queue: list, url: AsfDataportalConfig.apiUrl } ));
+', { table: table, url: AsfDataportalConfig.apiUrl } ));
+
+      $(this.el).find("#download_queue_table").dataTable(
+      {
+        "bFilter" : false,
+        "bLengthChange" : false,
+        "bPaginate" : false,
+        "bJQueryUI": true
+      });
 
       $(this.el).find("#download_queue_formats").buttonset();
       $(this.el).find("#do_queue_download").button( { icons: { primary: "ui-icon-circle-arrow-s" }}).focus();
