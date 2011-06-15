@@ -137,8 +137,8 @@ var PathFrameWidget = BaseWidget.extend({
   render: function(){
     $(this.el).html(
       _.template('<div>\
-      <label for="filter_path">Path</label><input type="text" id="filter_path" name="path" value="<%= path %>">\
-      <label for="filter_frame">Frame</label><input type="text" id="filter_frame" name="frame" value="<%= frame %>">\
+      <label for="filter_path">Path</label><input type="text" size="10" id="filter_path" name="path" value="<%= path %>">\
+      <label for="filter_frame">Frame</label><input type="text" size="10" id="filter_frame" name="frame" value="<%= frame %>">\
       </div>', this.model.toJSON())
     );
     return this;
