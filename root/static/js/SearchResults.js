@@ -169,44 +169,45 @@ var SearchResultsView = Backbone.View.extend(
       
       this.dataTable.fnAdjustColumnSizing();
 
-      $('.tool_download').button(
-        {
-          icons: {
-            primary: "ui-icon-circle-arrow-s"
-          },
-          text: 'Download' 
-        }
-      );
-      
-      $('.tool_enqueuer').click( function(e) {
-        e.stopPropagation();
-        if ( $(this).prop('selected') == 'selected' ) {
-          $(this).prop('selected','false');
-          SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product')));
-          $(this).button( "option", "label", "Add to queue" );
-          $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
-        } else {
-          $(this).prop('selected','selected');
-          SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product')));
-          $(this).button( "option", "label", "Remove from queue" );
-          $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
-        }
-        $(e.currentTarget.parentNode.parentNode).toggleClass("selected");
-      });
-
-      $('.tool_enqueuer').button(
-        {
-          icons: {
-            primary: "ui-icon-circle-plus"
-          },
-          label: 'Add to queue'
-        }
-      );
-
     } else {
       this.dataTable.fnClearTable();
       this.dataTable.fnAddData(preparedData);
     }
+
+    $('.tool_download').button(
+      {
+        icons: {
+          primary: "ui-icon-circle-arrow-s"
+        },
+        text: 'Download' 
+      }
+    );
+    
+    $('.tool_enqueuer').click( function(e) {
+      e.stopPropagation();
+      if ( $(this).prop('selected') == 'selected' ) {
+        $(this).prop('selected','false');
+        SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product')));
+        $(this).button( "option", "label", "Add to queue" );
+        $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+      } else {
+        $(this).prop('selected','selected');
+        SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product')));
+        $(this).button( "option", "label", "Remove from queue" );
+        $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
+      }
+      $(e.currentTarget.parentNode.parentNode).toggleClass("selected");
+    });
+
+    $('.tool_enqueuer').button(
+      {
+        icons: {
+          primary: "ui-icon-circle-plus"
+        },
+        label: 'Add to queue'
+      }
+    );
+
     this.clearOverlays(); // consider calling this at the same time we clear the datatable out?
     this.renderOnMap();
     return this;
