@@ -89,8 +89,9 @@
   </div>
 </div>
 
-
+<div id="results-widget-wrapper">
 <table class="datatable" id="results"></table>
+</div>
 
 </div>
 </div>

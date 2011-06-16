@@ -1,8 +1,16 @@
 var SearchResults = Backbone.Collection.extend(
   {
     url: AsfDataportalConfig.apiUrl,
-    model:DataProduct,
+    model: DataProduct,
     error:"",
+
+    // Client sets this to the SearchResultsView it creates
+    view: null,
+
+    setView: function(v) {
+      this.view = v;
+    },
+
     setParameters: function(sp) {
       this.searchParameters = sp;
     },
@@ -32,10 +40,7 @@ var SearchResults = Backbone.Collection.extend(
         dataType: "jsonp",
         context: this,
         beforeSend: function(){
-          $('#async-spinner').show();
-          $("#results-banner").hide();
-          $('#results-widget-wrapper').hide();
-          $("#error-message").hide();
+          this.view.showSearching();
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
@@ -53,16 +58,12 @@ var SearchResults = Backbone.Collection.extend(
         error: function(jqXHR, textStatus, errorThrown) {
 
           switch(jqXHR.status) {
+            // todo: move this gui code into the view object
             case 204:
-              $("#async-spinner").hide();
-              $("#results-banner").show();
-              $("#error-message").hide();
+              this.view.showNoResults();
               break;
             default:
-              $("#async-spinner").hide();
-              $("#results-banner").hide();
-              $("#error-message").show();
-              $("#error-message-code").text(jqXHR.status);
+              this.view.showError(jqXHR);
           }
         }
       }).results;
@@ -85,6 +86,30 @@ var SearchResultsView = Backbone.View.extend(
     return _.template('<h3><%= length %> results found</h3>', this.collection);
   },
 
+  showSearching: function() {
+
+    $('#async-spinner').show();
+    $("#results-banner").hide();
+    $('#results-widget-wrapper').hide();
+    $("#error-message").hide();
+    this.clearOverlays();
+
+  },
+
+  showError: function(jqXHR) {
+
+    $("#async-spinner").hide();
+    $("#results-banner").hide();
+    $("#error-message").show();
+    $("#error-message-code").text(jqXHR.status);
+  },
+
+  showNoResults: function() {
+
+    $("#async-spinner").hide();
+    $("#results-banner").show();
+    $("#error-message").hide();
+  },
 
 // todo: fix this to not use the mess of arrays -- datatables v1.8 should fix that with mDataProp in aoColumns
   render: function() {
@@ -183,7 +208,7 @@ var SearchResultsView = Backbone.View.extend(
       this.dataTable.fnAddData(preparedData);
     }
 
-    $('#results tbody tr').hover( this.toggleHighlight );
+    $('#results tbody tr').live('mouseenter', { view: this }, this.toggleHighlight );
 
     $('.tool_download').button(
       {
@@ -251,15 +276,9 @@ var SearchResultsView = Backbone.View.extend(
     }
   },
   clearOverlays: function() {
-    _.each(SearchApp.searchResultsView.mo, function(e) {
-      e.setMap(null);
-    });
-    SearchApp.searchResultsView.mo = {}; 
-  },
-  toggleHighlight: function(e) {
 
-    if( SearchApp.searchResultsView.activePoly ) {
-      SearchApp.searchResultsView.mo[SearchApp.searchResultsView.activePoly].setOptions({
+    if( this.activePoly ) {
+      this.mo[this.activePoly].setOptions({
         fillColor: '#777777',
         fillOpacity: 0.25,
         strokeColor: '#333333',
@@ -268,9 +287,28 @@ var SearchResultsView = Backbone.View.extend(
       });
     }
 
-    SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
+    _.each(this.mo, function(e) {
+      e.setMap(null);
+    });
+    this.mo = {}; 
+    this.activePoly = null;
 
-    SearchApp.searchResultsView.mo[SearchApp.searchResultsView.activePoly].setOptions({
+  },
+  toggleHighlight: function(e) {
+
+    if( e.view.SearchApp.searchResultsView.activePoly ) {
+      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
+        fillColor: '#777777',
+        fillOpacity: 0.25,
+        strokeColor: '#333333',
+        strokeOpacity: 0.5,
+        zIndex: 1000
+      });
+    }
+
+    e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
+
+    e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
       fillColor: '#FFFFB4',
       fillOpacity: .75,
       strokeColor: '#FFFF00',

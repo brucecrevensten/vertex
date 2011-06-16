@@ -38,6 +38,7 @@ $(function() {
         el: $("#results")
       }
     );
+    this.searchResults.setView( this.searchResultsView );
 
     // change when the form changes
     this.searchParameters.bind("change",function() {
