@@ -580,6 +580,126 @@ pathNumber BETWEEN ${path_start} AND ${path_end}
           </Arguments>
           <hashTree/>
         </hashTree>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="DB Fixed Center BBox 1+-.xxx with processing Browse512 filter" enabled="true">
+          <stringProp name="dataSource"></stringProp>
+          <stringProp name="query">select XMLELEMENT(&quot;ROW&quot;,
+  XMLForest(
+    granuleName,
+    productName,
+    platform,
+    sensor,
+    beamModeType,
+    TRIM(beamModeDesc) beamModeDesc,
+    orbit,
+    pathNumber,
+    frameNumber,
+    TO_CHAR(acquisitionDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS acquisitionDate,
+    TO_CHAR(processingDate, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS processingDate,
+    processingType,
+    TO_CHAR(startTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS startTime,
+    TO_CHAR(endTime, &apos;YYYY-MM-DD HH24:MI:SS&apos;) AS endTime,
+    centerLat,
+    centerLon,
+    nearStartLat,
+    nearStartLon,
+    nearEndLat,
+    nearEndLon,
+    farStartLat,
+    farStartLon,
+    farEndLat,
+    farEndLon,
+    faradayRotation,
+    ascendingDescending,
+    url, 
+    bytes,
+    ROUND( bytes/1024/1024, 2 ) AS fileSize,
+    offNadirAngle,
+    md5sum,
+    granuleDesc,
+    granuleType,
+    fileName,
+    shape
+  )).getStringVal() FROM 
+    data_product
+  WHERE
+platformType IN (&apos;E2&apos;,&apos;R1&apos;)  AND 
+startTime BETWEEN TO_DATE(&apos;1998-01-01&apos;,&apos;YYYY-MM-DD&apos;) AND TO_DATE(&apos;2000-01-01&apos;,&apos;YYYY-MM-DD&apos;) AND 
+processingType IN (&apos;BROWSE512&apos;) AND
+  centerLon BETWEEN ${west} AND ${east}
+      AND centerLat BETWEEN ${south} AND ${north}
+     ORDER BY startTime DESC</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="variableNames"></stringProp>
+        </JDBCSampler>
+        <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="bbox coords" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="west_deg" elementType="Argument">
+                <stringProp name="Argument.name">west_deg</stringProp>
+                <stringProp name="Argument.value">${__javaScript(&apos;-153&apos;,west_deg)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="west_min" elementType="Argument">
+                <stringProp name="Argument.name">west_min</stringProp>
+                <stringProp name="Argument.value">${__Random(0,50,west_min)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="west" elementType="Argument">
+                <stringProp name="Argument.name">west</stringProp>
+                <stringProp name="Argument.value">${__javaScript(&apos;${west_deg}&apos; + &apos;.&apos; + &apos;${west_min}&apos;, west )}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="east_deg" elementType="Argument">
+                <stringProp name="Argument.name">east_deg</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${west_deg}+1,east_deg)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="east_min" elementType="Argument">
+                <stringProp name="Argument.name">east_min</stringProp>
+                <stringProp name="Argument.value">${__Random(0,50,east_min)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="east" elementType="Argument">
+                <stringProp name="Argument.name">east</stringProp>
+                <stringProp name="Argument.value">${__javaScript(&apos;${east_deg}&apos; + &apos;.&apos; + &apos;${east_min}&apos;, east )}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="south_deg" elementType="Argument">
+                <stringProp name="Argument.name">south_deg</stringProp>
+                <stringProp name="Argument.value">${__javaScript(&apos;65&apos;,south_deg)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="south_min" elementType="Argument">
+                <stringProp name="Argument.name">south_min</stringProp>
+                <stringProp name="Argument.value">${__Random(0,50,south_min)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="south" elementType="Argument">
+                <stringProp name="Argument.name">south</stringProp>
+                <stringProp name="Argument.value">${__javaScript(&apos;${south_deg}&apos; + &apos;.&apos; + &apos;${south_min}&apos;, south )}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="north_deg" elementType="Argument">
+                <stringProp name="Argument.name">north_deg</stringProp>
+                <stringProp name="Argument.value">${__javaScript(${south_deg}+1,north_deg)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="north_min" elementType="Argument">
+                <stringProp name="Argument.name">north_min</stringProp>
+                <stringProp name="Argument.value">${__Random(0,50,north_min)}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="north" elementType="Argument">
+                <stringProp name="Argument.name">north</stringProp>
+                <stringProp name="Argument.value">${__javaScript(&apos;${north_deg}&apos; + &apos;.&apos; + &apos;${north_min}&apos;, north )}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
+        </hashTree>
       </hashTree>
       <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
