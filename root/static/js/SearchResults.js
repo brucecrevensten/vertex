@@ -90,7 +90,7 @@ var SearchResultsView = Backbone.View.extend(
   render: function() {
 
 //todo: remove this nonsense
-    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows.ROW, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE","THUMBNAIL","URL"]);
+    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows.ROW, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE","THUMBNAIL","URL","ID"]);
 
     if ( false == this.hasRendered ) {
       this.hasRendered = true;
@@ -149,12 +149,14 @@ var SearchResultsView = Backbone.View.extend(
             "bUseRendered": false, // keep the URl here for convenience for direct download link
             "bSearchable": false,
             "bSortable": false
-          }
+          },
+          { "bVisible":false } // suspend display of the ID column
         ],
         "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-          gid = aData[0]+"_"+aData[1];
 
-          v = new DataProductView( { model: SearchApp.searchResults.get(gid) } );
+          $(nRow).attr("product_id", aData[10]);
+
+          v = new DataProductView( { model: SearchApp.searchResults.get(aData[10]) } );
           $(nRow).bind( "click", { id: aData[0], view: v }, function(e) {
               $("#product_profile").html( e.data.view.render().el );
               $("#product_profile").dialog(
@@ -176,9 +178,12 @@ var SearchResultsView = Backbone.View.extend(
       this.dataTable.fnAdjustColumnSizing();
 
     } else {
+      this.clearOverlays();
       this.dataTable.fnClearTable();
       this.dataTable.fnAddData(preparedData);
     }
+
+    $('#results tbody tr').hover( this.toggleHighlight );
 
     $('.tool_download').button(
       {
@@ -218,9 +223,9 @@ var SearchResultsView = Backbone.View.extend(
       }
     );
 
-    this.clearOverlays(); // consider calling this at the same time we clear the datatable out?
     this.renderOnMap();
     return this;
+
   },
   renderOnMap: function() {
     var res = this.collection.data.results.rows.ROW;
@@ -229,9 +234,10 @@ var SearchResultsView = Backbone.View.extend(
         new google.maps.LatLng(res[ii].NEARSTARTLAT, res[ii].NEARSTARTLON),
         new google.maps.LatLng(res[ii].FARSTARTLAT, res[ii].FARSTARTLON),
         new google.maps.LatLng(res[ii].FARENDLAT, res[ii].FARENDLON),
-        new google.maps.LatLng(res[ii].NEARENDLAT, res[ii].NEARENDLON));
+        new google.maps.LatLng(res[ii].NEARENDLAT, res[ii].NEARENDLON)
+      );
       
-      var poly = new google.maps.Polygon({
+      this.mo[ res[ii].ID ] = new google.maps.Polygon({
           paths: path,
           fillColor: '#777777',
           fillOpacity: 0.25,
@@ -241,32 +247,44 @@ var SearchResultsView = Backbone.View.extend(
           zIndex: 1000 + ii,
           clickable: true
         });
-      poly.setMap(searchMap);
-      this.mapOverlays.push(poly);
+      this.mo[res[ii].ID].setMap(searchMap);
     }
   },
   clearOverlays: function() {
-    for(var ii = 0; ii < this.mapOverlays.length; ++ii) {
-      this.mapOverlays[ii].setMap(null);
+    _.each(SearchApp.searchResultsView.mo, function(e) {
+      e.setMap(null);
+    });
+    SearchApp.searchResultsView.mo = {}; 
+  },
+  toggleHighlight: function(e) {
+
+    if( SearchApp.searchResultsView.activePoly ) {
+      SearchApp.searchResultsView.mo[SearchApp.searchResultsView.activePoly].setOptions({
+        fillColor: '#777777',
+        fillOpacity: 0.25,
+        strokeColor: '#333333',
+        strokeOpacity: 0.5,
+        zIndex: 1000
+      });
     }
-    this.mapOverlays.length = 0;
-  },
-  highlightOverlay: function(idx) {
-    this.mapOverlays[idx].setOptions({
+
+    SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
+
+    SearchApp.searchResultsView.mo[SearchApp.searchResultsView.activePoly].setOptions({
       fillColor: '#FFFFB4',
-      StrokeColor: '#FFFF00'
+      fillOpacity: .75,
+      strokeColor: '#FFFF00',
+      strokeOpacity: 1,
+      zIndex: 10000
     });
-  },
-  unhighlightOverlay: function(idx) {
-    this.mapOverays[idx].setOptions({
-      fillColor: '#777777',
-      strokeColor: '#333333'
-    });
-  },
+   },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.
   // (this array is 1:1 with the results, so overlay [0] here is product [0] in the results)
-  mapOverlays: new Array()
+  mapOverlays: new Array(),
+  mo: {},
+  // the currently active/hightlighted polygon
+  activePoly: null
 }
 );
 
