@@ -45,6 +45,7 @@ var SearchResults = Backbone.Collection.extend(
         success: function(data, textStatus, jqXHR) {
           this.data = data;
 
+          this.view.showTable();
           // Munge this data to get a local true ID on each model; need to wiggle
           // the returned JSON a little bit so that Backbone can consume the (lowercase)
           // 'id' field.
@@ -52,8 +53,6 @@ var SearchResults = Backbone.Collection.extend(
             data.results.rows.ROW[i].id = data.results.rows.ROW[i].ID;
           }
           this.refresh( this.data.results.rows.ROW );
-          $('#async-spinner').hide();
-          $('#results-widget-wrapper').show();
         },
         error: function(jqXHR, textStatus, errorThrown) {
 
@@ -84,6 +83,13 @@ var SearchResultsView = Backbone.View.extend(
 
   renderLength: function() {
     return _.template('<h3><%= length %> results found</h3>', this.collection);
+  },
+
+  showTable: function() {
+
+    $('#async-spinner').hide();
+    $('#results-widget-wrapper').show();
+
   },
 
   showSearching: function() {
@@ -130,17 +136,12 @@ var SearchResultsView = Backbone.View.extend(
         "aoColumns": [
           { 
                       
+            "sWidth": '60px',
             "sTitle": "Granule Name",
             "bUseRendered": false, // preserve the original granule name (don't replace with the html internally) so sorting works as expected
             "fnRender": function(o) {
               // We do a little mini-table here to get vertical centering
-              return _.template('\
-  <div style="display:table">\
-    <img style="display:table-cell" src="<%= thumbnail %>"/>\
-    <span style="display:table-cell;vertical-align:middle;height: 100%;">\
-      <%= name %>\
-    </span>\
-  </div', { thumbnail: o.aData[8], name: o.aData[0] });
+              return _.template('<img title="<%= name %>" style="display:table-cell" src="<%= thumbnail %>"/>', { thumbnail: o.aData[8], name: o.aData[0] });
             }
           },
           { "sTitle": "Processing" },
@@ -199,8 +200,6 @@ var SearchResultsView = Backbone.View.extend(
         }
       }
       );
-      
-      this.dataTable.fnAdjustColumnSizing();
 
     } else {
       this.clearOverlays();
@@ -249,6 +248,7 @@ var SearchResultsView = Backbone.View.extend(
     );
 
     this.renderOnMap();
+    this.dataTable.fnAdjustColumnSizing();
     return this;
 
   },

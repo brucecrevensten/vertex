@@ -101,6 +101,10 @@ float: left;
   display: block;
 }
 
+#results-widget-wrapper {
+  width: 100%;
+}
+
 #filters input + label {
   display: block;
   margin: 1em 0 0 0;
@@ -116,16 +120,12 @@ label.hover {
 }
 
 .datatable {
-  width: inherit;
+  width: 100%;
 }
 
 .datatable tbody td {
   padding: 1ex;
   vertical-align: middle;
-}
-
-.datatable tbody td img {
-  margin-right: 1ex;
 }
 
 .datatable tbody tr:hover {
@@ -218,6 +218,10 @@ label.hover {
 /* override the min-height property here */
 #download_queue .dataTables_wrapper {
   min-height: 0;
+}
+
+#results .dataTables_wrapper {
+  width: 100%;
 }
 
 #download_queue_formats {
