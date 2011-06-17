@@ -210,16 +210,14 @@ label.hover {
 #async-spinner, #results-banner, #error-message {
   margin: 1em 0;
   padding: 1ex;
-  display: none;
 }
 
 #async-spinner span, #results-banner span, #error-message span {
   float: left;
-  margin: 7px 1ex;
+  margin: .5ex 1em 0 1ex;
 }
 
 #async-spinner span {
-  margin: 7px 1ex;
   background: transparent url(../images/ajax-loader.gif);
 }
 
