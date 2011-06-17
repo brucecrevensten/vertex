@@ -62,10 +62,8 @@
 <!-- loading async spinner -->
 <div class="ui-widget">
   <div id="async-spinner" class="ui-state-highlight ui-corner-all">
-    <p>
-      <span class="ui-icon"></span>
-      <strong>Loading search results&hellip;</strong>
-    </p>
+    <span class="ui-icon"></span>
+    <strong>Loading search results&hellip;</strong>
   </div>
 </div>
 
@@ -73,20 +71,16 @@
 <!-- results banner -->
 <div class="ui-widget">
   <div id="results-banner" class="ui-state-highlight ui-corner-all"> 
-    <p>
       <span class="ui-icon ui-icon-info"></span>
       <strong>No results were found</strong> for your current search criteria.
-    </p>
   </div>
 </div>
 
 <!-- error banner -->
 <div class="ui-widget">
   <div id="error-message" class="ui-state-error ui-corner-all"> 
-    <p>
       <span class="ui-icon ui-icon-alert"></span>
       <strong>An error occurred</strong> while processing your current search (<code id="error-message-code"></code>).
-    </p>
   </div>
 </div>
 

@@ -209,12 +209,13 @@ label.hover {
 
 #async-spinner, #results-banner, #error-message {
   margin: 1em 0;
-  padding: 1ex;
+  padding: 2.5ex 2ex 2ex 2ex;
+  display: none;
 }
 
 #async-spinner span, #results-banner span, #error-message span {
   float: left;
-  margin: .5ex 1em 0 1ex;
+  margin: -2px 1em 0 1ex;
 }
 
 #async-spinner span {
