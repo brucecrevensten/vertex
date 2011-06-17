@@ -179,9 +179,32 @@ label.hover {
   height: auto;
 }
 
+#product_profile {
+  text-align: right
+}
+
+#product_profile ul {
+  margin-top: 1ex;
+  padding: 0 0 1em 1em;
+}
+
+#product_profile #hanger {
+  float: left;
+  text-align: left;
+  margin: 1ex 1ex 1ex 1em;
+  width: 250px;
+}
+
+#product_profile li {
+  margin: 1ex 0;
+  text-indent: -1em;
+}
+
 #product_profile img {
   display: block;
   margin: 1em auto;
+  min-height: 512px;
+  float: left;
 }
 
 #async-spinner, #results-banner, #error-message {

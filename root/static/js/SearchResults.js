@@ -188,11 +188,11 @@ var SearchResultsView = Backbone.View.extend(
               $("#product_profile").dialog(
                 {
                   modal: true,
-                  width: 600,
+                  width: 900,
                   draggable: false,
                   resizable: false,
                   title: e.data.id,
-                  position: "top"
+                  position: "center"
                 }
               );
           });

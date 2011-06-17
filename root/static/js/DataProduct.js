@@ -12,7 +12,7 @@ var DataProductView = Backbone.View.extend(
       $(this.el).html(
         _.template('\
 <img src="<%= BROWSE %>" />\
-<a class="tool_download" style="float: right;" href="<%= URL %>">Download</a>\
+<div id="hanger">\
 <ul>\
 <li>Processing type: <%= PROCESSINGTYPE %></li>\
 <li>Beam mode: <%= BEAMMODEDESC %></li>\
@@ -25,6 +25,8 @@ var DataProductView = Backbone.View.extend(
 <li>Off Nadir Angle: <%= OFFNADIRANGLE %></li>\
 <li>Size: <%= sizeText %></li>\
 </ul>\
+<a class="tool_download" href="<%= URL %>">Download</a>\
+</div>\
         ', this.model.toJSON())
       );
       $(this.el).find('a').button(
