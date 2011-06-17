@@ -12,8 +12,8 @@ var DataProductView = Backbone.View.extend(
       $(this.el).html(
         _.template('\
 <img src="<%= BROWSE %>" />\
-<ul>\
 <a class="tool_download" style="float: right;" href="<%= URL %>">Download</a>\
+<ul>\
 <li>Processing type: <%= PROCESSINGTYPE %></li>\
 <li>Beam mode: <%= BEAMMODEDESC %></li>\
 <li>Frame: <%= FRAMENUMBER %></li>\
