@@ -133,15 +133,17 @@ var SearchResultsView = Backbone.View.extend(
         "bPaginate" : false,
         "bJQueryUI": true,
         "aaData": preparedData,
+        "bAutoWidth" : false,
         "aoColumns": [
           { 
-                      
-            "sWidth": '60px',
-            "sTitle": "Granule Name",
+            "bSearchable": false,
+            "bSortable": false,
+            "sWidth": "135px", // THIS makes the column width predictable in chrome/webkit
+            "sTitle": "Granule",
             "bUseRendered": false, // preserve the original granule name (don't replace with the html internally) so sorting works as expected
             "fnRender": function(o) {
               // We do a little mini-table here to get vertical centering
-              return _.template('<img title="<%= name %>" style="display:table-cell" src="<%= thumbnail %>"/>', { thumbnail: o.aData[8], name: o.aData[0] });
+              return _.template('<img title="<%= name %>" src="<%= thumbnail %>"/>', { thumbnail: o.aData[8], name: o.aData[0] });
             }
           },
           { "sTitle": "Processing" },
@@ -163,7 +165,8 @@ var SearchResultsView = Backbone.View.extend(
           },
           { "bVisible" : false }, // suspend display of thumbnail
           { 
-            "sTitle": "Tools",
+            "sTitle": "",
+            "sClass": "left-adjusted",
             "fnRender": function(o) {
       
               return _.template('\

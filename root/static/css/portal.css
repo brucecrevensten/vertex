@@ -123,9 +123,14 @@ label.hover {
   width: 100%;
 }
 
+.datatable th {
+  min-width: 70px;
+}
+
 .datatable tbody td {
   padding: 1ex;
   vertical-align: middle;
+  text-align: center;
 }
 
 .datatable tbody tr:hover {
@@ -151,6 +156,10 @@ label.hover {
 
 .datatable tr.even td.sorting_1 {
   background-color: #e8e8e8;
+}
+
+.datatable tbody td.left-adjusted {
+  text-align: left;
 }
 
 .datatable tr.odd td.sorting_1 {
