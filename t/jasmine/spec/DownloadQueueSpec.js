@@ -28,33 +28,33 @@ describe("Download Queue", function() {
     dq = new DownloadQueue();
     expect( dq.length ).toEqual( 0 );
     expect( dq.getSizeInBytes() ).toEqual( 0 );
-    expect( dq.getSizeAsText() ).toEqual( "0 B" );
+    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "0 B" );
     dp1 = new DataProduct( { "BYTES":500 } );
     dq.add( dp1 );
     expect( dq.length ).toEqual( 1 );
     expect( dq.getSizeInBytes() ).toEqual( 500 );
-    expect( dq.getSizeAsText() ).toEqual( "500 B" );
+    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "500 B" );
     dp2 = new DataProduct( { "BYTES":10000 } );
     dp3 = new DataProduct( { "BYTES":20000 } );
     dq.add( [ dp2, dp3 ] );
     expect( dq.length ).toEqual( 3 );
     expect( dq.getSizeInBytes() ).toEqual( 30500 );
-    expect( dq.getSizeAsText() ).toEqual( "29.79 KB" );
+    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "29.79 KB" );
     dp4 = new DataProduct( { "BYTES":1100000 } );
     dq.add( dp4 );
     expect( dq.length ).toEqual( 4 );
     expect( dq.getSizeInBytes() ).toEqual( 1130500 );
-    expect( dq.getSizeAsText() ).toEqual( "1.08 MB" );
+    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "1.08 MB" );
     dp5 = new DataProduct( { "BYTES":5500000000 } );
     dq.add( dp5 );
     expect( dq.length ).toEqual( 5 );
     expect( dq.getSizeInBytes() ).toEqual( 5501130500 );
-    expect( dq.getSizeAsText() ).toEqual( "5.12 GB" );
+    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "5.12 GB" );
     dp6 = new DataProduct( { "BYTES":1900000000000 } );
     dq.add( dp6 );
     expect( dq.length ).toEqual( 6 );
     expect( dq.getSizeInBytes() ).toEqual( 1905501130500 );
-    expect( dq.getSizeAsText() ).toEqual( "1.73 TB" );
+    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "1.73 TB" );
 
   });
 
@@ -91,12 +91,12 @@ describe("Download Queue", function() {
       dqv = new DownloadQueueView( { collection: dq } );
 
       dq.add( [
-        new DataProduct( { "GRANULENAME":"granule1", "BYTES":500 } ),
-        new DataProduct( { "GRANULENAME":"granule2", "BYTES":10000 } ),
-        new DataProduct( { "GRANULENAME":"granule3", "BYTES":20000 } ),
-        new DataProduct( { "GRANULENAME":"granule4", "BYTES":1100000 } ),
-        new DataProduct( { "GRANULENAME":"granule5", "BYTES":5000000000 } ),
-        new DataProduct( { "GRANULENAME":"granule6", "BYTES":1900000000000 } )
+        new DataProduct( { "ACQUISITIONDATE":"2011-01-01", "PLATFORM":"ALOS", "PROCESSINGTYPE":"L0", "GRANULENAME":"granule1", "BYTES":500 } ),
+        new DataProduct( { "ACQUISITIONDATE":"2011-01-01", "PLATFORM":"ALOS", "PROCESSINGTYPE":"L0", "GRANULENAME":"granule2", "BYTES":10000 } ),
+        new DataProduct( { "ACQUISITIONDATE":"2011-01-01", "PLATFORM":"ALOS", "PROCESSINGTYPE":"L0", "GRANULENAME":"granule3", "BYTES":20000 } ),
+        new DataProduct( { "ACQUISITIONDATE":"2011-01-01", "PLATFORM":"ALOS", "PROCESSINGTYPE":"L0", "GRANULENAME":"granule4", "BYTES":1100000 } ),
+        new DataProduct( { "ACQUISITIONDATE":"2011-01-01", "PLATFORM":"ALOS", "PROCESSINGTYPE":"L0", "GRANULENAME":"granule5", "BYTES":5000000000 } ),
+        new DataProduct( { "ACQUISITIONDATE":"2011-01-01", "PLATFORM":"ALOS", "PROCESSINGTYPE":"L0", "GRANULENAME":"granule6", "BYTES":1900000000000 } )
       ] );
 
       r = dqv.render().el.innerHTML;

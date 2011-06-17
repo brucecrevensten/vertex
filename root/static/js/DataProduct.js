@@ -1,4 +1,10 @@
-var DataProduct = Backbone.Model.extend();
+var DataProduct = Backbone.Model.extend(
+  {
+  initialize: function() {
+    this.set( {sizeText: AsfUtility.bytesToString(this.get('BYTES'))} );
+  }
+}
+);
 
 var DataProductView = Backbone.View.extend(
   {
@@ -17,22 +23,12 @@ var DataProductView = Backbone.View.extend(
 <li>Faraday rotation: <%= FARADAYROTATION %></li>\
 <li>Ascending/Descending: <%= ASCENDINGDESCENDING %></li>\
 <li>Off Nadir Angle: <%= OFFNADIRANGLE %></li>\
+<li>Size: <%= sizeText %></li>\
 </ul>\
         ', this.model.toJSON())
       );
       $(this.el).find('a').button();
       return this;
-    }
-  }
-);
-
-var DataProductController = Backbone.Controller.extend(
-  {
-    download: function() {
-    
-    },
-    displayOnMap: function() {
-    
     }
   }
 );

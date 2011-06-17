@@ -1,122 +1,95 @@
 var DownloadQueue = Backbone.Collection.extend(
   {
-    url: AsfDataportalConfig.apiUrl,
-    model:DataProduct,
+  url: AsfDataportalConfig.apiUrl,
+  model:DataProduct,
 
-    getSizeInBytes:function() {
-      return _.reduce(
-        this.pluck("BYTES"),
-        function(memo, size) {
-          return memo + size;
-        },
-        0
-      );
-    },
-  
-    getSizeAsText:function() {
-
-      var bytes = this.getSizeInBytes();
-      var kilobyte = 1024;
-      var megabyte = kilobyte * 1024;
-      var gigabyte = megabyte * 1024;
-      var terabyte = gigabyte * 1024;
-      var precision = 2;
-     
-      if (bytes < kilobyte) {
-          return bytes + ' B';
-      } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
-          return (bytes / kilobyte).toFixed(precision) + ' KB';
-   
-      } else if ((bytes >= megabyte) && (bytes < gigabyte)) {
-          return (bytes / megabyte).toFixed(precision) + ' MB';
-   
-      } else if ((bytes >= gigabyte) && (bytes < terabyte)) {
-          return (bytes / gigabyte).toFixed(precision) + ' GB';
-   
-      } else if (bytes >= terabyte) {
-          return (bytes / terabyte).toFixed(precision) + ' TB';
-   
-      } 
-    },
-  
+  getSizeInBytes:function() {
+    return _.reduce(
+      this.pluck("BYTES"),
+      function(memo, size) {
+        return memo + size;
+      },
+      0
+    );
   }
+}
 );
 
 var DownloadQueueSummaryView = Backbone.View.extend(
   {
-    initialize: function() {
-      _.bindAll(this, "render");
-      this.collection.bind("add", this.render);
-      this.collection.bind("remove", this.render);
-    },
+  initialize: function() {
+    _.bindAll(this, "render");
+    this.collection.bind("add", this.render);
+    this.collection.bind("remove", this.render);
+  },
 
-    // Creates a button that can pop the real DownloadQueue
-    render:function() {
+  // Creates a button that can pop the real DownloadQueue
+  render:function() {
 
-      var t; // will identify text fragment in summary button
-      var c; // will store class for styling nonempty queue button
-      if ( 0 == this.collection.length ) {
-        t = 'empty';
-        c = 'empty';
+    var t; // will identify text fragment in summary button
+    var c; // will store class for styling nonempty queue button
+    if ( 0 == this.collection.length ) {
+      t = 'empty';
+      c = 'empty';
+    } else {
+      c = 'nonempty';
+      t = this.collection.length.toString();
+      if ( 1 == this.collection.length ) {
+        t = t + ' item';
       } else {
-        c = 'nonempty';
-        t = this.collection.length.toString();
-        if ( 1 == this.collection.length ) {
-          t = t + ' item';
-        } else {
-          t = t + ' items';
-        }
-        t = t + ', ' + this.collection.getSizeAsText(); 
+        t = t + ' items';
       }
-
-      $(this.el).button(
-        {
-          disabled: ( 0 == this.collection.length ) ? true : false,
-          icons: {
-            primary: 'ui-icon-folder-open'
-          },
-          label: _.template('Download queue <span class="<%= class %>">(<%= summary %>)</span>', { summary: t, class: c })
-        }
-      );
-
-      if( 0 != this.collection.length ) {
-        $(this.el).effect('highlight');
-      }
-
-      return this;
-
+      t = t + ', ' + AsfUtility.bytesToString( this.collection.getSizeInBytes() ); 
     }
-  });
+
+    $(this.el).button(
+      {
+      disabled: ( 0 == this.collection.length ) ? true : false,
+      icons: {
+        primary: 'ui-icon-folder-open'
+      },
+      label: _.template('Download queue <span class="<%= class %>">(<%= summary %>)</span>', { summary: t, class: c })
+    }
+    );
+
+    if( 0 != this.collection.length ) {
+      $(this.el).effect('highlight');
+    }
+
+    return this;
+
+  }
+});
 
 var DownloadQueueView = Backbone.View.extend(
   {
-    // this div is already present in the static DOM upon page load
-    id: "download_queue",
+  // this div is already present in the static DOM upon page load
+  id: "download_queue",
 
-    initialize: function() {
-      _.bindAll(this, "render");
-    },
+  initialize: function() {
+    _.bindAll(this, "render");
+  },
 
-    // Renders the main download queue
-    render: function() {
+  // Renders the main download queue
+  render: function() {
 
-      var table = '';
-      this.collection.each( function(m) {
-        table = table + _.template('\
+    var table = '';
+    this.collection.each( function(m) {
+      table = table + _.template('\
 <tr>\
-  <td>\
-    <%= GRANULENAME %>\
-    <input type="hidden" name="granule_list[]" value="<%= GRANULENAME %>" />\
-  </td>\
-  <td><%= PROCESSINGTYPE %></td>\
-  <td><%= PLATFORM %></td>\
-  <td><%= ACQUISITIONDATE %></td>\
+<td>\
+<%= GRANULENAME %>\
+<input type="hidden" name="granule_list[]" value="<%= GRANULENAME %>" />\
+</td>\
+<td><%= PROCESSINGTYPE %></td>\
+<td><%= PLATFORM %></td>\
+<td><%= ACQUISITIONDATE %></td>\
 </tr>\
 ', m.toJSON());
-      });
+    });
 
-      $(this.el).html(
-        _.template('\
+    $(this.el).html(
+      _.template('\
 <form id="download_queue_form" action="<%= url %>">\
 <table class="datatable" id="download_queue_table">\
 <thead>\
@@ -141,7 +114,7 @@ var DownloadQueueView = Backbone.View.extend(
 ', { table: table, url: AsfDataportalConfig.apiUrl } ));
 
       $(this.el).find("#download_queue_table").dataTable(
-      {
+        {
         "bFilter" : false,
         "bLengthChange" : false,
         "bPaginate" : false,
@@ -153,6 +126,5 @@ var DownloadQueueView = Backbone.View.extend(
 
       return this;
     }
-
   }
 );
