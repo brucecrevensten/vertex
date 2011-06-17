@@ -13,7 +13,7 @@ var DataProductView = Backbone.View.extend(
         _.template('\
 <img src="<%= BROWSE %>" />\
 <ul>\
-<a style="float: right;" href="<%= URL %>">Download</a>\
+<a class="tool_download" style="float: right;" href="<%= URL %>">Download</a>\
 <li>Processing type: <%= PROCESSINGTYPE %></li>\
 <li>Beam mode: <%= BEAMMODEDESC %></li>\
 <li>Frame: <%= FRAMENUMBER %></li>\
@@ -27,8 +27,17 @@ var DataProductView = Backbone.View.extend(
 </ul>\
         ', this.model.toJSON())
       );
-      $(this.el).find('a').button();
+      $(this.el).find('a').button(
+      {
+        icons: {
+          primary: "ui-icon-circle-arrow-s"
+        },
+        text: 'Download' 
+      }
+      );
+
       return this;
+
     }
   }
 );

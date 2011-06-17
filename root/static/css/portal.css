@@ -236,3 +236,30 @@ label.hover {
 .footer_controls {
   padding: 2em 0;
 }
+
+button.tool_download, a.tool_download {
+  background: #42B823 none !important;
+  border: none !important;
+}
+
+button.tool_download, a.tool_download:hover {
+  color: white;
+  background-color: #03610b !important;
+  border: none !important;
+}
+
+.tool_enqueuer {
+  background: #399ec2 none !important; 
+  border: none;
+}
+
+button.tool_enqueuer:hover {
+  background-color: #066ba0 !important;
+}
+
+button.tool_enqueuer.tool-dequeue {
+  background-color: #f58400 !important;
+}
+button.tool_enqueuer.tool-dequeue:hover {
+  background-color: #b03000 !important;
+}

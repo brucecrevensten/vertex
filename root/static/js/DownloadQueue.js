@@ -105,7 +105,7 @@ var DownloadQueueView = Backbone.View.extend(
 <tbody> <%= table %> </tbody>\
 </table>\
 <div class="footer_controls">\
-<button type="submit" id="do_queue_download" name="Download">Download</button>\
+<button type="submit" id="do_queue_download" class="tool_download" name="Download">Download</button>\
 <div id="download_queue_formats">\
 <input checked="checked" type="radio" name="format" value="metalink" id="download_type_metalink" /><label for="download_type_metalink">Bulk Download (.metalink)</label>\
 <input type="radio" name="format" value="csv" id="download_type_csv" /><label for="download_type_csv">Spreadsheet (.csv)</label>\

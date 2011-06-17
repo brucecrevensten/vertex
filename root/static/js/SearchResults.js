@@ -225,11 +225,13 @@ var SearchResultsView = Backbone.View.extend(
     $('.tool_enqueuer').click( function(e) {
       e.stopPropagation();
       if ( $(this).prop('selected') == 'selected' ) {
+        $(this).toggleClass('tool-dequeue');
         $(this).prop('selected','false');
         SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product')));
         $(this).button( "option", "label", "Add to queue" );
         $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
       } else {
+        $(this).toggleClass('tool-dequeue');
         $(this).prop('selected','selected');
         SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product')));
         $(this).button( "option", "label", "Remove from queue" );
