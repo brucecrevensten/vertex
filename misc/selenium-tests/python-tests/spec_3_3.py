@@ -12,7 +12,7 @@ class spec_3_3(unittest.TestCase):
         sel.open("/portal")
         try: self.assertEqual("", sel.get_text("//div[@id='async-spinner']/p/span"))
         except AssertionError, e: self.verificationErrors.append(str(e))
-        try: self.assertEqual(u"Loading search results…", sel.get_text("//div[@id='async-spinner']/p/strong"))
+        try: self.assertEqual(u"Loading search results\u2026", sel.get_text("//div[@id='async-spinner']/p/strong"))
         except AssertionError, e: self.verificationErrors.append(str(e))
     
     def tearDown(self):

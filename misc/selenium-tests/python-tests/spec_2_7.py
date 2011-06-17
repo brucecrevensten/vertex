@@ -15,7 +15,7 @@ class spec_2_7(unittest.TestCase):
         except AssertionError, e: self.verificationErrors.append(str(e))
         try: self.assertEqual("Frame", sel.get_text("//div[@id='filters']/div[5]/div/label[2]"))
         except AssertionError, e: self.verificationErrors.append(str(e))
-        sel.type("filter_path", "257-300")
+        sel.type("filter_path", "255-300")
         sel.type("filter_frame", "1290-1300")
         for i in range(60):
             try:
