@@ -10,9 +10,9 @@ class spec_3_3(unittest.TestCase):
     def test_spec_3_3(self):
         sel = self.selenium
         sel.open("/portal")
-        try: self.assertEqual("", sel.get_text("//div[@id='async-spinner']/p/span"))
+        try: self.assertEqual("", sel.get_text("css=#async-spinner > span.ui-icon"))
         except AssertionError, e: self.verificationErrors.append(str(e))
-        try: self.assertEqual(u"Loading search results\u2026", sel.get_text("//div[@id='async-spinner']/p/strong"))
+        try: self.assertEqual(u"Loading search results\u2026", sel.get_text("css=strong"))
         except AssertionError, e: self.verificationErrors.append(str(e))
     
     def tearDown(self):
