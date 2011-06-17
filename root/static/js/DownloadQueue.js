@@ -84,6 +84,7 @@ var DownloadQueueView = Backbone.View.extend(
 <td><%= PROCESSINGTYPE %></td>\
 <td><%= PLATFORM %></td>\
 <td><%= ACQUISITIONDATE %></td>\
+<td><%= sizeText %></td>\
 </tr>\
 ', m.toJSON());
     });
@@ -98,6 +99,7 @@ var DownloadQueueView = Backbone.View.extend(
 <th>Processing</th>\
 <th>Platform</th>\
 <th>Acquisition Date</th>\
+<th>Size</th>\
 </tr>\
 </thead>\
 <tbody> <%= table %> </tbody>\
