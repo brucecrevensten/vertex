@@ -16,7 +16,7 @@
         <stringProp name="checkQuery">Select 1</stringProp>
         <stringProp name="connectionAge">5000</stringProp>
         <stringProp name="dataSource">postgres</stringProp>
-        <stringProp name="dbUrl">jdbc:postgresql://localhost:5555/test</stringProp>
+        <stringProp name="dbUrl">jdbc:postgresql://localhost:5432/test</stringProp>
         <stringProp name="driver">org.postgresql.Driver</stringProp>
         <boolProp name="keepAlive">true</boolProp>
         <stringProp name="password"></stringProp>
@@ -30,7 +30,7 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">50</stringProp>
+          <stringProp name="LoopController.loops">2</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
@@ -91,6 +91,10 @@
    granuleName || &apos;_&apos; || processingType AS id
   )) as text) FROM 
     data_product_2 dp2
+where
+  centerLon BETWEEN ${west} AND ${east}
+      AND centerLat BETWEEN ${south} AND ${north}
+     ORDER BY startTime DESC
   LIMIT 1
 </stringProp>
           <stringProp name="queryArguments"></stringProp>
@@ -538,6 +542,7 @@ xmlelement(name &quot;ROW&quot;,
 AND
 ST_Intersects( ST_GeomFromText(
 &apos;POLYGON((${p1_lon} ${p1_lat},${p2_lon} ${p2_lat},${p3_lon} ${p3_lat},${p4_lon} ${p4_lat},${p1_lon} ${p1_lat}))&apos;, 8307), shape)
+ORDER BY startTime DESC
 LIMIT 1;
 </stringProp>
           <stringProp name="queryArguments"></stringProp>
