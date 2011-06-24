@@ -66,48 +66,6 @@
 <div id="product_profile" style="display: none;"></div>
 <div id="download_queue" style="display: none;"></div>
 
-
-<!--
-<div id="authent">
-	<div id="user_auth_submit" class="auth_button">Login</div>
-	<div class="authenticate">
-	<input type="text" name="user_auth" id="user" value="username">
-	<input type="text" name="password_auth" id="pass" value="password">
-	</div>
-	
-</div>
--->
-<!--
-<script>
-	(function ($) {
-var UserLoginView = Backbone.View.extend(
-	{
-		el: $("body"),
-		
-		initialize: function() {
-			//	this.friends = new Friends( null, {view: this})
-			},
-		
-		events: {
-			"click #user_auth_submit": "showPrompt", //"attemptLogin",
-		},
-		
-	//	attemptLogin: function() {
-	//		var user = $("#user_auth").val();
-		//	var password = $("#password_auth").val();
-		showPrompt: function() {
-			var friend_name = prompt("Who is your friend?");
-		//	alert("You entered" + user + " and " + password);
-		},
-		
-	}
-	
-);
-var userLogin = new UserLoginView;
-})(jQuery);
-</script>
--->
-
 <div id="leftColumn">
 <div id="filters"></div>
 </div>
