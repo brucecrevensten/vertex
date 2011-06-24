@@ -1,5 +1,21 @@
 $(function() {
+	
+	/*  
+		TODO: Modify comment below once authentication is sketched out. 
+		
+		Create a User Model instance in the searchApp. This stores username, password, etc. Placing 
+		it here creates a blank user object for each time the document loads (any time it refreshes). 
+		This may not be desirable once the authentication is well sketched out. 
+		Finally, create a View that operates on the #user_auth_submit div element in index.tt and tie it
+		to watch the state of the user_current model instance. Inside that 
+		element are the fields for the login dialog modal, the login buttons, the username echo, etc. 
+		So each time the state of user_current changes this view can update either of those fields. 
+	*/
+	this.user_current = new User();
+	var userLoginView = new UserLoginView(  { model: this.user_current, el: $('#user_auth_submit') });
+    userLoginView.render();
 
+	
   window.SearchAppView = Backbone.View.extend({
     el: $('#SearchApp'),
     
@@ -18,6 +34,7 @@ $(function() {
     searchView: null,
     searchParameters: null,
     searchParametersView: null,
+	
     
     initialize: function() {
 
@@ -77,6 +94,7 @@ $(function() {
         }
       );
     });
+
 
     //fire up the map
     initMap('searchMap');
