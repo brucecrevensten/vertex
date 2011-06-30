@@ -1,34 +1,36 @@
 /* 
- The Basic sketch of the User Model. Contains a User Name and a Password. As well as a variable
- to keep track of the number of login attempts (We may want to respond to this after so many attempts).
- It Overrides Backbone's validate function: this means that when User.set({}) is called on the user_name 
- and password, validate will execute against these attributes. Currently the username and password
- are hardcoded into the validate method but we will replace this with an ajax call to the API's 
- authentication service. 
-
- TODO: Add code to send ajax request to authentication service. Also add flag to deter the request
- 	   and to not set the username and password if the user is already logged in 
+ User Model.
+ Contains a User Name, login attempts and authorization 
+ Perform ajax post request to authenticate the user
 */
 var User = Backbone.Model.extend(
 	{
 		user_name: null,
-		password: null,
 		login_attempts: 0,
+		auth_type: "",		// authorization type restricts/enhances content
 		
 		defaults: {
-			login_attempts: 0
+			login_attempts: 0,
+			auth_type: ""
 		},
 		
-		validate: function(attrs) {
-			if (0 == (attrs.user_name == "username") || 0==(attrs.password == "password")) {
-				return "bad username and or password";	
-			} 
-		} 
+		initialize: function() {
+		},
+		
+		validate: function(attrs) {		
+			// Write Sanity check code here. 
+				$.ajax({
+					type: "POST",
+					url: AsfDataportalConfig.authUrl,
+					data: "userid="+attrs.user_name + '&' + 'password='+attrs.password
+				});
+		}
 	}
 );
 
 /*
-	The sketch of the View that displays the user login information on the Search App page. 
+	UserLoginView
+	Displays the user login information on the Search App page. 
 	It hooks into #user_auth_submit div element so that it can modify content on the page there. 
 	Binds error methods to the models (User) error's. This means that when User.validate() returns 
 	anything (indicating an error) then the error is delegated to the method invoked within the
@@ -39,15 +41,13 @@ var User = Backbone.Model.extend(
 	
 	Bind this View to click events on the login/logout buttons
 	
-	Todo: Remove all of the alert invocations and replace with something more snazzy. 
-		  Add event binding to the Logout button to invoke ajax request to logout. 
+	Todo: Add event binding to the Logout button to invoke ajax request to logout. 
 */
 var UserLoginView = Backbone.View.extend(
 	{
 		el:  $("#user_auth_submit"),
 		
 		initialize: function() {
-			
 				this.model.bind("error", function(model, error) {
 					alert(error);
 				});
@@ -56,7 +56,11 @@ var UserLoginView = Backbone.View.extend(
 
 			 _.bindAll(this, "render");
 			
+			
 			$( "#dialog_mod" ).dialog({
+				create: function() {
+					$("#dialog_mod").append("")
+				},
 				autoOpen: false,
 				height: 200,
 				width: 350,
@@ -80,7 +84,7 @@ var UserLoginView = Backbone.View.extend(
 							$("#my_b").hide();
 							$("#my_b2").button({ label: "Logout"}).show();
 							
-							$("div.msg").replaceWith("<div id="+'"msg"'+' class="msg"'+"><p>Welcome " + user.get("user_name") + ", Login attempts: " + user.get("login_attempts") + "</p></div>");
+							$("div.msg").replaceWith("<div id="+'"msg"'+' class="msg"'+"><p>Welcome " + user.get("user_name") + "</p></div>");
 				
 							$( this ).dialog( "close");
 						} else {
@@ -88,14 +92,11 @@ var UserLoginView = Backbone.View.extend(
 						}       
 					},
 					"Register": function() {
-						alert("Registration is currently closed due to smugness. Find a new pool.");
-					},
-					Cancel: function() {
-						$( this ).dialog( "close" );
+						console.log("Register Button Clicked");
+						window.location.replace("http://ursa.asfdaac.alaska.edu/cgi-bin/login/guest/");
 					}
 				},
 				close: function() {
-					allFields.val( "" ).removeClass( "ui-state-error" );
 				}
 			});
 	    },
@@ -106,13 +107,14 @@ var UserLoginView = Backbone.View.extend(
 		},
 		
 		render: function() {
+
 			$("#my_b").button( { label: "Login"});
 			$("my_b2").button({label:"Logout"}).hide();
 		    return this;
 		},
 		
 		attemptLogin: function() {
-			$("#dialog_mod").dialog('open')
+			$("#dialog_mod").dialog('open');
 		},
 		attemptLogout: function() {
 			$("#my_b2").hide();
