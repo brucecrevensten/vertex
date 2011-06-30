@@ -70,7 +70,7 @@ $(function() {
       SearchApp.searchResults.fetchSearchResults(SearchApp.searchParameters); // initial population
     });
 
-    this.searchResults.fetchSearchResults(this.searchParameters); // initial population
+    //this.searchResults.fetchSearchResults(this.searchParameters); // initial population
 
     // Initialize the download queue
     this.downloadQueue = new DownloadQueue();
@@ -103,6 +103,15 @@ $(function() {
       );
     });
 
+    $('#triggerSearch').button(
+      {
+        icons: {
+          primary: "ui-icon-search"
+        },
+        label: "Search"
+    }).bind("click", { sp: this.searchParameters, sr: this.searchResults }, function(e) {
+      e.data.sr.fetchSearchResults(e.data.sp); // initial population
+    }).focus().click();
 
     //fire up the map
     initMap('searchMap');

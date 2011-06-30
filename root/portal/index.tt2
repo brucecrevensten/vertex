@@ -70,7 +70,9 @@
 <div id="leftColumn">
 <div id="filters"></div>
 <div style="margin: 1em 0;" id="platform_facets"></div>
+<button id="triggerSearch" />
 </div>
+
 <div id="rightColumn">
 <div id="searchMap"></div>
 
