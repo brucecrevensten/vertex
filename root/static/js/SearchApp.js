@@ -11,9 +11,9 @@ $(function() {
 		element are the fields for the login dialog modal, the login buttons, the username echo, etc. 
 		So each time the state of user_current changes this view can update either of those fields. 
 	*/
-	this.user_current = new User();
-	var userLoginView = new UserLoginView(  { model: this.user_current, el: $('#user_auth_submit') });
-    userLoginView.render();
+	//this.user_current = new User();
+	//var userLoginView = new UserLoginView(  { model: this.user_current, el: $('#user_auth_submit') });
+   // userLoginView.render();
 
 	
   window.SearchAppView = Backbone.View.extend({
@@ -47,6 +47,14 @@ $(function() {
       }
     );
     this.searchParametersView.render();
+
+    this.postFiltersView = new PostFiltersView(
+    {
+      model: this.searchParameters,
+      el: $("#platform_facets")
+    }
+    );
+    this.postFiltersView.render();
 
     this.searchResults = new SearchResults();
     this.searchResultsView = new SearchResultsView(

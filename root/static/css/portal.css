@@ -294,3 +294,7 @@ button.tool_enqueuer.tool-dequeue {
 button.tool_enqueuer.tool-dequeue:hover {
   background-color: #b03000 !important;
 }
+
+#platform_facet h5 {
+  margin: 1.5em 0 1ex;
+}

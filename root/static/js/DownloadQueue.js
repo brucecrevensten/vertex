@@ -48,7 +48,7 @@ var DownloadQueueSummaryView = Backbone.View.extend(
       icons: {
         primary: 'ui-icon-folder-open'
       },
-      label: _.template('Download queue <span class="<%= class %>">(<%= summary %>)</span>', { summary: t, class: c })
+      label: _.template('Download queue <span class="<%= className %>">(<%= summary %>)</span>', { summary: t, className: c })
     }
     );
 
