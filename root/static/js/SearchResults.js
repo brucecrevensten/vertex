@@ -2,6 +2,9 @@ var SearchResults = Backbone.Collection.extend(
   {
     url: AsfDataportalConfig.apiUrl,
     model: DataProduct,
+
+    // platforms found in result set list
+    platforms: [], 
     error:"",
 
     // Client sets this to the SearchResultsView it creates
@@ -15,9 +18,11 @@ var SearchResults = Backbone.Collection.extend(
       this.searchParameters = sp;
     },
 
+
     // Purpose of this function is to build the array of data that will be provided to the DataTable.
     // The DataTable expects an array of arrays, so we've gotta do a little bit of munging
     // from the incoming JSON.
+    // TODO: remove this, most recent revision of DataTables gives another way to provision data
     parseObjectsToArrays: function(d, c) {
       var a = [];
       for ( var i=0, iLen=d.length; i < iLen; i++ ) {
@@ -44,15 +49,18 @@ var SearchResults = Backbone.Collection.extend(
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
+          this.platforms = _.uniq( _.pluck( this.data.results.rows.ROW, 'PLATFORM') );
 
-          this.view.showTable();
           // Munge this data to get a local true ID on each model; need to wiggle
           // the returned JSON a little bit so that Backbone can consume the (lowercase)
           // 'id' field.
           for ( var i in data.results.rows.ROW ) {
             data.results.rows.ROW[i].id = data.results.rows.ROW[i].ID;
           }
+
+          this.view.showTable();
           this.refresh( this.data.results.rows.ROW );
+
         },
         error: function(jqXHR, textStatus, errorThrown) {
 
@@ -89,6 +97,7 @@ var SearchResultsView = Backbone.View.extend(
 
     $('#async-spinner').hide();
     $('#results-widget-wrapper').show();
+    $('#platform_facets').show();
 
   },
 
@@ -98,6 +107,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#results-banner").hide();
     $('#results-widget-wrapper').hide();
     $("#error-message").hide();
+    $('#platform_facets').hide();
     this.clearOverlays();
 
   },
@@ -108,6 +118,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#results-banner").hide();
     $("#error-message").show();
     $("#error-message-code").text(jqXHR.status);
+    $('#platform_facets').hide();
   },
 
   showNoResults: function() {
@@ -115,6 +126,8 @@ var SearchResultsView = Backbone.View.extend(
     $("#async-spinner").hide();
     $("#results-banner").show();
     $("#error-message").hide();
+    $("#platform_facet").hide();
+    $('#platform_facets').hide();
   },
 
 // todo: fix this to not use the mess of arrays -- datatables v1.8 should fix that with mDataProp in aoColumns

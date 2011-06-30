@@ -36,7 +36,8 @@ var SearchParameters = Backbone.Model.extend(
 
     setupPostFilters: function() {
       this.postFilters = [
-        new RadarsatFacet()
+        new RadarsatFacet(),
+        new AlosFacet(),
       ];
 
       self = this;
@@ -90,7 +91,6 @@ var PostFiltersView = Backbone.View.extend(
 {
   widgets: [],
   initialize: function() {
-    this.setWidgets();
     _.bindAll(this, 'render');
   },
   setWidgets: function() {
@@ -99,11 +99,16 @@ var PostFiltersView = Backbone.View.extend(
       this.widgets.push(this.model.postFilters[i].getWidget());
     }
   },
-  render: function() {
+  render: function(platforms) {
 
+    this.setWidgets();
+    $(this.el).empty();
     // build this dynamically in future, but not yet
     for ( var i in this.widgets ) {
-      $(this.el).append( this.widgets[i].render().el );
+      if( -1 != _.indexOf( platforms, this.widgets[i].name )) {
+        $(this.el).append( this.widgets[i].render().el );
+        console.log("rendering "+this.widgets[i].name);
+      } 
     }
     return this;
   }
@@ -111,7 +116,13 @@ var PostFiltersView = Backbone.View.extend(
 
 var BaseWidget = Backbone.View.extend(
 {
-  tagName: "div"
+  tagName: "div",
+  hide: function() {
+    $(this.el).hide();
+  },
+  show: function() {
+    $(this.el).show();
+  }
 }
 );
 
@@ -269,8 +280,8 @@ var GeographicWidget = BaseWidget.extend(
 var DateFilter = Backbone.Model.extend(
 { name: "DateFilter",
   defaults: {
-      start:"2010-12-01",
-      end:"2011-01-01",
+      start:"2009-12-01",
+      end:"2009-12-15",
   },
   getWidget: function() { 
     return new DateWidget({model:this});
@@ -495,77 +506,146 @@ var DirectionWidget = BaseWidget.extend(
 );
 
 var PlatformFacet = Backbone.Model.extend( {} ); 
-var PlatformFacetView = Backbone.View.extend( {} );
+var PlatformFacetView = BaseWidget.extend( {
+
+  // selected = this.model.toJSON
+  // key = key name to use in selected.key
+  // container = element into which all these items should be appended
+  // source = data structure in format: [ { title:string, group:string, modes: [ { label:label, value:inputValue }, ... ] }, ... ]
+  // id = string, ID fragment to prepend in dynamically-generated elements
+  // param = string, name of http parameter
+  renderButtonset: function( selected, key, el, source, id, name ) {
+
+    for( var i in source ) {
+      $(el).append( _.template('<h5><%= title %></h5>', source[i] ));
+      newEl = jQuery('<div/>', {
+        id: id+"_"+source[i].group,
+        "class": "checkbox"
+      });
+      for( var j in source[i].modes ) {
+        idVal = source[i].modes[j].value.replace('.','_');
+        $(newEl).append( 
+          _.template(
+            '<input type="checkbox" name="<%= name %>[]" value="<%= value %>" <%= ifChecked %> id="<%= id %>_<%= group %>_<%= idValue %>" /><label for="<%= id %>_<%= group %>_<%= idValue %>"><%= label %></label>',
+            {
+              ifChecked: ( -1 !== _.indexOf( selected[key], source[i].modes[j].value)) ? 'checked="checked"' : '',
+              group: source[i].group,
+              value: source[i].modes[j].value,
+              label: source[i].modes[j].label,
+              id: id,
+              idValue: idVal,
+              name: name
+            }
+          )
+        )
+      }
+      $(el).append( newEl );
+    }
+  }
+
+} );
 
 var AlosFacet = PlatformFacet.extend(
   {
     name: "ALOS",
     getWidget: function() {
-      return new AlosFacetView({model: this});
+      return new AlosFacetButton({model: this});
     }
   }
 );
 
-var AlosFacetView = PlatformFacetView.extend( {
-
-  title: "ALOS",
-  tagName: "button",
+var AlosFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
-  renderFacet: function() {
-     $("#platform_facet").html(
-      _.template('\
-<h5>FBS (Fine Beam Single Polarization)</h5>\
-<div id="a3_bmc_1" class="checkbox">\
-<input type="checkbox" name="offnadir[]" value="21.5" id="a3_bm_fbs_1" /><label for="a3_bm_fbs_1">21.5&deg;</label>\
-<input type="checkbox" name="offnadir[]" value="34.3" id="a3_bm_fbs_2" /><label for="a3_bm_fbs_2">34.3&deg;</label>\
-<input type="checkbox" name="offnadir[]" value="41.5" id="a3_bm_fbs_3" /><label for="a3_bm_fbs_3">41.5&deg;</label>\
-<input type="checkbox" name="offnadir[]" value="50.8" id="a3_bm_fbs_4" /><label for="a3_bm_fbs_4">50.8&deg;</label>\
-</div>\
-<h5>FBD (Fine Beam Double Polarization)</h5>\
-<div id="a3_bmc_2" class="checkbox">\
-<input checked="checked" type="checkbox" name="offnadir[]" value="34.3" id="a3_bm_fbd" /><label for="a3_bm_fbd">34.3&deg;</label>\
-</div>\
-<h5>PLR (Polarimetric Mode)</h5>\
-<div id="a3_bmc_3" class="checkbox">\
-<input type="checkbox" name="offnadir[]" value="21.5" id="a3_bm_plr_1" /><label for="a3_bm_plr_1">21.5&deg;</label>\
-<input type="checkbox" name="offnadir[]" value="23.1" id="a3_bm_plr_2" /><label for="a3_bm_plr_2">23.1&deg;</label>\
-</div>\
-<h5>WB1 (ScanSAR Burst Mode 1)</h5>\
-<div id="a3_bmc_4" class="checkbox">\
-<input checked="checked" type="checkbox" name="offnadir[]" value="27.1" id="a3_bm_wb1" /><label for="a3_bm_wb1">27.1&deg;</label>\
-</div>\
-'));
-    $("#platform_facet").find('.checkbox').each(function(index) {
+  id: "platform_facet",
+  tagName: "form",
+  events: { 
+    "change input" : "changed",
+  },
+  initialize: function() {
+    this.render();
+  },
+  changed: function(e) {
+    this.model.clear( { silent: true });
+    this.model.set( { offnadir: _.pluck( $(this.el).serializeArray(), 'value' ) } );
+ },
+  beamModes: [
+    {
+      title: "FBS (Fine Beam Single Polarization)",
+      group: "fbs",
+      modes: [
+        { label: "21.5&deg;", value: "21.5" },
+        { label: "34.3&deg;", value: "34.3" },
+        { label: "41.5&deg;", value: "41.5" },
+        { label: "50.8&deg;", value: "50.8" }
+      ]
+    },
+    {
+      title: "FBD (Fine Beam Double Polarization)",
+      group: "fbd",
+      modes: [
+        { label: "34.3&deg", value: "34.3" }
+      ]
+    },
+    {
+      title: "PLR (Polarimetric Mode)",
+      group: "plr",
+      modes: [
+        { label: "21.5&deg;", value: "21.5" },
+        { label: "23.1&deg;", value: "23.1" }
+      ]
+    },
+    {
+      title: "WB1 (ScanSAR Burst Mode 1)",
+      group: "wb1",
+      modes: [
+        { label: "27.1&deg;", value: "27.1" }
+      ]
+    }
+  ],
+  render: function() {
+    this.renderButtonset( this.model.toJSON(), 'offnadir', this.el, this.beamModes, 'a3', 'offnadir' );
+
+    $(this.el).find('.checkbox').each(function(index) {
       $(this).buttonset();
     });
     
+    $(this.el).dialog({
+      width: 700,
+      modal: true,
+      draggable: false,
+      resizable: false,
+      title: "ALOS Beam Modes",
+      position: "center"
+    });
+
+  }
+  
+});
+ 
+var AlosFacetButton = PlatformFacetView.extend( {
+  name: "ALOS",
+  tagName: "button",
+  initialize: function() {
+    _.bindAll(this, "render", "openDialog");
+  },
+  events: {
+    "click" : "openDialog"
+  },
+  openDialog: function(e) {
+    var v = new AlosFacetDialog( { model: this.model } );
   },
   render: function() {
-   $(this.el).button(
+    $(this.el).button(
       {
         icons: {
           secondary: "ui-icon-zoomin"
         },
-        label: "ALOS"
+        label: this.name
       }
-    ).click( { view: this }, function(e) {
-      $("#platform_facet").html( e.data.view.renderFacet() );
-      $("#platform_facet").dialog(
-      {
-          modal: true,
-          width: 400,
-          draggable: false,
-          resizable: false,
-          title: "ALOS Beam Modes & Off-Nadir Angles",
-          position: "center"
-        }
-      );
-    });
+    );
     return this;
   }
-
 });
- 
 
 /*
 specifying beam modes:
@@ -574,7 +654,7 @@ specifying beam modes:
 - need a 'toggle all' button @ radarsat
 - 'toggle all' button does a 'clear' on the model's list of selected things
 + when the form is changed, the model should change
-- when the model is changed, it should notify SearchParameters and update it
++ when the model is changed, it should notify SearchParameters and update it
 - strange case: user unselects all beam modes, what to do? IL#22
 */
 
@@ -591,6 +671,7 @@ var RadarsatFacet = PlatformFacet.extend(
 );
 
 var RadarsatFacetButton = PlatformFacetView.extend( {
+  name: "RADARSAT-1",
   tagName: "button",
   initialize: function() {
     _.bindAll(this, "render", "openDialog");
@@ -599,6 +680,7 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
     "click" : "openDialog"
   },
   openDialog: function(e) {
+    console.log('I think I should open a dialog box.');
     var v = new RadarsatFacetDialog( { model: this.model } );
   },
   render: function() {
@@ -690,78 +772,10 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
     }
   ],
   render: function() {
-    for( var i in this.beamModes ) {
-      $(this.el).append( _.template('<h5><%= title %></h5>', this.beamModes[i] ));
-      $(this.el).append( _.template('<div id="r1_bmc_<%= group %>" class="checkbox">', this.beamModes[i] ));
-      newEl = jQuery('<div/>', {
-        id: "r1_bmc_"+this.beamModes[i],
-        class: "checkbox"
-      });
-      for( var j in this.beamModes[i].modes ) {
-        $(newEl).append( 
-          _.template(
-            '<input type="checkbox" name="beam[]" value="<%= value %>" <%= ifChecked %> id="r1_<%= group %>_<%= value %>" /><label for="r1_<%= group %>_<%= value %>"><%= label %></label>',
-            {
-              ifChecked: 'checked="checked"',
-              group: this.beamModes[i].group,
-              value: this.beamModes[i].modes[j].value,
-              label: this.beamModes[i].modes[j].label
-            }
-          )
-        )
-      }
-      $(this.el).append( newEl );
-    }
-/*
-    $(this.el).html(
-      _.template('\
-<h5>Extended High Incidence Beam; off-nadir 52-58&deg;</h5>\
-<div id="r1_bmc_1" class="checkbox">\
-<input type="checkbox" name="beam[]" value="EH3" id="r1_bm_eh3" /><label for="r1_bm_eh3">EH3 (51.8&deg;)</label>\
-<input type="checkbox" name="beam[]" value="EH5" id="r1_bm_eh5" /><label for="r1_bm_eh5">EH5 (54.5&deg;)</label>\
-<input type="checkbox" name="beam[]" value="EH6" id="r1_bm_eh6" /><label for="r1_bm_eh6">EH6 (57.3&deg;)</label>\
-</div>\
-<h5>Extended Low Incidence Beam; off-nadir 10&deg;</h5>\
-<div id="r1_bmc_2" class="checkbox">\
-<input checked="checked" type="checkbox" name="beam[]" value="EL1" id="r1_bm_el1" /><label for="r1_bm_el1">EL1 (10&deg;)</label>\
-</div>\
-<h5>Fine Beam; off-nadir 37-47&deg;</h5>\
-<div id="r1_bmc_3" class="checkbox">\
-<input type="checkbox" name="beam[]" value="FN1" id="r1_bm_fn1" /><label for="r1_bm_fn1">FN1 (36.9&deg;)</label>\
-<input type="checkbox" name="beam[]" value="FN2" id="r1_bm_fn2" /><label for="r1_bm_fn2">FN2 (39.4&deg;)</label>\
-<input type="checkbox" name="beam[]" value="FN3" id="r1_bm_fn3" /><label for="r1_bm_fn3">FN3 (41.6&deg;)</label>\
-<input type="checkbox" name="beam[]" value="FN4" id="r1_bm_fn4" /><label for="r1_bm_fn4">FN4 (43.6&deg;)</label>\
-<input type="checkbox" name="beam[]" value="FN5" id="r1_bm_fn5" /><label for="r1_bm_fn5">FN5 (45.4&deg;)</label>\
-</div>\
-<h5>ScanSAR Narrow Beam; off-nadir 20-49&deg;</h5>\
-<div id="r1_bmc_4" class="checkbox">\
-<input type="checkbox" name="beam[]" value="SNA" id="r1_bm_sna" /><label for="r1_bm_sna">SNA (20&deg;)</label>\
-<input type="checkbox" name="beam[]" value="SNB" id="r1_bm_snb" /><label for="r1_bm_snb">SNB (30.8&deg;)</label>\
-</div>\
-<h5>Standard Beam; off-nadir 20-49&deg;</h5>\
-<div id="r1_bmc_5" class="checkbox">\
-<input type="checkbox" name="beam[]" value="ST1" id="r1_bm_st1" /><label for="r1_bm_st1">ST1 (19.6&deg;)</label>\
-<input type="checkbox" name="beam[]" value="ST2" id="r1_bm_st2" /><label for="r1_bm_st2">ST2 (24.2&deg;)</label>\
-<input type="checkbox" name="beam[]" value="ST3" id="r1_bm_st3" /><label for="r1_bm_st3">ST3 (30.5&deg;)</label>\
-<input type="checkbox" name="beam[]" value="ST4" id="r1_bm_st4" /><label for="r1_bm_st4">ST4 (33.6&deg;)</label>\
-<input type="checkbox" name="beam[]" value="ST5" id="r1_bm_st5" /><label for="r1_bm_st5">ST5 (36.5&deg;)</label>\
-<input type="checkbox" name="beam[]" value="ST6" id="r1_bm_st6" /><label for="r1_bm_st6">ST6 (41.5&deg;)</label>\
-<input type="checkbox" name="beam[]" value="ST7" id="r1_bm_st7" /><label for="r1_bm_st7">ST7 (44.9&deg;)</label>\
-</div>\
-<h5>ScanSAR Wide Beam; off-nadir 20-49&deg;</h5>\
-<div id="r1_bmc_6" class="checkbox">\
-<input type="checkbox" name="beam[]" value="SWA" id="r1_bm_swa" /><label for="r1_bm_swa">SWA (20&deg;)</label>\
-<input type="checkbox" name="beam[]" value="SWB" id="r1_bm_swb" /><label for="r1_bm_swb">SWB (20&deg;)</label>\
-</div>\
-<h5>Wide Beam; off-nadir 20-49&deg;</h5>\
-<div id="r1_bmc_6" class="checkbox">\
-<input type="checkbox" name="beam[]" value="WD1" id="r1_bm_wd1" /><label for="r1_bm_wd1">WD1 (20&deg;)</label>\
-<input type="checkbox" name="beam[]" value="WD2" id="r1_bm_wd2" /><label for="r1_bm_wd2">WD2 (20&deg;)</label>\
-<input type="checkbox" name="beam[]" value="WD3" id="r1_bm_wd3" /><label for="r1_bm_wd3">WD3 (20&deg;)</label>\
-</div>\
-<div id="r1_bmc_reset"></div>\
-'));
-*/
+    
+    this.renderButtonset( this.model.toJSON(), 'beam', this.el, this.beamModes, 'r1', 'beam' );
+
+    
     $(this.el).find('.checkbox').each(function(index) {
       $(this).buttonset();
     });

@@ -43,9 +43,15 @@ $(function() {
       el: $("#platform_facets")
     }
     );
-    this.postFiltersView.render();
 
     this.searchResults = new SearchResults();
+
+    this.searchResults.bind("refresh", function() {
+      console.log('caught refresh event on searchResults');
+      console.log(SearchApp.searchResults.platforms);
+      SearchApp.postFiltersView.render( SearchApp.searchResults.platforms );
+    });
+
     this.searchResultsView = new SearchResultsView(
       {
         collection: this.searchResults,
@@ -53,13 +59,6 @@ $(function() {
       }
     );
     this.searchResults.setView( this.searchResultsView );
-
-    // change when the form changes
-    this.searchParameters.bind("change",function() {
-      SearchApp.searchResults.fetchSearchResults(SearchApp.searchParameters); // initial population
-    });
-
-    //this.searchResults.fetchSearchResults(this.searchParameters); // initial population
 
     // Initialize the download queue
     this.downloadQueue = new DownloadQueue();
