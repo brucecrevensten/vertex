@@ -7,11 +7,11 @@ var User = Backbone.Model.extend(
 	{
 		user_name: null,
 		login_attempts: 0,
-		auth_type: "",		// authorization type restricts/enhances content
+		authType: "",		// authorization type restricts/enhances content
 		
 		defaults: {
 			login_attempts: 0,
-			auth_type: ""
+			authType: ""
 		},
 		
 		initialize: function() {
@@ -22,7 +22,17 @@ var User = Backbone.Model.extend(
 				$.ajax({
 					type: "POST",
 					url: AsfDataportalConfig.authUrl,
-					data: "userid="+attrs.user_name + '&' + 'password='+attrs.password
+					data: "userid="+attrs.user_name + '&' + 'password='+attrs.password,
+					dataType: "json",
+					context: this,
+					success: function(data, textStatus, jqXHR) {
+						this.authType = data.authType;
+						console.log(data);
+						console.log("user auth = " + this.authType);
+					},
+					error: function(error) {
+						console.log(error);
+					}
 				});
 		}
 	}

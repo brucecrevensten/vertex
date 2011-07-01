@@ -43,6 +43,28 @@ sub authenticate {
    
 }
 
+sub authorize {
+	my ($self, $userid) = @_;
+	my $dbh = $self->dbh;
+	if (!defined($dbh)) {
+    	DbException->throw( 
+      		message => "Could not establish a database connection in Auth model",
+    	);
+  	}
+	my $ret_val = 0;
+	my $sth = $dbh->prepare(qq(
+	    BEGIN
+	      ? := user_management.authorize_user(?);
+	    END;
+	));
+	
+	$sth->bind_param_inout(1, \$ret_val, 16);
+	$sth->bind_param(2, $userid);
+	$sth->execute();
+
+	return $ret_val;
+}
+
 sub datapool_session_cookie {
   my ($self, $userid, $ip_address) = @_;
   my $session = 0;

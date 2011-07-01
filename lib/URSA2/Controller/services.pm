@@ -181,7 +181,9 @@ sub authentication :Local {
     if($r->redirect) {
       $c->response->redirect($r->redirect);
     } else {
-      $c->res->body('authentication succeeded!  cookies being set...');
+	  my $authType = $c->model('User')->authorize($r->userid);
+	  $c->res->content_type("application/json");
+      $c->res->body('{"authType": ' . '"'.$authType .'"}');
     }
   }
 
