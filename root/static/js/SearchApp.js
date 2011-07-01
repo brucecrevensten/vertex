@@ -47,8 +47,6 @@ $(function() {
     this.searchResults = new SearchResults();
 
     this.searchResults.bind("refresh", function() {
-      console.log('caught refresh event on searchResults');
-      console.log(SearchApp.searchResults.platforms);
       SearchApp.postFiltersView.render( SearchApp.searchResults.platforms );
     });
 

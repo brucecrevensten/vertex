@@ -107,7 +107,6 @@ var PostFiltersView = Backbone.View.extend(
     for ( var i in this.widgets ) {
       if( -1 != _.indexOf( platforms, this.widgets[i].name )) {
         $(this.el).append( this.widgets[i].render().el );
-        console.log("rendering "+this.widgets[i].name);
       } 
     }
     return this;
@@ -354,11 +353,10 @@ var PlatformWidget = BaseWidget.extend(
   {
     title: "Platforms",
     titleId: "platform_widget_title",
-    tagName: "div",
     id: "filter_platform",
     platformTypes: {
       // value : display name
-      "R1" : "Radarsat-1",
+      "R1" : "RADARSAT-1",
       "E1" : "ERS-1",
       "E2" : "ERS-2",
       "J1" : "JERS-1",
@@ -373,24 +371,35 @@ var PlatformWidget = BaseWidget.extend(
 
       //TODO: this is ugly -- there's gotta be a better way to 
       // construct the jquery selector there.
-      var a = $("#"+this.id+" input").serializeArray();
+      var a = $(this.el).find('input:checkbox:checked').serializeArray();
       this.model.clear({silent:true});
       this.model.set( { platform: _.pluck(a,"value") } );
 
     },
 
     render: function() {
-      var f = "";
       var checked = this.model.toJSON()["platform"];
       for( var key in this.platformTypes ) {
-         rowData = {
+        rowData = {
           name: this.platformTypes[key],
+          id: "pf_"+this.platformTypes[key],
           value: key,
           ifChecked: ( _.indexOf(checked, key) > -1 ) ? 'checked="checked"' : ''
-         };
-         f = f + _.template('<li><label for="filter_platform_<%= name %>"><input type="checkbox" id="filter_platform_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>/>&nbsp;<%= name %></label></li>', rowData);
+        };
+        var i = $('<li>');
+        $(i).html( _.template('\
+<input type="checkbox" id="<%= id %>" <%= ifChecked %> name="platform" value="<%= value %>" /><label style="text-align: left;" for="<%= id %>"><%= name %></label>\
+', rowData));
+        $(i).find('input').button().click( function() {
+          if( true == $(this).prop('checked') ) {
+            $(this).button( "option", "icons", { primary: "ui-icon-check" });
+          } else {
+            $(this).button( "option", "icons", {} );
+          }
+        });
+        $(i).find('input:checkbox:checked').button( "option", "icons", { primary: "ui-icon-check" }).prop('checked', true);
+        $(this.el).append(i);
       }
-      $(this.el).html( '<ul>'+f+'</ul>' );
       return this;
     }
   }
@@ -680,7 +689,6 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
     "click" : "openDialog"
   },
   openDialog: function(e) {
-    console.log('I think I should open a dialog box.');
     var v = new RadarsatFacetDialog( { model: this.model } );
   },
   render: function() {
