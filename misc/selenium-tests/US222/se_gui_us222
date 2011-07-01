@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="spec_1_0">spec_1_0</a></td></tr>
+<tr><td><a href="spec_1_1_2">spec_1_1_2</a></td></tr>
+<tr><td><a href="spec1_6">spec_1_6</a></td></tr>
+<tr><td><a href="spec_1_6_3">spec_1_6_3</a></td></tr>
+<tr><td><a href="spec_1_7">spec_1_7</a></td></tr>
+<tr><td><a href="spec_5_0_1">spec_5_0_1</a></td></tr>
+<tr><td><a href="spec_5_0_2">spec_5_0_2</a></td></tr>
+<tr><td><a href="spec_5_1_1">spec_5_1_1</a></td></tr>
+<tr><td><a href="spec_5_1_3">spec_5_1_3</a></td></tr>
+<tr><td><a href="spec_5_1_4">spec_5_1_4</a></td></tr>
+<tr><td><a href="spec_5_2_1">spec_5_2_1</a></td></tr>
+<tr><td><a href="spec_5_2_2">spec_5_2_2</a></td></tr>
+<tr><td><a href="spec_5_2_4">spec_5_2_4</a></td></tr>
+<tr><td><a href="spec_5_2_5">spec_5_2_5</a></td></tr>
+<tr><td><a href="spec_5_2_6">spec_5_2_6</a></td></tr>
+<tr><td><a href="spec_5_3_2">spec_5_3_2</a></td></tr>
+</tbody></table>
+</body>
+</html>
