@@ -1,11 +1,5 @@
 $(function() {
 	
-	// TODO: Replace with User Factory. 
-	this.user_current = new User();
-	var userLoginView = new UserLoginView(  { model: this.user_current, el: $('#user_auth_submit') });
-    userLoginView.render(); 
-	$("#subAuthB").button();
-
   window.SearchAppView = Backbone.View.extend({
     el: $('#SearchApp'),
     
@@ -101,8 +95,15 @@ $(function() {
 
     //fire up the map
     initMap('searchMap');
+ 
+    this.user = new User();
+    this.userLoginView = new UserLoginView( { model: this.user, el: $('#user_auth_submit') } );
+    this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
+    this.userLoginButton.render();
+  
 
     },
+
     
     render: function () {
       //not sure if we need this, but it might be used for updating views based on minimized results panes, etc.

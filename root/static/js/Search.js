@@ -531,6 +531,7 @@ var PlatformFacetView = BaseWidget.extend( {
         id: id+"_"+source[i].group,
         "class": "checkbox"
       });
+      newEl.prop('beam', source[i].group);
       for( var j in source[i].modes ) {
         idVal = source[i].modes[j].value.replace('.','_');
         $(newEl).append( 
@@ -575,12 +576,15 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   },
   changed: function(e) {
     this.model.clear( { silent: true });
+    var beams = [];
+    $(this.el).find(':checked').each( function(i, el) { beams.push( $(el).parent().prop('beam') ); });
     this.model.set( { offnadir: _.pluck( $(this.el).serializeArray(), 'value' ) } );
- },
+    this.model.set( { beams: _.uniq( beams ) } );
+  },
   beamModes: [
     {
       title: "FBS (Fine Beam Single Polarization)",
-      group: "fbs",
+      group: "FBS",
       modes: [
         { label: "21.5&deg;", value: "21.5" },
         { label: "34.3&deg;", value: "34.3" },
@@ -590,14 +594,14 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     },
     {
       title: "FBD (Fine Beam Double Polarization)",
-      group: "fbd",
+      group: "FBD",
       modes: [
         { label: "34.3&deg", value: "34.3" }
       ]
     },
     {
       title: "PLR (Polarimetric Mode)",
-      group: "plr",
+      group: "PLR",
       modes: [
         { label: "21.5&deg;", value: "21.5" },
         { label: "23.1&deg;", value: "23.1" }
@@ -605,7 +609,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     },
     {
       title: "WB1 (ScanSAR Burst Mode 1)",
-      group: "wb1",
+      group: "WB1",
       modes: [
         { label: "27.1&deg;", value: "27.1" }
       ]
@@ -613,7 +617,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   ],
   render: function() {
     this.renderButtonset( this.model.toJSON(), 'offnadir', this.el, this.beamModes, 'a3', 'offnadir' );
-
     $(this.el).find('.checkbox').each(function(index) {
       $(this).buttonset();
     });

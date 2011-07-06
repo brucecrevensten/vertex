@@ -235,10 +235,14 @@ label.hover {
   font-size: .9em;
 }
 
-#queue_summary {
+#tools_menu {
   position: absolute;
   top: 3em;
   right: 3em;
+}
+
+#tools_menu div {
+  display: inline-block;
 }
 
 /* override the min-height property here */

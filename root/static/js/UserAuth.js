@@ -1,137 +1,96 @@
-/* 
- User Model.
- Contains a User Name, login attempts and authorization 
- Perform ajax post request to authenticate the user
-*/
 var User = Backbone.Model.extend(
 	{
-		user_name: null,
-		login_attempts: 0,
-		authType: "",		// authorization type restricts/enhances content
 		
 		defaults: {
-			login_attempts: 0,
-			authType: ""
+			authenticated: false,
+			userid: '',
+			password: '',
+			authType: ''
 		},
-		
+
 		initialize: function() {
+			this.widgetRenderer = this.getWidgetRenderer();
 		},
 		
-		validate: function(attrs) {		
-			// Write Sanity check code here. 
-				$.ajax({
-					type: "POST",
-					url: AsfDataportalConfig.authUrl,
-					data: "userid="+attrs.user_name + '&' + 'password='+attrs.password,
-					dataType: "json",
-					context: this,
-					success: function(data, textStatus, jqXHR) {
-						this.authType = data.authType;
-						console.log(data);
-						console.log("user auth = " + this.authType);
-					},
-					error: function(error) {
-						console.log(error);
-					}
-				});
+		authenticate: function(attrs) {		
+			$.ajax({
+				type: "POST",
+				url: AsfDataportalConfig.authUrl,
+				data: { userid: this.get('userid'), password: this.get('password') },
+				dataType: "json",
+				context: this,
+				success: function(data, textStatus, jqXHR) {
+					this.model.set('authenticated', true);
+					this.model.set('authType', data.authType);
+					this.widgetRenderer = this.getWidgetRenderer();
+				},
+				error: function(error) {
+					this.model.set('authenticated', false);
+					console.log(error);
+				}
+			});
+		},
+
+		getWidgetRenderer: function() {
+			// if the model isn't available, default to a fallback
+			if ( typeof this.model == 'undefined' ) { return new DefaultWidgetRenderer(); }
+			
+			switch( this.model.get('authType')) {
+				default: return new DefaultWidgetRenderer( { model: this.model } );
+			}
 		}
 	}
 );
 
-/*
-	UserLoginView
-	Displays the user login information on the Search App page. 
-	It hooks into #user_auth_submit div element so that it can modify content on the page there. 
-	Binds error methods to the models (User) error's. This means that when User.validate() returns 
-	anything (indicating an error) then the error is delegated to the method invoked within the
-	model's error binding (see below). 
-	
-	We create a dialog that has a few buttons and a username/password login text fields. 
-	Respond to these fields and hide/show the login/logout buttons when authenticaion is successful. 
-	
-	Bind this View to click events on the login/logout buttons
-	
-	Todo: Add event binding to the Logout button to invoke ajax request to logout. 
-*/
+var DefaultWidgetRenderer = Backbone.View.extend({});
+
+
 var UserLoginView = Backbone.View.extend(
 	{
-		el:  $("#user_auth_submit"),
-		
 		initialize: function() {
-				this.model.bind("error", function(model, error) {
-					alert(error);
-				});
-	
-				user = this.model;
-
-			 _.bindAll(this, "render");
-			
-			
-			$( "#dialog_mod" ).dialog({
-				create: function() {
-					$("#dialog_mod").append("")
-				},
-				autoOpen: false,
+			_.bindAll(this, "render");
+	    },
+		
+		render: function() {
+		    
+			$( "#login_dialog" ).dialog({
+				draggable: false,
+				resizable: false,				
 				height: 200,
 				width: 350,
 				modal: true,
 				buttons: {
+					"Cancel" : function() {
+						$( this).dialog('close');
+					},
 					"Login":  function() {
-						name = $("#name").val();
-						pass = $("#pas").val();
-
-						if (user.set({	user_name: name,
-										password: pass 		})) 
-					    {
-	
-							user.set({
-									user_name: name, 
-									password: pass, 
-									login_attempts: user.get("login_attempts")+1, 
-							});
-							
-							// Hide the login button and show the logout button. 
-							$("#my_b").hide();
-							$("#my_b2").button({ label: "Logout"}).show();
-							
-							$("div.msg").replaceWith("<div id="+'"msg"'+' class="msg"'+"><p>Welcome " + user.get("user_name") + "</p></div>");
-				
+						this.model.set( $(this.el).serializeArray() );
+						this.model.authenticate();
+						if( true == this.model.get('authenticated')) {
 							$( this ).dialog( "close");
 						} else {
-							user.set({login_attempts: user.get("login_attempts")+ 1}, {silent:true});
+							// update with error message
 						}       
-					},
-					"Register": function() {
-						console.log("Register Button Clicked");
-						window.location.replace("http://ursa.asfdaac.alaska.edu/cgi-bin/login/guest/");
 					}
-				},
-				close: function() {
 				}
 			});
-	    },
-		
-		events: {
-			"click #my_b": "attemptLogin",
-			"click #my_b2": "attemptLogout",
-		},
-		
-		render: function() {
-
-			$("#my_b").button( { label: "Login"});
-			$("my_b2").button({label:"Logout"}).hide();
 		    return this;
 		},
-		
-		attemptLogin: function() {
-			$("#dialog_mod").dialog('open');
-		},
-		attemptLogout: function() {
-			$("#my_b2").hide();
-			$("#my_b").show();
-			$("div.msg").replaceWith("<div id="+'"msg"'+' class="msg"'+">");
-		}
-		
 	}
-	
 );
+
+var UserLoginButton = Backbone.View.extend( {
+
+	render: function () {
+
+		if( this.model.get('authenticated') == true) {
+
+		} else {
+			$(this.el).html( _.template( '<button id="login_button">Login</button>') );
+			$(this.el).find('#login_button').button().click( function() {
+				SearchApp.userLoginView.render();
+			});
+		}
+		return this;
+	}
+});

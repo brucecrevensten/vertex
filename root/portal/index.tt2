@@ -30,36 +30,31 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/DataProduct.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/Search.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchResults.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/SearchApp.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/DownloadQueue.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/UserAuth.js') %]"></script> 
+<script type="text/javascript" src="[% c.uri_for('/static/js/SearchApp.js') %]"></script>
 
 </head>
 <body>
 
-<div id="queue_summary"></div>
 
 <div id="wrapper">
 <header>
 <h1><span>ASF Dataportal</span></h1>
-<nav>
-<ul>
-<li>Home</li>
-</ul>
-</nav>
+<div id="tools_menu">
+<div id="queue_summary"></div>
+<div id="user_tools"></div>
+</div>
 </header>
 
-<div id="user_auth_submit">
-	<div id="my_b"></div><div id="my_b2"></div>
-	<div id="msg" class="msg"></div>
-	<div id="dialog_mod">
-		<fieldset>
-				<label for="name">Name</label>
-				<input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" /><br />
-				<label for="password">Password</label>
-				<input type="password" name="password" id="pas" value="" class="text ui-widget-content ui-corner-all" /><br />
-		</fieldset>	
-	</div>
+<div id="login_dialog" style="display: none">
+	<div id="login_feedback" class="msg"></div>
+	<form>
+			<label for="login_username">Name</label>
+			<input type="text" name="userid" id="login_username"  /><br />
+			<label for="login_password">Password</label>
+			<input type="password" name="password" id="login_password" value=""  /><br />
+	</form>	
 </div>
 
 <div id="contents">
