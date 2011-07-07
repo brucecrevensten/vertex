@@ -48,9 +48,13 @@ sub getSelectXml {
     orbit,
     pathNumber,
     frameNumber,
+    missionName,
     TO_CHAR(acquisitionDate, 'YYYY-MM-DD HH24:MI:SS') AS acquisitionDate,
     TO_CHAR(processingDate, 'YYYY-MM-DD HH24:MI:SS') AS processingDate,
     processingType,
+    processingTypeDisplay,
+    processingLevel,
+    processingDescription,
     TO_CHAR(startTime, 'YYYY-MM-DD HH24:MI:SS') AS startTime,
     TO_CHAR(endTime, 'YYYY-MM-DD HH24:MI:SS') AS endTime,
     centerLat,
@@ -81,6 +85,7 @@ sub getSelectXml {
   )).getStringVal() FROM
     data_product dp
   WHERE
+    processingtype not in ('THUMBNAIL', 'BROWSE512') and
   );
 }
 
@@ -138,6 +143,7 @@ sub getResultsCount {
     from
       data_product
   WHERE
+    processingtype not in ('THUMBNAIL', 'BROWSE512') and
   );
 
   $sql .= $self->getApiQuery($r);

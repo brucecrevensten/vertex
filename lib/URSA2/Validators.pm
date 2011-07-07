@@ -58,7 +58,7 @@ validates the platform parameter:
 
 sub platform {
   my ($self, $platform) = @_;
-  my @platforms = ('A3','AS','E1','E2','J1','R1');
+  my @platforms = ('A3','AS','E1','E2','J1','R1', 'UA');
   return $self->validateArray($platform, 'platform', @platforms);
 }
 
@@ -72,7 +72,6 @@ exception.
 =cut
 sub validateArray {
   my($self, $arr, $field, @ref) = @_;
-
   if( !defined($arr) || scalar @{$arr} == 0 ) {
     return undef;
   }
@@ -91,7 +90,7 @@ sub validateArray {
 
 sub beam {
   my ($self, $beam) = @_;
-  my @beams = ('FBD', 'FBS', 'PLR', 'WB1', '3FP', 'ATI', 'XTI', 'STD', 'EH3', 'EH4', 'EH6', 'EL1', 'FN1', 'FN2', 'FN3', 'FN4', 'FN5', 'SNA', 'SNB', 'ST1', 'ST2', 'ST3', 'ST4', 'ST5', 'ST6', 'ST7', 'SWA', 'SWB', 'WD1', 'WD2', 'WD3');
+  my @beams = ('FBD', 'FBS', 'PLR', 'WB1', '3FP', 'ATI', 'XTI', 'STD', 'EH3', 'EH4', 'EH6', 'EL1', 'FN1', 'FN2', 'FN3', 'FN4', 'FN5', 'SNA', 'SNB', 'ST1', 'ST2', 'ST3', 'ST4', 'ST5', 'ST6', 'ST7', 'SWA', 'SWB', 'WD1', 'WD2', 'WD3', 'POL');
   return $self->validateArray($beam, 'beam', @beams);
 }
 
@@ -104,7 +103,7 @@ sub offnadir {
 sub processing {
 
   my ($self, $processing) = @_;
-  my @a = qw(L0 L1 L1.1 L1.0 L1.5 BROWSE);
+  my @a = qw(L0 L1 L1.1 L1.0 L1.5 BROWSE COMPLEX KMZ METADATA PROJECTED STOKES);
   if( -1 != firstidx { $_ eq 'any' } @{$processing} ) {
     return \@a;
   }

@@ -25,7 +25,7 @@
               <div style="position:absolute;left:20px;top:200px">
                 <h3>Metadata</h3>
                 <ul>
-                  <li>Processing type: <xsl:value-of select="PROCESSINGTYPE" /></li>
+                  <li>Processing type: <xsl:value-of select="PROCESSINGTYPEDISPLAY" /></li>
                   <li>Frame: <xsl:value-of select="FRAMENUMBER" /></li>
                   <li>Path: <xsl:value-of select="PATHNUMBER" /></li>
                   <li>Orbit: <xsl:value-of select="ORBIT" /></li>

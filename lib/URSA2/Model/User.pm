@@ -81,6 +81,7 @@ sub datapool_session_cookie {
     $session->param('-logged-in', 1);
     $session->flush();
   }; if($@) {
+URSA2->log->debug($@);
     # undef the $session (if we started to create one) in an eval block.
     # The CGI::Session object tries to write the session information to the
     # database when it leaves scope and that can die with an error.
