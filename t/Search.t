@@ -180,7 +180,7 @@ SKIP: {
   $mech->post($surn, { granule_list=>',R1_65186_ST3_F291, E1_00404_STD_F161,,', format=>'list'});
   is($mech->status(), Apache2::Const::HTTP_OK, '3: get HTTP 200 for successful search');
   my @list = split/,/, $mech->content();
-  is_deeply([sort @list], [sort qw(E1_00404_STD_F161 E1_00404_STD_F161 E1_00404_STD_F161 E1_00404_STD_F161 E1_00404_STD_F161 R1_65186_ST3_F291 R1_65186_ST3_F291 R1_65186_ST3_F291 R1_65186_ST3_F291 R1_65186_ST3_F291)], '3: get expected results for slightly weird granule list (extra spaces and commas)');
+  is_deeply([sort @list], [sort qw(E1_00404_STD_F161 E1_00404_STD_F161 E1_00404_STD_F161 R1_65186_ST3_F291 R1_65186_ST3_F291 R1_65186_ST3_F291)], '3: get expected results for slightly weird granule list (extra spaces and commas)');
   #is($mech->content(), qq(E1_00404_STD_F161,E1_00404_STD_F161,E1_00404_STD_F161,R1_65186_ST3_F291,R1_65186_ST3_F291,R1_65186_ST3_F291,), '3: get expected results for slightly weird granule list (extra spaces and commas)');
 
   # testing search restriction by platform: this region definitely has E1, E2, JERS, R1 assets.
@@ -244,7 +244,7 @@ SKIP: {
 
   $mech->post($surn, {'bbox' => '-135,64.5,-135.1,64.6', granule_list=>'R1_35587_SWB_F356,R1_34558_SWB_F356,R1_34601_SWB_F357', format=>'list'});
   @list = split/,/, $mech->content();
-  is_deeply([sort @list], [qw(R1_34601_SWB_F357 R1_34601_SWB_F357 R1_34601_SWB_F357 R1_34601_SWB_F357 R1_35587_SWB_F356 R1_35587_SWB_F356 R1_35587_SWB_F356 R1_35587_SWB_F356)], '2.9.1: granule_list overrides other search params if present');
+  is_deeply([sort @list], [qw(R1_34601_SWB_F357 R1_34601_SWB_F357 R1_35587_SWB_F356 R1_35587_SWB_F356)], '2.9.1: granule_list overrides other search params if present');
   #is( $mech->content(), q(R1_34558_SWB_F356,R1_34558_SWB_F356,R1_34601_SWB_F357,R1_34601_SWB_F357,R1_35587_SWB_F356,R1_35587_SWB_F356,), '2.9.1: granule_list overrides other search params if present');
 
   $mech->post($surn, { granule_list=>'R1_35587_SWB_F356,R1_34558_SWB_F356,R1_34601_SWB_F357', processing => 'BROWSE', format => 'list' });

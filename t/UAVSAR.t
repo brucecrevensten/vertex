@@ -75,10 +75,11 @@ SKIP: {
     unless $ENV{'TEST_DATABASE'};
   $mech->post($surn, { 'platform' => $platform, 'beam' => join(',', @beams),
     'processing' => join(',', @processing), 'format' => 'count'});
-  cmp_ok($mech->content(), '>', '0');
+  cmp_ok($mech->content(), '>', '0', 'Find UAVSAR scenes through API');
 
   $mech->post($surn, { 'granule_list' => join(',', @granules),
     'format' => 'list' });
   my @list = split/,/, $mech->content();
-  is_deeply([sort @list], [qw(UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01)]);
+  is_deeply([sort @list], [qw(UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01)],
+    'Find UAVSAR scenes by name through API');
 }

@@ -48,7 +48,6 @@ sub getSelectXml {
     orbit,
     pathNumber,
     frameNumber,
-    missionName,
     TO_CHAR(acquisitionDate, 'YYYY-MM-DD HH24:MI:SS') AS acquisitionDate,
     TO_CHAR(processingDate, 'YYYY-MM-DD HH24:MI:SS') AS processingDate,
     processingType,
