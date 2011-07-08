@@ -340,7 +340,7 @@ var PlatformFilter = Backbone.Model.extend(
   {
     name: "PlatformFilter",
     defaults: {
-      platform: ["E1","E2","J1","A3","R1"]
+      platform: ["E1","E2","J1","A3","R1","UAVSAR"]
     },
     getWidget: function() {
       return new PlatformWidget({model:this});
@@ -356,7 +356,7 @@ var PlatformWidget = BaseWidget.extend(
     id: "filter_platform",
     platformTypes: {
       // value : display name -- order is respected, here
-      'UAVSAR':'UAVSAR',
+      'UAVSAR' : 'UAVSAR',
       "A3" : "ALOS",
       "R1" : "RADARSAT-1",
       "E1" : "ERS-1",
