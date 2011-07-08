@@ -296,4 +296,51 @@ button.tool_enqueuer.tool-dequeue:hover {
 
 #platform_facet h5 {
   margin: 1.5em 0 1ex;
+  line-height: 115%;
+}
+
+#filters div.composite_checkbox_wrapper input + label {
+  display: inline-block !important;
+}
+
+#platform_profile {
+  color: #eee;
+}
+
+#platform_profile a {
+  text-decoration: underline;
+}
+
+#platform_profile a:focus, #platform_profile a:hover {
+  color: #399ec2;
+}
+
+#platform_profile strong {
+  color: white;
+}
+
+#platform_profile ul {
+  margin: 1em 0 1em 1em;
+}
+
+#platform_profile p {
+  margin: 1ex 0;
+  line-height: 135%;
+}
+
+#platform_profile img {
+  float: right;
+  margin: 0 0 1em 1em;
+}
+
+#platform_profile li {
+  margin-bottom: 1ex;
+}
+#platform_profile h3 {
+  color: white;
+  font-weight: bold;
+}
+#platform_profile * + h3 {
+  margin: 1.5em 0 1ex;
+
 }
