@@ -14,7 +14,7 @@ BEGIN { use_ok 'URSA2::Controller::services' }
 use ok "Test::WWW::Mechanize::Catalyst" => "URSA2";
 
 my @granules = qw(
-  UA_aleutn_27104_09076_007_090929_L090_CX_01
+  UA_aleutn_04701_09050_005_090723_L090_CX_01
 );
 my $platform = 'UA';
 
@@ -80,6 +80,6 @@ SKIP: {
   $mech->post($surn, { 'granule_list' => join(',', @granules),
     'format' => 'list' });
   my @list = split/,/, $mech->content();
-  is_deeply([sort @list], [qw(UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01 UA_aleutn_27104_09076_007_090929_L090_CX_01)],
+  is_deeply([sort @list], [qw(UA_aleutn_04701_09050_005_090723_L090_CX_01 UA_aleutn_04701_09050_005_090723_L090_CX_01 UA_aleutn_04701_09050_005_090723_L090_CX_01 UA_aleutn_04701_09050_005_090723_L090_CX_01 UA_aleutn_04701_09050_005_090723_L090_CX_01 UA_aleutn_04701_09050_005_090723_L090_CX_01)],
     'Find UAVSAR scenes by name through API');
 }
