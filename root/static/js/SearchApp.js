@@ -93,6 +93,13 @@ $(function() {
       e.data.sr.fetchSearchResults(e.data.sp); // initial population
     }).focus().click();
 
+    $('#resetSearch').button(
+      { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults }, function(e) {
+        e.data.sp.setDefaults();
+        e.data.spv.render();
+        e.data.sr.fetchSearchResults(e.data.sp);
+      });
+
     //fire up the map
     initMap('searchMap');
  

@@ -16,10 +16,7 @@ var SearchParameters = Backbone.Model.extend(
         new PlatformFilter()
       ];
 
-      // initialize default values from the widgets
-      for( var i in this.filters ) {
-        this.set( this.filters[i].toJSON() );
-      }
+      this.setDefaults();
 
       // bind change events in filters to update this object's attributes
       self = this;
@@ -31,6 +28,20 @@ var SearchParameters = Backbone.Model.extend(
       this.bind("change:filter", function(filter) {
         this.set( filter.toJSON() );
       });
+
+    },
+
+    setDefaults: function() {
+      // initialize default values from the widgets
+      for( var i in this.filters ) {
+        this.filters[i].reset();
+        this.set( this.filters[i].toJSON() );
+      }
+      
+      for( var i in this.postFilters ) {
+        this.postFilters[i].reset();
+        this.set( this.filters[i].toJSON() );
+      }
 
     },
 
@@ -75,6 +86,9 @@ var SearchParametersView = Backbone.View.extend(
   },
 
   render: function() {
+
+    $(this.el).accordion('destroy');
+    $(this.el).empty();
     for ( var i in this.widgets ) {
       $(this.el).append( '<h3><a href="#'+this.widgets[i].model.name+'">'+this.widgets[i].title+'</a></h3>' );
       $(this.el).append( this.widgets[i].render().el );
@@ -85,6 +99,7 @@ var SearchParametersView = Backbone.View.extend(
     });
     return this;
   }
+
 });
 
 var PostFiltersView = Backbone.View.extend(
@@ -103,7 +118,6 @@ var PostFiltersView = Backbone.View.extend(
 
     this.setWidgets();
     $(this.el).empty();
-    // build this dynamically in future, but not yet
     for ( var i in this.widgets ) {
       if( -1 != _.indexOf( platforms, this.widgets[i].name )) {
         $(this.el).append( this.widgets[i].render().el );
@@ -125,7 +139,15 @@ var BaseWidget = Backbone.View.extend(
 }
 );
 
-var PathFrameFilter = Backbone.Model.extend({
+var BaseFilter = Backbone.Model.extend(
+{
+  reset: function() {
+    this.set( this.defaults );
+  }
+}
+);
+
+var PathFrameFilter = BaseFilter.extend({
   name: "PathFrameFilter",
   defaults: {
     path:" ",
@@ -162,14 +184,38 @@ var PathFrameWidget = BaseWidget.extend({
 });
 
 // TODO: put in csv-to-coord array utility functions
-var GeographicFilter = Backbone.Model.extend(
+var GeographicFilter = BaseFilter.extend(
 {
   name: "GeographicFilter",
+  
+  // We'll maintain a naive kind of bounding box inside this object, which is
+  // updated whenever the model is changed, to avoid splitting/joining outside
+  // of this model.
+  swLat: 63.78,
+  swLon: -149.46,
+  neLat: 65.56,
+  neLon: -145.96,
+  
   defaults: {
-    bbox:"-149.46,63.78,-145.96,65.56"
+    // bounding box in W, N, E, S order
+    bbox:"-149.46,65.56,-145.96,63.78"
   },
   getWidget: function() {
     return new GeographicWidget({model:this});
+  },
+
+  events : {
+    "change:bbox" : "calculateCoordinates"
+  },
+
+  calculateCoordinates: function(e) {
+    
+    var bbox = this.get('bbox').split(/,/);
+    this.swLat = Math.min(bbox[1], bbox[3]);
+    this.swLon = Math.min(bbox[0], bbox[2]);
+    this.neLat = Math.max(bbox[1], bbox[3]);
+    this.neLon = Math.max(bbox[0], bbox[2]);
+
   }
 }
 );
@@ -179,32 +225,49 @@ var GeographicWidget = BaseWidget.extend(
   title: "Geographic Region",
   titleId: "geographic_widget_title",
   id: "geographic_widget",
+  
+  initialize: function() {
+    _.bindAll(this, 'changed')
+  },
+
   events : {
     "change input" : "changed"
   },
+  
   changed: function(evt) {
-      var target = $(evt.currentTarget),
-      data = {};
-      data[target.attr('name')] = target.attr('value');
-      var bbox = target.attr('value').split(/,/);
-      this.searchAreaOverlay.setBounds(new google.maps.LatLngBounds(
-        new google.maps.LatLng(Math.min(bbox[1], bbox[3]), Math.min(bbox[0], bbox[2])),
-        new google.maps.LatLng(Math.max(bbox[1], bbox[3]), Math.max(bbox[0], bbox[2]))
-      ));
-      this.model.set(data);
+    
+    this.model.set( { "bbox": $(this.el).find('input').val() });
+
+    this.render();
+  
   },
   render: function() {
     $(this.el).html(
       _.template('\
-<p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South.  Example: -135,64,-133,66</p>\
+<p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South.  Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
 ', this.model.toJSON())
     );
-    initMap('searchMap'); //it's safe to call this willy-nilly just in case the map isn't up yet
+    this.renderMap();
+    return this;
+  },
+
+  renderMap: function() {
+
+    initMap();
+
     this.searchAreaOverlay.setMap(searchMap);
+    this.searchAreaOverlay.setBounds(new google.maps.LatLngBounds(
+        new google.maps.LatLng(this.model.swLat, this.model.swLon),
+        new google.maps.LatLng(this.model.neLat, this.model.neLon)
+    ));
+    
     this.searchAreaSWMarker.setMap(searchMap);
+    this.searchAreaSWMarker.setPosition( new google.maps.LatLng(this.model.swLat, this.model.swLon) );
     this.searchAreaNEMarker.setMap(searchMap);
+    this.searchAreaNEMarker.setPosition( new google.maps.LatLng(this.model.neLat, this.model.neLon) );
+
     var selfref = this; //needed for the events below, as 'this' does not obtain closure
     google.maps.event.addListener(this.searchAreaSWMarker, 'drag', function() {
       selfref.updateSearchAreaOverlay();
@@ -219,14 +282,11 @@ var GeographicWidget = BaseWidget.extend(
       selfref.updateWidgetFromOverlay();
     });
     searchMap.fitBounds(this.searchAreaOverlay.getBounds());
+
     return this;
   },
-  // todo: derive these from the true defaults
-  searchAreaOverlay: new google.maps.Rectangle({
-    bounds: new google.maps.LatLngBounds(
-      new google.maps.LatLng(63.78, -149.46),
-      new google.maps.LatLng(65.56, -145.96)
-    ),
+
+  searchAreaOverlay : new google.maps.Rectangle( {
     strokeColor: '#0000FF',
     strokeOpacity: 0.5,
     strokeWeight: 2,
@@ -234,16 +294,16 @@ var GeographicWidget = BaseWidget.extend(
     fillOpacity: 0.5,
     clickable: false,
     zIndex: 500 //always be below the granule overlays, which start at 1000
-  }),
-  // todo: derive these from the true defaults
-  searchAreaSWMarker: new google.maps.Marker({
-    position: new google.maps.LatLng(63.78, -149.46),
+  }), 
+
+  searchAreaSWMarker : new google.maps.Marker({
     draggable: true
   }),
-  searchAreaNEMarker: new google.maps.Marker({
-    position: new google.maps.LatLng(65.56, -145.96),
+
+  searchAreaNEMarker : new google.maps.Marker({
     draggable: true
   }),
+
   updateSearchAreaOverlay: function() {
     var sw = this.searchAreaSWMarker.getPosition();
     var ne = this.searchAreaNEMarker.getPosition();
@@ -256,8 +316,9 @@ var GeographicWidget = BaseWidget.extend(
       new google.maps.LatLng(n, e));
     this.searchAreaOverlay.setBounds(latLngBounds);
     var target = $('#filter_bbox');
-    target.val([w, s, e, n].join(','));
+    target.val([w, n, e, s].join(','));
   },
+
   updateWidgetFromOverlay: function() {
     var bounds = this.searchAreaOverlay.getBounds();
     var sw = bounds.getSouthWest();
@@ -276,7 +337,7 @@ var GeographicWidget = BaseWidget.extend(
 }
 );
 
-var DateFilter = Backbone.Model.extend(
+var DateFilter = BaseFilter.extend(
 { name: "DateFilter",
   defaults: {
       start:"2009-12-01",
@@ -336,7 +397,7 @@ var DateWidget = BaseWidget.extend(
   }
 });
 
-var PlatformFilter = Backbone.Model.extend(
+var PlatformFilter = BaseFilter.extend(
   {
     name: "PlatformFilter",
     defaults: {
@@ -356,7 +417,7 @@ var PlatformWidget = BaseWidget.extend(
     id: "filter_platform",
     platformTypes: {
       // value : display name -- order is respected, here
-      'UA' : 'UAVSAR',
+      "UA" : "UAVSAR",
       "A3" : "ALOS",
       "R1" : "RADARSAT-1",
       "E1" : "ERS-1",
@@ -373,16 +434,13 @@ var PlatformWidget = BaseWidget.extend(
     },
 
     changed: function(evt) {
-
-      //TODO: this is ugly -- there's gotta be a better way to 
-      // construct the jquery selector there.
       var a = $(this.el).find('input:checkbox:checked').serializeArray();
       this.model.clear({silent:true});
       this.model.set( { platform: _.pluck(a,"value") } );
-
     },
 
     render: function() {
+      $(this.el).empty();
       var checked = this.model.toJSON()["platform"];
       for( var key in this.platformTypes ) {
         rowData = {
@@ -407,12 +465,13 @@ var PlatformWidget = BaseWidget.extend(
           }
         });
        
-       $(i).find('input:checkbox:checked').button( "option", "icons", { primary: "ui-icon-check" }).prop('checked', true);
-       $(i).find('button').button( { icons: { primary: "ui-icon-info"}, text: false}).click( this.renderPlatformInfo );
+        $(i).find('input:checkbox:checked').button( "option", "icons", { primary: "ui-icon-check" }).prop('checked', true);
+        $(i).find('button').button( { icons: { primary: "ui-icon-info"}, text: false}).click( this.renderPlatformInfo );
         $(this.el).append(i);
       }
       return this;
     },
+
     platformInformation: {
       'ALOS': {
         name: "ALOS",
@@ -543,7 +602,7 @@ var PlatformWidget = BaseWidget.extend(
 );
 
 
-var ProcessingFilter = Backbone.Model.extend(
+var ProcessingFilter = BaseFilter.extend(
   {
     name: "ProcessingFilter",
     defaults: {
@@ -602,7 +661,7 @@ var ProcessingWidget = BaseWidget.extend(
   }
 );
 
-var DirectionFilter = Backbone.Model.extend(
+var DirectionFilter = BaseFilter.extend(
   {
     name: "DirectionFilter",
     defaults: { direction: "any" },
@@ -651,7 +710,7 @@ var DirectionWidget = BaseWidget.extend(
   }
 );
 
-var PlatformFacet = Backbone.Model.extend( {} ); 
+var PlatformFacet = BaseFilter.extend( {} ); 
 var PlatformFacetView = BaseWidget.extend( {
 
   // selected = this.model.toJSON
