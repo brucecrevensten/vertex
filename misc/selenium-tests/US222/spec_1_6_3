@@ -13,10 +13,14 @@
 </thead><tbody>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#user_auth_submit div#my_b.ui-dialog</td>
+	<td>css=html body div[aria-labelledby='ui-dialog-title-login_dialog']</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>verifyAttribute</td>
+	<td>css=html body div[aria-labelledby='ui-dialog-title-login_dialog']@class</td>
+	<td>ui-dialog ui-widget ui-widget-content ui-corner-all </td>
+</tr>
 </tbody></table>
 </body>
 </html>

@@ -12,11 +12,30 @@
 <tr><td rowspan="1" colspan="3">spec_1_6</td></tr>
 </thead><tbody>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>css=div#user_auth_submit div#my_b.ui-dialog</td>
+	<td>open</td>
+	<td>/portal</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>click</td>
+	<td>login_button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>login_username</td>
+	<td>dq</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>login_password</td>
+	<td>07dq=WCFR</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>css=div.ui-dialog div.ui-dialog-buttonpane</td>
+	<td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

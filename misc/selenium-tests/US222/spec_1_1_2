@@ -13,17 +13,12 @@
 </thead><tbody>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#user_auth_submit</td>
+	<td>css=div#wrapper header div#tools_menu div#user_tools button#login_button.ui-button</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>css=div#user_auth_submit div#my_b.login</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>css=div#user_auth_submit div#my_b.login span.ui-button-text</td>
+	<td>verifyText</td>
+	<td>login_button</td>
 	<td>Login</td>
 </tr>
 </tbody></table>

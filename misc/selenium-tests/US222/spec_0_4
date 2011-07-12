@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://testapi.daac.asf.alaska.edu/portal" />
+<title>spec_0_4</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">spec_0_4</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/portal</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>css=html body div#wrapper footer</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=Location</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=User Support Office</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>link=About Us</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyAttribute</td>
+	<td>css=html body div#wrapper footer div#centerer div ul li a@href</td>
+	<td>/about</td>
+</tr>
+<tr>
+	<td>verifyAttribute</td>
+	<td>css=html body div#wrapper footer div#centerer div ul li:nth-child(2) a@href</td>
+	<td>/contact</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>css=html body div#wrapper footer div#centerer div p</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=html body div#wrapper footer div#centerer div:nth-child(4) p:nth-child(3)</td>
+	<td>2011 © Alaska Satellite Facility<br /> Geophysical Institute<br /> 903 Koyukuk Dr.<br /> P.O. Box 757320<br /> Fairbanks, AK 99775-7320<br /> Phone: (907) 474-6166<br /> Fax: (907) 474-2665<br /> Email: uso@asf.alaska.edu</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

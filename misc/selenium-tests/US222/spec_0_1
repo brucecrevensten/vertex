@@ -4,18 +4,29 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="http://testapi.daac.asf.alaska.edu/portal" />
-<title>spec_1_7</title>
+<title>spec_0_1</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">spec_1_7</td></tr>
+<tr><td rowspan="1" colspan="3">spec_0_1</td></tr>
 </thead><tbody>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=header div#tools_menu div#user_tools button#login_button.ui-button</td>
+	<td>css=html body div#wrapper header</td>
 	<td></td>
 </tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=html body div#wrapper header href.link</td>
+	<td>help</td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+
 </tbody></table>
 </body>
 </html>
