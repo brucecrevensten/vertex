@@ -77,6 +77,7 @@ mv Log4perl.conf.example Log4perl.conf
 
 mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/conf.d
 mv etc/httpd/conf.d/api.daac.asf.alaska.edu.conf ${RPM_BUILD_ROOT}/etc/httpd/conf.d
+mv etc/httpd/conf.d/dataportal.daac.asf.alaska.edu.conf ${RPM_BUILD_ROOT}/etc/httpd/conf.d
 # Remove things that do not need to be included in the deployment.
 rm -rf etc/
 rm -rf misc/
@@ -87,6 +88,7 @@ script/minify_js.pl root/static/js
 
 
 mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/logs/api.daac.asf.alaska.edu
+mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/logs/dataportal.daac.asf.alaska.edu
 
 perl Makefile.PL INSTALL_BASE=${RPM_BUILD_ROOT}%{inst_dir}
 make test
@@ -99,10 +101,12 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %dir %attr(0775,root,root) /etc/httpd/logs/api.daac.asf.alaska.edu
+%dir %attr(0775,root,root) /etc/httpd/logs/dataportal.daac.asf.alaska.edu
 %defattr(0644,root,root,2755)
 %attr(0755,root,root) %{inst_dir}/bin/ursa2_fastcgi.pl
 %config(noreplace) %attr(0644,root,root) %{inst_dir}/ursa2.conf
 %config(noreplace) %attr(0644,root,root) /etc/httpd/conf.d/api.daac.asf.alaska.edu.conf
+%config(noreplace) %attr(0644,root,root) /etc/httpd/conf.d/dataportal.daac.asf.alaska.edu.conf
 %{inst_dir}/root
 %{inst_dir}/lib
 %{inst_dir}/man
