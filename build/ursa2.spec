@@ -20,6 +20,7 @@ BuildRequires: perl
 BuildRequires: perl(Test::WWW::Mechanize::Catalyst)
 BuildRequires: perl(Test::More)
 BuildRequires: perl(URI::Escape)
+BuildRequires: perl(JavaScript::Minifier)
 Requires: perl
 Requires: perl(Apache2::Const)
 Requires: perl(DBD::Oracle)
@@ -76,7 +77,15 @@ mv Log4perl.conf.example Log4perl.conf
 
 mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/conf.d
 mv etc/httpd/conf.d/api.daac.asf.alaska.edu.conf ${RPM_BUILD_ROOT}/etc/httpd/conf.d
+# Remove things that do not need to be included in the deployment.
 rm -rf etc/
+rm -rf misc/
+rm -rf build/
+
+# Minify javascript files.
+script/minify_js.pl root/static/js
+
+
 mkdir -p ${RPM_BUILD_ROOT}/etc/httpd/logs/api.daac.asf.alaska.edu
 
 perl Makefile.PL INSTALL_BASE=${RPM_BUILD_ROOT}%{inst_dir}
