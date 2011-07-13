@@ -1,3 +1,5 @@
+var searchMap;
+
 function initMap(mapContainer) {
   if(window.searchMap) return;
 

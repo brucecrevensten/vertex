@@ -16,12 +16,27 @@ color: black;
 text-decoration: underline;
 }
 
+/* surrounds all application functionality */
+#contents {
+  position: relative;
+}
+
+#SearchApp {
+  margin: 1em 0;
+  min-height: 750px;
+  position: relative;
+}
+
 #wrapper {
   font:12pt arial,sans-serif;
   background: white;
   border: 1px solid #333;
   padding: 1.5em;
-  margin: 2em;
+  margin: 2em auto;
+  min-height: 820px;
+  width: 1250px;
+  position: relative;
+
 }
 
 header h1 {
@@ -38,24 +53,32 @@ header {
   height: 3em;
 }
 
-#SearchApp {
-  margin: 1em 0;
-  min-height: 10em;
-  position: relative;
+#leftColumn {
+  position: absolute;
+  width: 250px;
+  top: 0;
+  left: 0;
+  margin: 1ex;
 }
 
-#leftColumn {
-  width: 20%;
-  float: left;
+#centerColumn { 
+  position: absolute;
+  width: 600px;
+  left: 270px;
+  top: 0;
+  margin: 1ex;
 }
 
 #rightColumn {
-  float: right;
-  width: 78%;
-  margin-bottom: 1em;
+  position: absolute;
+  left: 880px;
+  width: 370px;
+  top: 0;
 }
 
 footer {
+  position: relative;
+  top: 610px;
   font-color: #878787 !important;
   font-size: smaller;
   clear: both;
@@ -91,18 +114,47 @@ width: 23%;
 float: left;
 }
 
+#searchResults {
+  overflow: auto;
+  height: 600px;
+}
+
+#searchResults li {
+  display: block;
+  padding: 1ex 0;
+  clear: both;
+}
+
+#searchResults li:nth-child(odd) {
+  background-color: #eee;
+}
+
+#searchResults li:hover {
+  background-color: #FFFFB4;
+}
+
+#searchResults li img {
+  float: left;
+  clear: both;
+  padding: 0 1em 1ex 1ex;
+}
+
+#searchResults h4 {
+  font-weight: bold;
+}
+
+#searchResults h4 span {
+  color: #888;
+}
+
 #searchMap {
-  width: 100%;
-  height: 400px;
+  width: 600px;
+  height: 600px;
   margin: 0 0 1em 0;
 }
 
 #filters label {
   display: block;
-}
-
-#results-widget-wrapper {
-  width: 100%;
 }
 
 #filters input + label {
@@ -114,74 +166,6 @@ label.hover {
   cursor: pointer;
 }
 
-.datatable {
-  width: 100%;
-}
-
-.datatable th {
-  min-width: 70px;
-}
-
-.datatable tbody td {
-  padding: 1ex;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.datatable tbody tr:hover {
-  background-color: #FFF88E !important; 
-}
-
-/* this rule is specific to highlighting the DataTable active sorting column */
-.datatable tbody tr:hover td.sorting_1 { 
-  background-color: #FFF940 !important;
-}
-
-.datatable tbody tr {
-  cursor: pointer;
-}
-
-.datatable tr.even {
-  background-color: #f2f2f2;
-}
-
-.datatable tr.odd {
-  background-color: #e2e2e2;
-}
-
-.datatable tr.even td.sorting_1 {
-  background-color: #e8e8e8;
-}
-
-.datatable tbody td.left-adjusted {
-  text-align: left;
-}
-
-.datatable tr.odd td.sorting_1 {
-  background-color: #d8d8d8;
-}
-
-.datatable tr.selected.even {
-  background-color: #399ec2; 
-}
-
-.datatable tr.selected {
-  background-color: #288db1;
-}
-
-.datatable tr.selected.even td.sorting_1 {
-  background-color: #399ec2;
-}
-
-.datatable tr.selected.odd td.sorting_1 {
-  background-color: #288db1;
-}
-
-.datatable { 
-  width: 100%;
-  color: black !important;
-  height: auto;
-}
 
 #product_profile {
   text-align: right
@@ -237,8 +221,8 @@ label.hover {
 
 #tools_menu {
   position: absolute;
-  top: 3em;
-  right: 3em;
+  top: 1em;
+  right: 1em;
 }
 
 #tools_menu div {
@@ -342,5 +326,4 @@ button.tool_enqueuer.tool-dequeue:hover {
 }
 #platform_profile * + h3 {
   margin: 1.5em 0 1ex;
-
 }

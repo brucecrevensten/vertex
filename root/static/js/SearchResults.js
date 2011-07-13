@@ -5,7 +5,7 @@ var SearchResults = Backbone.Collection.extend(
 
     // platforms found in result set list
     platforms: [], 
-    error:"",
+    error: '',
 
     // Client sets this to the SearchResultsView it creates
     view: null,
@@ -18,23 +18,8 @@ var SearchResults = Backbone.Collection.extend(
       this.searchParameters = sp;
     },
 
-
-    // Purpose of this function is to build the array of data that will be provided to the DataTable.
-    // The DataTable expects an array of arrays, so we've gotta do a little bit of munging
-    // from the incoming JSON.
-    // TODO: remove this, most recent revision of DataTables gives another way to provision data
-    parseObjectsToArrays: function(d, c) {
-      var a = [];
-      for ( var i=0, iLen=d.length; i < iLen; i++ ) {
-        var inner = [];
-        for ( var j=0, jLen=c.length; j < jLen; j++ ) {
-          inner.push( d[i][c[j]] );
-        }
-        a.push( inner);
-      }
-      return a;
-    },
     fetchSearchResults: function(sp) {
+
       this.setParameters(sp);
 
       var results = $.ajax({
@@ -49,6 +34,8 @@ var SearchResults = Backbone.Collection.extend(
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
+
+          // Fetch distinct platforms that were found
           this.platforms = _.uniq( _.pluck( this.data.results.rows.ROW, 'PLATFORM') );
 
           // Munge this data to get a local true ID on each model; need to wiggle
@@ -57,13 +44,11 @@ var SearchResults = Backbone.Collection.extend(
           for ( var i in data.results.rows.ROW ) {
             data.results.rows.ROW[i].id = data.results.rows.ROW[i].ID;
           }
-
-          this.view.showTable();
-          this.refresh( this.data.results.rows.ROW );
-
+          
+          this.view.showResults();
+          this.reset( this.data.results.rows.ROW );
         },
         error: function(jqXHR, textStatus, errorThrown) {
-
           switch(jqXHR.status) {
             // todo: move this gui code into the view object
             case 204:
@@ -86,17 +71,17 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
-    this.collection.bind("refresh", this.render);
+    this.collection.bind("reset", this.render);
   },
 
   renderLength: function() {
     return _.template('<h3><%= length %> results found</h3>', this.collection);
   },
 
-  showTable: function() {
+  showResults: function() {
 
     $('#async-spinner').hide();
-    $('#results-widget-wrapper').show();
+    $('#searchResults').show();
     $('#platform_facets').show();
 
   },
@@ -105,7 +90,7 @@ var SearchResultsView = Backbone.View.extend(
 
     $('#async-spinner').show();
     $("#results-banner").hide();
-    $('#results-widget-wrapper').hide();
+    $('#searchResults').hide();
     $("#error-message").hide();
     $('#platform_facets').hide();
     this.clearOverlays();
@@ -130,101 +115,53 @@ var SearchResultsView = Backbone.View.extend(
     $('#platform_facets').hide();
   },
 
-// todo: fix this to not use the mess of arrays -- datatables v1.8 should fix that with mDataProp in aoColumns
   render: function() {
 
-//todo: remove this nonsense
-    var preparedData = this.collection.parseObjectsToArrays(this.collection.data.results.rows.ROW, ["GRANULENAME","PROCESSINGTYPE","PLATFORM","ORBIT","FRAMENUMBER","CENTERLAT","CENTERLON","ACQUISITIONDATE","THUMBNAIL","URL","ID"]);
+    this.collection.each( function( e, i, l ) {
+     
+      d = e.toJSON();
+      d['acquisitionDateText'] = $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', d.ACQUISITIONDATE));
 
-    if ( false == this.hasRendered ) {
-      this.hasRendered = true;
-      this.dataTable = $(this.el).dataTable(
-      {
-        "bFilter" : false,
-        "bLengthChange" : false,
-        "sScrollY" : "20em",
-        "bPaginate" : false,
-        "bJQueryUI": true,
-        "aaData": preparedData,
-        "bAutoWidth" : false,
-        "aoColumns": [
-          { 
-            "bSearchable": false,
-            "bSortable": false,
-            "sWidth": "135px", // THIS makes the column width predictable in chrome/webkit
-            "sTitle": "Granule",
-            "bUseRendered": false, // preserve the original granule name (don't replace with the html internally) so sorting works as expected
-            "fnRender": function(o) {
-              // We do a little mini-table here to get vertical centering
-              return _.template('<img title="<%= name %>" src="<%= thumbnail %>"/>', { thumbnail: o.aData[8], name: o.aData[0] });
-            }
-          },
-          { "sTitle": "Processing" },
-          { "sTitle": "Platform" },
-          { "sTitle": "Orbit" },
-          { "sTitle": "Frame" },
-          { "sTitle": "Center Latitude/Longitude",
-            "fnRender": function(o) {
-              return o.aData[5]+', '+o.aData[6];
-            }
-          },
-          { "bVisible" : false }, // suspend display of CenterLon distinct from the prior column
-          { 
-            "sTitle": "Acquisition Date",
-            "fnRender" : function(o) {
-              // truncate the date to yyyy-mm-dd format
-              return $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', o.aData[7]));
-            }
-          },
-          { "bVisible" : false }, // suspend display of thumbnail
-          { 
-            "sTitle": "",
-            "sClass": "left-adjusted",
-            "fnRender": function(o) {
-      
-              return _.template('\
-<a href="<%= url %>" product="<%= product %>" class="tool_download">Download</a>\
-<button product="<%= product %>" class="tool_enqueuer">Add to queue</button>\
-', { product: o.aData[0]+"_"+o.aData[1], url: o.aData[9] } );
+      li = jQuery('<li/>').attr('product_id', d.id);
 
-            },
-            "bUseRendered": false, // keep the URl here for convenience for direct download link
-            "bSearchable": false,
-            "bSortable": false
-          },
-          { "bVisible":false } // suspend display of the ID column
-        ],
-        "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-
-          $(nRow).attr("product_id", aData[10]);
-
-          v = new DataProductView( { model: SearchApp.searchResults.get(aData[10]) } );
-          $(nRow).bind( "click", { id: aData[0], view: v }, function(e) {
-              $("#product_profile").html( e.data.view.render().el );
-              $("#product_profile").dialog(
-                {
-                  modal: true,
-                  width: 900,
-                  draggable: false,
-                  resizable: false,
-                  title: e.data.id,
-                  position: "center"
-                }
-              );
-          });
-          return nRow;
-        }
-      }
+      li.append(
+        _.template('\
+  <img src="<%= THUMBNAIL %>" title="<%= GRANULENAME %>" />\
+  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span><%= BEAMMODETYPE %></span></h4>\
+  <div>\
+    <p><%= acquisitionDateText %></p>\
+    <p>Frame <%= FRAMENUMBER %>, Path <%= ORBIT %></p>\
+    <div>\
+      <a href="<%= URL %>" product="<%= FILENAME %>" class="tool_download">Download</a>\
+      <button product="<%= id %>" class="tool_enqueuer">Add to queue</button>\
+    </div>\
+  </div>\
+  <div style="clear: both"></div>\
+', d )
       );
 
-    } else {
-      this.clearOverlays();
-      this.dataTable.fnClearTable();
-      this.dataTable.fnAddData(preparedData);
-    }
+      v = new DataProductView( { model: e } );
 
-    $('#results tbody tr').live('mouseenter', { view: this }, this.toggleHighlight );
+      li.bind( "click", { id: e.id, view: v }, function(e) {
+        $("#product_profile").html( e.data.view.render().el );
+        $("#product_profile").dialog(
+          {
+            modal: true,
+            width: 900,
+            draggable: false,
+            resizable: false,
+            title: e.data.id,
+            position: "center"
+          }
+        );
+      });
 
+      $(this.el).append(li);
+
+    }, this); // end iteration over collection
+
+    
+    $('#searchResults li').live('mouseenter', { view: this }, this.toggleHighlight );
     $('.tool_download').button(
       {
         icons: {
@@ -232,9 +169,7 @@ var SearchResultsView = Backbone.View.extend(
         },
         text: 'Download' 
       }
-    );
-
-    $('.tool_download').click( function(e) {
+    ).click( function(e) {
       e.stopPropagation();
     });
     
@@ -254,9 +189,7 @@ var SearchResultsView = Backbone.View.extend(
         $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
       }
       $(e.currentTarget.parentNode.parentNode).toggleClass("selected");
-    });
-
-    $('.tool_enqueuer').button(
+    }).button(
       {
         icons: {
           primary: "ui-icon-circle-plus"
@@ -265,14 +198,28 @@ var SearchResultsView = Backbone.View.extend(
       }
     );
 
+    this.clearOverlays();
     this.renderOnMap();
-    this.dataTable.fnAdjustColumnSizing();
+
+
     return this;
 
   },
   renderOnMap: function() {
     var res = this.collection.data.results.rows.ROW;
+
+    this.leastLat = Math.min( res[0].NEARSTARTLAT, res[0].FARSTARTLAT, res[0].FARENDLAT, res[0].NEARENDLAT );
+    this.mostLat = Math.max( res[0].NEARSTARTLAT, res[0].FARSTARTLAT, res[0].FARENDLAT, res[0].NEARENDLAT );
+    this.leastLon = Math.min( res[0].NEARSTARTLON, res[0].FARSTARTLON, res[0].FARENDLON, res[0].NEARENDLON );
+    this.mostLon = Math.max( res[0].NEARSTARTLON, res[0].FARSTARTLON, res[0].FARENDLON, res[0].NEARENDLON );
+
     for(var ii = 0; ii < res.length; ++ii) {
+
+      this.leastLat = Math.min( this.leastLat, res[ii].NEARSTARTLAT, res[ii].FARSTARTLAT, res[ii].FARENDLAT, res[ii].NEARENDLAT );
+      this.mostLat = Math.max( this.mostLat, res[ii].NEARSTARTLAT, res[ii].FARSTARTLAT, res[ii].FARENDLAT, res[ii].NEARENDLAT );
+      this.leastLon = Math.min( this.leastLon, res[ii].NEARSTARTLON, res[ii].FARSTARTLON, res[ii].FARENDLON, res[ii].NEARENDLON );
+      this.mostLon = Math.max( this.mostLon, res[ii].NEARSTARTLON, res[ii].FARSTARTLON, res[ii].FARENDLON, res[ii].NEARENDLON );
+
       var path = new Array(
         new google.maps.LatLng(res[ii].NEARSTARTLAT, res[ii].NEARSTARTLON),
         new google.maps.LatLng(res[ii].FARSTARTLAT, res[ii].FARSTARTLON),
@@ -292,6 +239,10 @@ var SearchResultsView = Backbone.View.extend(
         });
       this.mo[res[ii].ID].setMap(searchMap);
     }
+    searchMap.fitBounds( new google.maps.LatLngBounds(
+      new google.maps.LatLng( this.leastLat, this.leastLon ),
+      new google.maps.LatLng( this.mostLat, this.mostLon )
+    ));
   },
   clearOverlays: function() {
 
@@ -337,7 +288,6 @@ var SearchResultsView = Backbone.View.extend(
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.
   // (this array is 1:1 with the results, so overlay [0] here is product [0] in the results)
-  mapOverlays: new Array(),
   mo: {},
   // the currently active/hightlighted polygon
   activePoly: null

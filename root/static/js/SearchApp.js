@@ -47,7 +47,7 @@ $(function() {
     this.searchResultsView = new SearchResultsView(
       {
         collection: this.searchResults,
-        el: $("#results")
+        el: $("#searchResults")
       }
     );
     this.searchResults.setView( this.searchResultsView );

@@ -341,7 +341,7 @@ var DateFilter = BaseFilter.extend(
 { name: "DateFilter",
   defaults: {
       start:"2009-12-01",
-      end:"2009-12-15",
+      end:"2010-06-15",
   },
   getWidget: function() { 
     return new DateWidget({model:this});
@@ -452,7 +452,7 @@ var PlatformWidget = BaseWidget.extend(
         var i = $('<li>');
         $(i).html( _.template('\
 <div class="composite_checkbox_wrapper">\
-<input type="checkbox" id="<%= id %>" <%= ifChecked %> name="platform" value="<%= value %>" /><label style="text-align: left; width: 18em;" for="<%= id %>"><%= name %></label>\
+<input type="checkbox" id="<%= id %>" <%= ifChecked %> name="platform" value="<%= value %>" /><label style="text-align: left; width: 160px;" for="<%= id %>"><%= name %></label>\
 <button style="display:inline-block;" platform="<%= name %>">?</button>\
 </div>\
 ', rowData));
