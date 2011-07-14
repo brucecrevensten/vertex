@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://testapi.daac.asf.alaska.edu/portal" />
+<title>spec_6_1_to_6_3</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">spec_6_1_to_6_3</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/portal</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@id='platform_facets']/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='platform_facets']/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=html body div.ui-dialog form#platform_facet.platformFacet h5</td>
+	<td>FBS (Fine Beam Single Polarization)</td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_FBS.checkbox input#a3_FBS_21_5</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_FBS.checkbox input#a3_FBS_34_3.ui-helper-hidden-accessible</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_FBS.checkbox input#a3_FBS_41_5.ui-helper-hidden-accessible</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//form[@id='platform_facet']/h5[2]</td>
+	<td>FBD (Fine Beam Double Polarization)</td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_FBD.checkbox input#a3_FBD_34_3.ui-helper-hidden-accessible</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//form[@id='platform_facet']/h5[3]</td>
+	<td>PLR (Polarimetric Mode)</td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_PLR.checkbox input#a3_PLR_21_5.ui-helper-hidden-accessible</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_PLR.checkbox input#a3_PLR_23_1.ui-helper-hidden-accessible</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//form[@id='platform_facet']/h5[4]</td>
+	<td>WB1 (ScanSAR Burst Mode 1)</td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_WB1.checkbox input#a3_WB1_27_1.ui-helper-hidden-accessible</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

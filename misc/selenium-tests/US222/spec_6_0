@@ -17,51 +17,10 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>link=Processing Type</td>
-	<td></td>
+	<td>verifyText</td>
+	<td>//div[@id='platform_facets']/button</td>
+	<td>ALOS</td>
 </tr>
-<tr>
-	<td>click</td>
-	<td>link=Platforms</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>filter_platform_ERS-2</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>filter_platform_JERS-1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Date</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>filter_start</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=2</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>wrapper</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>css=div#postfilter</td>
-	<td></td>
-</tr>
-
 </tbody></table>
 </body>
 </html>
