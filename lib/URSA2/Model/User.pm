@@ -75,13 +75,17 @@ sub datapool_session_cookie {
     $ENV{REMOTE_ADDR} = $ip_address;
 
     $session = CGI::Session->new(
-      'driver:Oracle;serializer:Storable', undef, { Handle => $self->dbh }
+      'driver:Oracle', undef, {
+        'Handle' => $self->dbh,
+        'TableName' => 'sessions',
+      }
     );
     $session->param('-user_name', $userid);
     $session->param('-logged-in', 1);
     $session->flush();
+    $self->dbh->commit;
   }; if($@) {
-URSA2->log->debug($@);
+    URSA2->log->fatal($@);
     # undef the $session (if we started to create one) in an eval block.
     # The CGI::Session object tries to write the session information to the
     # database when it leaves scope and that can die with an error.
@@ -100,11 +104,13 @@ URSA2->log->debug($@);
         '-domain' => URSA2->config->{'Model::User'}->{'cookie'}->{'domain'}
       );
     }; if($@) {
+      URSA2->log->fatal($@);
       CookieException->throw(
         message => "Error generating datapool authentication cookie."
       );
     }
   }
+
   return($cookie);
 }
 
