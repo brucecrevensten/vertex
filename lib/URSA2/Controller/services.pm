@@ -187,6 +187,45 @@ sub authentication :Local {
 
 }
 
+=head2 Feedback
+
+Accept a comment and store it in the database.
+
+=cut
+
+sub feedback :Local {
+  my ( $self, $c ) = @_;
+  
+  my $r = URSA2::FeedbackRequest->factory( $c->request );
+  eval {
+    $r->decode();
+    $r->validate();
+
+    my $feedback = $c->model('Feedback');
+    $feedback->recordFeedback(
+      'userid'      => $r->{'userid'},
+      'name'        => $r->{'name'},
+      'email'       => $r->{'email'},
+      'comment'     => $r->{'comment'},
+      'ip_address'  => $c->req->address
+    );
+  };
+  my $e = $@;
+  if ( ( $e = Exception::Class->caught('MissingParameter') ) 
+    || ( $e = Exception::Class->caught('DbException') ) ) {
+      $e->dispatch($c);
+  } elsif($@) {
+    $e = Exception::Class->caught();
+    if ( ref $e ) {
+      $c->log->fatal( 'Uncaught exception in services controller: '.$e->description );
+    } else {
+      $c->log->fatal( 'Unhandled error in services controller: '.Dumper($@) );
+    }
+    $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
+    $c->detach();
+  }
+}
+
 =head2 end
 
 Do any last-minute captures + cleanup
