@@ -1,5 +1,5 @@
 var AsfDataportalConfig = {
   apiUrl : "http://testdataportal.daac.asf.alaska.edu/services/search/json",
   authUrl:  "http://testdataportal.daac.asf.alaska.edu/services/authentication",
-  feedbackUrl: "http://testdataportal.daac.asf.alaska.edu/services/feedback"
+  feedbackUrl: "http://testdataportal.daac.asf.alaska.edu/feedback"
 };
