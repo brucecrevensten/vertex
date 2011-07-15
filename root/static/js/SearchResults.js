@@ -145,6 +145,7 @@ var SearchResultsView = Backbone.View.extend(
 
   render: function() {
 
+    $(this.el).empty();
     this.collection.each( function( e, i, l ) {
      
       d = e.toJSON();
@@ -192,7 +193,6 @@ var SearchResultsView = Backbone.View.extend(
 
     this.clearOverlays();
     this.renderOnMap();
-
 
     return this;
 
