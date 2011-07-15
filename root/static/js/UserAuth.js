@@ -56,7 +56,7 @@ var UserLoginView = Backbone.View.extend(
 			$( "#login_dialog" ).dialog({
 				draggable: false,
 				resizable: false,				
-				height: 200,
+				height: 275,
 				width: 350,
 				modal: true,
 				buttons: {
