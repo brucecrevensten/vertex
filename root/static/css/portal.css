@@ -328,3 +328,73 @@ button.tool_enqueuer.tool-dequeue:hover {
 #platform_profile * + h3 {
   margin: 1.5em 0 1ex;
 }
+
+.datatable {
+  width: 100%;
+}
+
+.datatable th {
+  min-width: 70px;
+}
+
+.datatable tbody td {
+  padding: 1ex;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.datatable tbody tr:hover {
+  background-color: #FFF88E !important;
+}
+
+/* this rule is specific to highlighting the DataTable active sorting column */
+.datatable tbody tr:hover td.sorting_1 {
+  background-color: #FFF940 !important;
+}
+
+.datatable tbody tr {
+  cursor: pointer;
+}
+
+.datatable tr.even {
+  background-color: #f2f2f2;
+}
+
+.datatable tr.odd {
+  background-color: #e2e2e2;
+}
+
+.datatable tr.even td.sorting_1 {
+  background-color: #e8e8e8;
+}
+
+.datatable tbody td.left-adjusted {
+  text-align: left;
+}
+
+.datatable tr.odd td.sorting_1 {
+  background-color: #d8d8d8;
+}
+
+.datatable tr.selected.even {
+  background-color: #399ec2;
+}
+
+.datatable tr.selected {
+  background-color: #288db1;
+}
+
+.datatable tr.selected.even td.sorting_1 {
+  background-color: #399ec2;
+}
+
+.datatable tr.selected.odd td.sorting_1 {
+  background-color: #288db1;
+}
+
+.datatable {
+  width: 100%;
+  color: black !important;
+  height: auto;
+}
+
