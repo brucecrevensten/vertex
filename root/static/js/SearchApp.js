@@ -39,10 +39,6 @@ $(function() {
     );
 
     this.searchResults = new SearchResults();
-    this.searchResults.bind("reset", function() {
-      console.log('resetting post filters!')
-      SearchApp.postFiltersView.render( SearchApp.searchResults.platforms );
-    });
 
     this.searchResultsView = new SearchResultsView(
       {
@@ -51,6 +47,10 @@ $(function() {
       }
     );
     this.searchResults.setView( this.searchResultsView );
+
+    this.searchResultsView.bind("render", function() {
+      SearchApp.postFiltersView.render( SearchApp.searchResults.platforms );
+    });
 
     // Initialize the download queue
     this.downloadQueue = new DownloadQueue();

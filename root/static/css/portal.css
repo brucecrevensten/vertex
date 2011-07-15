@@ -114,6 +114,17 @@ width: 23%;
 float: left;
 }
 
+fieldset {
+  padding-left: 2em;
+  margin: 1em 0 1ex !important;
+}
+
+legend {
+  font-weight: bold;
+  margin: 1em 0 1ex -2em !important;
+  padding: 0 0 1ex 0;
+}
+
 #searchResults {
   overflow: auto;
   height: 600px;
@@ -123,6 +134,7 @@ float: left;
   display: block;
   padding: 1ex 0;
   clear: both;
+  cursor: pointer;
 }
 
 #searchResults li:nth-child(odd) {
@@ -397,4 +409,3 @@ button.tool_enqueuer.tool-dequeue:hover {
   color: black !important;
   height: auto;
 }
-

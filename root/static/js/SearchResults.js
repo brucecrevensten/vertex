@@ -38,6 +38,8 @@ var SearchResults = Backbone.Collection.extend(
           
           // Fetch distinct platforms that were found
           this.platforms = _.uniq( _.pluck( this.data.results.rows.ROW, 'PLATFORM') );
+          console.log(this.platforms);
+          
           var dp;
 
           for ( var i in data.results.rows.ROW ) {
@@ -193,7 +195,8 @@ var SearchResultsView = Backbone.View.extend(
 
     this.clearOverlays();
     this.renderOnMap();
-
+    this.trigger('render'); // custom event so post-filters know to render
+    
     return this;
 
   },

@@ -29,6 +29,8 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchMap.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/DataProduct.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/Search.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/PostFilterComponents.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/PostFilters.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchResults.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/DownloadQueue.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/UserAuth.js') %]"></script> 
@@ -113,22 +115,21 @@
   <footer>
     <div id="centerer">
     <div>
-    <h2>ASF * Alaska Satellite Facility</h2>
-    <ul>
-    <li><a href="/about">Location</a></li>
-    <li><a href="/contact">User Support Office</a></li>
-    <li><a href="/about">About Us</a></li>
-    <li>Feedback</li>
-    </ul>
+      <h2>ASF * Alaska Satellite Facility</h2>
+      <ul>
+        <li><a href="/about">Location</a></li>
+        <li><a href="/contact">User Support Office</a></li>
+        <li><a href="/about">About Us</a></li>
+      </ul>
     </div>
 
     <div>
     <h2>ASF Programs</h2>
     <ul>
-    <li><a href="/program/sdc" title="">SAR Data Center</a></li>
-    <li><a href="/program/asfe" title="">ASF Enterprise</a></li>
-    <li><a href="/program/stgs" title="">Satellite Tracking Ground Station</a></li>
-    <li><a href="/program/gdc" title="">GeoData Center</a></li>
+      <li><a href="/program/sdc" title="">SAR Data Center</a></li>
+      <li><a href="/program/asfe" title="">ASF Enterprise</a></li>
+      <li><a href="/program/stgs" title="">Satellite Tracking Ground Station</a></li>
+      <li><a href="/program/gdc" title="">GeoData Center</a></li>
     </ul>
     </div>
 

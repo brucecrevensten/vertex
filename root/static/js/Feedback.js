@@ -30,10 +30,10 @@ var FeedbackForm = Backbone.View.extend({
 	        _.template('\
 			<div id="feedback">\
 			<p> the form would go here</p>\
-			<form action="<%= URL %>" method="post">
-	  			<input class="required" type="textarea" cols="60" rows="8" name="feedback_comment" /><br />
-			</form>
-			<button id="feedback_button">Submit Feedback</button>
+			<form action="<%= URL %>" method="post">\
+	  			<input class="required" type="textarea" cols="60" rows="8" name="feedback_comment" /><br />\
+			</form>\
+			<button id="feedback_button">Submit Feedback</button>\
 			</div>\
 	    	', this.model.toJSON())
 	    );
@@ -53,6 +53,8 @@ var FeedbackForm = Backbone.View.extend({
 			"Feedback":  function() {
 				this.model.set( $(this.el).serializeArray() );
 				this.model.subnit_feedback();
+			}
+		}
 	    });
 
 	    return this;
