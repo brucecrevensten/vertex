@@ -60,6 +60,10 @@ var UserLoginView = Backbone.View.extend(
 				width: 350,
 				modal: true,
 				buttons: {
+					"Register": function(){
+						window.open('http://www.asf.alaska.edu/program/sdc/proposals');
+  						return false;
+					},
 					"Cancel" : function() {
 						$( this).dialog('close');
 					},

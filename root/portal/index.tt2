@@ -55,7 +55,7 @@
   			<input type="text" name="userid" id="login_username"  /><br />
   			<label for="login_password">Password</label>
   			<input type="password" name="password" id="login_password" value=""  /><br />
-  	</form>	
+  	</form>
   </div>
 
   <div id="contents">
@@ -116,6 +116,7 @@
     <li><a href="/about">Location</a></li>
     <li><a href="/contact">User Support Office</a></li>
     <li><a href="/about">About Us</a></li>
+    <li>Feedback</li>
     </ul>
     </div>
 
