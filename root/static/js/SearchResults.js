@@ -162,7 +162,7 @@ var SearchResultsView = Backbone.View.extend(
   <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span><%= BEAMMODETYPE %></span></h4>\
   <div>\
     <p><%= acquisitionDateText %></p>\
-    <p>Frame <%= FRAMENUMBER %>, Path <%= ORBIT %></p>\
+    <p>Frame <%= FRAMENUMBER %>, Path <%= PATHNUMBER %></p>\
   </div>\
   <div style="clear: both"></div>\
 ', d )
