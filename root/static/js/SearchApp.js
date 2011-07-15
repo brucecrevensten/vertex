@@ -39,8 +39,8 @@ $(function() {
     );
 
     this.searchResults = new SearchResults();
-
-    this.searchResults.bind("refresh", function() {
+    this.searchResults.bind("reset", function() {
+      console.log('resetting post filters!')
       SearchApp.postFiltersView.render( SearchApp.searchResults.platforms );
     });
 

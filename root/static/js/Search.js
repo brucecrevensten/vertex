@@ -440,6 +440,7 @@ var PlatformWidget = BaseWidget.extend(
     },
 
     render: function() {
+
       $(this.el).empty();
       var checked = this.model.toJSON()["platform"];
       for( var key in this.platformTypes ) {
@@ -597,66 +598,6 @@ var PlatformWidget = BaseWidget.extend(
           resizable: false
         }
       );
-    }
-  }
-);
-
-
-var ProcessingFilter = BaseFilter.extend(
-  {
-    name: "ProcessingFilter",
-    defaults: {
-      processing: ["L0","L1","L1.5","L1.0","L1.1"]
-    },
-    getWidget: function() {
-      return new ProcessingWidget({model:this});
-    },
-  }
-  );
-
-var ProcessingWidget = BaseWidget.extend(
-  {
-    title: "Processing Type",
-    titleId: "processing_widget_title",
-    tagName: "div",
-    id: "filter_processing",
-    processingTypes: {
-      // value : display name
-      "L0" : "L0",
-      "L1" : "L1",
-      "L1.0" : "L1.0",
-      "L1.1" : "L1.1",
-      "L1.5" : "L1.5"
-    },
-
-    events : {
-      "change input" : "changed",
-    },
-
-    changed: function(evt) {
-
-      //TODO: this is ugly -- there's gotta be a better way to 
-      // construct the jquery selector there.
-      var a = $("#"+this.id+" input").serializeArray();
-      this.model.clear({silent:true});
-      this.model.set( { processing: _.pluck(a,"value") } );
-
-    },
-
-    render: function() {
-      var f = "";
-      var checked = this.model.toJSON()["processing"];
-      for( var key in this.processingTypes ) {
-         rowData = {
-          name: this.processingTypes[key],
-          value: key,
-          ifChecked: ( _.indexOf(checked, key) > -1 ) ? 'checked="checked"' : ''
-         };
-         f = f + _.template('<li><label for="filter_processing_<%= name %>"><input type="checkbox" id="filter_processing_<%= name %>" value="<%= value %>" name="<%= name %>" <%= ifChecked %>>&nbsp;<%= name %></label></li>', rowData);
-      }
-      $(this.el).html( '<ul>'+f+'</ul>' );
-    
-      return this;
     }
   }
 );

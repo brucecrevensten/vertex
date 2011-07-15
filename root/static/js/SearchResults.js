@@ -34,21 +34,50 @@ var SearchResults = Backbone.Collection.extend(
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
-
+          this.reset();
+          
           // Fetch distinct platforms that were found
           this.platforms = _.uniq( _.pluck( this.data.results.rows.ROW, 'PLATFORM') );
+          var dp;
 
-          // Munge this data to get a local true ID on each model; need to wiggle
-          // the returned JSON a little bit so that Backbone can consume the (lowercase)
-          // 'id' field.
           for ( var i in data.results.rows.ROW ) {
-            data.results.rows.ROW[i].id = data.results.rows.ROW[i].ID;
+            
+            // Munge this data to get a local true ID (granule name)
+            data.results.rows.ROW[i].id = data.results.rows.ROW[i].GRANULENAME;
+            
+            // Create the DataProduct if it doesn't already exist
+            dp = this.get( data.results.rows.ROW[i].id );
+            if( 'undefined' == typeof dp ) {
+              this.add( data.results.rows.ROW[i] );
+              dp = this.get( data.results.rows.ROW[i].id );
+            }
+
+            // Create the DataProductFile, add to the collection in the DataProduct
+            dp.files.add( {
+              thumbnail: data.results.rows.ROW[i].THUMBNAIL,
+              productId: data.results.rows.ROW[i].GRANULENAME,
+              id: data.results.rows.ROW[i].ID,
+              processingType: data.results.rows.ROW[i].PROCESSINGTYPE,
+              processingTypeDisplay: data.results.rows.ROW[i].PROCESSINGTYPEDISPLAY,
+              processingLevel: data.results.rows.ROW[i].PROCESSINGLEVEL,
+              processingDescription: data.results.rows.ROW[i].PROCESSINGDESCRIPTION,
+              processingType: data.results.rows.ROW[i].PROCESSINGTYPE,
+              url: data.results.rows.ROW[i].URL,
+              platform: data.results.rows.ROW[i].PLATFORM,
+              acquisitionDate: data.results.rows.ROW[i].ACQUISITIONDATE,
+              bytes: data.results.rows.ROW[i].BYTES,
+              sizeText: AsfUtility.bytesToString(data.results.rows.ROW[i].BYTES),
+              md5sum: data.results.rows.ROW[i].MD5SUM,
+              filename: data.results.rows.ROW[i].FILENAME
+            });
           }
-          
+
           this.view.showResults();
-          this.reset( this.data.results.rows.ROW );
+          this.view.render();
+
         },
         error: function(jqXHR, textStatus, errorThrown) {
+
           switch(jqXHR.status) {
             // todo: move this gui code into the view object
             case 204:
@@ -71,7 +100,6 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
-    this.collection.bind("reset", this.render);
   },
 
   renderLength: function() {
@@ -120,6 +148,7 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.each( function( e, i, l ) {
      
       d = e.toJSON();
+
       d['acquisitionDateText'] = $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', d.ACQUISITIONDATE));
 
       li = jQuery('<li/>').attr('product_id', d.id);
@@ -131,14 +160,12 @@ var SearchResultsView = Backbone.View.extend(
   <div>\
     <p><%= acquisitionDateText %></p>\
     <p>Frame <%= FRAMENUMBER %>, Path <%= ORBIT %></p>\
-    <div>\
-      <a href="<%= URL %>" product="<%= FILENAME %>" class="tool_download">Download</a>\
-      <button product="<%= id %>" class="tool_enqueuer">Add to queue</button>\
-    </div>\
   </div>\
   <div style="clear: both"></div>\
 ', d )
       );
+
+      li.find('img').error( function() { $(this).remove(); });
 
       v = new DataProductView( { model: e } );
 
@@ -162,41 +189,6 @@ var SearchResultsView = Backbone.View.extend(
 
     
     $('#searchResults li').live('mouseenter', { view: this }, this.toggleHighlight );
-    $('.tool_download').button(
-      {
-        icons: {
-          primary: "ui-icon-circle-arrow-s"
-        },
-        text: 'Download' 
-      }
-    ).click( function(e) {
-      e.stopPropagation();
-    });
-    
-    $('.tool_enqueuer').click( function(e) {
-      e.stopPropagation();
-      if ( $(this).prop('selected') == 'selected' ) {
-        $(this).toggleClass('tool-dequeue');
-        $(this).prop('selected','false');
-        SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product')));
-        $(this).button( "option", "label", "Add to queue" );
-        $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
-      } else {
-        $(this).toggleClass('tool-dequeue');
-        $(this).prop('selected','selected');
-        SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product')));
-        $(this).button( "option", "label", "Remove from queue" );
-        $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
-      }
-      $(e.currentTarget.parentNode.parentNode).toggleClass("selected");
-    }).button(
-      {
-        icons: {
-          primary: "ui-icon-circle-plus"
-        },
-        label: 'Add to queue'
-      }
-    );
 
     this.clearOverlays();
     this.renderOnMap();
@@ -206,43 +198,47 @@ var SearchResultsView = Backbone.View.extend(
 
   },
   renderOnMap: function() {
-    var res = this.collection.data.results.rows.ROW;
 
-    this.leastLat = Math.min( res[0].NEARSTARTLAT, res[0].FARSTARTLAT, res[0].FARENDLAT, res[0].NEARENDLAT );
-    this.mostLat = Math.max( res[0].NEARSTARTLAT, res[0].FARSTARTLAT, res[0].FARENDLAT, res[0].NEARENDLAT );
-    this.leastLon = Math.min( res[0].NEARSTARTLON, res[0].FARSTARTLON, res[0].FARENDLON, res[0].NEARENDLON );
-    this.mostLon = Math.max( res[0].NEARSTARTLON, res[0].FARSTARTLON, res[0].FARENDLON, res[0].NEARENDLON );
+    e = this.collection.at(0).toJSON();
+    this.leastLat = Math.min( e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
+    this.mostLat = Math.max( e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
+    this.leastLon = Math.min( e.NEARSTARTLON, e.FARSTARTLON, e.FARENDLON, e.NEARENDLON );
+    this.mostLon = Math.max( e.NEARSTARTLON, e.FARSTARTLON, e.FARENDLON, e.NEARENDLON );
 
-    for(var ii = 0; ii < res.length; ++ii) {
+    this.collection.each( function( dp, i, l ) {
 
-      this.leastLat = Math.min( this.leastLat, res[ii].NEARSTARTLAT, res[ii].FARSTARTLAT, res[ii].FARENDLAT, res[ii].NEARENDLAT );
-      this.mostLat = Math.max( this.mostLat, res[ii].NEARSTARTLAT, res[ii].FARSTARTLAT, res[ii].FARENDLAT, res[ii].NEARENDLAT );
-      this.leastLon = Math.min( this.leastLon, res[ii].NEARSTARTLON, res[ii].FARSTARTLON, res[ii].FARENDLON, res[ii].NEARENDLON );
-      this.mostLon = Math.max( this.mostLon, res[ii].NEARSTARTLON, res[ii].FARSTARTLON, res[ii].FARENDLON, res[ii].NEARENDLON );
+        e = dp.toJSON();
 
-      var path = new Array(
-        new google.maps.LatLng(res[ii].NEARSTARTLAT, res[ii].NEARSTARTLON),
-        new google.maps.LatLng(res[ii].FARSTARTLAT, res[ii].FARSTARTLON),
-        new google.maps.LatLng(res[ii].FARENDLAT, res[ii].FARENDLON),
-        new google.maps.LatLng(res[ii].NEARENDLAT, res[ii].NEARENDLON)
-      );
-      
-      this.mo[ res[ii].ID ] = new google.maps.Polygon({
-          paths: path,
-          fillColor: '#777777',
-          fillOpacity: 0.25,
-          strokeColor: '#333333',
-          strokeOpacity: 0.5,
-          strokeWeight: 2,
-          zIndex: 1000 + ii,
-          clickable: true
-        });
-      this.mo[res[ii].ID].setMap(searchMap);
-    }
+        this.leastLat = Math.min( this.leastLat, e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
+        this.mostLat = Math.max( this.mostLat, e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
+        this.leastLon = Math.min( this.leastLon, e.NEARSTARTLON, e.FARSTARTLON, e.FARENDLON, e.NEARENDLON );
+        this.mostLon = Math.max( this.mostLon, e.NEARSTARTLON, e.FARSTARTLON, e.FARENDLON, e.NEARENDLON );
+
+        this.mo[ e.id ] = new google.maps.Polygon({
+            paths: new Array(
+              new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON),
+              new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON),
+              new google.maps.LatLng(e.FARENDLAT, e.FARENDLON),
+              new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
+            ),
+            fillColor: '#777777',
+            fillOpacity: 0.25,
+            strokeColor: '#333333',
+            strokeOpacity: 0.5,
+            strokeWeight: 2,
+            zIndex: 1000 + i,
+            clickable: true
+          });
+        this.mo[ e.id ].setMap(searchMap);
+
+
+    }, this);
+
     searchMap.fitBounds( new google.maps.LatLngBounds(
       new google.maps.LatLng( this.leastLat, this.leastLon ),
       new google.maps.LatLng( this.mostLat, this.mostLon )
     ));
+    
   },
   clearOverlays: function() {
 

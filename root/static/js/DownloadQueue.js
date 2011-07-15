@@ -1,11 +1,11 @@
 var DownloadQueue = Backbone.Collection.extend(
   {
   url: AsfDataportalConfig.apiUrl,
-  model:DataProduct,
+  model:DataProductFile,
 
   getSizeInBytes:function() {
     return _.reduce(
-      this.pluck("BYTES"),
+      this.pluck("bytes"),
       function(memo, size) {
         return memo + size;
       },
@@ -78,12 +78,12 @@ var DownloadQueueView = Backbone.View.extend(
       table = table + _.template('\
 <tr>\
 <td>\
-<%= GRANULENAME %>\
-<input type="hidden" name="granule_list[]" value="<%= GRANULENAME %>" />\
+<img src="<%= thumbnail %>" title="<%= productId %>" />\
+<input type="hidden" name="filename[]" value="<%= filename %>" />\
 </td>\
-<td><%= PROCESSINGTYPE %></td>\
-<td><%= PLATFORM %></td>\
-<td><%= ACQUISITIONDATE %></td>\
+<td><%= processingTypeDisplay %></td>\
+<td><%= platform %></td>\
+<td><%= acquisitionDate %></td>\
 <td><%= sizeText %></td>\
 </tr>\
 ', m.toJSON());
@@ -95,7 +95,7 @@ var DownloadQueueView = Backbone.View.extend(
 <table class="datatable" id="download_queue_table">\
 <thead>\
 <tr>\
-<th>Granule Name</th>\
+<th>Granule</th>\
 <th>Processing</th>\
 <th>Platform</th>\
 <th>Acquisition Date</th>\
