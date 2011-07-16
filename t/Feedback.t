@@ -52,7 +52,7 @@ is($mech->status(), Apache2::Const::HTTP_BAD_REQUEST,
 # set TEST_DATABASE=1 to run these tests.
 ################
 SKIP: {
-  skip 'Skipping tests requiring a database connection.', 2,
+  skip 'Skipping tests requiring a database connection.', 4,
     unless $ENV{'TEST_DATABASE'};
   $mech->post($surn, { 'comment' => $comment, 'userid' => $userid,
     'email' => $email, 'name' => $name});
