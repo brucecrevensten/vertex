@@ -7,7 +7,6 @@ var SearchParameters = Backbone.Model.extend(
 
     initialize: function() {
       this.setupPreFilters();
-      this.setupPostFilters();
     },
     setupPreFilters: function() {
       this.filters = [
@@ -22,10 +21,12 @@ var SearchParameters = Backbone.Model.extend(
       self = this;
       for( var i in this.filters ) {
         this.filters[i].bind( "change", function(filter) {
+          console.log(self);
           self.trigger("change:filter", filter);
         });
       }
       this.bind("change:filter", function(filter) {
+        console.log(filter.toJSON());
         this.set( filter.toJSON() );
       });
 
@@ -37,32 +38,8 @@ var SearchParameters = Backbone.Model.extend(
         this.filters[i].reset();
         this.set( this.filters[i].toJSON() );
       }
-      
-      for( var i in this.postFilters ) {
-        this.postFilters[i].reset();
-        this.set( this.filters[i].toJSON() );
-      }
-
     },
 
-    setupPostFilters: function() {
-      this.postFilters = [
-        new RadarsatFacet(),
-        new AlosFacet(),
-      ];
-
-      self = this;
-      for( var i in this.postFilters ) {
-        this.postFilters[i].bind( "change", function(filter) {
-          self.trigger("change:postfilter", filter);
-        });
-      }
-
-      this.bind("change:postfilter", function(filter) {
-        this.set( filter.toJSON() );
-      });
-
-    },
     defaults: {
         format:"jsonp"
     },
@@ -118,6 +95,7 @@ var BaseFilter = Backbone.Model.extend(
 {
   reset: function() {
     this.set( this.defaults );
+    this.trigger('reset');
   }
 }
 );

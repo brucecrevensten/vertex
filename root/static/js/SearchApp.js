@@ -31,9 +31,10 @@ $(function() {
     );
     this.searchParametersView.render();
 
+    this.postFilters = new PostFilters();
     this.postFiltersView = new PostFiltersView(
     {
-      model: this.searchParameters,
+      model: this.postFilters,
       el: $("#platform_facets")
     }
     );
@@ -48,6 +49,9 @@ $(function() {
     );
     this.searchResults.setView( this.searchResultsView );
 
+    // trouble brewing.  this may cause either recursion and/or things to not be cleared when expected.
+    // need to distinguish between a render upon new search results, and a render based on
+    // filtering.
     this.searchResultsView.bind("render", function() {
       SearchApp.postFiltersView.render( SearchApp.searchResults.platforms );
     });

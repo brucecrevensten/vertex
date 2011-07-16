@@ -18,6 +18,53 @@ var SearchResults = Backbone.Collection.extend(
       this.searchParameters = sp;
     },
 
+    // build the nested model structure of DataProducts and DataProductFiles
+    build: function(data) {
+
+      // TODO: possible memory leak here, if the associated things aren't deallocated
+      // when we reset this main collection.
+
+      this.reset();
+      var dp;
+
+      for ( var i in data ) {
+        // Munge this data to get a local true ID (granule name)
+        data[i].id = data[i].GRANULENAME;
+        
+        // Create the DataProduct if it doesn't already exist
+        dp = this.get( data[i].id );
+        if( 'undefined' == typeof dp ) {
+          this.add( data[i] );
+          dp = this.get( data[i].id );
+        }
+
+        // Create the DataProductFile, add to the collection in the DataProduct
+        dp.files.add( {
+          thumbnail: data[i].THUMBNAIL,
+          productId: data[i].GRANULENAME,
+          id: data[i].ID,
+          processingType: data[i].PROCESSINGTYPE,
+          processingTypeDisplay: data[i].PROCESSINGTYPEDISPLAY,
+          processingLevel: data[i].PROCESSINGLEVEL,
+          processingDescription: data[i].PROCESSINGDESCRIPTION,
+          processingType: data[i].PROCESSINGTYPE,
+          url: data[i].URL,
+          platform: data[i].PLATFORM,
+          acquisitionDate: data[i].ACQUISITIONDATE,
+          bytes: data[i].BYTES,
+          sizeText: AsfUtility.bytesToString(data[i].BYTES),
+          md5sum: data[i].MD5SUM,
+          filename: data[i].FILENAME
+        });
+      }
+    },
+
+    filter: function() {
+      var d = SearchApp.postFilters.applyFilters( this.data.results.rows.ROW );
+      this.build( d );
+      this.view.render();
+    },
+
     fetchSearchResults: function(sp) {
 
       this.setParameters(sp);
@@ -34,47 +81,10 @@ var SearchResults = Backbone.Collection.extend(
         },
         success: function(data, textStatus, jqXHR) {
           this.data = data;
-          this.reset();
-          
+
           // Fetch distinct platforms that were found
-          this.platforms = _.uniq( _.pluck( this.data.results.rows.ROW, 'PLATFORM') );
-          console.log(this.platforms);
-          
-          var dp;
-
-          for ( var i in data.results.rows.ROW ) {
-            
-            // Munge this data to get a local true ID (granule name)
-            data.results.rows.ROW[i].id = data.results.rows.ROW[i].GRANULENAME;
-            
-            // Create the DataProduct if it doesn't already exist
-            dp = this.get( data.results.rows.ROW[i].id );
-            if( 'undefined' == typeof dp ) {
-              this.add( data.results.rows.ROW[i] );
-              dp = this.get( data.results.rows.ROW[i].id );
-            }
-
-            // Create the DataProductFile, add to the collection in the DataProduct
-            dp.files.add( {
-              thumbnail: data.results.rows.ROW[i].THUMBNAIL,
-              productId: data.results.rows.ROW[i].GRANULENAME,
-              id: data.results.rows.ROW[i].ID,
-              processingType: data.results.rows.ROW[i].PROCESSINGTYPE,
-              processingTypeDisplay: data.results.rows.ROW[i].PROCESSINGTYPEDISPLAY,
-              processingLevel: data.results.rows.ROW[i].PROCESSINGLEVEL,
-              processingDescription: data.results.rows.ROW[i].PROCESSINGDESCRIPTION,
-              processingType: data.results.rows.ROW[i].PROCESSINGTYPE,
-              url: data.results.rows.ROW[i].URL,
-              platform: data.results.rows.ROW[i].PLATFORM,
-              acquisitionDate: data.results.rows.ROW[i].ACQUISITIONDATE,
-              bytes: data.results.rows.ROW[i].BYTES,
-              sizeText: AsfUtility.bytesToString(data.results.rows.ROW[i].BYTES),
-              md5sum: data.results.rows.ROW[i].MD5SUM,
-              filename: data.results.rows.ROW[i].FILENAME
-            });
-          }
-
-          this.view.showResults();
+          this.platforms = _.uniq( _.pluck( data.results.rows.ROW, 'PLATFORM') );
+          this.build(data.results.rows.ROW);
           this.view.render();
 
         },
@@ -113,6 +123,8 @@ var SearchResultsView = Backbone.View.extend(
     $('#async-spinner').hide();
     $('#searchResults').show();
     $('#platform_facets').show();
+    $("#error-message").hide();
+    $("#results-banner").hide();
 
   },
 
@@ -143,11 +155,19 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#platform_facet").hide();
     $('#platform_facets').hide();
+    this.clearOverlays();
+
   },
 
   render: function() {
 
     $(this.el).empty();
+
+    if( 0 == this.collection.length ) {
+      this.clearOverlays();
+      this.showNoResults();
+      return this;
+    }
     this.collection.each( function( e, i, l ) {
      
       d = e.toJSON();
@@ -193,6 +213,7 @@ var SearchResultsView = Backbone.View.extend(
     
     $('#searchResults li').live('mouseenter', { view: this }, this.toggleHighlight );
 
+    this.showResults();
     this.clearOverlays();
     this.renderOnMap();
     this.trigger('render'); // custom event so post-filters know to render

@@ -1,3 +1,44 @@
+var PostFilters = Backbone.Model.extend(
+  {
+    postFilters: [],
+    initialize: function() {
+      this.postFilters = [
+        new RadarsatFacet(),
+        new AlosFacet(),
+      ];
+
+      self = this;
+      for( var i in this.postFilters ) {
+        this.postFilters[i].bind( "change", function(filter) {
+          self.trigger("change:postfilter", filter);
+        });
+      }
+
+      this.bind("change:postfilter", function(filter) {
+        var v = {};
+        v[filter.name] = filter.toJSON();
+        this.set( v );
+      });
+
+    },
+
+    // todo: this needs to be platform-specific, otherwise it's a surprise.  still need this global reset, I think,
+    // when new searches are triggered -- tbd.
+    reset: function() {
+      for( var i in this.postFilters ) {
+        this.postFilters[i].reset();
+      }
+    },
+    
+    applyFilters: function( data ) {
+      for( var i in this.postFilters ) {
+        data = this.postFilters[i].filter(data);
+      }
+      return data;
+    }
+  }
+);
+
 var PostFiltersView = Backbone.View.extend(
 {
   widgets: [],
@@ -7,13 +48,14 @@ var PostFiltersView = Backbone.View.extend(
   setWidgets: function() {
     this.widgets = [];
     for ( var i in this.model.postFilters ) {
+      // TODO: another possible memory leak here if the widgets aren't getting destroyed
       this.widgets.push(this.model.postFilters[i].getWidget());
     }
   },
   render: function(platforms) {
 
-    console.log(platforms);
     this.setWidgets();
+    $(this.el).accordion("destroy");
     $(this.el).empty().append( jQuery('<h3><a href="#">Filter by platform</a></h3>'));
     var d = jQuery('<div/>');
     for ( var i in this.widgets ) {
@@ -24,6 +66,7 @@ var PostFiltersView = Backbone.View.extend(
     $(this.el).append(d).accordion();
     return this;
   }
+
 });
 
 
@@ -36,22 +79,22 @@ var PlatformFacetView = BaseWidget.extend( {
   // source = data structure in format: [ { title:string, group:string, modes: [ { label:label, value:inputValue }, ... ] }, ... ]
   // id = string, ID fragment to prepend in dynamically-generated elements
   // param = string, name of http parameter
-  renderButtonset: function( selected, key, el, source, id, name ) {
+  renderButtonset: function( selected, key, el, source, id, name, ifChecked ) {
 
     for( var i in source ) {
       $(el).append( _.template('<h5><%= title %></h5>', source[i] ));
       newEl = jQuery('<div/>', {
         id: id+"_"+source[i].group,
-        "class": "checkbox"
+        "class": "beamSelector"
       });
       newEl.prop('beam', source[i].group);
       for( var j in source[i].modes ) {
         idVal = source[i].modes[j].value.replace('.','_');
         $(newEl).append( 
           _.template(
-            '<input type="checkbox" name="<%= name %>[]" value="<%= value %>" <%= ifChecked %> id="<%= id %>_<%= group %>_<%= idValue %>" /><label for="<%= id %>_<%= group %>_<%= idValue %>"><%= label %></label>',
+            '<input type="checkbox" class="beamSelector" name="<%= name %>[]" value="<%= value %>" <%= ifChecked %> id="<%= id %>_<%= group %>_<%= idValue %>" /><label for="<%= id %>_<%= group %>_<%= idValue %>"><%= label %></label>',
             {
-              ifChecked: ( -1 !== _.indexOf( selected[key], source[i].modes[j].value)) ? 'checked="checked"' : '',
+              ifChecked: ( -1 !== _.indexOf( selected[key], source[i].modes[j].value )) ? 'checked="checked"' : '',
               group: source[i].group,
               value: source[i].modes[j].value,
               label: source[i].modes[j].label,
@@ -63,10 +106,14 @@ var PlatformFacetView = BaseWidget.extend( {
         )
       }
       $(el).append( newEl );
-      $(el).find('.checkbox').each(function(index) {
+      $(el).find('.beamSelector').each(function(index) {
         $(this).buttonset();
       });
     }
+    $(el).append( jQuery('<a/>', { 'class':'toggler' }).button( { icons: { primary: 'ui-icon-shuffle' }, label: 'Toggle all'} ).click( jQuery.proxy( function(e) {
+      $(this.el).find('input:checkbox').click();
+
+    }, this) ) );
   }
 
 } );
@@ -77,11 +124,74 @@ var AlosFacet = PlatformFacet.extend(
     defaults: {
       path: null,
       frame: null,
-      direction: 'any'
+      direction: 'any',
+      beamoffnadir: [
+        'FBS21.5',
+        'FBS34.3',
+        'FBS41.5',
+        'FBS50.8',
+        'FBD34.3',
+        'PLR21.5',
+        'PLR23.1',
+        'WB127.1',
+      ]
     },
     getWidget: function() {
       return new AlosFacetButton({model: this});
+    },
+    filter: function( d ) {
+      var f = this.toJSON();
+      d = _.reject( d, function(row) {
+        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
+      });
+
+      // todo: move building the arrays to validation / setting phase? later.
+      if( f.frame ) {
+        var frames = this.buildArrayFromString(f.frame);
+        d = _.reject( d, function(row) {
+          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
+        });
+      }
+
+      if( f.path ) {
+        var paths = this.buildArrayFromString(f.path);
+        d = _.reject( d, function(row) {
+          return ( -1 == _.indexOf( paths, row.PATHNUMBER ) );
+        });
+      }
+
+      if( f.beamoffnadir.length ) {
+        d = _.reject( d, function(row) {
+          return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE.concat(row.OFFNADIRANGLE)));
+        });
+      }
+      return d;
+    },
+    buildArrayFromString: function( s ) {
+      var a = [];
+      if ( !s ) { return a; }
+      s = s.split(',');
+      try {
+        for( var i = 0; i < s.length; ++i ) {
+          if( -1 == s[i].indexOf('-')) {
+            // individual frame
+            a.push( parseInt( s[i]) );
+          } else {
+            // range
+            r = s[i].split('-');
+            lb = Math.min(parseInt(r[0]), parseInt(r[1]));
+            ub = Math.max(parseInt(r[0]), parseInt(r[1]));
+            for( var j = lb; j <= ub; ++j ) {
+              a.push( j );
+            }
+          }
+        }
+      } catch(err) {
+        // TODO: handle this in validation or something.
+      }
+      return a;
     }
+
   }
 );
 
@@ -98,42 +208,50 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   },
   changed: function(e) {
     this.model.clear( { silent: true });
-    var beams = [];
-    $(this.el).find(':checked').each( function(i, el) { beams.push( $(el).parent().prop('beam') ); });
-    this.model.set( { offnadir: _.pluck( $(this.el).serializeArray(), 'value' ) } );
-    this.model.set( { beams: _.uniq( beams ) } );
+    var beamoffnadir  = [];
+    $(this.el).find('.beamSelector :checked').each( function(i, el) { beamoffnadir.push( $(el).val() ); });
+    var direction = $(this.el).find('input[name="direction"]:checked').val();
+    var path = $(this.el).find('input[name="path"]').val();
+    var frame = $(this.el).find('input[name="frame"]').val();
+
+    this.model.set({
+      beamoffnadir: beamoffnadir,
+      direction: direction,
+      path: path,
+      frame: frame
+    });
   },
   beamModes: [
     {
       title: "FBS (Fine Beam Single Polarization)",
       group: "FBS",
       modes: [
-        { label: "21.5&deg;", value: "21.5" },
-        { label: "34.3&deg;", value: "34.3" },
-        { label: "41.5&deg;", value: "41.5" },
-        { label: "50.8&deg;", value: "50.8" }
+        { label: "21.5&deg;", value: "FBS21.5" },
+        { label: "34.3&deg;", value: "FBS34.3" },
+        { label: "41.5&deg;", value: "FBS41.5" },
+        { label: "50.8&deg;", value: "FBS50.8" }
       ]
     },
     {
       title: "FBD (Fine Beam Double Polarization)",
       group: "FBD",
       modes: [
-        { label: "34.3&deg", value: "34.3" }
+        { label: "34.3&deg", value: "FBD34.3" }
       ]
     },
     {
       title: "PLR (Polarimetric Mode)",
       group: "PLR",
       modes: [
-        { label: "21.5&deg;", value: "21.5" },
-        { label: "23.1&deg;", value: "23.1" }
+        { label: "21.5&deg;", value: "PLR21.5" },
+        { label: "23.1&deg;", value: "PLR23.1" }
       ]
     },
     {
       title: "WB1 (ScanSAR Burst Mode 1)",
       group: "WB1",
       modes: [
-        { label: "27.1&deg;", value: "27.1" }
+        { label: "27.1&deg;", value: "WB127.1" }
       ]
     }
   ],
@@ -142,8 +260,9 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     $(this.el).empty();
 
     var b = jQuery('<div/>');
-    this.renderButtonset( this.model.toJSON(), 'offnadir', b, this.beamModes, 'a3', 'offnadir' );
-    
+    this.renderButtonset( this.model.toJSON(), 'beamoffnadir', b, this.beamModes, 'a3', 'offnadir', function(s, k, bm, bg) { 
+    } );
+
     var fs = jQuery('<fieldset/>').html( jQuery('<legend>Beam Modes & Off-Nadir Angles</legend>')).append(b);
     $(this.el).append(fs);
 
@@ -163,16 +282,16 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       draggable: true,
       resizable: false,
       title: "ALOS Platform Options",
-      position: "center",
+      position: [30,100],
       buttons: {
         "Cancel": function() { $(this).dialog('close'); },
-        "Reset": function() {},
-        "Filter": function() {}
+        "Reset": jQuery.proxy( function() {
+          this.model.reset();
+          this.render();
+        }, this),
+        "Filter": function() { SearchApp.searchResults.filter(); }
       }
     });
-
-
-
 
   }
   
@@ -222,6 +341,9 @@ var RadarsatFacet = PlatformFacet.extend(
     name: "RADARSAT-1",
     getWidget: function() {
       return new RadarsatFacetButton({model: this});
+    },
+    filter: function( d ) {
+      return d;
     }
   }
 );

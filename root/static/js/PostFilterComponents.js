@@ -14,7 +14,7 @@ var PathFrameWidgetComponent = BaseWidget.extend({
     rowData.legend = this.legend;
     rowData.pathLabel = this.pathLabel;
 
-    $(this.el).html(
+    $(this.el).addClass('pathFrameSelector').html(
       _.template('<fieldset><legend><%= legend %></legend>\
       <label style="width: 3em; display: inline-block; text-align: right;"><%= pathLabel %>&nbsp;</label><input type="text" size="10" name="path" value="<%= path %>"><br/>\
       <label style="width: 3em; display: inline-block; text-align: right;">Frame&nbsp;</label><input type="text" size="10" name="frame" value="<%= frame %>">\
@@ -33,8 +33,8 @@ var DirectionWidgetComponent = BaseWidget.extend(
     directionTypes: {
       // value : display name
       "any":"Any",
-      "ascending":"Ascending",
-      "descending":"Descending"
+      "ASCENDING":"Ascending", // key must match value returned by API
+      "DESCENDING":"Descending" // key must match value returned by API
     },
 
     events : {
@@ -54,10 +54,9 @@ var DirectionWidgetComponent = BaseWidget.extend(
           value: key,
           ifChecked: ( checked == key ) ? 'checked="checked"' : ''
          };
-         f = f + _.template('<label for="filter_direction_<%= name %>"><%= name %></label><input type="radio" id="filter_direction_<%= name %>" value="<%= value %>" name="filter_direction" <%= ifChecked %>>', rowData);
+         f = f + _.template('<label for="filter_direction_<%= name %>"><%= name %></label><input type="radio" id="filter_direction_<%= name %>" value="<%= value %>" name="direction" <%= ifChecked %>>', rowData);
       }
-      $(this.el).html( '<ul>'+f+'</ul>' );
-      $(this.el).buttonset();
+      $(this.el).addClass('directionSelector').html( '<ul>'+f+'</ul>' ).buttonset();
     
       return this;
     }

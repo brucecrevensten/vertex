@@ -409,3 +409,7 @@ button.tool_enqueuer.tool-dequeue:hover {
   color: black !important;
   height: auto;
 }
+
+.toggler { 
+  margin: 1em 0;
+}
