@@ -18,12 +18,10 @@ var SearchParameters = Backbone.Model.extend(
       this.setDefaults();
 
       // bind change events in filters to update this object's attributes
-      self = this;
       for( var i in this.filters ) {
-        this.filters[i].bind( "change", function(filter) {
-          console.log(self);
-          self.trigger("change:filter", filter);
-        });
+        this.filters[i].bind( "change", jQuery.proxy( function(filter) {
+          this.trigger("change:filter", filter);
+        }, this));
       }
       this.bind("change:filter", function(filter) {
         console.log(filter.toJSON());
