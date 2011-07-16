@@ -24,7 +24,6 @@ var SearchParameters = Backbone.Model.extend(
         }, this));
       }
       this.bind("change:filter", function(filter) {
-        console.log(filter.toJSON());
         this.set( filter.toJSON() );
       });
 
