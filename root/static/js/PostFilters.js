@@ -70,7 +70,34 @@ var PostFiltersView = Backbone.View.extend(
 });
 
 
-var PlatformFacet = BaseFilter.extend( {} ); 
+var PlatformFacet = BaseFilter.extend( {
+
+    buildArrayFromString: function( s ) {
+    var a = [];
+    if ( !s ) { return a; }
+    s = s.split(',');
+    try {
+      for( var i = 0; i < s.length; ++i ) {
+        if( -1 == s[i].indexOf('-')) {
+          // individual frame
+          a.push( parseInt( s[i]) );
+        } else {
+          // range
+          r = s[i].split('-');
+          lb = Math.min(parseInt(r[0]), parseInt(r[1]));
+          ub = Math.max(parseInt(r[0]), parseInt(r[1]));
+          for( var j = lb; j <= ub; ++j ) {
+            a.push( j );
+          }
+        }
+      }
+    } catch(err) {
+      // TODO: handle this in validation or something.
+    }
+    return a;
+  }
+
+} ); 
 var PlatformFacetView = BaseWidget.extend( {
 
   // selected = this.model.toJSON
@@ -79,7 +106,7 @@ var PlatformFacetView = BaseWidget.extend( {
   // source = data structure in format: [ { title:string, group:string, modes: [ { label:label, value:inputValue }, ... ] }, ... ]
   // id = string, ID fragment to prepend in dynamically-generated elements
   // param = string, name of http parameter
-  renderButtonset: function( selected, key, el, source, id, name, ifChecked ) {
+  renderButtonset: function( selected, key, el, source, id, name) {
 
     for( var i in source ) {
       $(el).append( _.template('<h5><%= title %></h5>', source[i] ));
@@ -141,55 +168,40 @@ var AlosFacet = PlatformFacet.extend(
     },
     filter: function( d ) {
       var f = this.toJSON();
+      
+      // only do filtering on this platform
+      var a = _.select( d, function(row) {
+        return ( 'ALOS' == row.PLATFORM );
+      });
       d = _.reject( d, function(row) {
+        return ( 'ALOS' == row.PLATFORM );
+      });
+
+      a = _.reject( a, function(row) {
         return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
       });
 
       // todo: move building the arrays to validation / setting phase? later.
       if( f.frame ) {
         var frames = this.buildArrayFromString(f.frame);
-        d = _.reject( d, function(row) {
+        a = _.reject( a, function(row) {
           return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
         });
       }
 
       if( f.path ) {
         var paths = this.buildArrayFromString(f.path);
-        d = _.reject( d, function(row) {
+        a = _.reject( a, function(row) {
           return ( -1 == _.indexOf( paths, row.PATHNUMBER ) );
         });
       }
 
       if( f.beamoffnadir.length ) {
-        d = _.reject( d, function(row) {
+        a = _.reject( a, function(row) {
           return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE.concat(row.OFFNADIRANGLE)));
         });
       }
-      return d;
-    },
-    buildArrayFromString: function( s ) {
-      var a = [];
-      if ( !s ) { return a; }
-      s = s.split(',');
-      try {
-        for( var i = 0; i < s.length; ++i ) {
-          if( -1 == s[i].indexOf('-')) {
-            // individual frame
-            a.push( parseInt( s[i]) );
-          } else {
-            // range
-            r = s[i].split('-');
-            lb = Math.min(parseInt(r[0]), parseInt(r[1]));
-            ub = Math.max(parseInt(r[0]), parseInt(r[1]));
-            for( var j = lb; j <= ub; ++j ) {
-              a.push( j );
-            }
-          }
-        }
-      } catch(err) {
-        // TODO: handle this in validation or something.
-      }
-      return a;
+      return _.union(a, d);
     }
 
   }
@@ -260,8 +272,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     $(this.el).empty();
 
     var b = jQuery('<div/>');
-    this.renderButtonset( this.model.toJSON(), 'beamoffnadir', b, this.beamModes, 'a3', 'offnadir', function(s, k, bm, bg) { 
-    } );
+    this.renderButtonset( this.model.toJSON(), 'beamoffnadir', b, this.beamModes, 'a3', 'offnadir');
 
     var fs = jQuery('<fieldset/>').html( jQuery('<legend>Beam Modes & Off-Nadir Angles</legend>')).append(b);
     $(this.el).append(fs);
@@ -336,14 +347,72 @@ specifying beam modes:
 var RadarsatFacet = PlatformFacet.extend(
   {
     defaults: {
-      beam: []
+      path: null,
+      frame: null,
+      direction: 'any',
+      beam: [
+        'EH3',
+        'EH5',
+        'EH6',
+        'EL1',
+        'FN1',
+        'FN2',
+        'FN3',
+        'FN4',
+        'FN5',
+        'SNA',
+        'SNB',
+        'SWA',
+        'SWB',
+        'ST1',
+        'ST2',
+        'ST3',
+        'ST4',
+        'ST5',
+        'ST6',
+        'ST7'
+      ]
     },
     name: "RADARSAT-1",
     getWidget: function() {
       return new RadarsatFacetButton({model: this});
     },
     filter: function( d ) {
-      return d;
+  var f = this.toJSON();
+      
+      // only do filtering on this platform
+      var a = _.select( d, function(row) {
+        return ( 'RADARSAT-1' == row.PLATFORM );
+      });
+      d = _.reject( d, function(row) {
+        return ( 'RADARSAT-1' == row.PLATFORM );
+      });
+
+      a = _.reject( a, function(row) {
+        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
+      });
+
+      // todo: move building the arrays to validation / setting phase? later.
+      if( f.frame ) {
+        var frames = this.buildArrayFromString(f.frame);
+        a = _.reject( a, function(row) {
+          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
+        });
+      }
+
+      if( f.path ) {
+        var paths = this.buildArrayFromString(f.path);
+        a = _.reject( a, function(row) {
+          return ( -1 == _.indexOf( paths, row.ORBIT ) );
+        });
+      }
+
+      if( f.beam.length ) {
+        a = _.reject( a, function(row) {
+          return ( -1 == _.indexOf( f.beam, row.BEAMMODETYPE ));
+        });
+      }
+      return _.union(a, d);
     }
   }
 );
@@ -387,14 +456,20 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   },
   changed: function(e) {
     this.model.clear( { silent: true });
-    this.model.set( { beam: _.pluck( $(this.el).serializeArray(), 'value' ) } );
-    // hack: if the user has selected all the options, clear the model
-    // so that it won't restrict by beam mode, which would
-    // otherwise limit search results to only this platform (other
-    // platforms would never match the beam in() clause
-    if ( 23 == this.model.get('beam').length ) {
-      this.model.clear( { silent: true } );
-    }
+    var beam = [];
+    $(this.el).find('.beamSelector :checked').each( function(i, el) { beam.push( $(el).val() ); });
+    var direction = $(this.el).find('input[name="direction"]:checked').val();
+    var path = $(this.el).find('input[name="path"]').val();
+    var frame = $(this.el).find('input[name="frame"]').val();
+
+    this.model.set({
+      beam: beam,
+      direction: direction,
+      path: path,
+      frame: frame
+    });
+
+    console.log(this.model.toJSON());
   },
   beamModes: [
     { title: "Extended High Incidence Beam, Off-Nadir 52-58&deg;",
@@ -449,21 +524,39 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
     }
   ],
   render: function() {
-    
-    this.renderButtonset( this.model.toJSON(), 'beam', this.el, this.beamModes, 'r1', 'beam' );
+    $(this.el).empty();
 
-    
-    $(this.el).find('.checkbox').each(function(index) {
-      $(this).buttonset();
-    });
+    var b = jQuery('<div/>');
+    this.renderButtonset( this.model.toJSON(), 'beam', b, this.beamModes, 'r1', 'beam');
+
+    var fs = jQuery('<fieldset/>').html( jQuery('<legend>Beam Modes</legend>')).append(b);
+    $(this.el).append(fs);
+
+    var d = new DirectionWidgetComponent( { model: this.model });
+    var fs = jQuery('<fieldset/>').html( jQuery('<legend>Flight Direction</legend>')).append(d.render().el);
+    $(this.el).append(fs);
+
+    var p = new PathFrameWidgetComponent( { model: this.model });
+    p.legend = 'Orbit/Frame';
+    p.pathLabel = 'Orbit';
+
+    $(this.el).append( p.render().el );
 
     $(this.el).dialog({
       width: 700,
-      modal: true,
-      draggable: false,
+      modal: false,
+      draggable: true,
       resizable: false,
-      title: "RADARSAT-1 Beam Modes",
-      position: "center"
+      title: "RADARSAT-1 Platform Options",
+      position: [40,110],
+      buttons: {
+        "Cancel": function() { $(this).dialog('close'); },
+        "Reset": jQuery.proxy( function() {
+          this.model.reset();
+          this.render();
+        }, this),
+        "Filter": function() { SearchApp.searchResults.filter(); }
+      }
     });
   }
 }

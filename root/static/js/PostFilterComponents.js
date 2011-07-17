@@ -8,6 +8,9 @@ var PathFrameWidgetComponent = BaseWidget.extend({
     data[target.attr('name')] = target.attr('value');
     this.model.set(data);
   },
+
+  // A gotcha!  For ALOS this is correctly named (path) but for other platforms you expect 'orbit'.
+  // since the GUI is flexible (displays correctly), the functionality is OK
   render: function(){
     
     var rowData = this.model.toJSON();
@@ -16,8 +19,8 @@ var PathFrameWidgetComponent = BaseWidget.extend({
 
     $(this.el).addClass('pathFrameSelector').html(
       _.template('<fieldset><legend><%= legend %></legend>\
-      <label style="width: 3em; display: inline-block; text-align: right;"><%= pathLabel %>&nbsp;</label><input type="text" size="10" name="path" value="<%= path %>"><br/>\
-      <label style="width: 3em; display: inline-block; text-align: right;">Frame&nbsp;</label><input type="text" size="10" name="frame" value="<%= frame %>">\
+      <label style="width: 3em; display: inline-block; text-align: right; padding-right: 1ex;"><%= pathLabel %></label><input type="text" size="10" name="path" value="<%= path %>"><br/>\
+      <label style="width: 3em; display: inline-block; text-align: right; padding-right: 1ex;">Frame</label><input type="text" size="10" name="frame" value="<%= frame %>">\
       </div>', rowData)
     );
     return this;
