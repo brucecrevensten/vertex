@@ -12,11 +12,10 @@
 <tr><td rowspan="1" colspan="3">spec_1_6_2</td></tr>
 </thead><tbody>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>css=html body div.ui-dialog div.ui-dialog-buttonpane a[href='http://www.asf.alaska.edu/register/info']</td>
+	<td>verifyTextPresent</td>
+	<td>exact:Name <br /> Password <br /> <br /> <br /> Forgot password? Contact ASF User Support at uso@asf.alaska.edu for assistance <br /> <br /> If you do not currently have access to the restricted ASF Datapool products, please click the 'Register' button below to visit the ASF SDC proposal submission page for guidance or contact User Support at uso@asf.alaska.edu</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>
