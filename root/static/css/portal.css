@@ -116,12 +116,12 @@ float: left;
 
 fieldset {
   padding-left: 2em;
-  margin: 1em 0 1ex !important;
+  margin: 1em 0 1ex;
 }
 
 legend {
   font-weight: bold;
-  margin: 1em 0 1ex -2em !important;
+  margin: 0 0 1ex -2em !important;
   padding: 0 0 1ex 0;
 }
 
@@ -291,9 +291,18 @@ button.tool_enqueuer.tool-dequeue:hover {
   background-color: #b03000 !important;
 }
 
-#platform_facet h5 {
-  margin: 1.5em 0 1ex;
-  line-height: 115%;
+.platformFacet fieldset h5 {
+  margin: 1ex 0;
+}
+
+#platform_facets li button {
+  width: 190px;
+  text-align: left;
+  margin: 0 0 1ex 0;
+}
+
+.platformFacet.ui-dialog-content {
+  padding: 0 0 0 1ex;
 }
 
 #filters div.composite_checkbox_wrapper input + label {

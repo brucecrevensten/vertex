@@ -5,6 +5,9 @@ var PostFilters = Backbone.Model.extend(
       this.postFilters = [
         new RadarsatFacet(),
         new AlosFacet(),
+        new LegacyFacet( { 'platform':'ERS-1','offset':0} ),
+        new LegacyFacet( { 'platform':'ERS-2','offset':10} ),
+        new LegacyFacet( { 'platform':'JERS-1','offset':20} )
       ];
 
       self = this;
@@ -22,8 +25,6 @@ var PostFilters = Backbone.Model.extend(
 
     },
 
-    // todo: this needs to be platform-specific, otherwise it's a surprise.  still need this global reset, I think,
-    // when new searches are triggered -- tbd.
     reset: function() {
       for( var i in this.postFilters ) {
         this.postFilters[i].reset();
@@ -55,15 +56,27 @@ var PostFiltersView = Backbone.View.extend(
   render: function(platforms) {
 
     this.setWidgets();
+    var render = false;
     $(this.el).accordion("destroy");
-    $(this.el).empty().append( jQuery('<h3><a href="#">Filter by platform</a></h3>'));
+    $(this.el).empty();
     var d = jQuery('<div/>');
+    var u = jQuery('<ul/>');
     for ( var i in this.widgets ) {
       if( -1 != _.indexOf( platforms, this.widgets[i].name )) {
-        d.append( this.widgets[i].render().el );
+        u.append( jQuery('<li/>').append( this.widgets[i].render().el) );
+        render = true;
       } 
     }
-    $(this.el).append(d).accordion();
+    if ( render ) {
+      var r = jQuery('<button/>').click( jQuery.proxy( function(e) {
+        this.model.reset();
+ 
+      }, this ) ).button( { icons: { primary: 'ui-icon-refresh'}, label: 'Reset all filters'});
+
+      d.append(u);
+      d.append(r);
+      $(this.el).append( jQuery('<h3><a href="#">Filter by platform</a></h3>')).append(d).accordion();
+    }
     return this;
   }
 
@@ -148,6 +161,7 @@ var PlatformFacetView = BaseWidget.extend( {
 var AlosFacet = PlatformFacet.extend(
   {
     name: "ALOS",
+    platform: 'ALOS',
     defaults: {
       path: null,
       frame: null,
@@ -209,7 +223,6 @@ var AlosFacet = PlatformFacet.extend(
 
 var AlosFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
-  id: "platform_facet",
   tagName: "form",
 
   events: { 
@@ -217,6 +230,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
+    this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
     this.model.clear( { silent: true });
@@ -231,7 +245,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       direction: direction,
       path: path,
       frame: frame
-    });
+    }, { silent: true });
   },
   beamModes: [
     {
@@ -324,7 +338,7 @@ var AlosFacetButton = PlatformFacetView.extend( {
     $(this.el).button(
       {
         icons: {
-          secondary: "ui-icon-zoomin"
+          primary: "ui-icon-zoomin"
         },
         label: this.name
       }
@@ -373,12 +387,13 @@ var RadarsatFacet = PlatformFacet.extend(
         'ST7'
       ]
     },
+    platform: 'RADARSAT-1',
     name: "RADARSAT-1",
     getWidget: function() {
       return new RadarsatFacetButton({model: this});
     },
     filter: function( d ) {
-  var f = this.toJSON();
+      var f = this.toJSON();
       
       // only do filtering on this platform
       var a = _.select( d, function(row) {
@@ -433,7 +448,7 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
     $(this.el).button(
       {
         icons: {
-          secondary: "ui-icon-zoomin"
+          primary: "ui-icon-zoomin"
         },
         label: "RADARSAT-1"
       }
@@ -446,13 +461,13 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
                                            
 var RadarsatFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
-  id: "platform_facet",
   tagName: "form",
   events: {
    "change input" : "changed",
   },
   initialize: function() {
     this.render();
+    this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
     this.model.clear( { silent: true });
@@ -467,9 +482,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       direction: direction,
       path: path,
       frame: frame
-    });
-
-    console.log(this.model.toJSON());
+    }, { silent: true });
   },
   beamModes: [
     { title: "Extended High Incidence Beam, Off-Nadir 52-58&deg;",
@@ -549,6 +562,135 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       resizable: false,
       title: "RADARSAT-1 Platform Options",
       position: [40,110],
+      buttons: {
+        "Cancel": function() { $(this).dialog('close'); },
+        "Reset": jQuery.proxy( function() {
+          this.model.reset();
+          this.render();
+        }, this),
+        "Filter": function() { SearchApp.searchResults.filter(); }
+      }
+    });
+  }
+}
+);
+
+var LegacyFacet = PlatformFacet.extend(
+  {
+    platform: null, // to be specified by child classes
+    defaults: {
+      path: null,
+      frame: null,
+      direction: 'any'
+    },
+    initialize: function(d) {
+      this.platform = d.platform;
+      this.offset = d.offset;
+    },
+    getWidget: function() {
+      return new LegacyFacetButton({model: this});
+    },
+    filter: function( d ) {
+      var f = this.toJSON();
+      
+      var p = this.platform;
+      // only do filtering on this platform
+      var a = _.select( d, function(row) {
+        return ( p == row.PLATFORM );
+      });
+      d = _.reject( d, function(row) {
+        return ( p == row.PLATFORM );
+      });
+
+      a = _.reject( a, function(row) {
+        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
+      });
+
+      if( f.frame ) {
+        var frames = this.buildArrayFromString(f.frame);
+        a = _.reject( a, function(row) {
+          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
+        });
+      }
+
+      if( f.path ) {
+        var paths = this.buildArrayFromString(f.path);
+        a = _.reject( a, function(row) {
+          return ( -1 == _.indexOf( paths, row.ORBIT ) );
+        });
+      }
+
+      return _.union(a, d);
+    }
+  }
+);
+
+var LegacyFacetButton = PlatformFacetView.extend( {
+  tagName: "button",
+  initialize: function() {
+    this.name = this.model.platform;
+    _.bindAll(this, "render", "openDialog");
+  },
+  events: {
+    "click" : "openDialog"
+  },
+  openDialog: function(e) {
+    var v = new LegacyFacetDialog( { model: this.model } );
+  },
+  render: function() {
+    $(this.el).button(
+      {
+        icons: {
+          primary: "ui-icon-zoomin"
+        },
+        label: this.model.platform
+      }
+    );
+
+    return this;
+ 
+  }
+});
+                                           
+var LegacyFacetDialog = PlatformFacetView.extend( {
+  className: "platformFacet",
+  tagName: "form",
+  events: {
+   "change input" : "changed",
+  },
+  initialize: function() {
+    this.render();
+    this.model.bind( 'change', jQuery.proxy( this.render, this) );
+  },
+  changed: function(e) {
+    this.model.clear( { silent: true });
+    this.model.set({
+      direction: $(this.el).find('input[name="direction"]:checked').val(),
+      path: $(this.el).find('input[name="path"]').val(),
+      frame: $(this.el).find('input[name="frame"]').val()
+    }, { silent: true });
+  },
+ 
+  render: function() {
+    $(this.el).empty();
+
+    var d = new DirectionWidgetComponent( { model: this.model });
+    var fs = jQuery('<fieldset/>').html( jQuery('<legend>Flight Direction</legend>')).append(d.render().el);
+    $(this.el).append(fs);
+
+    var p = new PathFrameWidgetComponent( { model: this.model });
+    p.legend = 'Orbit/Frame';
+    p.pathLabel = 'Orbit';
+
+    $(this.el).append( p.render().el );
+
+    $(this.el).dialog({
+      width: 300,
+      modal: false,
+      draggable: true,
+      resizable: false,
+      title: this.model.platform + " Platform Options",
+      position: [50 + this.model.offset, 120 + this.model.offset ],
       buttons: {
         "Cancel": function() { $(this).dialog('close'); },
         "Reset": jQuery.proxy( function() {

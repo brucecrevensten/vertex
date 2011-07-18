@@ -160,7 +160,8 @@ var SearchResultsView = Backbone.View.extend(
   },
   getPlatformRowTemplate: function( p ) {
     switch(p) {
-      case 'ALOS': return '\
+      case 'ALOS':
+        return '\
   <img src="<%= THUMBNAIL %>" title="<%= GRANULENAME %>" />\
   <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span><%= BEAMMODETYPE %></span></h4>\
   <div>\
@@ -169,7 +170,8 @@ var SearchResultsView = Backbone.View.extend(
   </div>\
   <div style="clear: both"></div>\
 ';
-      case 'RADARSAT-1': return '\
+        break;
+      default: return '\
  <img src="<%= THUMBNAIL %>" title="<%= GRANULENAME %>" />\
   <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span><%= BEAMMODETYPE %></span></h4>\
   <div>\
@@ -178,7 +180,6 @@ var SearchResultsView = Backbone.View.extend(
   </div>\
   <div style="clear: both"></div>\
 ';
-      default: return '';
     }
   },
   render: function() {
@@ -198,9 +199,7 @@ var SearchResultsView = Backbone.View.extend(
 
       li = jQuery('<li/>').attr('product_id', d.id);
 
-      li.append(
-        _.template( this.getPlatformRowTemplate( d.PLATFORM) , d )
-      );
+      li.append( _.template( this.getPlatformRowTemplate( d.PLATFORM) , d ) );
 
       li.find('img').error( function() { $(this).remove(); });
 
@@ -236,7 +235,7 @@ var SearchResultsView = Backbone.View.extend(
 
   },
   renderOnMap: function() {
-    console.log('rendering frames on map');
+
     e = this.collection.at(0).toJSON();
     this.leastLat = Math.min( e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
     this.mostLat = Math.max( e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
