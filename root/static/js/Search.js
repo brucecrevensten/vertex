@@ -103,18 +103,11 @@ var BaseFilter = Backbone.Model.extend(
 var GeographicFilter = BaseFilter.extend(
 {
   name: "GeographicFilter",
-  
-  // We'll maintain a naive kind of bounding box inside this object, which is
-  // updated whenever the model is changed, to avoid splitting/joining outside
-  // of this model.
-  swLat: 63.78,
-  swLon: -149.46,
-  neLat: 65.56,
-  neLon: -145.96,
-  
+
+  markers: new Array(),
+
   defaults: {
-    // bounding box in W, N, E, S order
-    bbox:"-149.46,65.56,-145.96,63.78"
+    bbox: "",
   },
   getWidget: function() {
     return new GeographicWidget({model:this});
@@ -125,14 +118,22 @@ var GeographicFilter = BaseFilter.extend(
   },
 
   calculateCoordinates: function(e) {
-    
     var bbox = this.get('bbox').split(/,/);
     this.swLat = Math.min(bbox[1], bbox[3]);
     this.swLon = Math.min(bbox[0], bbox[2]);
     this.neLat = Math.max(bbox[1], bbox[3]);
     this.neLon = Math.max(bbox[0], bbox[2]);
+  },
 
+  reset: function() {
+    for(var ii = 0; ii < this.markers.length; ii++) {
+      this.markers[ii].setMap(null);
+      delete this.markers[ii];
+    }
+    this.markers = new Array();
+    this.set({ "bbox": ""});
   }
+
 }
 );
 
@@ -141,6 +142,7 @@ var GeographicWidget = BaseWidget.extend(
   title: "Geographic Region",
   titleId: "geographic_widget_title",
   id: "geographic_widget",
+  clickListener: null,
   
   initialize: function() {
     _.bindAll(this, 'changed')
@@ -163,9 +165,13 @@ var GeographicWidget = BaseWidget.extend(
 <p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South.  Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
+<button class="ui-button ui-widget ui-state-default ui-corner-all" id="ClearBbox">Clear</button>\
 ', this.model.toJSON())
     );
     this.renderMap();
+    var clearButton = $(this.el).find('#ClearBbox').bind('click',
+      jQuery.proxy(this.clear, this));
+
     return this;
   },
 
@@ -173,31 +179,38 @@ var GeographicWidget = BaseWidget.extend(
 
     initMap();
 
-    this.searchAreaOverlay.setMap(searchMap);
-    this.searchAreaOverlay.setBounds(new google.maps.LatLngBounds(
-        new google.maps.LatLng(this.model.swLat, this.model.swLon),
-        new google.maps.LatLng(this.model.neLat, this.model.neLon)
-    ));
-    
-    this.searchAreaSWMarker.setMap(searchMap);
-    this.searchAreaSWMarker.setPosition( new google.maps.LatLng(this.model.swLat, this.model.swLon) );
-    this.searchAreaNEMarker.setMap(searchMap);
-    this.searchAreaNEMarker.setPosition( new google.maps.LatLng(this.model.neLat, this.model.neLon) );
-
     var selfref = this; //needed for the events below, as 'this' does not obtain closure
-    google.maps.event.addListener(this.searchAreaSWMarker, 'drag', function() {
-      selfref.updateSearchAreaOverlay();
-    });
-    google.maps.event.addListener(this.searchAreaNEMarker, 'drag', function() {
-      selfref.updateSearchAreaOverlay();
-    });
-    google.maps.event.addListener(this.searchAreaSWMarker, 'dragend', function() {
-      selfref.updateWidgetFromOverlay();
-    });
-    google.maps.event.addListener(this.searchAreaNEMarker, 'dragend', function() {
-      selfref.updateWidgetFromOverlay();
-    });
-    searchMap.fitBounds(this.searchAreaOverlay.getBounds());
+    if(this.clickListener == null) {
+      this.clickListener = google.maps.event.addListener(searchMap, 'click', function(event) {
+        if(selfref.model.markers.length >= 2) { return; }
+        var marker = new google.maps.Marker({
+          position: event.latLng,
+          map: searchMap,
+          draggable: true
+        });
+        google.maps.event.addListener(marker, 'drag', function() {
+          selfref.updateSearchAreaOverlay();
+        });
+        google.maps.event.addListener(marker, 'dragend', function() {
+          selfref.updateWidgetFromOverlay();
+        });
+        selfref.model.markers.push(marker);
+        if(selfref.model.markers.length == 2) {
+          selfref.updateSearchAreaOverlay();
+          selfref.updateWidgetFromOverlay();
+        }
+      });
+    }
+
+    this.searchAreaOverlay.setMap(searchMap);
+    if(this.model.markers.length == 2) {
+      this.searchAreaOverlay.setBounds(new google.maps.LatLngBounds(
+        this.model.markers[0].getPosition(), this.model.markers[1].getPosition()
+      ));
+      //searchMap.fitBounds(this.searchAreaOverlay.getBounds());
+    } else {
+      this.searchAreaOverlay.setBounds(null);
+    }
 
     return this;
   },
@@ -212,17 +225,9 @@ var GeographicWidget = BaseWidget.extend(
     zIndex: 500 //always be below the granule overlays, which start at 1000
   }), 
 
-  searchAreaSWMarker : new google.maps.Marker({
-    draggable: true
-  }),
-
-  searchAreaNEMarker : new google.maps.Marker({
-    draggable: true
-  }),
-
   updateSearchAreaOverlay: function() {
-    var sw = this.searchAreaSWMarker.getPosition();
-    var ne = this.searchAreaNEMarker.getPosition();
+    var sw = this.model.markers[0].getPosition();
+    var ne = this.model.markers[1].getPosition();
     var w = Math.min(sw.lng(), ne.lng()).toFixed(2);
     var s = Math.min(sw.lat(), ne.lat()).toFixed(2);
     var e = Math.max(sw.lng(), ne.lng()).toFixed(2);
@@ -249,7 +254,14 @@ var GeographicWidget = BaseWidget.extend(
     var data = {};
     data[target.attr('name')] = target.attr('value');
     this.model.set(data);
+  },
+
+  clear: function() {
+    this.model.reset();
+    $('#filter_bbox').val('');
+    this.searchAreaOverlay.setBounds(null);
   }
+
 }
 );
 
