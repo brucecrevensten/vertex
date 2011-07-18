@@ -13,6 +13,13 @@ use base 'URSA2::Model::DBI::Proxy';
 
 __PACKAGE__->config();
 
+my $session;
+
+BEGIN {
+  $session = CGI::Session->new();
+}
+
+
 =item authenticate
 
 Accepts username and password, attempts authentication against
@@ -67,7 +74,6 @@ sub authorize {
 
 sub datapool_session_cookie {
   my ($self, $userid, $ip_address) = @_;
-  my $session = 0;
   my $cookie = 0;
 
   eval {
