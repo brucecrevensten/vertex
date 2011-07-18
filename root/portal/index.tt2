@@ -118,49 +118,57 @@
 
   <footer>
     <div id="centerer">
-    <div>
-      <h2>ASF * Alaska Satellite Facility</h2>
-      <ul>
-        <li><a href="/about">Location</a></li>
-        <li><a href="/contact">User Support Office</a></li>
-        <li><a href="/about">About Us</a></li>
-      </ul>
-    </div>
+      <div>
+        <h2>ASF * Alaska Satellite Facility</h2>
+        <ul>
+          <li><a href="/about">Location</a></li>
+          <li><a href="/contact">User Support Office</a></li>
+          <li><a href="/about">About Us</a></li>
+        </ul>
+      </div>
 
-    <div>
-    <h2>ASF Programs</h2>
-    <ul>
-      <li><a href="/program/sdc" title="">SAR Data Center</a></li>
-      <li><a href="/program/asfe" title="">ASF Enterprise</a></li>
-      <li><a href="/program/stgs" title="">Satellite Tracking Ground Station</a></li>
-      <li><a href="/program/gdc" title="">GeoData Center</a></li>
-    </ul>
-    </div>
+      <div>
+        <h2>ASF Programs</h2>
+        <ul>
+          <li><a href="/program/sdc" title="">SAR Data Center</a></li>
+          <li><a href="/program/asfe" title="">ASF Enterprise</a></li>
+          <li><a href="/program/stgs" title="">Satellite Tracking Ground Station</a></li>
+          <li><a href="/program/gdc" title="">GeoData Center</a></li>
+        </ul>
+      </div>
 
-    <div>
-    <h2>ASF Support Resources</h2>
-    <ul>
-    <li><a href="/citation">Citation Information</a></li>
-    <li><a href="/contact">Contact Us</a></li>
-    <li><a href="/downloads/software_tools" title="">Software Tools</a></li>
-    <li><a href="/program/sdc/proposals" title="Submit a Proposal | Alaska Satellite Facility">Submit Proposal</a></li>
-    </ul>
-    </div>
+      <div>
+        <h2>ASF Support Resources</h2>
+        <ul>
+        <li><a href="/citation">Citation Information</a></li>
+        <li><a href="/contact">Contact Us</a></li>
+        <li><a href="/downloads/software_tools" title="">Software Tools</a></li>
+        <li><a href="/program/sdc/proposals" title="Submit a Proposal | Alaska Satellite Facility">Submit Proposal</a></li>
+        </ul>
+      </div>
 
-    <div>
-    <h2>Alaska Satellite Facility</h2>
-    <p>ASF Dataportal V[% c.config.version %]</p>
-    <p>
-    2011 &copy; Alaska Satellite Facility<br/>
-    Geophysical Institute<br/>
-    903 Koyukuk Dr.<br/>
-    P.O. Box 757320<br/>
-    Fairbanks, AK 99775-7320<br/>
-    Phone: (907) 474-6166<br/>
-    Fax: (907) 474-2665<br/>
-    Email: uso@asf.alaska.edu<br/>
-    </p>
-    </div>
+      <div>
+        <h2>Alaska Satellite Facility</h2>
+        <p>ASF Dataportal V0.0.68</p>
+        <p>
+        2011 &copy; Alaska Satellite Facility<br/>
+        Geophysical Institute<br/>
+        903 Koyukuk Dr.<br/>
+        P.O. Box 757320<br/>
+        Fairbanks, AK 99775-7320<br/>
+        Phone: (907) 474-6166<br/>
+        Fax: (907) 474-2665<br/>
+        Email: uso@asf.alaska.edu<br/>
+        </p>
+      </div>
+
+      <div>
+        <a href="http://www.nasa.gov"><img src="../static/images/nasa-logo.png"></a>
+        <a href="http://www.uaf.edu"><img src="../static/images/uaf-logo.png"></a>
+        <br />
+        <a href="http://www.gi.alaska.edu"><img src="../static/images/gi-logo.png"></a>
+        <a href="http://www.asf.alaska.edu"><img src="../static/images/asflogo-footer.png"></a>
+      </div>
 
     </div>
   </footer>
