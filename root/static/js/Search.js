@@ -169,8 +169,7 @@ var GeographicWidget = BaseWidget.extend(
 ', this.model.toJSON())
     );
     this.renderMap();
-    var clearButton = $(this.el).find('#ClearBbox').bind('click',
-      jQuery.proxy(this.clear, this));
+    $(this.el).find('#ClearBbox').bind('click', jQuery.proxy(this.clear, this));
 
     return this;
   },
