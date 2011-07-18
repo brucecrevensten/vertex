@@ -108,7 +108,7 @@ $(function() {
     initMap('searchMap');
  
     this.user = new User();
-    this.userLoginView = new UserLoginView( { model: this.user, el: $('#user_auth_submit') } );
+    this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
     this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
     this.userLoginButton.render();
   
@@ -128,4 +128,13 @@ $(function() {
   });
   
   window.SearchApp = new SearchAppView;
+
+	// Instead of using serialzeArray() we can use serializeJSON to return JSON formatted form data. 
+	$.fn.serializeJSON=function() {
+		var json = {};
+		jQuery.map($(this).serializeArray(), function(n, i){
+			json[n['name']] = n['value'];
+		});
+		return json;
+	};
 });

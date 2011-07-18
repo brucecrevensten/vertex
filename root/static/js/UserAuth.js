@@ -12,7 +12,11 @@ var User = Backbone.Model.extend(
 			this.widgetRenderer = this.getWidgetRenderer();
 		},
 		
-		authenticate: function(attrs) {		
+		authenticate: function(attrs) {	
+			console.log("Authenticating");
+			console.log(this);
+			console.log(this.get('userid'));
+			
 			$.ajax({
 				type: "POST",
 				url: AsfDataportalConfig.authUrl,
@@ -20,15 +24,19 @@ var User = Backbone.Model.extend(
 				dataType: "json",
 				context: this,
 				success: function(data, textStatus, jqXHR) {
-					this.model.set('authenticated', true);
-					this.model.set('authType', data.authType);
+					console.log("Success");
+					this.set( {'authenticated': true, 'authType': data.authType} );
 					this.widgetRenderer = this.getWidgetRenderer();
+					
+					console.log(this);
 				},
 				error: function(error) {
-					this.model.set('authenticated', false);
+					console.log("There was an error");
+					this.set('authenticated', false);
 					console.log(error);
+					
 				}
-			});
+			}); 
 		},
 
 		getWidgetRenderer: function() {
@@ -47,12 +55,12 @@ var DefaultWidgetRenderer = Backbone.View.extend({});
 
 var UserLoginView = Backbone.View.extend(
 	{
+
 		initialize: function() {
 			_.bindAll(this, "render");
 	    },
 		
 		render: function() {
-		    
 			$( "#login_dialog" ).dialog({
 				draggable: false,
 				resizable: false,				
@@ -60,23 +68,24 @@ var UserLoginView = Backbone.View.extend(
 				width: 350,
 				modal: true,
 				buttons: {
-					"Login":  function() {
-						this.model.set( $(this.el).serializeArray() );
-						this.model.authenticate();
-						if( true == this.model.get('authenticated')) {
-							$( this ).dialog( "close");
-						} else {
-							// update with error message
-						}       
-					},
 					"Register": function(){
 						window.open('http://www.asf.alaska.edu/program/sdc/proposals');
   						return false;
 					},
 					"Cancel" : function() {
 						$( this).dialog('close');
-					}
-					
+					},
+					"Login": jQuery.proxy( function() {
+						this.model.set($(this.el).find('form').serializeJSON());
+						this.model.authenticate();
+						
+						if( true == this.model.get('authenticated')) {
+							$( this ).dialog( "close");
+						} else {
+							console.log("User name and/or password is incorrect");
+				//			// update with error message
+						}       
+					}, this)
 				}
 			});
 		    return this;
