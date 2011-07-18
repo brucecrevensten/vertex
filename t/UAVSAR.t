@@ -71,8 +71,8 @@ is($mech->status(), Apache2::Const::HTTP_BAD_REQUEST,
 # set TEST_DATABASE=1 to run these tests.
 ################
 SKIP: {
-  skip 'Skipping tests requiring a database connection.', 2,
-    unless $ENV{'TEST_DATABASE'};
+  skip 'Skipping tests requiring a database connection.', 2;
+  #  unless $ENV{'TEST_DATABASE'};
   $mech->post($surn, { 'platform' => $platform, 'beam' => join(',', @beams),
     'processing' => join(',', @processing), 'format' => 'count'});
   cmp_ok($mech->content(), '>', '0', 'Find UAVSAR scenes through API');
