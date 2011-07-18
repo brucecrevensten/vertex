@@ -60,13 +60,6 @@ var UserLoginView = Backbone.View.extend(
 				width: 350,
 				modal: true,
 				buttons: {
-					"Register": function(){
-						window.open('http://www.asf.alaska.edu/program/sdc/proposals');
-  						return false;
-					},
-					"Cancel" : function() {
-						$( this).dialog('close');
-					},
 					"Login":  function() {
 						this.model.set( $(this.el).serializeArray() );
 						this.model.authenticate();
@@ -75,7 +68,15 @@ var UserLoginView = Backbone.View.extend(
 						} else {
 							// update with error message
 						}       
+					},
+					"Register": function(){
+						window.open('http://www.asf.alaska.edu/program/sdc/proposals');
+  						return false;
+					},
+					"Cancel" : function() {
+						$( this).dialog('close');
 					}
+					
 				}
 			});
 		    return this;
