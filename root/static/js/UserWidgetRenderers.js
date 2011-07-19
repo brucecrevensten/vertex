@@ -1,5 +1,19 @@
 var UnrestrictedWidgetRenderer = Backbone.View.extend({
 
+  restrictedBrowseNote: '<div class="ui-widget">\
+        <div class="ui-state-highlight ui-corner-all" style="padding: 1em;">\
+          <p><span class="ui-icon ui-icon-info" style="float: left; position: relative; top: -2px; margin-right: .3em;"></span>\
+          This granule has a restricted browse product, and you must log in to view it.</p>\
+        </div>\
+      </div>',
+
+  restrictedProductNote: '<div class="ui-widget">\
+        <div class="ui-state-highlight ui-corner-all" style="padding: 1em;">\
+          <p><span class="ui-icon ui-icon-info" style="float: left; position: relative; top: -2px; margin-right: .3em;"></span>\
+          This granule&rsquo;s products are restricted, and you must log in to download them.</p>\
+        </div>\
+      </div>',
+
 	// Returns Product Profile browse image
   _ppBrowse: function( m ) {
 		// Try to use the BROWSE512
@@ -23,66 +37,94 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
     return t;
 	},
 	ppBrowse: function( m ) {
-		if ( 'RADARSAT-1' == m.get('PLATFORM') ) {
-			return '<div class="ui-widget">\
-				<div class="ui-state-highlight ui-corner-all" style="padding: 1em;">\
-					<p><span class="ui-icon ui-icon-info" style="float: left; position: relative; top: -2px; margin-right: .3em;"></span>\
-					This image has a restricted browse product, and you must log in to view it.</p>\
-				</div>\
-			</div>';
+		if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM') ) {
+			return this.restrictedBrowseNote;
 		} else {
 			return this._ppBrowse(m);
 		}
 	},
-	ppFileList: function( m ) {}
+	ppFileList: function( m ) {
+    if ( 'UAVSAR' == m.get('PLATFORM') ) {
+      return new DataProductFilesView( { collection: m.files } ).renderForProfile();
+    } else {
+      return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { collection: m.files } ).renderForProfile( { 'disabled': true }));
+    }
+  },
+  srThumbnail: function( m ) {
+    if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM')) {
+      return;
+    } else {
+      return _.template('<img src="<%= THUMBNAIL %>" />', m.toJSON());
+    }
+  }
 		
 });
 
-var ALOSUserWidgetRenderer = UnrestrictedWidgetRenderer.extend({
+var RestrictedWidgetRenderer = UnrestrictedWidgetRenderer.extend({
+    restrictedBrowseNote: '<div class="ui-widget">\
+        <div class="ui-state-highlight ui-corner-all" style="padding: 1em;">\
+          <p><span class="ui-icon ui-icon-info" style="float: left; position: relative; top: -2px; margin-right: .3em;"></span>\
+          This granule has a restricted browse product, and your account does not have permissions to view it.</p>\
+        </div>\
+      </div>',
 
-	ppFileList: function( m ) {
-		
-      var l = jQuery('<ul/>', { 'class': 'downloads'});
-      this.model.files.each( function(el, i, list) {
-        e = el.toJSON();
-        var li = jQuery('<li/>');
-        
-        li.append( jQuery('<a/>', {
-          'href': e.url,
-          'class': 'tool_download'
-        }).button( {
-          icons: {
-            primary: "ui-icon-circle-arrow-s"
-          },
-          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
-        }) );
+  restrictedProductNote: '<div class="ui-widget">\
+        <div class="ui-state-highlight ui-corner-all" style="padding: 1em;">\
+          <p><span class="ui-icon ui-icon-info" style="float: left; position: relative; top: -2px; margin-right: .3em;"></span>\
+          This granule&rsquo;s products are restricted, and your account does not have permissions to download them.</p>\
+        </div>\
+      </div>',
+});
 
-        li.append( jQuery('<button>Add to queue</button>', {
-          'class': 'tool_enqueuer',
-          'title': 'Add to download queue'
-        }).attr('product_id', e.productId).attr('product_file_id', e.id).click( function(e) {
-          if ( $(this).prop('selected') == 'selected' ) {
-            $(this).toggleClass('tool-dequeue');
-            $(this).prop('selected','false');
-            SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
-            $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
-          } else {
-            $(this).toggleClass('tool-dequeue');
-            $(this).prop('selected','selected');
-            SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
-            $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
-          }
-        }).button(
-          {
-            icons: {
-              primary: "ui-icon-circle-plus"
-            },
-            text: false
-          }
-        ));
-        l.append(li);
-      });
-      return l;
+var AlosUserWidgetRenderer = RestrictedWidgetRenderer.extend({
+  
+  ppFileList: function( m ) {
+    if( 'ALOS' == m.get('PLATFORM') || 'UAVSAR' == m.get('PLATFORM')) {
+      return new DataProductFilesView( { collection: m.files } ).renderForProfile();
+    } else {
+      return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { collection: m.files } ).renderForProfile( { 'disabled': true }));
+    }
 	}
 });
 
+var LegacyUserWidgetRenderer = RestrictedWidgetRenderer.extend({
+
+  ppBrowse: function( m ) {
+      return this._ppBrowse(m);
+  },
+  
+  ppFileList: function( m ) {
+    if( 'RADARSAT-1' == m.get('PLATFORM')
+      || 'JERS-1' == m.get('PLATFORM')
+      || 'ERS-1' == m.get('PLATFORM')
+      || 'ERS-2' == m.get('PLATFORM')
+      || 'UAVSAR' == m.get('PLATFORM')
+    ) {
+      return new DataProductFilesView( { collection: m.files } ).renderForProfile();
+    } else {
+      return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { collection: m.files } ).renderForProfile( { 'disabled': true }));
+    }
+  },
+
+  srThumbnail: function( m ) {
+      return _.template('<img src="<%= THUMBNAIL %>" />', m.toJSON());
+  }
+
+});
+
+
+var UniversalUserWidgetRenderer = UnrestrictedWidgetRenderer.extend({
+
+  ppBrowse: function( m ) {
+    return this._ppBrowse(m);
+  },
+  
+  ppFileList: function( m ) {
+    return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { collection: m.files } ).renderForProfile( { 'disabled': true }));
+  },
+
+  srThumbnail: function( m ) {
+    return _.template('<img src="<%= THUMBNAIL %>" />', m.toJSON());
+  }
+
+});
