@@ -183,11 +183,28 @@ sub authentication :Local {
     } else {
 		my $auth_type ="UNRESTRICTED";
 		$auth_type = $c->model('User')->authorize($r->userid);	
-        $c->res->body($auth_type);
+		$c->response->content_type('application/json; charset=utf-8');
+        $c->res->body( '{"authType":"'.$auth_type.'"}' );
+	    
     }
   }
 
 }
+
+
+
+sub destroy_session :Local {
+  my ( $self, $c ) = @_;
+	$c->request->cookies->{value} = undef;
+	$c->res->body("Logged Out");
+  #	open FILE, ">/tmp/file_out_2.txt";
+#	use Data::Dumper;
+#	print FILE "GOT HERE!\n";
+#	print FILE "" . Dumper($c->request->cookies);
+#	close FILE;
+	
+}
+
 
 =head2 Feedback
 

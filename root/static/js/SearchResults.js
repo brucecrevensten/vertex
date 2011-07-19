@@ -118,6 +118,10 @@ var SearchResultsView = Backbone.View.extend(
     return _.template('<h3><%= length %> results found</h3>', this.collection);
   },
 
+  events: {
+	'authSuccess':'render'
+  },
+
   showResults: function() {
 
     $('#async-spinner').hide();

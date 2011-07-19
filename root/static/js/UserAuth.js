@@ -32,7 +32,31 @@ var User = Backbone.Model.extend(
 				},
 				error: function(error) {
 					console.log("There was an error");
+					//this.set('authenticated', true);
+					console.log(error);
+					
+				}
+			}); 
+		},
+		
+		logout: function(attrs) {	
+			console.log("Logging Out");
+		
+			$.ajax({
+				type: "POST",
+				url: AsfDataportalConfig.logoutUrl,
+				data: { },//userid: this.get('userid'), password: this.get('password') },
+				dataType: "json",
+				context: this,
+				success: function(data, textStatus, jqXHR) {
+					console.log("Success");
 					this.set('authenticated', false);
+					this.trigger('authSuccess');
+				},
+				error: function(error) {
+					console.log("There was an error");
+					this.set('authenticated', false);
+					this.trigger('authSuccess');
 					console.log(error);
 					
 				}
@@ -40,11 +64,11 @@ var User = Backbone.Model.extend(
 		},
 
 		getWidgetRenderer: function() {
-			switch( this.get('authType')) {
-				case 'UNIVERSAL': return new UniversalWidgetRenderer( { model: this.model } );
-				case 'ALOS': return new AlosWidgetRenderer( { model: this.model } );
-				case 'LEGACY': return new LegacyWidgetRenderer( { model: this.model } );
-				default: return new UnrestrictedWidgetRenderer( { model: this.model } );
+			switch( this.get('authType')) {							
+				case 'UNIVERSAL': console.log("GOT UNIVERSAL"); return new UniversalUserWidgetRenderer( { model: this.model } );
+				case 'ALOS': console.log("GOT ALOS");  return new AlosUserWidgetRenderer( { model: this.model } );
+				case 'LEGACY': console.log("GOT LEGACY"); return new LegacyUserWidgetRenderer( { model: this.model } );
+				default: console.log("GOT UNRESTRICTED");  return new UnrestrictedWidgetRenderer( { model: this.model } );
 			}
 		}
 	}
@@ -83,6 +107,10 @@ var UserLoginView = Backbone.View.extend(
 							$( '#login_dialog').dialog( "close");
 				 			// update with error message
 						}       
+					}, this),
+					"Logout": jQuery.proxy( function() {
+						this.model.logout();
+						$( '#login_dialog' ).dialog( "close");
 					}, this)
 				}
 			});
