@@ -45,19 +45,22 @@ var DirectionWidgetComponent = BaseWidget.extend(
     },
 
     changed: function(evt) {
-      this.model.set( { direction: evt.currentTarget.value } );
+      this.model.set( { direction: evt.currentTarget.value },
+        { silent: true } );
     },
 
     render: function() {
       var f = "";
       var checked = this.model.toJSON()["direction"];
+      var rowData;
       for( var key in this.directionTypes ) {
          rowData = {
+          id: this.model.cid,
           name: this.directionTypes[key],
           value: key,
           ifChecked: ( checked == key ) ? 'checked="checked"' : ''
          };
-         f = f + _.template('<label for="filter_direction_<%= name %>"><%= name %></label><input type="radio" id="filter_direction_<%= name %>" value="<%= value %>" name="direction" <%= ifChecked %>>', rowData);
+         f = f + _.template('<label for="filter_direction_<%= name %>_<%= id %>"><%= name %></label><input type="radio" id="filter_direction_<%= name %>_<%= id %>" value="<%= value %>" name="direction" <%= ifChecked %>>', rowData);
       }
       $(this.el).addClass('directionSelector').html( '<ul>'+f+'</ul>' ).buttonset();
     
