@@ -18,15 +18,19 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>filter_bbox</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
 	<td>w,n,s,e</td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#geographic_widget.ui-accordion-content input#filter_bbox.invalid</td>
+	<td>click</td>
+	<td>id=triggerSearch</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>verifyElementPresent</td>
+	<td>css=html body div#wrapper div#contents div#rightColumn div.ui-widget div#error-message.ui-state-error</td>
+	<td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

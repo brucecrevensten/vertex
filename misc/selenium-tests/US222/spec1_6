@@ -17,6 +17,16 @@
 	<td></td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-148.70,64.35,-146.48,65.22</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>login_button</td>
 	<td></td>

@@ -17,71 +17,85 @@
 	<td></td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-148.70,64.35,-146.48,65.22</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='platform_facets']/button</td>
+	<td>link=Filter by platform</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='platform_facets']/button</td>
+	<td>//div[@id='platform_facets']/div/ul/li/button</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=html body div.ui-dialog form#platform_facet.platformFacet h5</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5</td>
 	<td>FBS (Fine Beam Single Polarization)</td>
 </tr>
 <tr>
-	<td>verifyNotChecked</td>
-	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_FBS.checkbox input#a3_FBS_21_5</td>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS21_5.beamSelector</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyNotChecked</td>
-	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_FBS.checkbox input#a3_FBS_34_3.ui-helper-hidden-accessible</td>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS34_3.beamSelector</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyNotChecked</td>
-	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_FBS.checkbox input#a3_FBS_41_5.ui-helper-hidden-accessible</td>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS41_5.beamSelector</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS50_8.beamSelector</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//form[@id='platform_facet']/h5[2]</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5[2]</td>
 	<td>FBD (Fine Beam Double Polarization)</td>
 </tr>
 <tr>
-	<td>verifyNotChecked</td>
-	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_FBD.checkbox input#a3_FBD_34_3.ui-helper-hidden-accessible</td>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBD.beamSelector input#a3_FBD_FBD34_3.beamSelector</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//form[@id='platform_facet']/h5[3]</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5[3]</td>
 	<td>PLR (Polarimetric Mode)</td>
 </tr>
 <tr>
-	<td>verifyNotChecked</td>
-	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_PLR.checkbox input#a3_PLR_21_5.ui-helper-hidden-accessible</td>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_PLR.beamSelector input#a3_PLR_PLR21_5.beamSelector</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyNotChecked</td>
-	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_PLR.checkbox input#a3_PLR_23_1.ui-helper-hidden-accessible</td>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_PLR.beamSelector input#a3_PLR_PLR23_1.beamSelector</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>//form[@id='platform_facet']/h5[4]</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5[4]</td>
 	<td>WB1 (ScanSAR Burst Mode 1)</td>
 </tr>
 <tr>
-	<td>verifyNotChecked</td>
-	<td>css=html body div.ui-dialog form#platform_facet.platformFacet div#a3_WB1.checkbox input#a3_WB1_27_1.ui-helper-hidden-accessible</td>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_WB1.beamSelector input#a3_WB1_WB127_1.beamSelector</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

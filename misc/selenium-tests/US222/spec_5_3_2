@@ -13,75 +13,64 @@
 </thead><tbody>
 <tr>
 	<td>verifyAttribute</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li:nth-child(1) label@for</td>
+	<td>css=div#leftColumn div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(1) div.composite_checkbox_wrapper label@for</td>
 	<td>*UAVSAR</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li:nth-child(2) label@for</td>
+	<td>css=div#leftColumn div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(2) div.composite_checkbox_wrapper label@for</td>
 	<td>*ALOS</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li:nth-child(3) label@for</td>
-	<td>*Radarsat-1</td>
+	<td>css=div#leftColumn div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(3) div.composite_checkbox_wrapper label@for</td>
+	<td>*RADARSAT-1</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li:nth-child(4) label@for</td>
+	<td>css=div#leftColumn div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(4) div.composite_checkbox_wrapper label@for</td>
 	<td>*ERS-1</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li:nth-child(5) label@for</td>
+	<td>css=div#leftColumn div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(5) div.composite_checkbox_wrapper label@for</td>
 	<td>*ERS-2</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li:nth-child(6) label@for</td>
+	<td>css=div#leftColumn div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(6) div.composite_checkbox_wrapper label@for</td>
 	<td>*JERS-1</td>
 </tr>
 <tr>
-	<td>verifyAttribute</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li:nth-child(7) label@for</td>
-	<td>*AIRSAR</td>
-</tr>
-<tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li(1) label input#filter_platform_UAVSAR[value='UA']</td>
+	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(1) div.composite_checkbox_wrapper input#pf_UAVSAR</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li(2) label input#filter_platform_ALOS[value='A3']</td>
+	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(2) div.composite_checkbox_wrapper input#pf_ALOS</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li(3) label input#filter_platform_Radarsat-1[value='R1']</td>
+	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(3) div.composite_checkbox_wrapper input#pf_RADARSAT-1</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li(4) label input#filter_platform_ERS-1[value='E1']</td>
+	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(4) div.composite_checkbox_wrapper input#pf_ERS-1</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li(5) label input#filter_platform_ERS-2[value='E2']</td>
+	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(5) div.composite_checkbox_wrapper input#pf_ERS-2</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li(6) label input#filter_platform_JERS-1[value='J1']</td>
+	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(6) div.composite_checkbox_wrapper input#pf_JERS-1</td>
 	<td></td>
 </tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content ul li(7) label input#filter_platform_AIRSAR[value='AS']</td>
-	<td></td>
-</tr>
-
 </tbody></table>
 </body>
 </html>
