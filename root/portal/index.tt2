@@ -44,10 +44,10 @@
 
 <div id="wrapper">
   <header>
-    <h1><span>ASF Dataportal</span></h1>
+    <a href="http://www.asf.alaska.edu"><img src="../static/images/asf-logo.png"></a>
     <div id="tools_menu">
-    <div id="queue_summary"></div>
-    <div id="user_tools"></div>
+      <div id="queue_summary"></div>
+      <div id="user_tools"></div>
     </div>
   </header>
 
@@ -162,6 +162,14 @@
     Email: uso@asf.alaska.edu<br/>
     </p>
     </div>
+
+      <div id="logos">
+        <a href="http://www.nasa.gov"><img src="../static/images/nasa-logo.png"></a>
+        <a href="http://www.uaf.edu"><img src="../static/images/uaf-logo.png"></a>
+        <br />
+        <a href="http://www.gi.alaska.edu"><img src="../static/images/gi-logo.png"></a>
+        <a href="http://www.asf.alaska.edu"><img src="../static/images/asflogo-footer.png"></a>
+      </div>
 
     </div>
   </footer>
