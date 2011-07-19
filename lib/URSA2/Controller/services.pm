@@ -181,7 +181,7 @@ sub authentication :Local {
     if($r->redirect) {
       $c->response->redirect($r->redirect);
     } else {
-		my $auth_type ="NOTHING YET";
+		my $auth_type ="UNRESTRICTED";
 		$auth_type = $c->model('User')->authorize($r->userid);	
         $c->res->body($auth_type);
     }
