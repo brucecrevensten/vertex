@@ -12,16 +12,10 @@
 <tr><td rowspan="1" colspan="3">spec_0_2</td></tr>
 </thead><tbody>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>css=html body div#wrapper header a@href</td>
+	<td>verifyAttribute</td>
+	<td>css=header a@href</td>
 	<td>http://www.asf.alaska.edu</td>
 </tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>css=html body div#wrapper header a@href</td>
-	<td>http://www.gi.alaska.edu</td>
-</tr>
-
 </tbody></table>
 </body>
 </html>
