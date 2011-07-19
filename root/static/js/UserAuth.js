@@ -75,12 +75,13 @@ var UserLoginView = Backbone.View.extend(
 					"Login": jQuery.proxy( function() {
 						this.model.set($(this.el).find('form').serializeJSON());
 						this.model.authenticate();
+					
 						
 						if( true == this.model.get('authenticated')) {
-							$( this ).dialog( "close");
+							$( '#login_dialog' ).dialog( "close");
 						} else {
-							console.log("User name and/or password is incorrect");
-				//			// update with error message
+							$( '#login_dialog').dialog( "close");
+				 			// update with error message
 						}       
 					}, this)
 				}
