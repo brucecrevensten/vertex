@@ -13,67 +13,53 @@ var DataProduct = Backbone.Model.extend({
 
 var DataProductView = Backbone.View.extend(
   {
-    initialize: function() {
-      
+    width: 500, // width of the rendered Product Profile; will be changed depending on missing image, etc
+    getTemplate: function() {
+      switch(this.model.PLATFORM) {
+        case 'ALOS': return '\
+<ul class="metadata">\
+<li><span>Processing type</span>: <%= PROCESSINGTYPE %></li>\
+<li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
+<li><span>Frame</span>: <%= FRAMENUMBER %></li>\
+<li><span>Path</span>: <%= PATHNUMBER %></li>\
+<li><span>Start time</span>: <%= STARTTIME %></li>\
+<li><span>End time</span>: <%= ENDTIME %></li>\
+<li><span>Faraday rotation</span>: <%= FARADAYROTATION %></li>\
+<li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
+<li><span>Off Nadir Angle</span>: <%= OFFNADIRANGLE %></li>\
+</ul>\
+';
+        case 'UAVSAR': return '\
+<ul class="metadata">\
+<li><span>Processing type</span>: <%= PROCESSINGTYPE %></li>\
+<li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
+<li><span>Start time</span>: <%= STARTTIME %></li>\
+<li><span>End time</span>: <%= ENDTIME %></li>\
+</ul>\
+';
+
+        default: return '\
+<ul class="metadata">\
+<li><span>Processing type</span>: <%= PROCESSINGTYPE %></li>\
+<li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
+<li><span>Frame</span>: <%= FRAMENUMBER %></li>\
+<li><span>Orbit</span>: <%= ORBIT %></li>\
+<li><span>Start time</span>: <%= STARTTIME %></li>\
+<li><span>End time</span>: <%= ENDTIME %></li>\
+<li><span>Faraday rotation</span>: <%= FARADAYROTATION %></li>\
+<li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
+</ul>\
+';
+
+      }
     },
     render: function() {
-      $(this.el).html(
-        _.template('\
-<img src="<%= BROWSE %>" />\
-<ul class="metadata">\
-<li>Processing type: <%= PROCESSINGTYPE %></li>\
-<li>Beam mode: <%= BEAMMODEDESC %></li>\
-<li>Frame: <%= FRAMENUMBER %></li>\
-<li>Path/Orbit: <%= PATHNUMBER %> / <%= ORBIT %></li>\
-<li>Start time: <%= STARTTIME %></li>\
-<li>End time: <%= ENDTIME %></li>\
-<li>Faraday rotation: <%= FARADAYROTATION %></li>\
-<li>Ascending/Descending: <%= ASCENDINGDESCENDING %></li>\
-<li>Off Nadir Angle: <%= OFFNADIRANGLE %></li>\
-</ul>\
-', this.model.toJSON())
-      );
-      var l = jQuery('<ul/>', { 'class': 'downloads'});
-      this.model.files.each( function(el, i, list) {
-        e = el.toJSON();
-        var li = jQuery('<li/>');
-        
-        li.append( jQuery('<a/>', {
-          'href': e.url,
-          'class': 'tool_download'
-        }).button( {
-          icons: {
-            primary: "ui-icon-circle-arrow-s"
-          },
-          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
-        }) );
 
-        li.append( jQuery('<button>Add to queue</button>', {
-          'class': 'tool_enqueuer',
-          'title': 'Add to download queue'
-        }).attr('product_id', e.productId).attr('product_file_id', e.id).click( function(e) {
-          if ( $(this).prop('selected') == 'selected' ) {
-            $(this).toggleClass('tool-dequeue');
-            $(this).prop('selected','false');
-            SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
-            $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
-          } else {
-            $(this).toggleClass('tool-dequeue');
-            $(this).prop('selected','selected');
-            SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
-            $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
-          }
-        }).button(
-          {
-            icons: {
-              primary: "ui-icon-circle-plus"
-            },
-            text: false
-          }
-        ));
-        l.append(li);
-      });
-      $(this.el).append(l);
+      var ur = SearchApp.user.getWidgetRenderer();
+      $(this.el).html( ur.ppBrowse( this.model ));
+      this.width = ur.ppWidth;
+      $(this.el).append( _.template( this.getTemplate(), this.model.toJSON()));      
+      $(this.el).append( ur.ppFileList( this.model ));
       return this;
 
     }

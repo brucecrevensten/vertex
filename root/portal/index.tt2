@@ -33,6 +33,7 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/PostFilters.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchResults.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/DownloadQueue.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/UserWidgetRenderers.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/UserAuth.js') %]"></script> 
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchApp.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/Feedback.js') %]"></script>

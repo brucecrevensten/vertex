@@ -180,10 +180,6 @@ label.hover {
 }
 
 
-#product_profile {
-  text-align: right
-}
-
 #product_profile ul {
   margin-top: 1ex;
   padding: 0 0 1em 1em;
@@ -199,6 +195,7 @@ label.hover {
 #product_profile li {
   margin: 1ex 0;
   text-indent: -1em;
+  text-align: left;
 }
 
 #product_profile img {

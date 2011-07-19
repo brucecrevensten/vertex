@@ -48,6 +48,7 @@ sub search :Path {
   $c->stats->profile( begin => 'search' );
   my $t = URSA2::Transformer->new();
 
+=cut
   $c->stats->profile('preparing to perform search...');
 
   eval {
@@ -98,9 +99,15 @@ sub search :Path {
     $t->transform( $c );
     $c->stats->profile('finished transformation.');
   };
-
-  my $e;
-  
+=cut
+  my $f;
+  {
+    local $/=undef;
+    open FILE, "r.jsonp" or die "Couldn't open file: $!";
+    $f = <FILE>;
+    close FILE;
+  }
+=cut
   if ( 
     ($e = Exception::Class->caught('MissingParameter'))
     || ($e = Exception::Class->caught('InvalidParameter'))
@@ -119,16 +126,20 @@ sub search :Path {
     $c->detach();
   } else {
     # processed ok
-
     #TODO: make this cleaner/wrap it up in SearchRequest/Transformer
     if( defined($c->request->param('format')) && 'jsonp' eq $c->request->param('format') ) {
-      $c->response->body( $c->request->param('callback').'('.$t->getOutput().')' );
+=cut
+      $c->response->body( $c->request->param('callback').'('.$f.')' );
+=cut
     } else {
       $c->response->body( $t->getOutput() );
     }
-    $c->response->content_type( $t->getContentType() );
+=cut
+    $c->response->content_type( 'text/javascript; charset=utf-8' );
     $c->response->header('Content-Disposition' => 'attachment; filename='.$t->getFilename);
+=cut
   }
+=cut
 }
 
 =head2 Authentication
@@ -181,49 +192,12 @@ sub authentication :Local {
     if($r->redirect) {
       $c->response->redirect($r->redirect);
     } else {
-      $c->res->body('authentication succeeded!  cookies being set...');
+	  my $authType = $c->model('User')->authorize($r->userid);
+	  $c->res->content_type("application/json");
+      $c->res->body('{"authType": ' . '"'.$authType .'"}');
     }
   }
 
-}
-
-=head2 Feedback
-
-Accept a comment and store it in the database.
-
-=cut
-
-sub feedback :Local {
-  my ( $self, $c ) = @_;
-  
-  my $r = URSA2::FeedbackRequest->factory( $c->request );
-  eval {
-    $r->decode();
-    $r->validate();
-
-    my $feedback = $c->model('Feedback');
-    $feedback->recordFeedback(
-      'userid'      => $r->{'userid'},
-      'name'        => $r->{'name'},
-      'email'       => $r->{'email'},
-      'comment'     => $r->{'comment'},
-      'ip_address'  => $c->req->address
-    );
-  };
-  my $e = $@;
-  if ( ( $e = Exception::Class->caught('MissingParameter') ) 
-    || ( $e = Exception::Class->caught('DbException') ) ) {
-      $e->dispatch($c);
-  } elsif($@) {
-    $e = Exception::Class->caught();
-    if ( ref $e ) {
-      $c->log->fatal( 'Uncaught exception in services controller: '.$e->description );
-    } else {
-      $c->log->fatal( 'Unhandled error in services controller: '.Dumper($@) );
-    }
-    $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
-    $c->detach();
-  }
 }
 
 =head2 end

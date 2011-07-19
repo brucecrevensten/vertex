@@ -191,26 +191,22 @@ var SearchResultsView = Backbone.View.extend(
       this.showNoResults();
       return this;
     }
+
     this.collection.each( function( e, i, l ) {
      
       d = e.toJSON();
-
       d['acquisitionDateText'] = $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', d.ACQUISITIONDATE));
-
       li = jQuery('<li/>').attr('product_id', d.id);
-
       li.append( _.template( this.getPlatformRowTemplate( d.PLATFORM) , d ) );
-
       li.find('img').error( function() { $(this).remove(); });
 
       v = new DataProductView( { model: e } );
-
       li.bind( "click", { id: e.id, view: v }, function(e) {
         $("#product_profile").html( e.data.view.render().el );
         $("#product_profile").dialog(
           {
             modal: true,
-            width: 900,
+            width: 'auto',
             draggable: false,
             resizable: false,
             title: e.data.id,
@@ -223,7 +219,6 @@ var SearchResultsView = Backbone.View.extend(
 
     }, this); // end iteration over collection
 
-    
     $('#searchResults li').live('mouseenter', { view: this }, this.toggleHighlight );
 
     this.showResults();

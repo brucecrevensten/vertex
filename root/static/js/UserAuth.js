@@ -40,18 +40,15 @@ var User = Backbone.Model.extend(
 		},
 
 		getWidgetRenderer: function() {
-			// if the model isn't available, default to a fallback
-			if ( typeof this.model == 'undefined' ) { return new DefaultWidgetRenderer(); }
-			
-			switch( this.model.get('authType')) {
-				default: return new DefaultWidgetRenderer( { model: this.model } );
+			switch( this.get('authType')) {
+				case 'UNIVERSAL': return new UniversalWidgetRenderer( { model: this.model } );
+				case 'ALOS': return new AlosWidgetRenderer( { model: this.model } );
+				case 'LEGACY': return new LegacyWidgetRenderer( { model: this.model } );
+				default: return new UnrestrictedWidgetRenderer( { model: this.model } );
 			}
 		}
 	}
 );
-
-var DefaultWidgetRenderer = Backbone.View.extend({});
-
 
 var UserLoginView = Backbone.View.extend(
 	{
@@ -108,3 +105,7 @@ var UserLoginButton = Backbone.View.extend( {
 		return this;
 	}
 });
+
+
+
+

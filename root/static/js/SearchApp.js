@@ -18,6 +18,7 @@ $(function() {
     searchView: null,
     searchParameters: null,
     searchParametersView: null,
+    currentUser: null,
 	
     
     initialize: function() {
