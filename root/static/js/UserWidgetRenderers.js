@@ -120,7 +120,7 @@ var UniversalUserWidgetRenderer = UnrestrictedWidgetRenderer.extend({
   },
   
   ppFileList: function( m ) {
-    return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { collection: m.files } ).renderForProfile( { 'disabled': true }));
+    return new DataProductFilesView( { collection: m.files } ).renderForProfile();
   },
 
   srThumbnail: function( m ) {
