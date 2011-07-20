@@ -149,6 +149,7 @@ sub authentication :Local {
     my $user = $c->model('User');
     if ( $user->authenticate($r->userid, $r->password) ) {
       $cookie = $user->datapool_session_cookie($r->userid, $c->req->address);
+		
     } else {
       if($r->redirect) {
         # Redirect authorization failures also.
@@ -192,17 +193,30 @@ sub authentication :Local {
 }
 
 
-
+# Remove the session id from the database (Effectively Logs-out the user)
 sub destroy_session :Local {
   my ( $self, $c ) = @_;
-	$c->request->cookies->{value} = undef;
-	$c->res->body("Logged Out");
-  #	open FILE, ">/tmp/file_out_2.txt";
-#	use Data::Dumper;
-#	print FILE "GOT HERE!\n";
-#	print FILE "" . Dumper($c->request->cookies);
-#	close FILE;
+
+	# Locate the cookie and grab the session id 
+	use CGI::Cookie;
+	my %cookie = CGI::Cookie->fetch();
+	my $id = $cookie{'datapool'}->value;
 	
+	# Requires are larger LongReadLen to work
+	$c->model('User')->dbh->{LongReadLen} = 2097152; # 2 mb
+
+	# Instantiate an instance of an existing session using the session id
+    my $session = CGI::Session->new(
+      'driver:Oracle', $id, {
+        'Handle' => $c->model('User')->dbh,
+        'TableName' => 'sessions',
+      }
+    );
+
+	# Remove the session from the database
+	$session->delete();
+	$session->flush();
+	$c->model('User')->dbh->commit();	
 }
 
 

@@ -24,41 +24,34 @@ var User = Backbone.Model.extend(
 				dataType: "json",
 				context: this,
 				success: function(data, textStatus, jqXHR) {
-					console.log("Success");
 					this.set( {'authenticated': true, 'authType': data.authType} );
 					this.widgetRenderer = this.getWidgetRenderer();
-					
-					console.log(this);
+					this.trigger('authSuccess');	
 				},
 				error: function(error) {
 					console.log("There was an error");
-					//this.set('authenticated', true);
 					console.log(error);
-					
 				}
 			}); 
 		},
 		
 		logout: function(attrs) {	
-			console.log("Logging Out");
-		
 			$.ajax({
 				type: "POST",
 				url: AsfDataportalConfig.logoutUrl,
-				data: { },//userid: this.get('userid'), password: this.get('password') },
+				data: { userid: this.get('userid'), password: this.get('password') },
 				dataType: "json",
 				context: this,
 				success: function(data, textStatus, jqXHR) {
-					console.log("Success");
-					this.set('authenticated', false);
+					this.set( {'authenticated': false, 'authType': 'UNRESTRICTED'} );
+					this.widgetRenderer = this.getWidgetRenderer();
 					this.trigger('authSuccess');
+					
 				},
 				error: function(error) {
-					console.log("There was an error");
-					this.set('authenticated', false);
-					this.trigger('authSuccess');
-					console.log(error);
-					
+						this.set( {'authenticated': false, 'authType': 'UNRESTRICTED'} );
+						this.widgetRenderer = this.getWidgetRenderer();
+						this.trigger('authSuccess');
 				}
 			}); 
 		},
