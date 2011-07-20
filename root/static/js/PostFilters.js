@@ -230,6 +230,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
+    this.model.unbind('change');
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -467,6 +468,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
+    this.model.unbind('change');
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -660,6 +662,7 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
+    this.model.unbind('change');
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
