@@ -113,18 +113,6 @@ var GeographicFilter = BaseFilter.extend(
     return new GeographicWidget({model:this});
   },
 
-  events : {
-    "change:bbox" : "calculateCoordinates"
-  },
-
-  calculateCoordinates: function(e) {
-    var bbox = this.get('bbox').split(/,/);
-    this.swLat = Math.min(bbox[1], bbox[3]);
-    this.swLon = Math.min(bbox[0], bbox[2]);
-    this.neLat = Math.max(bbox[1], bbox[3]);
-    this.neLon = Math.max(bbox[0], bbox[2]);
-  },
-
   reset: function() {
     for(var ii = 0; ii < this.markers.length; ii++) {
       this.markers[ii].setMap(null);
@@ -153,8 +141,35 @@ var GeographicWidget = BaseWidget.extend(
   },
   
   changed: function(evt) {
-    
+    this.model.reset();
     this.model.set( { "bbox": $(this.el).find('input').val() });
+    var bbox = $(this.el).find('input').val().split(/\s*,\s*/);
+    bbox.reverse();
+    var selfref = this;
+    
+    while(bbox.length) {
+      var lng = bbox.pop();
+      var lat = bbox.pop();
+
+      var point = new google.maps.LatLng(lat,lng);
+      
+      var marker = new google.maps.Marker({
+        position: point,
+        map: searchMap,
+        draggable: true
+      });
+      google.maps.event.addListener(marker, 'drag', function() {
+        selfref.updateSearchAreaOverlay();
+      });
+      google.maps.event.addListener(marker, 'dragend', function() {
+        selfref.updateWidgetFromOverlay();
+      });
+      selfref.model.markers.push(marker);
+    }
+    if(selfref.model.markers.length == 2) {
+      selfref.updateSearchAreaOverlay();
+      selfref.updateWidgetFromOverlay();
+    }
 
     this.render();
   
@@ -225,34 +240,38 @@ var GeographicWidget = BaseWidget.extend(
   }), 
 
   updateSearchAreaOverlay: function() {
-    var sw = this.model.markers[0].getPosition();
-    var ne = this.model.markers[1].getPosition();
-    var w = Math.min(sw.lng(), ne.lng()).toFixed(2);
-    var s = Math.min(sw.lat(), ne.lat()).toFixed(2);
-    var e = Math.max(sw.lng(), ne.lng()).toFixed(2);
-    var n = Math.max(sw.lat(), ne.lat()).toFixed(2);
-    var latLngBounds = new google.maps.LatLngBounds(
-      new google.maps.LatLng(s, w),
-      new google.maps.LatLng(n, e));
-    this.searchAreaOverlay.setBounds(latLngBounds);
-    var target = $('#filter_bbox');
-    target.val([w, n, e, s].join(','));
+    if(this.model.markers.length == 2) {
+      var sw = this.model.markers[0].getPosition();
+      var ne = this.model.markers[1].getPosition();
+      var w = Math.min(sw.lng(), ne.lng()).toFixed(2);
+      var s = Math.min(sw.lat(), ne.lat()).toFixed(2);
+      var e = Math.max(sw.lng(), ne.lng()).toFixed(2);
+      var n = Math.max(sw.lat(), ne.lat()).toFixed(2);
+      var latLngBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(s, w),
+        new google.maps.LatLng(n, e));
+      this.searchAreaOverlay.setBounds(latLngBounds);
+      var target = $('#filter_bbox');
+      target.val([w, s, e, n].join(','));
+    }
   },
 
   updateWidgetFromOverlay: function() {
     var bounds = this.searchAreaOverlay.getBounds();
-    var sw = bounds.getSouthWest();
-    var ne = bounds.getNorthEast();
-    var target = $('#filter_bbox');
-    target.val([
-      Math.min(sw.lng(), ne.lng()).toFixed(2),
-      Math.min(sw.lat(), ne.lat()).toFixed(2),
-      Math.max(sw.lng(), ne.lng()).toFixed(2),
-      Math.max(sw.lat(), ne.lat()).toFixed(2)
-    ].join(','));
-    var data = {};
-    data[target.attr('name')] = target.attr('value');
-    this.model.set(data);
+    if(bounds) {
+      var sw = bounds.getSouthWest();
+      var ne = bounds.getNorthEast();
+      var target = $('#filter_bbox');
+      target.val([
+        Math.min(sw.lng(), ne.lng()).toFixed(2),
+        Math.min(sw.lat(), ne.lat()).toFixed(2),
+        Math.max(sw.lng(), ne.lng()).toFixed(2),
+        Math.max(sw.lat(), ne.lat()).toFixed(2)
+      ].join(','));
+      var data = {};
+      data[target.attr('name')] = target.attr('value');
+      this.model.set(data);
+    }
   },
 
   clear: function() {
