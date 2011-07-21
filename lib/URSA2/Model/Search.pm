@@ -45,6 +45,7 @@ sub getSelectXml {
     sensor,
     beamModeType,
     TRIM(beamModeDesc) beamModeDesc,
+    polarization,
     orbit,
     pathNumber,
     frameNumber,
