@@ -185,6 +185,12 @@ legend {
   float: right;
 }
 
+#login_msg {
+	font-size:9pt !important;
+	float: right;
+	margin-bottom:2ex;
+}
+
 #searchResults p {
   font-size: 11pt !important;
 }
@@ -461,4 +467,16 @@ button.tool_enqueuer.tool-dequeue:hover {
 
 .toggler { 
   margin: 1em 0;
+}
+
+label.login_fields {
+    display: block;
+    width: 70px;
+    float: left;
+    margin: 2px 4px 6px 4px;
+}
+
+input.login_fields {
+  display: block;
+  position: relative;
 }

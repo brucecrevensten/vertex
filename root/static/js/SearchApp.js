@@ -113,7 +113,8 @@ $(function() {
     this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
     this.userLoginButton.render();
   	this.userLoginFields = new UserLoginFields({ model: this.user, el: $('#form1')});
-
+	this.userLoginMessage = new UserLoginMessage( {model: this.user, el: $('#login_msg')});
+		this.userLoginMessage.render();
     },
 
     

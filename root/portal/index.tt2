@@ -45,6 +45,7 @@
   <header>
   <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
     <h1>&nbsp;ASF Dataportal</h1>
+	<div id="login_msg"></div>
     <div id="tools_menu">
       <div id="queue_summary"></div>
       <div id="user_tools"></div>
@@ -54,10 +55,10 @@
   <div id="login_dialog" style="display: none">
   	<div id="login_feedback" class="msg"></div>
   	<form name="form1" id="form1">
-  			<label for="login_username">Name</label>
-  			<input type="text" name="userid" id="login_username"  /><br />
-  			<label for="login_password">Password</label>
-  			<input type="password" name="password" id="login_password" value=""  /><br />
+  			<label for="login_username" class="login_fields">Name</label>
+  			<input type="text" name="userid" id="login_username" class="login_fields"  /><br />
+  			<label for="login_password" class="login_fields">Password</label>
+  			<input type="password" name="password" id="login_password" value=""  class="login_fields"/><br />
   	</form>
     <br />
     <br />

@@ -99,6 +99,27 @@ var UserLoginView = Backbone.View.extend(
 	}
 );
 
+var UserLoginMessage = Backbone.View.extend( {
+	initialize: function() {
+			_.bindAll(this, "render");
+			this.model.bind('authSuccess', this.render);
+			this.model.bind('authError', this.render);
+			this.model.bind('authRefresh', this.render);
+	},
+	
+	render: function() {
+		if( this.model.get('authenticated') == true) {
+					$(this.el).html( _.template( 	
+						'<div id="login_msg"> Welcome <%= userid %> </div>', {'userid':this.model.get('userid')}) );
+		} else {
+					$(this.el).html( _.template( 	
+						'<div id="login_msg"> Welcome Guest') );
+		}
+	}
+	
+});
+
+
 var UserLoginFields = Backbone.View.extend( {
 	initialize: function() {	
 		// Alert the user to an invalid username/password combination
@@ -107,11 +128,11 @@ var UserLoginFields = Backbone.View.extend( {
 				{
 					$(this.el).html( _.template( 	
 						'<form name="form1" id="form1">\
-						<font color = "red"><p>Bad username and/or password</p></font><br/>\
-		  				<label for="login_username">Name</label>\
-		  				<input type="text" name="userid" id="login_username"  /><font color = "red" size=+2 >*</font><br />\
-		  				<label for="login_password">Password</label>\
-		  				<input type="password" name="password" id="login_password" value=""  /><font color = "red" size=+2 >*</font><br />\
+						<font color = "red"><p>Invalid username and/or password</p></font><br/>\
+		  				<label for="login_username" class="login_fields">Name<font color = "red" class="star">     *</font></label>\
+		  				<input type="text" name="userid" id="login_username" class="login_fields"  /><br />\
+		  				<label for="login_password" class="login_fields">Password<font color = "red" class="star">     *</font></label>\
+		  				<input type="password" name="password" id="login_password" value="" class="login_fields" /><br />\
 		  				</form>') );
 			    }, this)
 		);
@@ -120,11 +141,11 @@ var UserLoginFields = Backbone.View.extend( {
 			jQuery.proxy(function() 
 				{
 					$(this.el).html( _.template( 	
-						'<form name="form1" id="form1">\
-		  				<label for="login_username">Name</label>\
-		  				<input type="text" name="userid" id="login_username"  /><br />\
-		  				<label for="login_password">Password</label>\
-		  				<input type="password" name="password" id="login_password" value=""  /><br />\
+						'<form name="form1" id="form1" class="login_fields">\
+		  				<label for="login_username" class="login_fields">Name</label>\
+		  				<input type="text" name="userid" id="login_username" class="login_fields" /><br />\
+		  				<label for="login_password" class="login_fields">Password</label>\
+		  				<input type="password" name="password" id="login_password" value="" class="login_fields" /><br />\
 		  				</form>') );
 			    }, this)
 		);
