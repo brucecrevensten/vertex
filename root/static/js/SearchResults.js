@@ -112,6 +112,7 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
+	this.showBeforeSearchMessage();
   },
 
   renderLength: function() {
@@ -122,8 +123,19 @@ var SearchResultsView = Backbone.View.extend(
 	'authSuccess':'render'
   },
 
-  showResults: function() {
+  showBeforeSearchMessage: function() {
+		console.log("showBeforeSearchMessage");
+		$('#async-spinner').hide();
+	    $('#searchResults').hide();
+	    $('#platform_facets').hide();
+	    $("#error-message").hide();
+	    $("#results-banner").hide();
+		$('#before-search-msg').show();
+  },
 
+  showResults: function() {
+	console.log("showResults");
+	$('#before-search-msg').hide();
     $('#async-spinner').hide();
     $('#searchResults').show();
     $('#platform_facets').show();
@@ -133,7 +145,8 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showSearching: function() {
-
+	console.log("showSearching");
+	$('#before-search-msg').hide();
     $('#async-spinner').show();
     $("#results-banner").hide();
     $('#searchResults').hide();
@@ -144,7 +157,8 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showError: function(jqXHR) {
-
+	console.log("showError");
+	$('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").hide();
     $("#error-message").show();
@@ -153,14 +167,13 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showNoResults: function() {
-
+	$('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").show();
     $("#error-message").hide();
     $("#platform_facet").hide();
     $('#platform_facets').hide();
     this.clearOverlays();
-
   },
   getPlatformRowTemplate: function( p ) {
     switch(p) {

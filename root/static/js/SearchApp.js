@@ -42,6 +42,7 @@ $(function() {
 
     this.searchResults = new SearchResults();
 
+
     this.searchResultsView = new SearchResultsView(
       {
         collection: this.searchResults,
@@ -49,6 +50,7 @@ $(function() {
       }
     );
     this.searchResults.setView( this.searchResultsView );
+	
 
     // trouble brewing.  this may cause either recursion and/or things to not be cleared when expected.
     // need to distinguish between a render upon new search results, and a render based on
@@ -96,7 +98,7 @@ $(function() {
         label: "Search"
     }).bind("click", { sp: this.searchParameters, sr: this.searchResults }, function(e) {
       e.data.sr.fetchSearchResults(e.data.sp); // initial population
-    }).focus().click();
+    }).focus();//.click(); ///// Add .click() to make app begin searching immediately
 
     $('#resetSearch').button(
       { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults }, function(e) {

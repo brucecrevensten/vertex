@@ -43,14 +43,20 @@
 
 <div id="wrapper">
   <header>
+	
+	<div>
   <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
-    <h1>&nbsp;ASF Dataportal</h1>
-	<div id="login_msg"></div>
+ 	<h1>&nbsp;ASF Dataportal</h1>
+	
+	
     <div id="tools_menu">
+		<div id="login_msg"></div>
       <div id="queue_summary"></div>
       <div id="user_tools"></div>
     </div>
+	</div>
   </header>
+
 
   <div id="login_dialog" style="display: none">
   	<div id="login_feedback" class="msg"></div>
@@ -75,7 +81,9 @@
     <div id="download_queue" style="display: none;"></div>
     <div id="platform_facet" style="display: none;"></div>
 
-    <div id="leftColumn">	
+	
+    <div id="leftColumn">
+	  	
       <div id="filters"></div>
       <div style="margin: 1em 0;" id="platform_facets"></div>
       <div style="margin: 1em 0;">
@@ -90,6 +98,14 @@
     </div> <!-- end center column -->
 
     <div id="rightColumn">
+
+	    <!-- default search message -->
+		 <div class="ui-widget">
+	        <div id="before-search-msg" class="ui-state-highlight ui-corner-all">
+	          <strong>Please use the map and/or the search parameters on the left to select your search criteria.</strong>
+	        </div>
+	      </div>
+	
        <!-- loading async spinner -->
       <div class="ui-widget">
         <div id="async-spinner" class="ui-state-highlight ui-corner-all">
@@ -113,8 +129,9 @@
             <strong>An error occurred</strong> while processing your current search (<code id="error-message-code"></code>).
         </div>
       </div>
+	
       <ul id="searchResults"></ul>
-    </div>
+</div>
 
   </div> <!-- end contents -->
 

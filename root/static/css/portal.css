@@ -187,8 +187,9 @@ legend {
 
 #login_msg {
 	font-size:9pt !important;
-	float: right;
-	margin-bottom:2ex;
+	float: left;
+	padding-right: 10px;
+	padding-top: 5px;
 }
 
 #searchResults p {
@@ -248,7 +249,7 @@ label.hover {
   cursor: help;
 }
 
-#async-spinner, #results-banner, #error-message {
+#async-spinner, #results-banner, #error-message, #before-search-msg {
   margin: 1em 0;
   padding: 2.5ex 2ex 2ex 2ex;
   display: none;
