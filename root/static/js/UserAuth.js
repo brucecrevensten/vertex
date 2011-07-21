@@ -13,7 +13,7 @@ var User = Backbone.Model.extend(
 		},
 		
 		authenticate: function(attrs) {	
-			console.log("Authenticating");
+			console.log("Begin Authenticate");
 			console.log(this);
 			console.log(this.get('userid'));
 			
@@ -31,6 +31,10 @@ var User = Backbone.Model.extend(
 				error: function(error) {
 					console.log("There was an error");
 					console.log(error);
+					this.trigger('authError');
+				}, 
+				beforeSend: function() {
+					console.log("Sending Ajax Request");
 				}
 			}); 
 		},
@@ -51,7 +55,7 @@ var User = Backbone.Model.extend(
 				error: function(error) {
 						this.set( {'authenticated': false, 'authType': 'UNRESTRICTED'} );
 						this.widgetRenderer = this.getWidgetRenderer();
-						this.trigger('authSuccess');
+						this.trigger('authError');
 				}
 			}); 
 		},
@@ -72,6 +76,7 @@ var UserLoginView = Backbone.View.extend(
 
 		initialize: function() {
 			_.bindAll(this, "render");
+		
 	    },
 		
 		render: function() {
@@ -92,18 +97,7 @@ var UserLoginView = Backbone.View.extend(
 					"Login": jQuery.proxy( function() {
 						this.model.set($(this.el).find('form').serializeJSON());
 						this.model.authenticate();
-					
 						
-						if( true == this.model.get('authenticated')) {
-							$( '#login_dialog' ).dialog( "close");
-						} else {
-							$( '#login_dialog').dialog( "close");
-				 			// update with error message
-						}       
-					}, this),
-					"Logout": jQuery.proxy( function() {
-						this.model.logout();
-						$( '#login_dialog' ).dialog( "close");
 					}, this)
 				}
 			});
@@ -113,18 +107,43 @@ var UserLoginView = Backbone.View.extend(
 );
 
 var UserLoginButton = Backbone.View.extend( {
+		
+		initialize: function() {
+			_.bindAll(this, "render");
+			this.model.bind('authSuccess', jQuery.proxy(function() {
+				this.render();
+			}, this));
+			this.model.bind('authError', function() {
+				console.log("Inccorect username and/or password");
+			})
+		},
+		
 
 	render: function () {
 
 		if( this.model.get('authenticated') == true) {
-
+				$("#login_dialog").dialog("close");
+				$(this.el).find('#login_button').button({ label: "Logout"});
+				$(this.el).find('#login_button').button().unbind('click', this.login_button_action);	
+				$(this.el).find('#login_button').button().bind('click', this.logout_button_action);
+				
 		} else {
 			$(this.el).html( _.template( '<button id="login_button">Login</button>') );
-			$(this.el).find('#login_button').button().click( function() {
-				SearchApp.userLoginView.render();
-			});
+			$(this.el).find('#login_button').button().unbind('click', this.logout_button_action);
+			$(this.el).find('#login_button').button().bind('click', this.login_button_action);
 		}
 		return this;
+	},
+	
+	login_button_action: function() {
+		SearchApp.userLoginView.render();
+		return this;
+	},
+	
+	logout_button_action: function() {
+			console.log("Log out Clicked");
+			SearchApp.user.logout();
+			return this;
 	}
 });
 
