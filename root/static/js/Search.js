@@ -476,18 +476,21 @@ var PlatformWidget = BaseWidget.extend(
         processingFooter: ''
        },
       'UAVSAR': {
-        name: 'UAVSAR -- not defined yet',
-        imageUrl: '',
-        launchDate: '',
-        altitude: '',
-        cycle: '',
-        status: '',
-        website: '',
-        description: '',
-        dataDescription: '',
-        processingType1: '',
-        processingType2: '',
-        processingType3: '',
+        name: 'UAVSAR Uninhabited Aerial Vehicle Synthetic Aperture Radar',
+        imageUrl: 'http://www.asf.alaska.edu/sites/all/files/images/satellites/uavsar.png',
+        launchDate: '18 Sept 2007',
+        altitude: 'Variable',
+        cycle: 'Non-cyclic',
+        status: 'In Service',
+        website: 'http://uavsar.jpl.nasa.gov/',
+        description: 'Uninhabited Aerial Vehicle Synthetic Aperture Radar: UAVSAR, a Jet Propulsion Laboratory (JPL)-built reconfigurable, polarimetric L-band synthetic aperture radar (SAR), is specifically designed to acquire airborne repeat track SAR data for differential interferometric measurements.<br/><br/>The radar is designed to be operable on a UAV (Uninhabited Aerial Vehicle), but will initially be demonstrated on a on a NASA Gulfstream III. The radar is fully polarimetric, with a range bandwidth of 80 MHz (2 m range resolution), and a range swath greater than 16 km.<br/><br/>More information is available at the <a href="http://uavsar.jpl.nasa.gov/">JPL UAVSAR Website</a>.',
+        dataDescription: 'UAVSAR data are processed at JPL and are freely available from the SDC. UAVSAR data are available for immediate download using the this interface.<br/><br/>UAVSAR data are provided as Polarimetric Products and Interferometric Products.',
+        processingType1: 'SLC files (.slc): Calibrated single look complex files for each polarization (HH, HV, VH, and VV), floating point format, little endian, 8 bytes per pixel, corresponding to the scattering matrix.',
+        processingType2: 'MLC files (.mlc): Calibrated multi-looked cross products, floating point format, three files 8 bytes per pixel, three files 4 bytes per pixel, little endian. ',
+        processingType3: 'Compressed Stokes Matrix product (.dat): AIRSAR compressed Stokes matrix format for software compatibility (http://airsar.jpl.nasa.gov/data/data_format.pdf). 10 bytes per pixel.',
+        processingType4: 'Ground projected files (.grd): calibrated complex cross products projected to the ground in simple geographic coordinates (latitude, longitude). There is a fixed number of looks for each pixel. Floating point, little endian, 8 or 4 bytes per pixel.',
+        processingType5: 'Hgt file: the DEM that the imagery was projected to, in the same geographic coordinates as the ground projected files. Floating point (4 bytes per pixel), little endian, ground elevation in meters.',
+        processingType6: 'Annotation file (.ann) : a text file with metadata.',
         processingFooter: ''
       }
     },
@@ -497,7 +500,7 @@ var PlatformWidget = BaseWidget.extend(
         _.template( '\
 <div class="platformInformation">\
 <h3><%= name %> Highlights</h3>\
-<img src="<%= imageUrl %>" />\
+<img id="<%= imageId %>" src="<%= imageUrl %>" />\
 <ul>\
 <li>Launch Date: <strong><%= launchDate %></strong></li>\
 <li>Altitude: <strong><%= altitude %></strong></li>\

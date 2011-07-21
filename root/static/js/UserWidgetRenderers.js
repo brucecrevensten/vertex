@@ -85,6 +85,7 @@ var AlosUserWidgetRenderer = RestrictedWidgetRenderer.extend({
       return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { collection: m.files } ).renderForProfile( { 'disabled': true }));
     }
 	}
+  
 });
 
 var LegacyUserWidgetRenderer = RestrictedWidgetRenderer.extend({

@@ -30,7 +30,7 @@ var DataProductFilesView = Backbone.View.extend( {
         label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
       }) );
 
-      li.append( jQuery('<button>Add to queue</button>', {
+      li.append( $('<button>Add to queue</button>', {
         'class': 'tool_enqueuer',
         'title': 'Add to download queue'
       }).attr('product_id', e.productId).attr('product_file_id', e.id).click( function(e) {
@@ -65,6 +65,12 @@ var DataProduct = Backbone.Model.extend({
   initialize: function() {
     this.name = 'DataProduct';
     this.files = new DataProductFiles();
+    var d = this.get('ASCENDINGDESCENDING');
+    this.set({
+      'ASCENDINGDESCENDING': d.charAt(0).toUpperCase() + d.slice(1).toLowerCase(),
+      'acquisitionDateText': $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('ACQUISITIONDATE'))),
+      'FARADAYROTATION': this.get('FARADAYROTATION').toFixed(2)
+    });
   }
 });
 
@@ -72,50 +78,61 @@ var DataProductView = Backbone.View.extend(
   {
     width: 500, // width of the rendered Product Profile; will be changed depending on missing image, etc
     getTemplate: function() {
-      switch(this.model.PLATFORM) {
+      switch(this.model.get('PLATFORM')) {
         case 'ALOS': return '\
+<h4>ALOS PALSAR</h4>\
 <ul class="metadata">\
-<li><span>Processing type</span>: <%= PROCESSINGTYPE %></li>\
-<li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
-<li><span>Frame</span>: <%= FRAMENUMBER %></li>\
+<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= BEAMMODEDESC %>"><%= BEAMMODETYPE %></span></li>\
+<li><span>Orbit</span>: <%= ORBIT %></li>\
 <li><span>Path</span>: <%= PATHNUMBER %></li>\
-<li><span>Start time</span>: <%= STARTTIME %></li>\
-<li><span>End time</span>: <%= ENDTIME %></li>\
-<li><span>Faraday rotation</span>: <%= FARADAYROTATION %></li>\
+<li><span>Frame</span>: <%= FRAMENUMBER %></li>\
+<li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
+<li><span>Faraday rotation</span>: <%= FARADAYROTATION %>&deg;</li>\
 <li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
-<li><span>Off Nadir Angle</span>: <%= OFFNADIRANGLE %></li>\
+<li><span>Off Nadir Angle</span>: <%= OFFNADIRANGLE %>&deg;</li>\
+<li><span>Frequency</span>: L-Band</li>\
 </ul>\
 ';
         case 'UAVSAR': return '\
 <ul class="metadata">\
-<li><span>Processing type</span>: <%= PROCESSINGTYPE %></li>\
 <li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
-<li><span>Start time</span>: <%= STARTTIME %></li>\
-<li><span>End time</span>: <%= ENDTIME %></li>\
+<li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
+<li><span>Frequency</span>: L-Band</li>\
 </ul>\
 ';
-
-        default: return '\
+        case 'JERS-1': return '\
 <ul class="metadata">\
-<li><span>Processing type</span>: <%= PROCESSINGTYPE %></li>\
 <li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
 <li><span>Frame</span>: <%= FRAMENUMBER %></li>\
 <li><span>Orbit</span>: <%= ORBIT %></li>\
-<li><span>Start time</span>: <%= STARTTIME %></li>\
-<li><span>End time</span>: <%= ENDTIME %></li>\
-<li><span>Faraday rotation</span>: <%= FARADAYROTATION %></li>\
+<li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
 <li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
+<li><span>Frequency</span>: L-Band</li>\
+</ul>\
+';
+        default: return '\
+<ul class="metadata">\
+<li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
+<li><span>Frame</span>: <%= FRAMENUMBER %></li>\
+<li><span>Orbit</span>: <%= ORBIT %></li>\
+<li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
+<li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
+<li><span>Frequency</span>: C-Band</li>\
 </ul>\
 ';
 
       }
     },
-    render: function() {
 
+    render: function() {
       var ur = SearchApp.user.getWidgetRenderer();
       $(this.el).html( ur.ppBrowse( this.model ));
-      $(this.el).append( _.template( this.getTemplate(), this.model.toJSON()));      
-      $(this.el).append( ur.ppFileList( this.model ));
+      var p3 = $(
+        '<div/>',{'id':'hanger'}
+        ).append(
+          _.template( this.getTemplate(), this.model.toJSON())
+        ).append( ur.ppFileList( this.model ));
+      $(this.el).append(p3);
       return this;
 
     }

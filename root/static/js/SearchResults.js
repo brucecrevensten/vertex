@@ -166,23 +166,14 @@ var SearchResultsView = Backbone.View.extend(
     switch(p) {
       case 'ALOS':
         return '\
-  <img src="<%= THUMBNAIL %>" title="<%= GRANULENAME %>" />\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span><%= BEAMMODETYPE %></span></h4>\
-  <div>\
-    <p><%= acquisitionDateText %></p>\
-    <p>Frame <%= FRAMENUMBER %>, Path <%= PATHNUMBER %></p>\
-  </div>\
-  <div style="clear: both"></div>\
+  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
+  <p>Frame <%= FRAMENUMBER %>, Path <%= PATHNUMBER %></p>\
+  <p>Off-Nadir <%= OFFNADIRANGLE %>&deg;</p>\
 ';
         break;
       default: return '\
- <img src="<%= THUMBNAIL %>" title="<%= GRANULENAME %>" />\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span><%= BEAMMODETYPE %></span></h4>\
-  <div>\
-    <p><%= acquisitionDateText %></p>\
-    <p>Frame <%= FRAMENUMBER %>, Orbit <%= ORBIT %></p>\
-  </div>\
-  <div style="clear: both"></div>\
+  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
+  <p>Frame <%= FRAMENUMBER %>, Orbit <%= ORBIT %></p>\
 ';
     }
   },
@@ -196,13 +187,68 @@ var SearchResultsView = Backbone.View.extend(
       return this;
     }
 
+    var ur = SearchApp.user.getWidgetRenderer();
     this.collection.each( function( e, i, l ) {
      
-      d = e.toJSON();
+      var d = e.toJSON();
       d['acquisitionDateText'] = $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', d.ACQUISITIONDATE));
-      li = jQuery('<li/>').attr('product_id', d.id);
+      var li = jQuery('<li/>', {'class':'productRow'}).attr('product_id', d.id);
+      li.append( ur.srThumbnail( e ));
       li.append( _.template( this.getPlatformRowTemplate( d.PLATFORM) , d ) );
       li.find('img').error( function() { $(this).remove(); });
+      var b = $('<div/>', { 'class':'productRowTools' }
+      ).append( $('<button>More information&hellip;</button>').button( { 'text':false, 'icons':{'primary':'ui-icon-help'}}));
+      
+      var k = $('<button>Add to queue&hellip;</button>', { 'class':'tool_enqueuer' }
+      ).button( { 'text':false, 'icons':{'primary':'ui-icon-circle-plus'}}
+      ).bind('click', { 'd':d }, function(e) {
+          $('#gpl_'+e.data.d.id).toggle();
+          e.stopPropagation();
+        });
+
+      b.append(k);
+      
+      var c = $('<ul/>', { 'style':'display:none', 'class':'granuleProductList', 'id':'gpl_'+d.id } );
+      // stopping point: the e/files/each isn't quite grabbing the collection of files, so the below code won't work.
+      e.files.each( function( q, w, r ) {
+      
+        var lit = $('<li/>');
+        var btn = $('<button>Add to queue...</button>', {
+          'class': 'tool_enqueuer',
+          'title': 'Add to download queue'
+        }).attr('product_id', q.get('productId'));
+        btn.attr('product_file_id', q.id);
+        btn.click( function(e2) {
+            e2.stopPropagation();
+            if ( $(this).prop('disabled') == 'disabled' ) { return false; }
+            if ( $(this).prop('selected') == 'selected' ) {
+              $(this).toggleClass('tool-dequeue');
+              $(this).prop('selected','false');
+              SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
+              $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+            } else {
+              $(this).toggleClass('tool-dequeue');
+              $(this).prop('selected','selected');
+              SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
+              $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
+            }
+          }
+          ).button(
+            {
+              'label': q.get('processingTypeDisplay') + ' (' + q.get('sizeText') + ')',
+              'icons': {
+                'primary':'ui-icon-circle-plus'
+              }
+            }
+          );
+          lit.append(btn);
+          c.append(lit);
+    
+    });
+
+      li.append(b);
+      li.append(c);
+      li.append('<div style="clear: both"></div>');
 
       v = new DataProductView( { model: e } );
       li.bind( "click", { id: e.id, view: v }, function(e) {
@@ -223,7 +269,7 @@ var SearchResultsView = Backbone.View.extend(
 
     }, this); // end iteration over collection
 
-    $('#searchResults li').live('mouseenter', { view: this }, this.toggleHighlight );
+    $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
 
     this.showResults();
     this.clearOverlays();

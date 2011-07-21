@@ -13,9 +13,6 @@ var User = Backbone.Model.extend(
 		},
 		
 		authenticate: function(attrs) {	
-			console.log("Begin Authenticate");
-			console.log(this);
-			console.log(this.get('userid'));
 			
 			$.ajax({
 				type: "POST",
@@ -29,12 +26,9 @@ var User = Backbone.Model.extend(
 					this.trigger('authSuccess');	
 				},
 				error: function(error) {
-					console.log("There was an error");
-					console.log(error);
 					this.trigger('authError');
 				}, 
 				beforeSend: function() {
-					console.log("Sending Ajax Request");
 				}
 			}); 
 		},
@@ -62,10 +56,10 @@ var User = Backbone.Model.extend(
 
 		getWidgetRenderer: function() {
 			switch( this.get('authType')) {							
-				case 'UNIVERSAL': console.log("GOT UNIVERSAL"); return new UniversalUserWidgetRenderer( { model: this.model } );
-				case 'ALOS': console.log("GOT ALOS");  return new AlosUserWidgetRenderer( { model: this.model } );
-				case 'LEGACY': console.log("GOT LEGACY"); return new LegacyUserWidgetRenderer( { model: this.model } );
-				default: console.log("GOT UNRESTRICTED");  return new UnrestrictedWidgetRenderer( { model: this.model } );
+				case 'UNIVERSAL': return new UniversalUserWidgetRenderer( { model: this.model } );
+				case 'ALOS': return new AlosUserWidgetRenderer( { model: this.model } );
+				case 'LEGACY': return new LegacyUserWidgetRenderer( { model: this.model } );
+				default: return new UnrestrictedWidgetRenderer( { model: this.model } );
 			}
 		}
 	}
@@ -171,7 +165,6 @@ var UserLoginButton = Backbone.View.extend( {
 	},
 	
 	logout_button_action: function() {
-			console.log("Log out Clicked");
 			SearchApp.user.logout();
 			return this;
 	}

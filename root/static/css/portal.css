@@ -30,23 +30,18 @@ text-decoration: underline;
 #wrapper {
   font:12pt arial,sans-serif;
   background: white;
-  border: 1px solid #333;
+  background: hsla(233, 99%, 99%, .97);  
+  border: 2px solid #eee;
   padding: 1.5em;
   margin: 2em auto;
   min-height: 820px;
   width: 1250px;
   position: relative;
-
 }
 
 header h1 {
-  height: 27px;
-  width: 232px;
-  background: url(../images/asf-logo.png);
-}
-
-header h1 span {
-  display: none;
+  font-size: 18pt !important;
+  font-weight: bold;
 }
 
 header {
@@ -110,8 +105,9 @@ line-height: 110%;
 
 footer div div {
 margin: 0;
-width: 20%;
+width: 16%;
 float: left;
+text-align: center;
 }
 
 fieldset {
@@ -132,13 +128,31 @@ legend {
 
 #searchResults li {
   display: block;
-  padding: 1ex 0;
+  padding: 1em 0;
   clear: both;
   cursor: pointer;
 }
 
+#searchResults li ul li {
+  padding: 0;
+  text-align: left;
+  margin: .5ex 0 0 1ex;
+}
+
+#searchResults li ul li:nth-child(odd) {
+  background-color: inherit;
+}
+
+#searchResults li ul li:hover {
+  background-color: inherit;
+}
+
+#searchResults div {
+  padding-left: 1ex;
+}
+
 #searchResults li:nth-child(odd) {
-  background-color: #eee;
+  background-color: #eef0ff;
 }
 
 #searchResults li:hover {
@@ -146,18 +160,37 @@ legend {
 }
 
 #searchResults li img {
+  vertical-align: middle;
   float: left;
   clear: both;
   padding: 0 1em 1ex 1ex;
 }
 
-#searchResults h4 {
-  font-size: larger;
+#searchResults h4, #searchResults h4 * {
+  font-size: 12pt !important;
   font-weight: bold;
 }
 
-#searchResults h4 span {
+#searchResults h4 span.beam {
   color: #888;
+}
+
+#searchResults h4 span.date {
+  color: #333;
+  float: right;
+  padding-right: 1ex;
+}
+
+#searchResults .productRowTools {
+  float: right;
+}
+
+#searchResults p {
+  font-size: 11pt !important;
+}
+
+#searchResults li button {
+  margin-top: 1ex;
 }
 
 #searchMap {
@@ -203,6 +236,10 @@ label.hover {
   margin: 1em auto;
   min-height: 512px;
   float: left;
+}
+
+#product_profile span.beamModeHelp {
+  cursor: help;
 }
 
 #async-spinner, #results-banner, #error-message {
@@ -304,6 +341,12 @@ button.tool_enqueuer.tool-dequeue:hover {
 
 #filters div.composite_checkbox_wrapper input + label {
   display: inline-block !important;
+}
+
+#platform_profile #uavsar-platform-image {
+  width: 336px;
+  height: 200px;
+  background-image: transparent url(../images/uavsar.png);
 }
 
 #platform_profile {
