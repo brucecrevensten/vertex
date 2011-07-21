@@ -91,20 +91,52 @@ var UserLoginView = Backbone.View.extend(
 						window.open('http://www.asf.alaska.edu/program/sdc/proposals');
   						return false;
 					},
-					"Cancel" : function() {
-						$( this).dialog('close');
-					},
+					"Cancel" : jQuery.proxy( function() {
+				    	$('#login_dialog').dialog('close');
+					},this),
 					"Login": jQuery.proxy( function() {
 						this.model.set($(this.el).find('form').serializeJSON());
-						this.model.authenticate();
-						
+						this.model.authenticate();	
 					}, this)
 				}
-			});
+			}).bind('dialogclose', jQuery.proxy(function() { this.model.trigger('authFieldsRefresh')}, this)); //refresh every time it closes
 		    return this;
 		},
 	}
 );
+
+var UserLoginFields = Backbone.View.extend( {
+	initialize: function() {	
+		// Alert the user to an invalid username/password combination
+		this.model.bind('authError', 
+			jQuery.proxy(function() 
+				{
+					$(this.el).html( _.template( 	
+						'<form name="form1" id="form1">\
+						<font color = "red"><p>Bad username and/or password</p></font><br/>\
+		  				<label for="login_username">Name</label>\
+		  				<input type="text" name="userid" id="login_username"  /><font color = "red" size=+2 >*</font><br />\
+		  				<label for="login_password">Password</label>\
+		  				<input type="password" name="password" id="login_password" value=""  /><font color = "red" size=+2 >*</font><br />\
+		  				</form>') );
+			    }, this)
+		);
+		
+		this.model.bind('authFieldsRefresh', 
+			jQuery.proxy(function() 
+				{
+					$(this.el).html( _.template( 	
+						'<form name="form1" id="form1">\
+		  				<label for="login_username">Name</label>\
+		  				<input type="text" name="userid" id="login_username"  /><br />\
+		  				<label for="login_password">Password</label>\
+		  				<input type="password" name="password" id="login_password" value=""  /><br />\
+		  				</form>') );
+			    }, this)
+		);
+	}
+	
+});
 
 var UserLoginButton = Backbone.View.extend( {
 		
@@ -113,9 +145,7 @@ var UserLoginButton = Backbone.View.extend( {
 			this.model.bind('authSuccess', jQuery.proxy(function() {
 				this.render();
 			}, this));
-			this.model.bind('authError', function() {
-				console.log("Inccorect username and/or password");
-			})
+
 		},
 		
 

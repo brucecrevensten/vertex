@@ -112,7 +112,7 @@ $(function() {
     this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
     this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
     this.userLoginButton.render();
-  
+  	this.userLoginFields = new UserLoginFields({ model: this.user, el: $('#form1')});
 
     },
 
