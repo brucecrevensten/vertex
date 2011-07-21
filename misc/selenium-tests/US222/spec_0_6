@@ -13,43 +13,43 @@
 </thead><tbody>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//div[@id='logos']/a[1]@href</td>
-	<td>http://www.nasa.gov</td>
-</tr>
-<tr>
-	<td>verifyAttribute</td>
-	<td>//div[@id='logos']/a[2]@href</td>
-	<td>http://www.uaf.edu</td>
-</tr>
-<tr>
-	<td>verifyAttribute</td>
-	<td>//div[@id='logos']/a[3]@href</td>
-	<td>http://www.gi.alaska.edu</td>
-</tr>
-<tr>
-	<td>verifyAttribute</td>
-	<td>//div[@id='logos']/a[4]@href</td>
+	<td>//html/body/div/footer/div/div[1]/a@href</td>
 	<td>http://www.asf.alaska.edu</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//div[@id='logos']/a[1]/img@src</td>
-	<td>../static/images/nasa-logo.png</td>
+	<td>//html/body/div/footer/div/div[2]/a@href</td>
+	<td>http://www.gi.alaska.edu</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//div[@id='logos']/a[2]/img@src</td>
-	<td>../static/images/uaf-logo.png</td>
+	<td>//html/body/div/footer/div/div[5]/a@href</td>
+	<td>http://www.uaf.edu</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//div[@id='logos']/a[3]/img@src</td>
+	<td>//html/body/div/footer/div/div[6]/a@href</td>
+	<td>http://www.nasa.gov</td>
+</tr>
+<tr>
+	<td>verifyAttribute</td>
+	<td>//html/body/div/footer/div/div[1]/a/img@src</td>
+	<td>../static/images/asflogo-footer.png</td>
+</tr>
+<tr>
+	<td>verifyAttribute</td>
+	<td>//html/body/div/footer/div/div[2]/a/img@src</td>
 	<td>../static/images/gi-logo.png</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//div[@id='logos']/a[4]/img@src</td>
-	<td>../static/images/asflogo-footer.png</td>
+	<td>//html/body/div/footer/div/div[5]/a/img@src</td>
+	<td>../static/images/uaf-logo.png</td>
+</tr>
+<tr>
+	<td>verifyAttribute</td>
+	<td>//html/body/div/footer/div/div[6]/a/img@src</td>
+	<td>../static/images/nasa-logo.png</td>
 </tr>
 
 </tbody></table>

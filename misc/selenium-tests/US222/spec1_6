@@ -34,16 +34,21 @@
 <tr>
 	<td>type</td>
 	<td>login_username</td>
-	<td>dq</td>
+	<td>universal_user_test</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>login_password</td>
-	<td>07dq=WCFR</td>
+	<td>testtest</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
 	<td>css=div.ui-dialog div.ui-dialog-buttonpane</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>Bad username and/or password</td>
 	<td></td>
 </tr>
 </tbody></table>

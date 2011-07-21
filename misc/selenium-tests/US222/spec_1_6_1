@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>verifyText</td>
-	<td>css=html body div.ui-dialog div.ui-dialog-buttonpane div.ui-dialog-buttonset button.ui-button:nth-child(2) span.ui-button-text</td>
+	<td>css=html body div.ui-dialog div.ui-dialog-buttonpane div.ui-dialog-buttonset button.ui-button span.ui-button-text</td>
 	<td>Register</td>
 </tr>
 <tr>

@@ -13,8 +13,13 @@
 </thead><tbody>
 <tr>
 	<td>verifyAttribute</td>
-	<td>css=header a@href</td>
-	<td>http://www.asf.alaska.edu</td>
+	<td>//html/body/div/header/img@src</td>
+	<td>http://testdataportal.daac.asf.alaska.edu/static/images/asf-logo-header.png</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//html/body/div/header/h1</td>
+	<td>ASF Dataportal</td>
 </tr>
 </tbody></table>
 </body>
