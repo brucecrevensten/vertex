@@ -198,9 +198,8 @@ sub destroy_session :Local {
   my ( $self, $c ) = @_;
 
 	# Locate the cookie and grab the session id 
-	use CGI::Cookie;
-	my %cookie = CGI::Cookie->fetch();
-	my $id = $cookie{'datapool'}->value;
+	my $id = $c->request->cookie('datapool');
+	$id =~ s/datapool=//;
 	
 	# Requires are larger LongReadLen to work
 	$c->model('User')->dbh->{LongReadLen} = 2097152; # 2 mb
