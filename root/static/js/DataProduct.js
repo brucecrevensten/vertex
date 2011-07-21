@@ -66,10 +66,14 @@ var DataProduct = Backbone.Model.extend({
     this.name = 'DataProduct';
     this.files = new DataProductFiles();
     var d = this.get('ASCENDINGDESCENDING');
+    var fdr = this.get('FARADAYROTATION');
+    if(_.isNumber(fdr)) {
+      fdr.toFixed(2);
+    }
     this.set({
       'ASCENDINGDESCENDING': d.charAt(0).toUpperCase() + d.slice(1).toLowerCase(),
       'acquisitionDateText': $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('ACQUISITIONDATE'))),
-      'FARADAYROTATION': this.get('FARADAYROTATION').toFixed(2)
+      'FARADAYROTATION': fdr
     });
   }
 });
