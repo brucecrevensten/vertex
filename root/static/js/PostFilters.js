@@ -3,12 +3,15 @@ var PostFilters = Backbone.Model.extend(
     postFilters: [],
     initialize: function() {
       this.postFilters = [
-        new RadarsatFacet(),
         new AlosFacet(),
+        new RadarsatFacet(),
         new LegacyFacet( { 'platform':'ERS-1','offset':0} ),
         new LegacyFacet( { 'platform':'ERS-2','offset':10} ),
         new LegacyFacet( { 'platform':'JERS-1','offset':20} )
       ];
+
+      // Processing facet always show up; treat it as unlike the platform.
+      this.processingFacet = new ProcessingFacet();
 
       self = this;
       for( var i in this.postFilters ) {
@@ -45,6 +48,7 @@ var PostFiltersView = Backbone.View.extend(
   widgets: [],
   initialize: function() {
     _.bindAll(this, 'render');
+    this.processingWidget = new ProcessingFacetButton( { 'model': this.model.processingFacet } );
   },
   setWidgets: function() {
     this.widgets = [];
@@ -53,7 +57,9 @@ var PostFiltersView = Backbone.View.extend(
       this.widgets.push(this.model.postFilters[i].getWidget());
     }
   },
-  render: function(platforms) {
+  // platforms: array of platform names present in search results
+  // procTypes: array of processing types present in search results
+  render: function(platforms, procTypes) {
 
     this.setWidgets();
     var render = false;
@@ -61,6 +67,11 @@ var PostFiltersView = Backbone.View.extend(
     $(this.el).empty();
     var d = jQuery('<div/>');
     var u = jQuery('<ul/>');
+
+    // Always show the processing type filter, since it always applies
+    this.processingWidget.model.set({ 'procTypes':procTypes });
+    u.append( jQuery('<li/>').append( this.processingWidget.render().el) );
+
     for ( var i in this.widgets ) {
       if( -1 != _.indexOf( platforms, this.widgets[i].name )) {
         u.append( jQuery('<li/>').append( this.widgets[i].render().el) );
@@ -75,38 +86,174 @@ var PostFiltersView = Backbone.View.extend(
 
       d.append(u);
       d.append(r);
-      $(this.el).append( jQuery('<h3><a href="#">Filter by platform</a></h3>')).append(d).accordion();
+      $(this.el).append( jQuery('<h3><a href="#">Filter By Platform & Product</a></h3>')).append(d).accordion();
     }
     return this;
   }
 
 });
 
+var ProcessingDescription = Backbone.Model.extend({});
+var ProcessingDescriptions = Backbone.Collection.extend({
+  model: ProcessingDescription
+});
+
+var ProcessingFacet = BaseFilter.extend( {
+  initialize:function() {
+    this.processingTypes = new ProcessingDescriptions( 
+      [
+        {"level":"L0","id":"L1.0","display":"Level 1.0","description":"Reconstructed, unprocessed signal data with radiometric- and geometric-correction coefficients appended but not applied."},
+        {"level":"L1","id":"L1.1","display":"Level 1.1","description":"Single Look Complex products provided in slant range geometry and compressed in range and azimuth. Individual files are provided for each polarization for multi-polarization modes."},
+        {"level":"L1","id":"L1.5","display":"Level 1.5","description":"Multi-look processed images projected onto map coordinates. Data can be processed either geo-referenced or geo-coded. Individual files are provided for each polarization for multi-polarization modes."},
+        {"level":"L1","id":"BROWSE","display":"Browse Image","description":"Full size browse image."},
+        {"level":"L1","id":"BROWSE512","display":"Browse Image,512 x 512 pixel browse image."},
+        {"level":"L1","id":"THUMBNAIL","display":"Thumbnail, Thumbnail image."},
+        {"level":"L0","id":"L0","display":"Level Zero,Raw signal SAR data processed into frames with an accompanying CEOS format leader file."},
+        {"level":"L1","id":"L1","display":"Detected Image,Fully processed SAR data which only contains the amplitude information. Image does not require any further SAR processing to be visualized."},
+        {"level":"L1","id":"STOKES","display":"Compressed Stokes Matrix, AIRSAR compressed Stokes matrix formatted data for software compatibility (http://airsar.jpl.nasa.gov/data/data_format.pdf). 10 bytes per pixel."},
+        {"level":"L1","id":"COMPLEX","display":"Multi-look Complex, Calibrated multi-look data, cross products, floating point format, three files 8 bytes per pixel, three files 4 bytes per pixel, little endian."},
+        {"level":"L1","id":"PROJECTED","display":"Ground Projected, Calibrated complex data, cross products projected to the ground in simple geographic coordinates (latitude, longitude). There is a fixed number of looks for each pixel. Floating point, little endian, 8 or 4 bytes per pixel."},
+        {"level":"METADATA","id":"METADATA","display":"Annotation file / Metadata,Text file containing metadata."},
+        {"level":"L1","id":"KMZ","display":"Google Earth KMZ, compressed KML file for viewing a representation of the file in Google Earth or similar software."},
+
+      ]
+    );
+  }
+});
+
+var ProcessingFacetButton = BaseWidget.extend( {
+  name: "Processing Type",
+  tagName: "button",
+  initialize: function() {
+    _.bindAll(this, "render", "openDialog");
+  },
+  events: {
+    "click" : "openDialog"
+  },
+  openDialog: function(e) {
+    var v = new ProcessingFacetDialog( { model: this.model } );
+  },
+  render: function() {
+    $(this.el).button(
+      {
+        icons: {
+          primary: "ui-icon-zoomin"
+        },
+        label: this.name
+      }
+    );
+    return this;
+  }
+});
+
+var ProcessingFacetDialog = BaseWidget.extend( {
+
+  className: "platformFacet",
+  tagName: "form",
+
+  events: { 
+    "change input" : "changed",
+  },
+  initialize: function() {
+    this.render();
+    this.model.unbind('change');
+    this.model.bind( 'change', jQuery.proxy( this.render, this) );
+  },
+  changed: function(e) {
+    this.model.clear( { silent: true });
+    var direction = $(this.el).find('input[name="direction"]:checked').val();
+    var path = $(this.el).find('input[name="path"]').val();
+    var frame = $(this.el).find('input[name="frame"]').val();
+
+    this.model.set({
+      beamoffnadir: beamoffnadir,
+      direction: direction,
+      path: path,
+      frame: frame
+    }, { silent: true });
+  },
+ 
+  render: function() {
+
+    $(this.el).empty();
+    var checked = this.model.get('procTypes');
+    var ul = $('<ul/>');
+    _.each( this.model.get('procTypes'), function(procType) {
+      var p = this.model.processingTypes.get(procType).toJSON();
+      var rowData = {
+        "id":"procinfo_"+p.id.replace('.','_'),
+        "procType":p.id,
+        "ifChecked": ( _.indexOf(checked, procType) > -1 ) ? 'checked="checked"' : '',
+        "name":p.display,
+        "description":p.description
+      };
+      var i = $('<li>').html( _.template('\
+<div class="composite_checkbox_wrapper">\
+<input type="checkbox" id="<%= id %>" <%= ifChecked %> name="processingTypeSelector" value="<%= procType %>" /><label style="text-align: left; width: 160px;" for="<%= id %>"><%= name %></label>\
+<button style="display:inline-block;" procType="<%= procType %>" title="<%= description %>">?</button>\
+</div>\
+', rowData));
+      $(i).find('.composite_checkbox_wrapper').buttonset();
+      $(i).find('input').button().click( function() {
+        if( true == $(this).prop('checked') ) {
+          $(this).button( "option", "icons", { primary: "ui-icon-check" });
+        } else {
+          $(this).button( "option", "icons", {} );
+        }
+      });
+     
+      $(i).find('input:checkbox:checked').button( "option", "icons", { primary: "ui-icon-check" }).prop('checked', true);
+      $(i).find('button').button( { icons: { primary: "ui-icon-info"}, text: false}).click( function() { return false; });
+      ul.append(i);
+    }, this);
+
+    $(this.el).append(ul);
+
+    $(this.el).dialog({
+      width: 220,
+      modal: false,
+      draggable: true,
+      resizable: false,
+      title: "Product processing choices",
+      position: [20,90],
+      buttons: {
+        "Cancel": function() { $(this).dialog('close'); },
+        "Reset": jQuery.proxy( function() {
+          this.model.reset();
+          this.render();
+        }, this),
+        "Filter": function() { SearchApp.searchResults.filter(); }
+      }
+    });
+
+  }
+    
+});
 
 var PlatformFacet = BaseFilter.extend( {
 
     buildArrayFromString: function( s ) {
-    var a = [];
-    if ( !s ) { return a; }
-    s = s.split(',');
-    try {
-      for( var i = 0; i < s.length; ++i ) {
-        if( -1 == s[i].indexOf('-')) {
-          // individual frame
-          a.push( parseInt( s[i]) );
-        } else {
-          // range
-          r = s[i].split('-');
-          lb = Math.min(parseInt(r[0]), parseInt(r[1]));
-          ub = Math.max(parseInt(r[0]), parseInt(r[1]));
-          for( var j = lb; j <= ub; ++j ) {
-            a.push( j );
+      var a = [];
+      if ( !s ) { return a; }
+      s = s.split(',');
+      try {
+        for( var i = 0; i < s.length; ++i ) {
+          if( -1 == s[i].indexOf('-')) {
+            // individual frame
+            a.push( parseInt( s[i]) );
+          } else {
+            // range
+            r = s[i].split('-');
+            lb = Math.min(parseInt(r[0]), parseInt(r[1]));
+            ub = Math.max(parseInt(r[0]), parseInt(r[1]));
+            for( var j = lb; j <= ub; ++j ) {
+              a.push( j );
+            }
           }
         }
+      } catch(err) {
+        // TODO: handle this in validation or something.
       }
-    } catch(err) {
-      // TODO: handle this in validation or something.
-    }
     return a;
   }
 

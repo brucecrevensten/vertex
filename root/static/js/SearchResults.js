@@ -83,6 +83,7 @@ var SearchResults = Backbone.Collection.extend(
 
           // Fetch distinct platforms that were found
           this.platforms = _.uniq( _.pluck( data.results.rows.ROW, 'PLATFORM') );
+          this.procTypes = _.uniq( _.pluck( data.results.rows.ROW, 'PROCESSINGTYPE') );
           this.build(data.results.rows.ROW);
           this.view.render();
 

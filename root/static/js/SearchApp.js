@@ -42,7 +42,6 @@ $(function() {
 
     this.searchResults = new SearchResults();
 
-
     this.searchResultsView = new SearchResultsView(
       {
         collection: this.searchResults,
@@ -56,7 +55,7 @@ $(function() {
     // need to distinguish between a render upon new search results, and a render based on
     // filtering.
     this.searchResultsView.bind("render", function() {
-      SearchApp.postFiltersView.render( SearchApp.searchResults.platforms );
+      SearchApp.postFiltersView.render( SearchApp.searchResults.platforms, SearchApp.searchResults.procTypes );
     });
 
     // Initialize the download queue

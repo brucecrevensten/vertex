@@ -180,11 +180,11 @@ var GeographicWidget = BaseWidget.extend(
 <p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South<br />(or use the map)<br />Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
-<button class="ui-button ui-widget ui-state-default ui-corner-all" id="ClearBbox">Clear</button>\
+<button style="margin:1ex 0; float:right;" id="ClearBbox">Clear</button>\
 ', this.model.toJSON())
     );
     this.renderMap();
-    $(this.el).find('#ClearBbox').bind('click', jQuery.proxy(this.clear, this));
+    $(this.el).find('#ClearBbox').button({'icons':{'primary':'ui-icon-refresh'},'label':'Clear'}).bind('click', jQuery.proxy(this.clear, this));
 
     return this;
   },
