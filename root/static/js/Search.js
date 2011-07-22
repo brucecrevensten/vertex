@@ -76,6 +76,36 @@ var SearchParametersView = Backbone.View.extend(
 
 });
 
+var DisplaySearchParametersView = Backbone.View.extend(
+{
+  displayData: {
+    bbox: null,
+    start: null,
+    end: null,
+    platforms: null
+  },
+  initialize: function() {
+    _.bindAll(this, 'render');
+    for(var ii in this.model.filters) {
+      if(!_.isUndefined(this.model.filters[ii].get('start'))) {
+        this.displayData.start = this.model.filters[ii].get('start');
+      }
+      if(!_.isUndefined(this.model.filters[ii].get('end'))) {
+        this.displayData.end = this.model.filters[ii].get('end');
+      }
+    }
+  },
+
+  render: function() {
+    $(this.el).html(
+          _.template('\
+          <%= start %>-<%= end %>\
+    ', this.displayData));
+    $(this.el).show();
+  }
+
+});
+
 var BaseWidget = Backbone.View.extend(
 {
   tagName: "div",
@@ -180,11 +210,11 @@ var GeographicWidget = BaseWidget.extend(
 <p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South<br />(or use the map)<br />Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
-<button style="margin:1ex 0; float:right;" id="ClearBbox">Clear</button>\
+<button class="ui-button ui-widget ui-state-default ui-corner-all" id="ClearBbox">Clear</button>\
 ', this.model.toJSON())
     );
     this.renderMap();
-    $(this.el).find('#ClearBbox').button({'icons':{'primary':'ui-icon-refresh'},'label':'Clear'}).bind('click', jQuery.proxy(this.clear, this));
+    $(this.el).find('#ClearBbox').bind('click', jQuery.proxy(this.clear, this));
 
     return this;
   },
@@ -519,7 +549,7 @@ var PlatformWidget = BaseWidget.extend(
         _.template( '\
 <div class="platformInformation">\
 <h3><%= name %> Highlights</h3>\
-<img id="<%= imageId %>" src="<%= imageUrl %>" />\
+<img src="<%= imageUrl %>" />\
 <ul>\
 <li>Launch Date: <strong><%= launchDate %></strong></li>\
 <li>Altitude: <strong><%= altitude %></strong></li>\
