@@ -31,6 +31,51 @@ var DownloadQueue = Backbone.Collection.extend(
 }
 );
 
+var DownloadQueueSearchResultsView = Backbone.View.extend({
+  initialize: function() {
+    _.bindAll(this, "render");
+    this.collection.bind("add", this.render);
+    this.collection.bind("remove", this.render);
+
+    //TODO: bind this to the 'render' event on the search results
+  },
+  setSearchResultsView: function(srv) {
+    this.srv = srv;
+    this.srv.bind("render", this.render);
+  },
+  render: function() {
+    $(SearchApp.searchResultsView.el).find('li.productRow').removeClass('inQueue');
+    this.collection.each( function(m) {
+      $(SearchApp.searchResultsView.el).find('[product_id="'+m.get('productId')+'"]').addClass('inQueue');
+    });
+  }
+});
+
+var DownloadQueueMapView = Backbone.View.extend({
+  
+  initialize: function() {
+    _.bindAll(this, "render");
+    this.collection.bind("add", this.render);
+    this.collection.bind("remove", this.render);
+  },
+  setSearchResultsView: function(srv) {
+    this.srv = srv;
+    this.srv.bind("render", this.render);
+  },
+  render: function() {
+    // find each .mo that is in the queue, and highlight it + bump it up
+    this.collection.each( function(m) {
+      SearchApp.searchResultsView.mo[ m.get('productId') ].setOptions({
+        fillColor: '#7777FF',
+        fillOpacity: 0.5,
+        strokeColor: '#333399',
+        strokeOpacity: 0.5,
+        zIndex: 1500
+      });
+    });
+  }
+});
+
 var DownloadQueueSummaryView = Backbone.View.extend(
   {
   initialize: function() {

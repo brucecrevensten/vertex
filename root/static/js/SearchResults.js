@@ -354,14 +354,32 @@ var SearchResultsView = Backbone.View.extend(
   },
   toggleHighlight: function(e) {
 
+    /*
+    the two states:
+    - off, not currently highlighted
+    - in queue, return to queue highlight status + zindex
+*/
+
     if( e.view.SearchApp.searchResultsView.activePoly ) {
-      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-        fillColor: '#777777',
-        fillOpacity: 0.25,
-        strokeColor: '#333333',
-        strokeOpacity: 0.5,
-        zIndex: 1000
-      });
+      // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
+      if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), e.view.SearchApp.searchResultsView.activePoly )) {
+        // It's in the DQ, turn it blue again  
+        e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
+          fillColor: '#77aaFF',
+          fillOpacity: 0.5,
+          strokeColor: '#336699',
+          strokeOpacity: 0.5,
+          zIndex: 1500
+        });
+      } else {
+        e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
+          fillColor: '#777777',
+          fillOpacity: 0.25,
+          strokeColor: '#333333',
+          strokeOpacity: 0.5,
+          zIndex: 1000
+        });
+      }
     }
 
     e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");

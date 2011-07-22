@@ -75,6 +75,15 @@ $(function() {
     this.downloadQueueSummaryView.render();
     $("#queue_summary").bind("click", this.downloadQueueView.render );
     
+    this.downloadQueueSearchResultsView = new DownloadQueueSearchResultsView( {
+      collection: this.downloadQueue 
+    });
+    this.downloadQueueSearchResultsView.setSearchResultsView(this.searchResultsView);
+    
+    this.downloadQueueMapView = new DownloadQueueMapView( {
+      collection: this.downloadQueue
+    });
+    this.downloadQueueMapView.setSearchResultsView(this.searchResultsView);
 
     $('#triggerSearch').button(
       {
@@ -86,35 +95,25 @@ $(function() {
       e.data.sr.fetchSearchResults(e.data.sp); // initial population
     }).focus();//.click(); ///// Add .click() to make app begin searching immediately
 
-    $('#resetSearch').button(
-      { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults }, function(e) {
-        e.data.sp.setDefaults();
-        e.data.spv.render();
-        e.data.sr.fetchSearchResults(e.data.sp);
-      });
+      $('#resetSearch').button(
+        { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults }, function(e) {
+          e.data.sp.setDefaults();
+          e.data.spv.render();
+          e.data.sr.fetchSearchResults(e.data.sp);
+        });
 
-    //fire up the map
-    initMap('searchMap');
- 
-    this.user = new User();
-    this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
-    this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
-    this.userLoginButton.render();
-  	this.userLoginFields = new UserLoginFields({ model: this.user, el: $('#form1')});
-	this.userLoginMessage = new UserLoginMessage( {model: this.user, el: $('#login_msg')});
-		this.userLoginMessage.render();
+      //fire up the map
+      initMap('searchMap');
+   
+      this.user = new User();
+      this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
+      this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
+      this.userLoginButton.render();
+    	this.userLoginFields = new UserLoginFields({ model: this.user, el: $('#form1')});
+  	  this.userLoginMessage = new UserLoginMessage( {model: this.user, el: $('#login_msg')});
+  		this.userLoginMessage.render();
     },
 
-    
-    render: function () {
-      //not sure if we need this, but it might be used for updating views based on minimized results panes, etc.
-    },
-    
-    handleResults: function () {
-      //this should be where the result of the filters gets passed on to the results views. Or maybe in the render function above, actually? One or the other.
-    }
-    
-    //we'll likely need more here as we figure it out
   });
   
   window.SearchApp = new SearchAppView;

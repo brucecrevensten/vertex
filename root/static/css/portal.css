@@ -132,9 +132,17 @@ legend {
 
 #searchResults li {
   display: block;
-  padding: 1em 0;
+  padding: 1em 1ex 1ex 1ex;
   clear: both;
   cursor: pointer;
+}
+
+#searchResults li.productRow.inQueue {
+  background-color: #77aaff !important;
+}
+
+#searchResults li.productRow.inQueue h4 span.beam {
+  color: white !important;
 }
 
 #searchResults li ul li {
