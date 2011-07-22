@@ -46,7 +46,7 @@
 	
 	<div>
   <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
- 	<h1>&nbsp;ASF Dataportal</h1>
+ 	<h1>&nbsp;Unamed Reworked Search Assistant</h1>
 	
 	
     <div id="tools_menu">

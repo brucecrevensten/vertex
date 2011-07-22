@@ -142,7 +142,7 @@ legend {
 }
 
 #searchResults li.productRow.inQueue h4 span.beam {
-  color: white !important;
+  color: #ddd !important;
 }
 
 #searchResults li ul li {

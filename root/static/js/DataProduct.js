@@ -1,4 +1,10 @@
-var DataProductFile = Backbone.Model.extend( {} );
+var DataProductFile = Backbone.Model.extend( {
+  initialize: function() {
+    this.set( {
+       'acquisitionDateText': $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('acquisitionDate')))
+    });
+  }
+} );
 
 var DataProductFiles = Backbone.Collection.extend( { 
   model: DataProductFile
@@ -99,6 +105,7 @@ var DataProductView = Backbone.View.extend(
 ';
         case 'UAVSAR': return '\
 <ul class="metadata">\
+<li><span>Mission</span>: <%= MISSIONNAME %></li>\
 <li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
 <li><span>Frequency</span>: L-Band</li>\
@@ -129,6 +136,7 @@ var DataProductView = Backbone.View.extend(
     },
 
     render: function() {
+      $(this.el).empty();
       var ur = SearchApp.user.getWidgetRenderer();
       $(this.el).html( ur.ppBrowse( this.model ));
       var p3 = $(

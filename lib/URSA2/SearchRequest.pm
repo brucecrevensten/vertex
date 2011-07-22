@@ -126,6 +126,7 @@ sub decode {
   $self->{path} = $self->handleMultipleValues('path');
   $self->{offnadir} = $self->handleMultipleValues('offnadir');
   $self->{processing} = $self->handleMultipleValues('processing');
+  $self->{products} = $self->handleMultipleValues('products');
 
   $self->{start} = $self->{requests}->param('start');
   $self->{end} = $self->{requests}->param('end');
@@ -133,7 +134,6 @@ sub decode {
   $self->{bbox} = $self->{requests}->param('bbox');
   $self->{polygon} = $self->{requests}->param('polygon');
   $self->{format} = $self->{requests}->param('format');
-  $self->{products} = $self->csvToArr( $self->{requests}->param('products'));
   $self->{direction} = $self->{requests}->param('direction');
   $self->{frame} = $self->buildListFromRanges($self->{frame});
   $self->{path} = $self->buildListFromRanges($self->{path});

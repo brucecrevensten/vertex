@@ -62,9 +62,45 @@ var User = Backbone.Model.extend(
 				case 'LEGACY': return new LegacyUserWidgetRenderer( { model: this.model } );
 				default: return new UnrestrictedWidgetRenderer( { model: this.model } );
 			}
+		},
+
+		getRestrictionTester: function() {
+			switch( this.get('authType')) {
+				case 'UNIVERSAL' : return new UniversalRestrictionTester();
+				case 'ALOS' : return new AlosRestrictionTester();
+				case 'LEGACY' : return new LegacyRestrictionTester();
+				default : return new UnrestrictedRestrictionTester();
+			}
 		}
 	}
 );
+
+var UniversalRestrictionTester = Backbone.Model.extend({
+	containsRestrictedProduct: function( p ) {
+		return false;
+	}	
+});
+
+var AlosRestrictionTester = Backbone.Model.extend({
+	restricted: [ 'ERS-1', 'ERS-2', 'JERS-1', 'RADARSAT-1' ],
+	containsRestrictedProduct: function( p ) {
+		return ( 0 != _.intersection( _.uniq( p.pluck('platform')), this.restricted ).length );
+	}	
+});
+
+var LegacyRestrictionTester = Backbone.Model.extend({
+	restricted: [ 'ALOS' ],
+	containsRestrictedProduct: function( p ) {
+		return ( 0 != _.intersection( _.uniq( p.pluck('platform')), this.restricted ).length );
+	}	
+});
+
+var UnrestrictedRestrictionTester = Backbone.Model.extend({
+	restricted: [ 'ALOS', 'ERS-1', 'ERS-2', 'JERS-1', 'RADARSAT-1' ],
+	containsRestrictedProduct: function( p ) {
+		return ( 0 != _.intersection( _.uniq( p.pluck('platform')), this.restricted ).length );
+	}	
+});
 
 var UserLoginView = Backbone.View.extend(
 	{

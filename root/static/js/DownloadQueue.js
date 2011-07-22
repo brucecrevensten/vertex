@@ -65,13 +65,16 @@ var DownloadQueueMapView = Backbone.View.extend({
   render: function() {
     // find each .mo that is in the queue, and highlight it + bump it up
     this.collection.each( function(m) {
-      SearchApp.searchResultsView.mo[ m.get('productId') ].setOptions({
-        fillColor: '#7777FF',
-        fillOpacity: 0.5,
-        strokeColor: '#333399',
-        strokeOpacity: 0.5,
-        zIndex: 1500
-      });
+      // After applying filters, currently-selected items may not be drawn on the map -- check first!
+      if( true != _.isUndefined( SearchApp.searchResultsView.mo[ m.get('productId') ] )) {
+        SearchApp.searchResultsView.mo[ m.get('productId') ].setOptions({
+          fillColor: '#7777FF',
+          fillOpacity: 0.5,
+          strokeColor: '#333399',
+          strokeOpacity: 0.5,
+          zIndex: 1500
+        });
+      }
     });
   }
 });
@@ -128,22 +131,41 @@ var DownloadQueueView = Backbone.View.extend(
       this.collection.each( function(m) {
         table = table + _.template('\
 <tr>\
-<td>\
-<img src="<%= thumbnail %>" title="<%= productId %>" />\
-<input type="hidden" name="filename[]" value="<%= filename %>" />\
+<td style="vertical-align: middle; line-height: 30px;">\
+<img style="height: 30px; float: left;" src="<%= thumbnail %>" title="<%= productId %>" />\
+<span style="height: 30px; display: inline-block;" vertical-align: middle" ><%= filename %></span>\
+</div>\
 </td>\
 <td><%= processingTypeDisplay %></td>\
 <td><%= platform %></td>\
-<td><%= acquisitionDate %></td>\
+<td><%= acquisitionDateText %></td>\
 <td><%= sizeText %></td>\
-<td><a product_file_id="<%= id %>" product_id="<%= productId %>" class="remove">Remove from queue</a>\
+<td>\
+<a product_file_id="<%= id %>" product_id="<%= productId %>" class="remove">Remove from queue</a>\
+<input type="hidden" name="products[]" value="<%= filename %>" />\
+</td>\
 </tr>\
 ', m.toJSON());
       });
 
+      var pageTemplate = { 
+        'table': table, 
+        'url': AsfDataportalConfig.apiUrl,
+        'restricted': ''
+      };
+
+      if ( SearchApp.user.getRestrictionTester().containsRestrictedProduct( this.collection ) ) {
+        pageTemplate.restricted = '<div class="ui-state-highlight ui-corner-all" style="padding: 1em;">\
+          <p><span class="ui-icon ui-icon-info" style="float: left; position: relative; top: -2px; margin-right: .3em;"></span>\
+          Your download queue contains some items that are restricted.  You can download the metadata, but you&rsquo;ll\
+          need to log in to be able to successfully bulk download the products.</p>\
+          </div>';
+      }
+
       $(this.el).html(
         _.template('\
 <form id="download_queue_form" action="<%= url %>">\
+<%= restricted %>\
 <table class="datatable" id="download_queue_table">\
 <thead>\
 <tr>\
@@ -157,17 +179,23 @@ var DownloadQueueView = Backbone.View.extend(
 </thead>\
 <tbody> <%= table %> </tbody>\
 </table>\
-<div class="footer_controls">\
-<button type="submit" id="do_queue_download" class="tool_download" name="Download">Download</button>\
+<h4 style="margin: 1em 0; font-weight: bold;">About bulk download</h4>\
+<p style="margin: 1em 0; line-height: 120%;">\
+This search tool uses the <strong>.metalink</strong> format to support bulk downloads of data.<br/>\
+<a style="margin-top: 1ex;" target="_blank" href="http://www.asf.alaska.edu/program/sdc/bulk_download" id="get_bulk_download">Get a bulk download client</a>\
+</p>\
+<div class="footer_controls" style="margin-top: 1em; padding-top: 1ex; border-top: 1px solid #888">\
 <div id="download_queue_formats">\
-<input checked="checked" type="radio" name="format" value="metalink" id="download_type_metalink" /><label for="download_type_metalink">Bulk Download (.metalink)</label>\
-<input type="radio" name="format" value="csv" id="download_type_csv" /><label for="download_type_csv">Spreadsheet (.csv)</label>\
-<input type="radio" name="format" value="kml" id="download_type_kml" /><label for="download_type_kml">Google Earth (.kml)</label>\
+<input type="hidden" name="format" value="metalink" id="format_specifier" />\
+<input class="downloader" type"button" value="metalink" id="download_type_metalink" />\
+<input class="downloader" type="button" value="csv" id="download_type_csv" />\
+<input class="downloader" type="button" value="kml" id="download_type_kml" />\
 </div>\
 </div>\
 </form>\
-', { table: table, url: AsfDataportalConfig.apiUrl } ));
+', pageTemplate ));
 
+      $(this.el).find('#get_bulk_download').button({ icons: { primary: "ui-icon-newwin" }});
       $(this.el).find('a.remove').button(
         {
           'label': 'Remove',
@@ -189,8 +217,20 @@ var DownloadQueueView = Backbone.View.extend(
         "bJQueryUI": true
       });
 
-      $(this.el).find("#download_queue_formats").buttonset();
-      $(this.el).find("#do_queue_download").button( { icons: { primary: "ui-icon-circle-arrow-s" }}).focus();
+      $(this.el).find("#download_type_metalink").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Bulk Download (.metalink)'} ).click( function() {
+        $('#format_specifier').val( 'metalink');
+        $('#download_queue_form').submit();
+      });
+      $(this.el).find("#download_type_csv").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Download Metadata (.csv)'} ).click( function() {
+        $('#format_specifier').val( 'csv');
+        $('#download_queue_form').submit();
+      });
+      $(this.el).find("#download_type_kml").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Google Earth (.kml)'} ).click( function() {
+        $('#format_specifier').val( 'kml');
+        $('#download_queue_form').submit();
+      });
+
+      $(this.el).find('img').error( function() { $(this).remove(); });
 
     } else {
 
