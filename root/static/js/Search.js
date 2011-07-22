@@ -76,36 +76,6 @@ var SearchParametersView = Backbone.View.extend(
 
 });
 
-var DisplaySearchParametersView = Backbone.View.extend(
-{
-  displayData: {
-    bbox: null,
-    start: null,
-    end: null,
-    platforms: null
-  },
-  initialize: function() {
-    _.bindAll(this, 'render');
-    for(var ii in this.model.filters) {
-      if(!_.isUndefined(this.model.filters[ii].get('start'))) {
-        this.displayData.start = this.model.filters[ii].get('start');
-      }
-      if(!_.isUndefined(this.model.filters[ii].get('end'))) {
-        this.displayData.end = this.model.filters[ii].get('end');
-      }
-    }
-  },
-
-  render: function() {
-    $(this.el).html(
-          _.template('\
-          <%= start %>-<%= end %>\
-    ', this.displayData));
-    $(this.el).show();
-  }
-
-});
-
 var BaseWidget = Backbone.View.extend(
 {
   tagName: "div",
@@ -210,11 +180,11 @@ var GeographicWidget = BaseWidget.extend(
 <p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South<br />(or use the map)<br />Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
-<button class="ui-button ui-widget ui-state-default ui-corner-all" id="ClearBbox">Clear</button>\
+<button style="margin:1ex 0; float:right;" id="ClearBbox">Clear</button>\
 ', this.model.toJSON())
     );
     this.renderMap();
-    $(this.el).find('#ClearBbox').bind('click', jQuery.proxy(this.clear, this));
+    $(this.el).find('#ClearBbox').button({'icons':{'primary':'ui-icon-refresh'},'label':'Clear'}).bind('click', jQuery.proxy(this.clear, this));
 
     return this;
   },
@@ -314,11 +284,38 @@ var GeographicWidget = BaseWidget.extend(
 );
 
 var DateFilter = BaseFilter.extend(
-{ name: "DateFilter",
-  defaults: {
-      start:"2009-12-01",
-      end:"2010-06-15",
-  },
+{ 
+	
+  name: "DateFilter",
+
+	format_date: function(this_date) {
+		var year, month, day;
+	    year = String(this_date.getFullYear());
+	    month = String(this_date.getMonth() + 1);
+	    if (month.length == 1) {
+	        month = "0" + month;
+	    }
+	    day = String(this_date.getDate());
+	    if (day.length == 1) {
+	        day = "0" + day;
+	    }
+	    var date_str =  year + "-" + month + "-" + day;
+		return date_str;
+	},
+	
+	get_date_N_years_ago: function(N) {
+		var num_days = 365*N;
+		var begin_date = new Date();
+		begin_date.setDate(begin_date.getDate() - num_days);
+		return begin_date;
+	},
+	
+	initialize: function() {
+		var today = new Date();
+		this.set({"start":this.format_date(this.get_date_N_years_ago(1))});
+		this.set({"end":this.format_date(today)});
+	},
+
   getWidget: function() { 
     return new DateWidget({model:this});
   }
@@ -549,7 +546,7 @@ var PlatformWidget = BaseWidget.extend(
         _.template( '\
 <div class="platformInformation">\
 <h3><%= name %> Highlights</h3>\
-<img src="<%= imageUrl %>" />\
+<img id="<%= imageId %>" src="<%= imageUrl %>" />\
 <ul>\
 <li>Launch Date: <strong><%= launchDate %></strong></li>\
 <li>Altitude: <strong><%= altitude %></strong></li>\
