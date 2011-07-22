@@ -141,6 +141,10 @@ legend {
   background-color: #77aaff !important;
 }
 
+#searchResults li.productRow.inQueue:hover {
+  background-color: #FFFFB4 !important;
+}
+
 #searchResults li:nth-child(odd).productRow.inQueue {
   background-color: #85afff !important; 
 }
