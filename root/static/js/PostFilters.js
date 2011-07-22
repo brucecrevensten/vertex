@@ -211,9 +211,13 @@ var AlosFacet = PlatformFacet.extend(
       }
 
       if( f.beamoffnadir.length ) {
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE));
-        });
+          a = _.reject( a, function(row) {
+            if(row.BEAMMODETYPE == 'WB1') {
+              return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE));
+            } else {
+              return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE.concat(row.OFFNADIRANGLE)));
+            }
+          });
       }
       return _.union(a, d);
     }
