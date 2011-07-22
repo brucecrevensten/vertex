@@ -74,21 +74,8 @@ $(function() {
       }
     );
     this.downloadQueueSummaryView.render();
-    $("#queue_summary").bind("click", { dqv: this.downloadQueueView }, function(e) {
-      $("#download_queue").html(
-        e.data.dqv.render().el.innerHTML
-      );
-      $("#download_queue").dialog(
-       {
-          modal: true,
-          width: 800,
-          draggable: false,
-          resizable: false,
-          title: "Download queue",
-          position: "top"
-        }
-      );
-    });
+    $("#queue_summary").bind("click", this.downloadQueueView.render );
+    
 
     $('#triggerSearch').button(
       {

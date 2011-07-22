@@ -47,7 +47,6 @@ var SearchResults = Backbone.Collection.extend(
           processingTypeDisplay: data[i].PROCESSINGTYPEDISPLAY,
           processingLevel: data[i].PROCESSINGLEVEL,
           processingDescription: data[i].PROCESSINGDESCRIPTION,
-          processingType: data[i].PROCESSINGTYPE,
           url: data[i].URL,
           platform: data[i].PLATFORM,
           acquisitionDate: data[i].ACQUISITIONDATE,
@@ -213,8 +212,10 @@ var SearchResultsView = Backbone.View.extend(
       ).append( $('<button>More information&hellip;</button>').button( { 'text':false, 'icons':{'primary':'ui-icon-help'}}));
       
       var k = $('<button>Add to queue&hellip;</button>', { 'class':'tool_enqueuer' }
-      ).button( { 'text':false, 'icons':{'primary':'ui-icon-circle-plus'}}
+      ).button( { 'text':false, 'icons':{'primary':'ui-icon-circle-plus',
+                'secondary':'ui-icon-triangle-1-s'}}
       ).bind('click', { 'd':d }, function(e) {
+          $(this).toggleClass('ui-state-active');
           $('#gpl_'+e.data.d.id).toggle();
           e.stopPropagation();
         });
@@ -222,7 +223,7 @@ var SearchResultsView = Backbone.View.extend(
       b.append(k);
       
       var c = $('<ul/>', { 'style':'display:none', 'class':'granuleProductList', 'id':'gpl_'+d.id } );
-      // stopping point: the e/files/each isn't quite grabbing the collection of files, so the below code won't work.
+
       e.files.each( function( q, w, r ) {
       
         var lit = $('<li/>');

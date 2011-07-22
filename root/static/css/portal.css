@@ -121,6 +121,10 @@ legend {
   padding: 0 0 1ex 0;
 }
 
+#download_queue_table {
+  width: 100%;
+}
+
 #searchResults {
   overflow: auto;
   height: 600px;
