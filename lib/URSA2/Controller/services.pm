@@ -48,7 +48,6 @@ sub search :Path {
   $c->stats->profile( begin => 'search' );
   my $t = URSA2::Transformer->new();
 
-=cut
   $c->stats->profile('preparing to perform search...');
 
   eval {
@@ -99,15 +98,9 @@ sub search :Path {
     $t->transform( $c );
     $c->stats->profile('finished transformation.');
   };
-=cut
-  my $f;
-  {
-    local $/=undef;
-    open FILE, "r.jsonp" or die "Couldn't open file: $!";
-    $f = <FILE>;
-    close FILE;
-  }
-=cut
+
+  my $e;
+  
   if ( 
     ($e = Exception::Class->caught('MissingParameter'))
     || ($e = Exception::Class->caught('InvalidParameter'))
@@ -126,20 +119,16 @@ sub search :Path {
     $c->detach();
   } else {
     # processed ok
+
     #TODO: make this cleaner/wrap it up in SearchRequest/Transformer
     if( defined($c->request->param('format')) && 'jsonp' eq $c->request->param('format') ) {
-=cut
-      $c->response->body( $c->request->param('callback').'('.$f.')' );
-=cut
+      $c->response->body( $c->request->param('callback').'('.$t->getOutput().')' );
     } else {
       $c->response->body( $t->getOutput() );
     }
-=cut
-    $c->response->content_type( 'text/javascript; charset=utf-8' );
+    $c->response->content_type( $t->getContentType() );
     $c->response->header('Content-Disposition' => 'attachment; filename='.$t->getFilename);
-=cut
   }
-=cut
 }
 
 =head2 Authentication
@@ -192,9 +181,7 @@ sub authentication :Local {
     if($r->redirect) {
       $c->response->redirect($r->redirect);
     } else {
-	  my $authType = $c->model('User')->authorize($r->userid);
-	  $c->res->content_type("application/json");
-      $c->res->body('{"authType": ' . '"'.$authType .'"}');
+      $c->res->body('authentication succeeded!  cookies being set...');
     }
   }
 
