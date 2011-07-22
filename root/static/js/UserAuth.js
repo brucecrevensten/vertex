@@ -5,7 +5,8 @@ var User = Backbone.Model.extend(
 			authenticated: false,
 			userid: '',
 			password: '',
-			authType: ''
+			authType: '',
+			user_first_name:'',
 		},
 
 		initialize: function() {
@@ -21,9 +22,9 @@ var User = Backbone.Model.extend(
 				dataType: "json",
 				context: this,
 				success: function(data, textStatus, jqXHR) {
-					this.set( {'authenticated': true, 'authType': data.authType} );
+					this.set( {'authenticated': true, 'authType': data.authType, 'user_first_name':data.user_first_name} );
 					this.widgetRenderer = this.getWidgetRenderer();
-					this.trigger('authSuccess');	
+					this.trigger('authSuccess');
 				},
 				error: function(error) {
 					this.trigger('authError');
@@ -110,10 +111,10 @@ var UserLoginMessage = Backbone.View.extend( {
 	render: function() {
 		if( this.model.get('authenticated') == true) {
 					$(this.el).html( _.template( 	
-						'<div id="login_msg"> Welcome <%= userid %> </div>', {'userid':this.model.get('userid')}) );
+						'<div id="login_msg"> Welcome <%= user_first_name %>! </div>', {'user_first_name':this.model.get('user_first_name')}) );
 		} else {
 					$(this.el).html( _.template( 	
-						'<div id="login_msg"> Welcome Guest') );
+						'<div id="login_msg"> Welcome Guest!') );
 		}
 	}
 	

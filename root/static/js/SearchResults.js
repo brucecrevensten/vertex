@@ -123,7 +123,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showBeforeSearchMessage: function() {
-		console.log("showBeforeSearchMessage");
 		$('#async-spinner').hide();
 	    $('#searchResults').hide();
 	    $('#platform_facets').hide();
@@ -133,7 +132,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showResults: function() {
-	console.log("showResults");
 	$('#before-search-msg').hide();
     $('#async-spinner').hide();
     $('#searchResults').show();
@@ -144,7 +142,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showSearching: function() {
-	console.log("showSearching");
 	$('#before-search-msg').hide();
     $('#async-spinner').show();
     $("#results-banner").hide();
@@ -156,7 +153,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showError: function(jqXHR) {
-	console.log("showError");
 	$('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").hide();

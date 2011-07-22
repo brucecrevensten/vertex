@@ -184,9 +184,12 @@ sub authentication :Local {
     } else {
 		my $auth_type ="UNRESTRICTED";
 		$auth_type = $c->model('User')->authorize($r->userid);	
+		
+		# Get the User's First Name to display in a Welcome Message
+		my $user_first_name = $c->model('User')->get_user_first_name($r->userid);
+		
 		$c->response->content_type('application/json; charset=utf-8');
-        $c->res->body( '{"authType":"'.$auth_type.'"}' );
-	    
+		$c->res->body( '{"authType":"'.$auth_type.'", "user_first_name":"'.$user_first_name.'"}' ); 
     }
   }
 
