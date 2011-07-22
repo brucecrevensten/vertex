@@ -114,7 +114,7 @@ var UserLoginMessage = Backbone.View.extend( {
 						'<div id="login_msg"> Welcome <%= user_first_name %>! </div>', {'user_first_name':this.model.get('user_first_name')}) );
 		} else {
 					$(this.el).html( _.template( 	
-						'<div id="login_msg"> Welcome Guest!') );
+						'<div id="login_msg"> Welcome Explorer!') );
 		}
 	}
 	
