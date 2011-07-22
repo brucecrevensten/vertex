@@ -546,7 +546,7 @@ var PlatformWidget = BaseWidget.extend(
         _.template( '\
 <div class="platformInformation">\
 <h3><%= name %> Highlights</h3>\
-<img id="<%= imageId %>" src="<%= imageUrl %>" />\
+<img src="<%= imageUrl %>" />\
 <ul>\
 <li>Launch Date: <strong><%= launchDate %></strong></li>\
 <li>Altitude: <strong><%= altitude %></strong></li>\
