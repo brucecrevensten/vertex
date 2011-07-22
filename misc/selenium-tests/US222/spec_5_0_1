@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/portal</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -31,7 +31,6 @@
 	<td>css=div#filters.ui-accordion h3.ui-accordion-header[tabindex='-1'] a[href='#PlatformFilter'][tabindex='-1']</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

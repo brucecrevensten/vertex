@@ -14,7 +14,7 @@
 <tr>
 	<td>verifyAttribute</td>
 	<td>//html/body/div/header/img@src</td>
-	<td>http://testdataportal.daac.asf.alaska.edu/static/images/asf-logo-header.png</td>
+	<td>https://testdataportal.daac.asf.alaska.edu/</td>
 </tr>
 <tr>
 	<td>verifyText</td>

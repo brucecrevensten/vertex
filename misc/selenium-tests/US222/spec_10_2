@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/portal</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -21,7 +21,6 @@
 	<td>css=div#filters.ui-accordion div#geographic_widget.ui-accordion-content input#filter_bbox[value='']</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

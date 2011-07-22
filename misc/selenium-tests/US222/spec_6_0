@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/portal</td>
+	<td>/</td>
 	<td></td>
 </tr>
 <tr>
@@ -28,13 +28,13 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Filter by platform</td>
+	<td>link=Filter By Platform &amp; Product</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>css=div#platform_facets.ui-accordion div.ui-accordion-content ul li:nth-child(1) button.ui-button</td>
-	<td>ALOS</td>
+	<td>Processing Type</td>
 </tr>
 </tbody></table>
 </body>
