@@ -149,6 +149,7 @@ sub authentication :Local {
     my $user = $c->model('User');
     if ( $user->authenticate($r->userid, $r->password) ) {
       $cookie = $user->datapool_session_cookie($r->userid, $c->req->address);
+		
     } else {
       if($r->redirect) {
         # Redirect authorization failures also.
@@ -181,10 +182,83 @@ sub authentication :Local {
     if($r->redirect) {
       $c->response->redirect($r->redirect);
     } else {
-      $c->res->body('authentication succeeded!  cookies being set...');
+		my $auth_type ="UNRESTRICTED";
+		$auth_type = $c->model('User')->authorize($r->userid);	
+		
+		# Get the User's First Name to display in a Welcome Message
+		my $user_first_name = $c->model('User')->get_user_first_name($r->userid);
+		
+		$c->response->content_type('application/json; charset=utf-8');
+		$c->res->body( '{"authType":"'.$auth_type.'", "user_first_name":"'.$user_first_name.'"}' ); 
     }
   }
 
+}
+
+
+# Remove the session id from the database (Effectively Logs-out the user)
+sub destroy_session :Local {
+  my ( $self, $c ) = @_;
+
+	# Locate the cookie and grab the session id 
+	my $id = $c->request->cookie('datapool');
+	$id =~ s/datapool=//;
+	
+	# Requires are larger LongReadLen to work
+	$c->model('User')->dbh->{LongReadLen} = 2097152; # 2 mb
+
+	# Instantiate an instance of an existing session using the session id
+    my $session = CGI::Session->new(
+      'driver:Oracle', $id, {
+        'Handle' => $c->model('User')->dbh,
+        'TableName' => 'sessions',
+      }
+    );
+
+	# Remove the session from the database
+	$session->delete();
+	$session->flush();
+	$c->model('User')->dbh->commit();	
+}
+
+
+=head2 Feedback
+
+Accept a comment and store it in the database.
+
+=cut
+
+sub feedback :Local {
+  my ( $self, $c ) = @_;
+  
+  my $r = URSA2::FeedbackRequest->factory( $c->request );
+  eval {
+    $r->decode();
+    $r->validate();
+
+    my $feedback = $c->model('Feedback');
+    $feedback->recordFeedback(
+      'userid'      => $r->{'userid'},
+      'name'        => $r->{'name'},
+      'email'       => $r->{'email'},
+      'comment'     => $r->{'comment'},
+      'ip_address'  => $c->req->address
+    );
+  };
+  my $e = $@;
+  if ( ( $e = Exception::Class->caught('MissingParameter') ) 
+    || ( $e = Exception::Class->caught('DbException') ) ) {
+      $e->dispatch($c);
+  } elsif($@) {
+    $e = Exception::Class->caught();
+    if ( ref $e ) {
+      $c->log->fatal( 'Uncaught exception in services controller: '.$e->description );
+    } else {
+      $c->log->fatal( 'Unhandled error in services controller: '.Dumper($@) );
+    }
+    $c->response->status(Apache2::Const::HTTP_INTERNAL_SERVER_ERROR);
+    $c->detach();
+  }
 }
 
 =head2 end
