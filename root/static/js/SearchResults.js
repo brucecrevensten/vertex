@@ -197,6 +197,7 @@ var SearchResultsView = Backbone.View.extend(
     }
 
     var ur = SearchApp.user.getWidgetRenderer();
+    $(this.el).append(this.getProcessingMenu());
     this.collection.each( function( e, i, l ) {
      
       var d = e.toJSON();
@@ -208,14 +209,35 @@ var SearchResultsView = Backbone.View.extend(
       var b = $('<div/>', { 'class':'productRowTools' }
       ).append( $('<button>More information&hellip;</button>').button( { 'text':false, 'icons':{'primary':'ui-icon-help'}}));
       
-      var k = $('<button>Add to queue&hellip;</button>', { 'class':'tool_enqueuer' }
-      ).button( { 'text':false, 'icons':{'primary':'ui-icon-circle-plus',
-                'secondary':'ui-icon-triangle-1-s'}}
+      var k = $('<div/>', { 'class':'tool_enqueuer' }
+      ).html( 
+        _.template('\
+<input type="checkbox" id="<%= id %>_queue_toggler" /><label for="<%= id %>_queue_toggler">&nbsp;</label>\
+', { id: d.id }
+        )
+      ).button( 
+        { 
+          'text':false,
+          'icons':
+            {
+              'primary':'ui-icon-circle-plus',
+              'secondary':'ui-icon-triangle-1-s'
+            }
+        }
       ).bind('click', { 'd':d }, function(e) {
-          $(this).toggleClass('ui-state-active');
-          $('#gpl_'+e.data.d.id).toggle();
-          e.stopPropagation();
-        });
+        if( true != _.isUndefined( SearchApp.searchResultsView.currentProduct )) {
+          if( e.data.d.id != SearchApp.searchResultsView.currentProduct ) {
+            $('#'+SearchApp.searchResultsView.currentProduct+'_queue_toggler').click();
+          } 
+        }
+        if( e.data.d.id == SearchApp.searchResultsView.currentProduct ) {
+          SearchApp.searchResultsView.currentProduct = undefined;
+        } else {
+          SearchApp.searchResultsView.currentProduct = e.data.d.id;
+        }
+        $('#gpl_'+e.data.d.id).toggle();
+        e.stopPropagation();
+      });
 
       b.append(k);
       
@@ -291,6 +313,10 @@ var SearchResultsView = Backbone.View.extend(
     
     return this;
 
+  },
+  getProcessingMenu: function() {
+    var e = $('<div/>');
+    return e;
   },
   renderOnMap: function() {
 

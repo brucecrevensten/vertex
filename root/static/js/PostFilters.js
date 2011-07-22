@@ -10,9 +10,6 @@ var PostFilters = Backbone.Model.extend(
         new LegacyFacet( { 'platform':'JERS-1','offset':20} )
       ];
 
-      // Processing facet always show up; treat it as unlike the platform.
-      this.processingFacet = new ProcessingFacet();
-
       self = this;
       for( var i in this.postFilters ) {
         this.postFilters[i].bind( "change", function(filter) {
@@ -68,10 +65,6 @@ var PostFiltersView = Backbone.View.extend(
     var d = jQuery('<div/>');
     var u = jQuery('<ul/>');
 
-    // Always show the processing type filter, since it always applies
-    this.processingWidget.model.set({ 'procTypes':procTypes });
-    u.append( jQuery('<li/>').append( this.processingWidget.render().el) );
-
     for ( var i in this.widgets ) {
       if( -1 != _.indexOf( platforms, this.widgets[i].name )) {
         u.append( jQuery('<li/>').append( this.widgets[i].render().el) );
@@ -86,7 +79,7 @@ var PostFiltersView = Backbone.View.extend(
 
       d.append(u);
       d.append(r);
-      $(this.el).append( jQuery('<h3><a href="#">Filter By Platform & Product</a></h3>')).append(d).accordion();
+      $(this.el).append( jQuery('<h3><a href="#">Filter By Platform</a></h3>')).append(d).accordion();
     }
     return this;
   }

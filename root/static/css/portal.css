@@ -141,6 +141,10 @@ legend {
   background-color: #77aaff !important;
 }
 
+#searchResults li:nth-child(odd).productRow.inQueue {
+  background-color: #85afff !important; 
+}
+
 #searchResults li.productRow.inQueue h4 span.beam {
   color: #ddd !important;
 }
@@ -254,6 +258,7 @@ label.hover {
 #product_profile img {
   display: block;
   margin: 1em auto;
+  min-width: 512px;
   min-height: 512px;
   float: left;
 }
