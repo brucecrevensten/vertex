@@ -45,8 +45,10 @@
   <header>
 	
 	<div>
-  <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
- 	<h1>&nbsp;Unamed Reworked Search Assistant</h1>
+  <a href="https:/testdataportal.daac.asf.alaska.edu/">
+    <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
+ 	  <h1>&nbsp;Unamed Reworked Search Assistant</h1>
+  </a>
 	
 	
     <div id="tools_menu">
