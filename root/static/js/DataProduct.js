@@ -138,6 +138,7 @@ var DataProductView = Backbone.View.extend(
     render: function() {
       $(this.el).empty();
       var ur = SearchApp.user.getWidgetRenderer();
+		$(this.el).empty();
       $(this.el).html( ur.ppBrowse( this.model ));
       var p3 = $(
         '<div/>',{'id':'hanger'}

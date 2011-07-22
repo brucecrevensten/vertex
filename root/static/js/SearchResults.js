@@ -268,6 +268,7 @@ var SearchResultsView = Backbone.View.extend(
           {
             modal: true,
             width: 'auto',
+			minWidth: 400,
             draggable: false,
             resizable: false,
             title: e.data.id,

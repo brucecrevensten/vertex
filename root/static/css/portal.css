@@ -241,13 +241,14 @@ label.hover {
   float: left;
   text-align: left;
   margin: 1ex 1ex 1ex 1em;
-  width: 250px;
+  width: 450px;
 }
 
 #product_profile li {
   margin: 1ex 0;
   text-indent: -1em;
   text-align: left;
+  
 }
 
 #product_profile img {
