@@ -73,8 +73,10 @@ sub getSelectXml {
     url,
     nvl((select url from data_product where granulename = dp.granulename
      and processingtype = 'THUMBNAIL'), 'none') AS thumbnail,
-    nvl((select url from data_product where granulename = dp.granulename
-     and processingtype = 'BROWSE512'), 'none') AS browse,
+    coalesce((select url from data_product where granulename = dp.granulename
+     and processingtype = 'BROWSE512'), 
+     (select url from data_product where granulename = dp.granulename
+      and processingtype = 'BROWSE'), 'none') AS browse,
     bytes,
     ROUND( bytes/1024/1024, 2 ) AS fileSize,
     offNadirAngle,
