@@ -133,7 +133,7 @@ var GeographicWidget = BaseWidget.extend(
   clickListener: null,
   
   initialize: function() {
-    _.bindAll(this, 'changed')
+    _.bindAll(this, 'changed');
   },
 
   events : {
@@ -193,6 +193,7 @@ var GeographicWidget = BaseWidget.extend(
 
     initMap();
 
+    google.maps.event.clearInstanceListeners(searchMap);
     var selfref = this; //needed for the events below, as 'this' does not obtain closure
     if(this.clickListener == null) {
       this.clickListener = google.maps.event.addListener(searchMap, 'click', function(event) {

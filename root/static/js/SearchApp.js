@@ -101,6 +101,7 @@ $(function() {
       $('#resetSearch').button(
         { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults }, function(e) {
           e.data.sp.setDefaults();
+          e.data.spv.setWidgets();
           e.data.spv.render();
           e.data.sr.fetchSearchResults(e.data.sp);
         });
