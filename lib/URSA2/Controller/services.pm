@@ -201,8 +201,7 @@ sub destroy_session :Local {
   my ( $self, $c ) = @_;
 
 	# Locate the cookie and grab the session id 
-	my $id = $c->request->cookie('datapool');
-	$id =~ s/datapool=//;
+	my $id = $c->request->cookies->{'datapool'}->value;
 	
 	# Requires are larger LongReadLen to work
 	$c->model('User')->dbh->{LongReadLen} = 2097152; # 2 mb
