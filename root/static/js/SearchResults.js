@@ -67,6 +67,7 @@ var SearchResults = Backbone.Collection.extend(
     fetchSearchResults: function(sp) {
 
       this.setParameters(sp);
+      this.data = {}; // flush previous result set
 
       var results = $.ajax({
         type: "GET",
@@ -104,6 +105,65 @@ var SearchResults = Backbone.Collection.extend(
     }
   }
 );
+
+var SearchResultsProcessingWidget = Backbone.View.extend(
+{
+  el: '#srProcLevelTool',
+  initialize: function() {
+    _.bindAll(this);
+    this.collection.bind('add', this.render);
+    this.collection.bind('remove', this.render);
+  },
+  render: function() {
+    $(this.el).empty();
+    var w = $('<div/>').html( '<input type="checkbox" id="toggleProcMenu" /><label for="toggleProcMenu">Add all by type&hellip...</label>');
+    w.find('#toggleProcMenu').button(
+      {
+        'label':'Add all by type&hellip;',
+        'icons': {
+          'secondary': 'ui-icon-triangle-1-s'
+        }
+      }
+    ).click( function(e) {
+      $('#addProductsByType').toggle('blind');
+    });
+
+    var m = $('<ul/>', { 'id':'addProductsByType', 'class':'ui-helper-reset ui-widget-content ui-corner-bottom', 'style':'display: none;'});
+    _.each( this.collection.procTypes, function( p, i, l ) {
+      var li = $('<li/>');
+      var ab = $('<button/>', { 'processing':p }).button(
+        {
+          'label': processingTypes.get(p).get('display'),
+          'icons': {
+            'primary':'ui-icon-circle-plus'
+          }
+        }
+      ).click( function(e) {
+       
+        var pl = $(this).attr('processing');
+        var filesToAdd = [];
+        SearchApp.searchResults.each(
+          function(aProduct)
+            {   
+              filesToAdd.push( aProduct.files.select( 
+                function(aFile)
+                  { 
+                    return aFile.get('processingType') == pl;
+                  }
+                )
+              );
+            }
+          );
+        SearchApp.downloadQueue.add( _.union(filesToAdd), {'silent':true} ); // suspend extra flashes of queue button
+        SearchApp.downloadQueue.trigger('add'); // manually trigger to get one flash effect
+      }
+      );
+      m.append( li.append( ab ) );
+    }, this);
+    $(this.el).append(w).append(m);
+    return this;
+  },
+});
 
 var SearchResultsView = Backbone.View.extend(
 {
@@ -197,7 +257,6 @@ var SearchResultsView = Backbone.View.extend(
     }
 
     var ur = SearchApp.user.getWidgetRenderer();
-    $(this.el).append(this.getProcessingMenu());
     this.collection.each( function( e, i, l ) {
      
       var d = e.toJSON();
@@ -314,10 +373,7 @@ var SearchResultsView = Backbone.View.extend(
     return this;
 
   },
-  getProcessingMenu: function() {
-    var e = $('<div/>');
-    return e;
-  },
+
   renderOnMap: function() {
 
     e = this.collection.at(0).toJSON();
@@ -405,12 +461,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   toggleHighlight: function(e) {
-
-    /*
-    the two states:
-    - off, not currently highlighted
-    - in queue, return to queue highlight status + zindex
-*/
 
     if( e.view.SearchApp.searchResultsView.activePoly ) {
       // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not

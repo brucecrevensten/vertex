@@ -27,6 +27,7 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchMap.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/DataProduct.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/ProcessingTypes.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/Search.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/PostFilterComponents.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/PostFilters.js') %]"></script>
@@ -129,7 +130,7 @@
             <strong>An error occurred</strong> while processing your current search (<code id="error-message-code"></code>).
         </div>
       </div>
-	
+	    <div id="srProcLevelTool"></div>
       <ul id="searchResults"></ul>
 </div>
 
