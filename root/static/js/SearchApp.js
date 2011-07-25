@@ -1,3 +1,7 @@
+if( _.isUndefined( console.log) ) {
+ window.console.log = function() {}; 
+}
+
 $(function() {
 	
   window.SearchAppView = Backbone.View.extend({
@@ -24,46 +28,48 @@ $(function() {
     initialize: function() {
     // init search behaviors
     this.searchParameters = new SearchParameters();
+    this.postFilters = new PostFilters();
+
+    this.searchResults = new SearchResults();
+    this.searchResults.searchParameters = this.searchParameters;
+    this.searchResults.postFilters = this.postFilters;
+    this.searchResults.postFilters.bind('change', jQuery.proxy( this.searchResults.filter, this.searchResults) ); // manual binding between two models
+    
     this.searchParametersView = new SearchParametersView( 
       { 
         model: this.searchParameters, 
         el: $("#filters") 
       }
     );
-    this.searchParametersView.render();
-    
-    this.postFilters = new PostFilters();
-    this.postFiltersView = new PostFiltersView(
-    {
-      model: this.postFilters,
-      el: $("#platform_facets")
-    }
+    this.searchParametersView.render();  
+
+    this.activeSearchFiltersView = new ActiveSearchFiltersView(
+      { 
+        'searchParameters': this.searchParameters,
+        'postFilters': this.postFilters
+      }
     );
-
-    this.activeSearchFiltersView = new ActiveSearchFiltersView( this.searchParameters, this.postFilters );
-
-    this.searchResults = new SearchResults();
 
     this.searchResultsView = new SearchResultsView(
       {
-        collection: this.searchResults,
-        el: $("#searchResults")
+        'postFilters': this.postFilters,
+        'collection': this.searchResults,
+        'el': $("#searchResults")
       }
     );
-    this.searchResults.setView( this.searchResultsView );
 
-    // trouble brewing?  this may cause either recursion and/or things to not be cleared when expected.
-    // need to distinguish between a render upon new search results, and a render based on
-    // filtering.
-    this.searchResultsView.bind("render", function() {
-      SearchApp.postFiltersView.render( SearchApp.searchResults.platforms, SearchApp.searchResults.procTypes );
-    });
+    this.postFiltersView = new PostFiltersView(
+      {
+        'searchResults': this.searchResults,
+        'model': this.postFilters,
+        'el': $("#platform_facets")
+      }
+    );
 
     this.searchResultsProcTool = new SearchResultsProcessingWidget( {
       collection: this.searchResults
     });
 
-    // Initialize the download queue
     this.downloadQueue = new DownloadQueue();
     this.downloadQueueView = new DownloadQueueView( 
       { 
@@ -78,16 +84,19 @@ $(function() {
       }
     );
     this.downloadQueueSummaryView.render();
+    //TODO:move this
     $("#queue_summary").bind("click", this.downloadQueueView.render );
     
     this.downloadQueueSearchResultsView = new DownloadQueueSearchResultsView( {
       collection: this.downloadQueue 
     });
+    //TODO: move this
     this.downloadQueueSearchResultsView.setSearchResultsView(this.searchResultsView);
     
     this.downloadQueueMapView = new DownloadQueueMapView( {
       collection: this.downloadQueue
     });
+    //TODO: move this
     this.downloadQueueMapView.setSearchResultsView(this.searchResultsView);
 
     $('#triggerSearch').button(
@@ -96,9 +105,10 @@ $(function() {
           primary: "ui-icon-search"
         },
         label: "Search"
-    }).bind("click", { sp: this.searchParameters, sr: this.searchResults }, function(e) {
-      e.data.sr.fetchSearchResults(e.data.sp); // initial population
-    }).focus();//.click(); ///// Add .click() to make app begin searching immediately
+      }).bind("click", jQuery.proxy( function(e) {
+        this.searchResultsView.showSearching();
+        this.searchResults.fetchSearchResults(); // initial population
+      }, this)).focus();//.click(); ///// Add .click() to make app begin searching immediately
 
       $('#resetSearch').button(
         { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults, srv:this.searchResultsView }, function(e) {
@@ -143,18 +153,16 @@ $(function() {
 var ActiveSearchFiltersView = Backbone.View.extend(
 {
   el: '#active-filters-list',
-  initialize: function(sp, pf) {
+  initialize: function() {
     _.bindAll(this);
-    this.searchParameters = sp;
-    this.postFilters = pf;
-    this.searchParameters.bind('change', this.render);
-    this.postFilters.bind('change', this.render);
+    this.options.searchParameters.bind('change', this.render);
+    this.options.postFilters.bind('change', this.render);
   },
   render: function() {
     
     $('#active-filters').show();
     $(this.el).empty();
-    var p = this.searchParameters.get('platform');
+    var p = this.options.searchParameters.get('platform');
     var platformText;
     if ( _.isEqual( p, AsfPlatformConfig.platform ) ) {
       platformText = 'All Platforms';
@@ -167,14 +175,14 @@ var ActiveSearchFiltersView = Backbone.View.extend(
     }
 
     $(this.el).append(
-      _.template('<li>Date range: <%= start %>&mdash;<%= end %></li>', this.searchParameters.toJSON() )
+      _.template('<li>Date range: <%= start %>&mdash;<%= end %></li>', this.options.searchParameters.toJSON() )
     ).append(
       _.template('<li><%= platformText %></li>', { 'platformText': platformText } )
     );
 
     var postFilterText;
-    if( true != _.isUndefined( this.postFilters ) ) {
-      _.each( this.postFilters.toJSON(), function(e, i, l) {
+    if( true != _.isUndefined( this.options.postFilters ) ) {
+      _.each( this.options.postFilters.toJSON(), function(e, i, l) {
 
         var postFilterItems = [];
         if( e.direction && 'any' != e.direction ) {

@@ -11,12 +11,16 @@ var PostFilters = Backbone.Model.extend(
       ];
 
       self = this;
-      for( var i in this.postFilters ) {
-        this.postFilters[i].bind( "change", function(filter) {
-          self.trigger("change:postfilter", filter);
-        });
-      }
 
+      _.each( this.postFilters, function(e, i, l) {
+
+        e.bind('all', function(e) { console.log('PostFiltersModel observed postFilterComponent='+e); } );
+        e.bind('change', function(filter) {
+          self.trigger('change:postfilter', filter);
+        })
+      });
+
+      this.bind('all', function(e) { console.log('PostFiltersModel observed self event = '+e); } );
       this.bind("change:postfilter", function(filter) {
         var v = {};
         v[filter.platform] = filter.toJSON();
@@ -45,8 +49,14 @@ var PostFiltersView = Backbone.View.extend(
   widgets: [],
   initialize: function() {
     _.bindAll(this, 'render');
-    this.processingWidget = new ProcessingFacetButton( { 'model': this.model.processingFacet } );
+
+    this.options.searchResults.bind('all', function(e) { console.log('PostFiltersView observed SearchResults = '+e); } );
+
+    this.options.searchResults.bind('refresh', this.render);
+    this.options.searchResults.bind('add', this.render);
+    this.options.searchResults.bind('remove', this.render);
   },
+
   setWidgets: function() {
     this.widgets = [];
     for ( var i in this.model.postFilters ) {
@@ -55,8 +65,7 @@ var PostFiltersView = Backbone.View.extend(
     }
   },
   // platforms: array of platform names present in search results
-  // procTypes: array of processing types present in search results
-  render: function(platforms, procTypes) {
+  render: function(platforms) {
 
     this.setWidgets();
     var render = false;
@@ -66,7 +75,7 @@ var PostFiltersView = Backbone.View.extend(
     var u = jQuery('<ul/>');
 
     for ( var i in this.widgets ) {
-      if( -1 != _.indexOf( platforms, this.widgets[i].name )) {
+      if( -1 != _.indexOf( this.options.searchResults.platforms, this.widgets[i].name )) {
         u.append( jQuery('<li/>').append( this.widgets[i].render().el) );
         render = true;
       } 
@@ -111,6 +120,7 @@ var ProcessingFacetButton = BaseWidget.extend( {
   }
 });
 
+/* TODO deprecate / re-implement elsewhere
 var ProcessingFacetDialog = BaseWidget.extend( {
 
   className: "platformFacet",
@@ -194,6 +204,7 @@ var ProcessingFacetDialog = BaseWidget.extend( {
   }
     
 });
+*/
 
 var PlatformFacet = BaseFilter.extend( {
 
@@ -341,7 +352,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     "change input" : "changed",
   },
   initialize: function() {
-    this.render();
+    this.model.bind('all', function(e) { console.log('AlosFacetDialog observed AlosFacet = '+e); } );
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -353,10 +364,10 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     var frame = $(this.el).find('input[name="frame"]').val();
 
     this.model.set({
-      beamoffnadir: beamoffnadir,
-      direction: direction,
-      path: path,
-      frame: frame
+      'beamoffnadir': beamoffnadir,
+      'direction': direction,
+      'path': path,
+      'frame': frame
     });
   },
   beamModes: [
@@ -413,23 +424,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
     $(this.el).append( p.render().el );
 
-    $(this.el).dialog({
-      width: 300,
-      modal: false,
-      draggable: true,
-      resizable: false,
-      title: "ALOS-PALSAR Platform Options",
-      position: [30,100],
-      buttons: {
-        "Cancel": function() { $(this).dialog('close'); },
-        "Reset": jQuery.proxy( function() {
-          this.model.reset();
-          this.render();
-        }, this),
-        "Filter": function() { SearchApp.searchResults.filter(); }
-      }
-    });
-
   }
   
 });
@@ -445,6 +439,21 @@ var AlosFacetButton = PlatformFacetView.extend( {
   },
   openDialog: function(e) {
     var v = new AlosFacetDialog( { model: this.model } );
+    v.render();
+    $(v.el).dialog({
+      width: 300,
+      modal: false,
+      draggable: true,
+      resizable: false,
+      title: "ALOS-PALSAR Platform Options",
+      position: [30,100],
+      buttons: {
+        "Close": function() { $(this).dialog('close'); },
+        "Reset": jQuery.proxy( function() {
+          this.model.reset();
+        }, this)
+      }
+    });
   },
   render: function() {
     $(this.el).button(
@@ -568,6 +577,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
+    this.model.bind('all', function(e) { console.log('RadarsatFacetDialog observed RadarsatFacet = '+e); } );
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -664,12 +674,11 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       title: "RADARSAT-1 Platform Options",
       position: [40,110],
       buttons: {
-        "Cancel": function() { $(this).dialog('close'); },
+        "Close": function() { $(this).dialog('close'); },
         "Reset": jQuery.proxy( function() {
           this.model.reset();
           this.render();
-        }, this),
-        "Filter": function() { SearchApp.searchResults.filter(); }
+        }, this)
       }
     });
   }
@@ -761,14 +770,15 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
+    this.model.bind('all', function(e) { console.log( this.platform +' observed selfFacet = '+e); } );
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
     this.model.clear( { silent: true });
     this.model.set({
-      direction: $(this.el).find('input[name="direction"]:checked').val(),
-      path: $(this.el).find('input[name="path"]').val(),
-      frame: $(this.el).find('input[name="frame"]').val()
+      'direction': $(this.el).find('input[name="direction"]:checked').val(),
+      'path': $(this.el).find('input[name="path"]').val(),
+      'frame': $(this.el).find('input[name="frame"]').val()
     });
   },
  
@@ -793,12 +803,11 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
       title: this.model.platform + " Platform Options",
       position: [50 + this.model.offset, 120 + this.model.offset ],
       buttons: {
-        "Cancel": function() { $(this).dialog('close'); },
+        "Close": function() { $(this).dialog('close'); },
         "Reset": jQuery.proxy( function() {
           this.model.reset();
           this.render();
-        }, this),
-        "Filter": function() { SearchApp.searchResults.filter(); }
+        }, this)
       }
     });
   }

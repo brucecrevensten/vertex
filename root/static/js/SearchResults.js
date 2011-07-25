@@ -7,16 +7,7 @@ var SearchResults = Backbone.Collection.extend(
     platforms: [], 
     error: '',
 
-    // Client sets this to the SearchResultsView it creates
-    view: null,
-
-    setView: function(v) {
-      this.view = v;
-    },
-
-    setParameters: function(sp) {
-      this.searchParameters = sp;
-    },
+    initialize: function() {},
 
     // build the nested model structure of DataProducts and DataProductFiles
     build: function(data) {
@@ -33,8 +24,8 @@ var SearchResults = Backbone.Collection.extend(
         
         // Create the DataProduct if it doesn't already exist
         dp = this.get( data[i].id );
-        if( 'undefined' == typeof dp ) {
-          this.add( data[i] );
+        if( _.isUndefined(dp) ) {
+          this.add( data[i], { 'silent' : true} );
           dp = this.get( data[i].id );
         }
 
@@ -59,34 +50,31 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     filter: function() {
-      var d = SearchApp.postFilters.applyFilters( this.data.results.rows.ROW );
+      var d = this.postFilters.applyFilters( this.data );
       this.build( d );
-      this.view.render();
     },
 
-    fetchSearchResults: function(sp) {
+    fetchSearchResults: function() {
 
-      this.setParameters(sp);
       this.data = {}; // flush previous result set
 
-      var results = $.ajax({
-        type: "GET",
-        url: this.url,
-        data: this.searchParameters.toJSON(),
-        processData: true,
-        dataType: "jsonp",
-        context: this,
-        beforeSend: function(){
-          this.view.showSearching();
-        },
-        success: function(data, textStatus, jqXHR) {
-          this.data = data;
+      var results = $.ajax(
+        {
+          type: "GET",
+          url: this.url,
+          data: this.searchParameters.toJSON(),
+          processData: true,
+          dataType: "jsonp",
+          context: this,
+          success: function(data, textStatus, jqXHR) {
+            this.data = data.results.rows.ROW;
 
-          // Fetch distinct platforms that were found
-          this.platforms = _.uniq( _.pluck( data.results.rows.ROW, 'PLATFORM') );
-          this.procTypes = _.uniq( _.pluck( data.results.rows.ROW, 'PROCESSINGTYPE') );
-          this.build(data.results.rows.ROW);
-          this.view.render();
+            // Fetch distinct platforms that were found
+            this.platforms = _.uniq( _.pluck( this.data, 'PLATFORM') );
+            this.procTypes = _.uniq( _.pluck( this.data, 'PROCESSINGTYPE') );
+      
+            this.build(this.data);
+            this.trigger('refresh');
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -112,9 +100,11 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
   el: '#srProcLevelTool',
   initialize: function() {
     _.bindAll(this);
+    this.collection.bind('all', function(e) { console.log('SearchResultsProcessingWidget observed collectionEvent='+e); } );
+    this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
-	this.collection.bind('clear_results', this.clear_results);
+    this.collection.bind('clear_results', this.clear_results);
   },
   clear_results: function() {
 		$(this.el).empty();
@@ -177,7 +167,25 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
-	this.showBeforeSearchMessage();
+    
+    // Observe changes to this collection
+    this.collection.bind('refresh', this.render);
+    this.collection.bind('add', this.render);
+    this.collection.bind('remove', this.render);
+    this.collection.bind('all', function(e) { console.log('SearchResultsView observed collectionEvent='+e); } );
+
+    
+    // Observe changes to the post-filters
+    this.options.postFilters.bind('change', this.render);
+    this.options.postFilters.bind('all', function(e) { console.log('SearchResultsView observed postFiltersEvent='+e); } );
+
+    _.each( this.postFilters, function(e, i, l) {
+      e.bind('change', this.render);
+      e.bind('all', function(e) { console.log('SearchResultsView observed postFilterInstanceEvent='+e); } );
+
+    }, this);
+    
+    this.showBeforeSearchMessage();
   },
 
   renderLength: function() {
@@ -185,7 +193,7 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   events: {
-	'authSuccess':'render'
+	   'authSuccess':'render'
   },
 
   showBeforeSearchMessage: function() {
@@ -261,7 +269,6 @@ var SearchResultsView = Backbone.View.extend(
   render: function() {
 
     $(this.el).empty();
-
     if( 0 == this.collection.length ) {
       this.clearOverlays();
       this.showNoResults();
@@ -382,7 +389,6 @@ var SearchResultsView = Backbone.View.extend(
     this.showResults();
     this.clearOverlays();
     this.renderOnMap();
-    this.trigger('render'); // custom event so post-filters know to render
     
     return this;
 
