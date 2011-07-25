@@ -139,10 +139,10 @@
   <footer>
     <div id="centerer">
       <div>
-        <a href="http://www.asf.alaska.edu"><img src="../static/images/asflogo-footer.png" /></a>
+        <a target="_blank" href="http://www.asf.alaska.edu"><img src="../static/images/asflogo-footer.png" /></a>
       </div>
       <div>
-        <a href="http://www.gi.alaska.edu"><img src="../static/images/gi-logo.png" /></a>
+        <a target="_blank" href="http://www.gi.alaska.edu"><img src="../static/images/gi-logo.png" /></a>
       </div>
       <div style="text-align: left;">
         <h2>Alaska Satellite Facility</h2>
@@ -162,10 +162,10 @@
         </p>
       </div>
       <div>
-        <a href="http://www.uaf.edu"><img src="../static/images/uaf-logo.png"></a>
+        <a target="_blank" href="http://www.uaf.edu"><img src="../static/images/uaf-logo.png"></a>
       </div>
       <div>
-        <a href="http://www.nasa.gov"><img src="../static/images/nasa-logo.png"></a>
+        <a target="_blank" href="http://esdis.eosdis.nasa.gov/"><img src="../static/images/nasa-logo.png"></a>
       </div>
     </div>
   </footer>
