@@ -169,6 +169,7 @@ var GeographicWidget = BaseWidget.extend(
     if(selfref.model.markers.length == 2) {
       selfref.updateSearchAreaOverlay();
       selfref.updateWidgetFromOverlay();
+      searchMap.fitBounds(this.searchAreaOverlay.getBounds());
     }
 
     this.render();
