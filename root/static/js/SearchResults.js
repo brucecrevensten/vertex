@@ -240,6 +240,12 @@ var SearchResultsView = Backbone.View.extend(
   <p>Off-Nadir <%= OFFNADIRANGLE %>&deg;</p>\
 ';
         break;
+      case 'UAVSAR':
+        return '\
+  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
+  <p><%= MISSIONNAME %> <%= GRANULENAME %></p>\
+';
+        break;
       default: return '\
   <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
   <p>Frame <%= FRAMENUMBER %>, Orbit <%= ORBIT %></p>\
