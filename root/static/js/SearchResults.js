@@ -322,6 +322,7 @@ var SearchResultsView = Backbone.View.extend(
           'title': 'Add to download queue'
         }).attr('product_id', q.get('productId'));
         btn.attr('product_file_id', q.id);
+		btn.attr('id', "b_"+q.id);
         btn.click( function(e2) {
             e2.stopPropagation();
             if ( $(this).prop('disabled') == 'disabled' ) { return false; }

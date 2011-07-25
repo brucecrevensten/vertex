@@ -207,6 +207,11 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
         $( e.currentTarget.parentNode.parentNode ).hide('blind');
         e.data.collection.remove( SearchApp.searchResults.get( $(e.currentTarget).attr('product_id') ).files.get( $(e.currentTarget).attr('product_file_id') ));
         e.data.collection.trigger('queue:remove');
+		
+		$("#b_"+$(e.currentTarget).attr('product_file_id')).toggleClass('tool-dequeue');
+		$("#b_"+$(e.currentTarget).attr('product_file_id')).prop('selected','false');
+		$("#b_"+$(e.currentTarget).attr('product_file_id')).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+				
       });
 
       $(this.el).find("#download_queue_table").dataTable(
