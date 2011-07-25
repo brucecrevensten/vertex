@@ -193,7 +193,7 @@ var GeographicWidget = BaseWidget.extend(
 
     initMap();
 
-    google.maps.event.clearInstanceListeners(searchMap);
+    google.maps.event.clearListeners(searchMap, 'click');
     var selfref = this; //needed for the events below, as 'this' does not obtain closure
     if(this.clickListener == null) {
       this.clickListener = google.maps.event.addListener(searchMap, 'click', function(event) {
