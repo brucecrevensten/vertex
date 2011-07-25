@@ -112,6 +112,11 @@ var UserLoginView = Backbone.View.extend(
 			_.bindAll(this, "render");
 		
 	    },
+	
+		login: function() {
+			this.model.set($(this.el).find('form').serializeJSON());
+			this.model.authenticate();
+		},
 		
 		render: function() {
 			$( "#login_dialog" ).dialog({
@@ -129,12 +134,17 @@ var UserLoginView = Backbone.View.extend(
 				    	$('#login_dialog').dialog('close');
 					},this),
 					"Login": jQuery.proxy( function() {
-						this.model.set($(this.el).find('form').serializeJSON());
-						this.model.authenticate();	
+						this.login();
 					}, this)
 				}
-			}).bind('dialogclose', jQuery.proxy(function() { this.model.trigger('authFieldsRefresh')}, this)); //refresh every time it closes
-		    return this;
+			}).keypress( jQuery.proxy(function(e) {
+				    if(e.keyCode == 13) { // 13 = Enter/Return
+						this.login();
+				    }
+				}, this)
+				).bind('dialogclose', jQuery.proxy(function() { this.model.trigger('authFieldsRefresh')}, this)); //refresh every time it closes
+				
+			return this;
 		},
 	}
 );
