@@ -27,7 +27,8 @@ var DataProductFilesView = Backbone.View.extend( {
       
       li.append( jQuery('<a/>', {
         'href': (disabled) ? '#' : e.url, // deactivate the link if user isn't logged in
-        'class': 'tool_download'
+        'class': 'tool_download',
+        'target': '_blank'
       }).button( {
         'disabled': disabled,
         'icons': {
