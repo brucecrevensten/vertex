@@ -391,7 +391,7 @@ var PlatformWidget = BaseWidget.extend(
     platformTypes: {
       // value : display name -- order is respected, here
       "UA" : "UAVSAR",
-      "A3" : "ALOS",
+      "A3" : "ALOS-PALSAR",
       "R1" : "RADARSAT-1",
       "E1" : "ERS-1",
       "E2" : "ERS-2",
@@ -447,8 +447,8 @@ var PlatformWidget = BaseWidget.extend(
     },
 
     platformInformation: {
-      'ALOS': {
-        name: "ALOS",
+      'ALOS-PALSAR': {
+        name: "ALOS-PALSAR",
         imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/alos.png",
         launchDate: "24 Jan 2006",
         altitude: "700 km",

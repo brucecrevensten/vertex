@@ -274,7 +274,7 @@ var PlatformFacetView = BaseWidget.extend( {
 
 var AlosFacet = PlatformFacet.extend(
   {
-    name: "ALOS",
+    name: "ALOS-PALSAR",
     platform: 'ALOS',
     defaults: {
       path: null,
@@ -425,7 +425,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       modal: false,
       draggable: true,
       resizable: false,
-      title: "ALOS Platform Options",
+      title: "ALOS-PALSAR Platform Options",
       position: [30,100],
       buttons: {
         "Cancel": function() { $(this).dialog('close'); },
@@ -459,7 +459,7 @@ var AlosFacetButton = PlatformFacetView.extend( {
         icons: {
           primary: "ui-icon-zoomin"
         },
-        label: this.name
+        label: 'ALOS-PALSAR'
       }
     );
     return this;
