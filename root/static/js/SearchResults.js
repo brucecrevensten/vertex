@@ -356,12 +356,13 @@ var SearchResultsView = Backbone.View.extend(
 
       v = new DataProductView( { model: e } );
       li.bind( "click", { id: e.id, view: v }, function(e) {
+		 $("#product_profile").empty();
         $("#product_profile").html( e.data.view.render().el );
         $("#product_profile").dialog(
           {
             modal: true,
             width: 'auto',
-			      minWidth: 400,
+			minWidth: 400,
             draggable: false,
             resizable: false,
             title: e.data.id,
