@@ -25,8 +25,11 @@ var User = Backbone.Model.extend(
 					this.set( {'authenticated': true, 'authType': data.authType, 'user_first_name':data.user_first_name} );
 					this.widgetRenderer = this.getWidgetRenderer();
 					this.trigger('authSuccess');
+					console.log('There was a succcess');
 				},
 				error: function(error) {
+					console.log('THere was an Error');
+					console.log(error);
 					this.trigger('authError');
 				}, 
 				beforeSend: function() {

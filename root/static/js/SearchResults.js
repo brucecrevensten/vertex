@@ -90,14 +90,15 @@ var SearchResults = Backbone.Collection.extend(
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
-
           switch(jqXHR.status) {
-            // todo: move this gui code into the view object
+            // todo: move this gui code into the view objects
             case 204:
               this.view.showNoResults();
+			  this.trigger('clear_results');
               break;
             default:
               this.view.showError(jqXHR);
+			  this.trigger('clear_results');
           }
         }
       }).results;
@@ -113,6 +114,10 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
     _.bindAll(this);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
+	this.collection.bind('clear_results', this.clear_results);
+  },
+  clear_results: function() {
+		$(this.el).empty();
   },
   render: function() {
     $(this.el).empty();
@@ -218,6 +223,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#async-spinner").hide();
     $("#results-banner").hide();
     $("#error-message").show();
+	console.log(jqXHR);
     $("#error-message-code").text(jqXHR.status);
     $('#platform_facets').hide();
   },

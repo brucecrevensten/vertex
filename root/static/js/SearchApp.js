@@ -101,11 +101,17 @@ $(function() {
     }).focus();//.click(); ///// Add .click() to make app begin searching immediately
 
       $('#resetSearch').button(
-        { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults }, function(e) {
+        { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults, srv:this.searchResultsView }, function(e) {
           e.data.sp.setDefaults();
           e.data.spv.setWidgets();
           e.data.spv.render();
-          e.data.sr.fetchSearchResults(e.data.sp);
+
+		  e.data.sr.data = {};
+		  e.data.sr.reset();
+		  e.data.srv.render();
+		  
+	      e.data.sr.trigger('clear_results');
+		  e.data.srv.showBeforeSearchMessage();
         });
 
       //fire up the map
