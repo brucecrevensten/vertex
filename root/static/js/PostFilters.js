@@ -19,7 +19,7 @@ var PostFilters = Backbone.Model.extend(
 
       this.bind("change:postfilter", function(filter) {
         var v = {};
-        v[filter.name] = filter.toJSON();
+        v[filter.platform] = filter.toJSON();
         this.set( v );
       });
 
@@ -85,8 +85,6 @@ var PostFiltersView = Backbone.View.extend(
   }
 
 });
-
-
 
 var ProcessingFacetButton = BaseWidget.extend( {
   name: "Processing Type",
@@ -264,10 +262,6 @@ var PlatformFacetView = BaseWidget.extend( {
         $(this).buttonset();
       });
     }
-    $(el).append( jQuery('<a/>', { 'class':'toggler' }).button( { icons: { primary: 'ui-icon-shuffle' }, label: 'Toggle all'} ).click( jQuery.proxy( function(e) {
-      $(this.el).find('input:checkbox').click();
-
-    }, this) ) );
   }
 
 } );
@@ -348,7 +342,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
-    this.model.unbind('change');
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -364,7 +357,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       direction: direction,
       path: path,
       frame: frame
-    }, { silent: true });
+    });
   },
   beamModes: [
     {
@@ -465,17 +458,6 @@ var AlosFacetButton = PlatformFacetView.extend( {
     return this;
   }
 });
-
-/*
-specifying beam modes:
-+ the api needs to understand eating an http array, not just csv
-- the form should have all 'checked' as default BUT this corresponds to an _empty_ array of restrictions
-- need a 'toggle all' button @ radarsat
-- 'toggle all' button does a 'clear' on the model's list of selected things
-+ when the form is changed, the model should change
-+ when the model is changed, it should notify SearchParameters and update it
-- strange case: user unselects all beam modes, what to do? IL#22
-*/
 
 var RadarsatFacet = PlatformFacet.extend(
   {
@@ -586,7 +568,6 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
-    this.model.unbind('change');
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -602,7 +583,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       direction: direction,
       path: path,
       frame: frame
-    }, { silent: true });
+    });
   },
   beamModes: [
     { title: "Extended High Incidence Beam, Off-Nadir 52-58&deg;",
@@ -780,7 +761,6 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
-    this.model.unbind('change');
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -789,7 +769,7 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
       direction: $(this.el).find('input[name="direction"]:checked').val(),
       path: $(this.el).find('input[name="path"]').val(),
       frame: $(this.el).find('input[name="frame"]').val()
-    }, { silent: true });
+    });
   },
  
   render: function() {

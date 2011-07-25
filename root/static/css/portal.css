@@ -272,10 +272,15 @@ label.hover {
   cursor: help;
 }
 
-#async-spinner, #results-banner, #error-message, #before-search-msg {
-  margin: 1em 0;
+#async-spinner, #results-banner, #error-message, #before-search-msg, #active-filters {
+  margin: 0 0 1em 0;
   padding: 2.5ex 2ex 2ex 2ex;
   display: none;
+}
+
+#active-filters h4 {
+  margin: 0 0 1ex 0;
+  font-weight: bold;
 }
 
 #async-spinner span, #results-banner span, #error-message span {
