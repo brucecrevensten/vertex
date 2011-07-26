@@ -29,7 +29,7 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
       ).error( { 'context':this }, function(e) { $(this).remove(); });
       var s = m.files.select( function(row) { return ( 'BROWSE' == row.get('processingType') ) } );
       if ( s[0] ) {
-        t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank', 'title':title } ).html( t );
+        t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank', 'title':m.get('GRANULENAME') } ).html( t );
       }     
 		} else {
       this.ppWidth = 500; // missing image = make narrow  
