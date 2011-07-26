@@ -5,6 +5,11 @@ var SearchParameters = Backbone.Model.extend(
     initialize: function() {
       this.setupPreFilters();
     },
+
+	getGeographicFilter: function() {
+		return this.filters[0];
+	},	
+	
     setupPreFilters: function() {
       this.filters = [
         new GeographicFilter(),
@@ -117,6 +122,26 @@ var GeographicFilter = BaseFilter.extend(
     }
     this.markers = new Array();
     this.set({ "bbox": ""});
+ 	//$('#triggerSearch').attr('disabled', 'disabled');
+//	$('#triggerSearch').attr('disabled', true);
+//	console.log("reset");
+  },
+
+  validate: function(attrs) {
+			if (attrs.bbox != "") {
+				$("#triggerSearch").empty();
+				$("#triggerSearch").button(
+			      {
+			        icons: {
+			          primary: "ui-icon-search"
+			        },
+			        label: "Search",
+					disabled: false
+			    }).focus();
+			} else {
+					$("#triggerSearch").attr('disabled', true);
+			}
+			console.log("validate");
   }
 
 }
