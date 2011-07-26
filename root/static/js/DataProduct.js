@@ -1,4 +1,22 @@
 var DataProductFile = Backbone.Model.extend( {
+ /* Structure of this model:
+  {
+          thumbnail: data[i].THUMBNAIL,
+          productId: data[i].GRANULENAME,
+          id: data[i].ID,
+          processingType: data[i].PROCESSINGTYPE,
+          processingTypeDisplay: data[i].PROCESSINGTYPEDISPLAY,
+          processingLevel: data[i].PROCESSINGLEVEL,
+          processingDescription: data[i].PROCESSINGDESCRIPTION,
+          url: data[i].URL,
+          platform: data[i].PLATFORM,
+          acquisitionDate: data[i].ACQUISITIONDATE,
+          bytes: data[i].BYTES,
+          sizeText: AsfUtility.bytesToString(data[i].BYTES),
+          md5sum: data[i].MD5SUM,
+          filename: data[i].FILENAME
+  }
+ */
   initialize: function() {
     this.set( {
        'acquisitionDateText': $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('acquisitionDate')))
@@ -22,7 +40,12 @@ var DataProductFilesView = Backbone.View.extend( {
 
     var l = jQuery('<ul/>', { 'class': 'downloads'});
     this.collection.each( function(el, i, list) {
+
+   
       e = el.toJSON();
+      // Skip if type = BROWSE
+      if( 'BROWSE' == e.processingType ) { return; }
+   
       var li = jQuery('<li/>');
       
       li.append( jQuery('<a/>', {

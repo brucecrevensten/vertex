@@ -321,15 +321,19 @@ var SearchResultsView = Backbone.View.extend(
       
       var c = $('<ul/>', { 'style':'display:none', 'class':'granuleProductList', 'id':'gpl_'+d.id } );
 
+      //TODO: refactor this into DataProductFile view/model/something
       e.files.each( function( q, w, r ) {
-      
+        
+        // skip if BROWSE
+        if( 'BROWSE' == q.get('processingType')) { return; }
+
         var lit = $('<li/>');
         var btn = $('<button>Add to queue...</button>', {
           'class': 'tool_enqueuer',
           'title': 'Add to download queue'
         }).attr('product_id', q.get('productId'));
         btn.attr('product_file_id', q.id);
-		btn.attr('id', "b_"+q.id);
+		    btn.attr('id', "b_"+q.id);
         btn.click( function(e2) {
             e2.stopPropagation();
             if ( $(this).prop('disabled') == 'disabled' ) { return false; }
