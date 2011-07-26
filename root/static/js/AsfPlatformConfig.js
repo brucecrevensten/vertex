@@ -3,7 +3,7 @@ var AsfPlatformConfig = {
 	platformTypes: {
       // value : display name -- order is respected, here
       "UA" : "UAVSAR",
-      "A3" : "ALOS-PALSAR",
+      "A3" : "ALOS PALSAR",
       "R1" : "RADARSAT-1",
       "E1" : "ERS-1",
       "E2" : "ERS-2",
@@ -11,7 +11,7 @@ var AsfPlatformConfig = {
     },
 	
     platformInformation: {
-      'ALOS': {
+      'A3': {
         name: "ALOS",
         imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/alos.png",
         launchDate: "24 Jan 2006",
@@ -26,7 +26,7 @@ var AsfPlatformConfig = {
         processingType3: "Level 1.5: Multi-look processed images projected onto map coordinates. Data can be processed either geo-referenced or geo-coded. Individual files are provided for each polarization for multi-polarization modes.",
         processingFooter: 'PALSAR data are provided in CEOS format. More detailed product descriptions are available from the <a href="http://www.eorc.jaxa.jp/ALOS/en/doc/format.htm">JAXA website</a>.'
       },
-      'ERS-1': {
+      'E1': {
         name: "ERS-1",
         imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/ers1.png",
         launchDate: "17 Jan 1991",
@@ -41,7 +41,7 @@ var AsfPlatformConfig = {
         processingType3: "Detected Image: Fully processed SAR data which only contains the amplitude information. Image does not require any further SAR processing to be visualized.",
         processingFooter: ''
       },
-      'ERS-2': {
+      'E2': {
         name: "ERS-2",
         imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/ers2.png",
         launchDate: "20 April 1995",
@@ -56,7 +56,7 @@ var AsfPlatformConfig = {
         processingType3: 'Detected Image: Fully processed SAR data which only contains the amplitude information. Image does not require any further SAR processing to be visualized.',
         processingFooter: ''
        },
-      'JERS-1': {
+      'J1': {
         name: "JERS-1",
         imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/jers1.png",
         launchDate: "11 Feb 1992",
@@ -71,7 +71,7 @@ var AsfPlatformConfig = {
         processingType3: 'Detected Image: Fully processed SAR data which only contains the amplitude information. Image does not require any further SAR processing to be visualized.',
         processingFooter: ''
        },
-      'RADARSAT-1': {
+      'R1': {
         name: "RADARSAT-1",
         imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/radarsat-1.png",
         launchDate: "4 Nov 1995",
@@ -86,7 +86,7 @@ var AsfPlatformConfig = {
         processingType3: 'Detected Image: Fully processed SAR data which only contains the amplitude information. Image does not require any further SAR processing to be visualized.',
         processingFooter: ''
        },
-      'UAVSAR': {
+      'UA': {
         name: 'UAVSAR Uninhabited Aerial Vehicle Synthetic Aperture Radar',
         imageUrl: 'http://www.asf.alaska.edu/sites/all/files/images/satellites/uavsar.png',
         launchDate: '18 Sept 2007',

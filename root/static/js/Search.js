@@ -141,7 +141,6 @@ var GeographicFilter = BaseFilter.extend(
 			} else {
 					$("#triggerSearch").attr('disabled', true);
 			}
-			console.log("validate");
   }
 
 }
@@ -433,7 +432,7 @@ var PlatformWidget = BaseWidget.extend(
       for( var key in this.platformTypes ) {
         rowData = {
           name: this.platformTypes[key],
-          id: "pf_"+this.platformTypes[key],
+          id: "pf_"+key,
           value: key,
           ifChecked: ( _.indexOf(checked, key) > -1 ) ? 'checked="checked"' : ''
         };
@@ -441,7 +440,7 @@ var PlatformWidget = BaseWidget.extend(
         $(i).html( _.template('\
 <div class="composite_checkbox_wrapper">\
 <input type="checkbox" id="<%= id %>" <%= ifChecked %> name="platform" value="<%= value %>" /><label style="text-align: left; width: 160px;" for="<%= id %>"><%= name %></label>\
-<button style="display:inline-block;" platform="<%= name %>">?</button>\
+<button style="display:inline-block;" platform="<%= value %>">?</button>\
 </div>\
 ', rowData));
         $(i).find('.composite_checkbox_wrapper').buttonset();
@@ -485,7 +484,7 @@ var PlatformWidget = BaseWidget.extend(
 <p><%= processingFooter %></p>\
 ', AsfPlatformConfig.platformInformation[platform])).dialog(
         {
-          title: platform,
+          title: AsfPlatformConfig.platformTypes[platform],
           width: 800,
           modal: true,
           draggable: false,
