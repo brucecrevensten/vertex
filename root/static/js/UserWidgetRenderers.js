@@ -29,7 +29,7 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
       ).error( { 'context':this }, function(e) { $(this).remove(); });
       var s = m.files.select( function(row) { return ( 'BROWSE' == row.get('processingType') ) } );
       if ( s[0] ) {
-        t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank' } ).html( t );
+        t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank', 'title':title } ).html( t );
       }     
 		} else {
       this.ppWidth = 500; // missing image = make narrow  
@@ -54,7 +54,7 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
     if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM')) {
       return;
     } else {
-      return _.template('<img src="<%= THUMBNAIL %>" />', m.toJSON());
+      return _.template('<img title="<%= GRANULENAME %>" src="<%= THUMBNAIL %>" />', m.toJSON());
     }
   }
 		
@@ -108,7 +108,7 @@ var LegacyUserWidgetRenderer = RestrictedWidgetRenderer.extend({
   },
 
   srThumbnail: function( m ) {
-      return _.template('<img src="<%= THUMBNAIL %>" />', m.toJSON());
+      return _.template('<img title="<%= GRANULENAME %>" src="<%= THUMBNAIL %>" />', m.toJSON());
   }
 
 });
@@ -125,7 +125,7 @@ var UniversalUserWidgetRenderer = UnrestrictedWidgetRenderer.extend({
   },
 
   srThumbnail: function( m ) {
-    return _.template('<img src="<%= THUMBNAIL %>" />', m.toJSON());
+    return _.template('<img title="<%= GRANULENAME %>" src="<%= THUMBNAIL %>" />', m.toJSON());
   }
 
 });
