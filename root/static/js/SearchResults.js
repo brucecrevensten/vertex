@@ -17,10 +17,7 @@ var SearchResults = Backbone.Collection.extend(
 
       this.reset();
       var dp;
-		var count = data.length;
-		console.log("COUNT IS: " + count);
-		$("#srCount").empty();
-		$("#srCount").html(_.template("<p><%= COUNT %> results</p>", {"COUNT": count}));
+		
       for ( var i in data ) {
         // Munge this data to get a local true ID (granule name)
         data[i].id = data[i].GRANULENAME;
@@ -78,6 +75,10 @@ var SearchResults = Backbone.Collection.extend(
       
             this.build(this.data);
             this.trigger('refresh');
+
+			var count = this.length;
+			$("#srCount").empty();
+			$("#srCount").html(_.template("<p><%= COUNT %> results</p>", {"COUNT": count}));
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
