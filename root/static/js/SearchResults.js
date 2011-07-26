@@ -17,7 +17,10 @@ var SearchResults = Backbone.Collection.extend(
 
       this.reset();
       var dp;
-
+		var count = data.length;
+		console.log("COUNT IS: " + count);
+		$("#srCount").empty();
+		$("#srCount").html(_.template("<p><%= COUNT %> results</p>", {"COUNT": count}));
       for ( var i in data ) {
         // Munge this data to get a local true ID (granule name)
         data[i].id = data[i].GRANULENAME;
@@ -280,7 +283,7 @@ var SearchResultsView = Backbone.View.extend(
     }
   },
   render: function() {
-
+	
     $(this.el).empty();
     if( 0 == this.collection.length ) {
       this.clearOverlays();

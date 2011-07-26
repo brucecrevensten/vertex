@@ -508,6 +508,13 @@ input.login_fields {
 #srProcLevelTool ul {
   margin: 0 0 1em 0;
   padding: 1ex;
+  float left;
+}
+
+#srCount {
+  float: right;
+  font-weight: bold;
+  font-variant: small-caps
 }
 
 #feedbackButton {

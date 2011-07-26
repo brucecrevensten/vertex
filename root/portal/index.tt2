@@ -137,8 +137,11 @@
           <div id="active-filters-list"></div>
         </div>
       </div>
-
-	    <div id="srProcLevelTool"></div>
+		
+		<div>
+		<div align="right" id="srCount"></div>
+	    <div align="left" id="srProcLevelTool"></div>
+		</div>
       <ul id="searchResults"></ul>
 </div>
 
