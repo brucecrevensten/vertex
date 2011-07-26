@@ -4,26 +4,7 @@ if( _.isUndefined( console.log) ) {
 
 $(function() {
 	
-  window.SearchAppView = Backbone.View.extend({
-    el: $('#SearchApp'),
-    
-    //Do we want to use these this way? Maybe, I don't know!
-    //mapTemplate: _.template($('#map-template').html()),
-    //filtersTemplate: _.template($('#filters-template').html()),
-    //resultsTemplate: _.template($('#results-template').html()),
-    
-    events: {
-      //bind any events here...a good example would be for triggering requestResults when the filters change
-    },
-
-    // The SearchAppView scopes and manages the objects noted below,
-    // defined in the initialize() function.
-    searchResults: null,
-    searchView: null,
-    searchParameters: null,
-    searchParametersView: null,
-    currentUser: null,
-	
+  window.SearchAppView = Backbone.View.extend({	
     
     initialize: function() {
     // init search behaviors

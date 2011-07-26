@@ -21,22 +21,16 @@ text-decoration: underline;
   position: relative;
 }
 
-#SearchApp {
-  margin: 1em 0;
-  min-height: 750px;
-  position: relative;
-}
-
 #wrapper {
   font:12pt arial,sans-serif;
   background: white;
   background: hsla(233, 99%, 99%, .97);  
   border: 2px solid #eee;
   padding: 1.5em;
-  margin: 2em auto;
-  min-height: 820px;
+  margin: 1em auto;
   width: 1250px;
   position: relative;
+  height: 735px;
 }
 
 header h1 {
@@ -66,23 +60,23 @@ header {
 
 #rightColumn {
   position: absolute;
-  left: 880px;
-  width: 370px;
+  left: 870px;
+  width: 385px;
   top: 0;
   margin-top: 1ex;
 }
 
 footer {
   position: relative;
-  top: 610px;
+  top: 600px;
   font-color: #878787 !important;
   font-size: smaller;
   clear: both;
-  margin: 0;
+  margin: 1ex 0;
   border: 1px solid #ccc;
-  height: 12em;
-  padding: 2em 1em 1em;
+  padding: 2ex 0;
   background: #efefef;
+  height: 75px;
 }
 
 footer h2 { 
@@ -106,7 +100,7 @@ line-height: 110%;
 
 footer div div {
 margin: 0;
-width: 16%;
+width: 20%%;
 float: left;
 text-align: center;
 }
@@ -223,8 +217,8 @@ legend {
 }
 
 #searchMap {
-  width: 600px;
-  height: 600px;
+  width: 580px;
+  height: 580px;
   margin: 0 0 1em 0;
 }
 

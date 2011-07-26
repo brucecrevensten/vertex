@@ -123,8 +123,12 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
       $('#addProductsByType').toggle('blind');
     });
 
-    var m = $('<ul/>', { 'id':'addProductsByType', 'class':'ui-helper-reset ui-widget-content ui-corner-bottom', 'style':'display: none;'});
+    var m = $('<ul/>', { 'id':'addProductsByType', 'class':'ui-helper-reset ui-widget-content ui-corner-bottom', 'style':'width: 300px; display: none; position: absolute; z-index: 1000'});
     _.each( this.collection.procTypes, function( p, i, l ) {
+
+      // Don't display browse images for download.
+      if( 'BROWSE' == p ) { return; }
+
       var li = $('<li/>');
       var ab = $('<button/>', { 'processing':p }).button(
         {
@@ -409,9 +413,16 @@ var SearchResultsView = Backbone.View.extend(
     this.showResults();
     this.clearOverlays();
     this.renderOnMap();
+    this.resetHeight();
     
     return this;
 
+  },
+
+  resetHeight: function() {
+    // 580 = maximum possible height of the search results, before
+    // other dynamic page elements are rendered.
+    $(this.el).height( 575 - ( $('#active-filters').outerHeight() + 31 )); // 31px = fixed height of ProcTypeButton
   },
 
   renderOnMap: function() {

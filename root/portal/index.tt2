@@ -152,20 +152,12 @@
       <div>
         <a target="_blank" href="http://www.gi.alaska.edu"><img src="../static/images/gi-logo.png" /></a>
       </div>
-      <div style="text-align: left;">
+      <div style="text-align: left; width: 15em;">
         <h2>Alaska Satellite Facility</h2>
         <p>ASF Dataportal V[% c.config.version %]</p>
         <p>
           2011 &copy; Alaska Satellite Facility</p>
-      </div>
-      <div style="text-align: left;">
-        <p>
-          Geophysical Institute<br/>
-          903 Koyukuk Dr.<br/>
-          P.O. Box 757320<br/>
-          Fairbanks, AK 99775-7320<br/>
           Phone: (907) 474-6166<br/>
-          Fax: (907) 474-2665<br/>
           Email: uso@asf.alaska.edu<br/>
         </p>
       </div>
@@ -176,6 +168,7 @@
         <a target="_blank" href="http://esdis.eosdis.nasa.gov/"><img src="../static/images/nasa-logo.png"></a>
       </div>
     </div>
+    <div style="clear:both;">&nbsp;</div>
   </footer>
 </div>
 
