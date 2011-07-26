@@ -509,3 +509,34 @@ input.login_fields {
   margin: 0 0 1em 0;
   padding: 1ex;
 }
+
+#feedbackButton {
+  position: fixed;
+  bottom: 0; right: 0;
+  width: 8em;
+  background-color: white;
+  border: 1px solid #888;
+  padding: 1ex;
+  text-align: center;
+}
+
+#feedbackButton * {
+  font-size: 12pt !important;
+  color: blue !important;
+}
+
+#feedbackButton:hover {
+  cursor: pointer;
+};
+
+#feedbackForm p {
+  line-height: 120% !important;
+}
+
+#feedbackForm label {
+  display: block;
+}
+
+#feedbackForm div {
+  margin: 1em;
+}

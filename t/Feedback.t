@@ -4,7 +4,6 @@ use Test::More tests => 12;
 use HTTP::Request::Common;
 use Data::Dumper;
 use Apache2::Const qw(:http);
-use URSA2::FeedbackRequest;
 use URSA2::Exceptions qw(InvalidParameter);
 use Catalyst::Test 'URSA2';
 use JSON;
@@ -52,8 +51,8 @@ is($mech->status(), Apache2::Const::HTTP_BAD_REQUEST,
 # set TEST_DATABASE=1 to run these tests.
 ################
 SKIP: {
-  skip 'Skipping tests requiring a database connection.', 4;
-  #unless $ENV{'TEST_DATABASE'};
+  skip 'Skipping tests requiring a database connection.', 4
+  unless $ENV{'TEST_DATABASE'};
   $mech->post($surn, { 'comment' => $comment, 'userid' => $userid,
     'email' => $email, 'name' => $name});
   is($mech->status, Apache2::Const::HTTP_OK,

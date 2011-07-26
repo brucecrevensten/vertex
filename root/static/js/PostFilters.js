@@ -14,13 +14,11 @@ var PostFilters = Backbone.Model.extend(
 
       _.each( this.postFilters, function(e, i, l) {
 
-        e.bind('all', function(e) { console.log('PostFiltersModel observed postFilterComponent='+e); } );
         e.bind('change', function(filter) {
           self.trigger('change:postfilter', filter);
         })
       });
 
-      this.bind('all', function(e) { console.log('PostFiltersModel observed self event = '+e); } );
       this.bind("change:postfilter", function(filter) {
         var v = {};
         v[filter.platform] = filter.toJSON();
@@ -49,8 +47,6 @@ var PostFiltersView = Backbone.View.extend(
   widgets: [],
   initialize: function() {
     _.bindAll(this, 'render');
-
-    this.options.searchResults.bind('all', function(e) { console.log('PostFiltersView observed SearchResults = '+e); } );
 
     this.options.searchResults.bind('refresh', this.render);
     this.options.searchResults.bind('add', this.render);
@@ -352,7 +348,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     "change input" : "changed",
   },
   initialize: function() {
-    this.model.bind('all', function(e) { console.log('AlosFacetDialog observed AlosFacet = '+e); } );
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -577,7 +572,6 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
-    this.model.bind('all', function(e) { console.log('RadarsatFacetDialog observed RadarsatFacet = '+e); } );
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
@@ -770,7 +764,6 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     this.render();
-    this.model.bind('all', function(e) { console.log( this.platform +' observed selfFacet = '+e); } );
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {

@@ -1,7 +1,3 @@
-if( _.isUndefined( console.log) ) {
- window.console.log = function() {}; 
-}
-
 $(function() {
 	
   window.SearchAppView = Backbone.View.extend({	
@@ -118,6 +114,10 @@ $(function() {
 
       //fire up the map
       initMap('searchMap');
+
+      v = new FeedbackButton();
+      v.render();
+      
     },
 
   });

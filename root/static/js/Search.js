@@ -122,9 +122,6 @@ var GeographicFilter = BaseFilter.extend(
     }
     this.markers = new Array();
     this.set({ "bbox": ""});
- 	//$('#triggerSearch').attr('disabled', 'disabled');
-//	$('#triggerSearch').attr('disabled', true);
-//	console.log("reset");
   },
 
   validate: function(attrs) {

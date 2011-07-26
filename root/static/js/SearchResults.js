@@ -100,7 +100,6 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
   el: '#srProcLevelTool',
   initialize: function() {
     _.bindAll(this);
-    this.collection.bind('all', function(e) { console.log('SearchResultsProcessingWidget observed collectionEvent='+e); } );
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
@@ -177,19 +176,14 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
-    this.collection.bind('all', function(e) { console.log('SearchResultsView observed collectionEvent='+e); } );
-
 
    	this.model.bind('authSuccess', this.render);
 
     // Observe changes to the post-filters
     this.options.postFilters.bind('change', this.render);
-    this.options.postFilters.bind('all', function(e) { console.log('SearchResultsView observed postFiltersEvent='+e); } );
 
     _.each( this.postFilters, function(e, i, l) {
       e.bind('change', this.render);
-      e.bind('all', function(e) { console.log('SearchResultsView observed postFilterInstanceEvent='+e); } );
-
     }, this);
     
     this.showBeforeSearchMessage();

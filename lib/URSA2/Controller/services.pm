@@ -2,6 +2,7 @@ package URSA2::Controller::services;
 use URSA2::Transformer;
 use URSA2::SearchRequest;
 use URSA2::AuthenticationRequest;
+use URSA2::FeedbackRequest;
 use URSA2::Exceptions;
 use Moose;
 use namespace::autoclean;
@@ -229,6 +230,8 @@ Accept a comment and store it in the database.
 
 sub feedback :Local {
   my ( $self, $c ) = @_;
+
+  URSA2->log->debug(Dumper($c));
   
   my $r = URSA2::FeedbackRequest->factory( $c->request );
   eval {
