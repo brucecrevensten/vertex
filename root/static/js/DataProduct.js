@@ -87,7 +87,6 @@ var DataProductFilesView = Backbone.View.extend( {
         }
       }).button(
         {
-          'disabled' : disabled,
           'icons': {
             'primary': "ui-icon-circle-plus"
           },
