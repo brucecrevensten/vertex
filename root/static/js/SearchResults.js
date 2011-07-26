@@ -81,12 +81,12 @@ var SearchResults = Backbone.Collection.extend(
           switch(jqXHR.status) {
             // todo: move this gui code into the view objects
             case 204:
-              this.view.showNoResults();
-			  this.trigger('clear_results');
+              SearchApp.searchResultsView.showNoResults();
+			        this.trigger('clear_results');
               break;
             default:
-              this.view.showError(jqXHR);
-			  this.trigger('clear_results');
+              SearchApp.searchResultsView.showError(jqXHR);
+			        this.trigger('clear_results');
           }
         }
       }).results;
@@ -231,8 +231,17 @@ var SearchResultsView = Backbone.View.extend(
     $("#async-spinner").hide();
     $("#results-banner").hide();
     $("#error-message").show();
-	console.log(jqXHR);
-    $("#error-message-code").text(jqXHR.status);
+    console.log(jqXHR);
+    var errorText;
+    switch( jqXHR.status ) {
+      case '400': errorText = 'Some search fields were missing or invalid, and your search could not be completed.';
+        break;
+      case '500': errorText = 'An error occurred on the server and your search could not be completed.';
+        break;
+      default: errorText = 'Your search could not be completed due to an unhandled error condition (#' + jqXHR.status +').  You can try reloading this page and trying your search again.';
+        break;
+    }
+    $("#error-message-text").text(errorText);
     $('#platform_facets').hide();
   },
 

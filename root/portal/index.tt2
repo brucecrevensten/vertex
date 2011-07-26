@@ -128,7 +128,7 @@
       <div class="ui-widget">
         <div id="error-message" class="ui-state-error ui-corner-all"> 
             <span class="ui-icon ui-icon-alert"></span>
-            <strong>An error occurred</strong> while processing your current search (<code id="error-message-code"></code>).
+            <code id="error-message-text"></code>
         </div>
       </div>
 
