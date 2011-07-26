@@ -114,7 +114,7 @@ var DataProductView = Backbone.View.extend(
 ';
         case 'JERS-1': return '\
 <ul class="metadata">\
-<li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
+<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= BEAMMODEDESC %>"><%= BEAMMODETYPE %></span></li>\
 <li><span>Frame</span>: <%= FRAMENUMBER %></li>\
 <li><span>Orbit</span>: <%= ORBIT %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
@@ -124,7 +124,7 @@ var DataProductView = Backbone.View.extend(
 ';
         default: return '\
 <ul class="metadata">\
-<li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
+<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= BEAMMODEDESC %>"><%= BEAMMODETYPE %></span></li>\
 <li><span>Frame</span>: <%= FRAMENUMBER %></li>\
 <li><span>Orbit</span>: <%= ORBIT %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
