@@ -134,8 +134,7 @@
 
       <div class="ui-widget">
         <div id="active-filters" class="ui-state-highlight ui-corner-all">
-          <h4>Current search parameters</h4>
-          <ul id="active-filters-list"></ul>
+          <div id="active-filters-list"></div>
         </div>
       </div>
 

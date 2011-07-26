@@ -174,11 +174,13 @@ var ActiveSearchFiltersView = Backbone.View.extend(
       }, ''), ', ');
     }
 
+    var activeDateAndPlatforms = this.options.searchParameters.toJSON();
+    activeDateAndPlatforms['platformText'] = platformText;
+
     $(this.el).append(
-      _.template('<li>Date range: <%= start %>&mdash;<%= end %></li>', this.options.searchParameters.toJSON() )
-    ).append(
-      _.template('<li><%= platformText %></li>', { 'platformText': platformText } )
+      _.template('<h4><%= platformText %>: <%= start %>&mdash;<%= end %></li>', activeDateAndPlatforms )
     );
+    var ul = $('<ul/>');
 
     var postFilterText;
     if( true != _.isUndefined( this.options.postFilters ) ) {
@@ -220,14 +222,14 @@ var ActiveSearchFiltersView = Backbone.View.extend(
         }
 
         if( true != _.isEmpty( postFilterItems) ) {
-          $(this.el).append(
+          ul.append(
             _.template('<li><%= postFilters %></li>', { 'postFilters': i + ': '+postFilterItems.join(', ') } )
           );
         }
 
       }, this);
     }
-
+    $(this.el).append(ul);
     return this;
   }
 });
