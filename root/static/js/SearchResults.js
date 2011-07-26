@@ -110,6 +110,7 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
   },
   clear_results: function() {
 		$(this.el).empty();
+		$("#srCount").empty();
   },
   render: function() {
     $(this.el).empty();
