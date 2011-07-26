@@ -127,6 +127,7 @@ legend {
 }
 
 #searchResults {
+  border-top: 1px solid #888;
   overflow: auto;
   height: 600px;
 }
@@ -188,7 +189,7 @@ legend {
 }
 
 #searchResults h4, #searchResults h4 * {
-  font-size: 12pt !important;
+  font-size: 11pt !important;
   font-weight: bold;
 }
 
@@ -214,7 +215,7 @@ legend {
 }
 
 #searchResults p {
-  font-size: 11pt !important;
+  font-size: 10pt !important;
 }
 
 #searchResults li button {

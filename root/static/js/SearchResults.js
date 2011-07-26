@@ -265,7 +265,7 @@ var SearchResultsView = Backbone.View.extend(
     switch(p) {
       case 'ALOS':
         return '\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %>-PALSAR <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
+  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> PALSAR <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
   <p>Frame <%= FRAMENUMBER %>, Path <%= PATHNUMBER %></p>\
   <p>Off-Nadir <%= OFFNADIRANGLE %>&deg;</p>\
 ';
