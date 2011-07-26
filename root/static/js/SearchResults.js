@@ -171,6 +171,7 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
+
     
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
@@ -178,7 +179,9 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('remove', this.render);
     this.collection.bind('all', function(e) { console.log('SearchResultsView observed collectionEvent='+e); } );
 
-    
+
+   	this.model.bind('authSuccess', this.render);
+
     // Observe changes to the post-filters
     this.options.postFilters.bind('change', this.render);
     this.options.postFilters.bind('all', function(e) { console.log('SearchResultsView observed postFiltersEvent='+e); } );
@@ -194,10 +197,6 @@ var SearchResultsView = Backbone.View.extend(
 
   renderLength: function() {
     return _.template('<h3><%= length %> results found</h3>', this.collection);
-  },
-
-  events: {
-	   'authSuccess':'render'
   },
 
   showBeforeSearchMessage: function() {

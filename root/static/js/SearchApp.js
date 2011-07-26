@@ -7,6 +7,16 @@ $(function() {
   window.SearchAppView = Backbone.View.extend({	
     
     initialize: function() {
+	
+	  this.user = new User();
+      this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
+      this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
+      this.userLoginButton.render();
+    	this.userLoginFields = new UserLoginFields({ model: this.user, el: $('#form1')});
+  	  this.userLoginMessage = new UserLoginMessage( {model: this.user, el: $('#login_msg')});
+  		this.userLoginMessage.render();
+    
+
     // init search behaviors
     this.searchParameters = new SearchParameters();
     this.postFilters = new PostFilters();
@@ -35,7 +45,8 @@ $(function() {
       {
         'postFilters': this.postFilters,
         'collection': this.searchResults,
-        'el': $("#searchResults")
+        'el': $("#searchResults"),
+		'model': this.user
       }
     );
 
@@ -107,14 +118,6 @@ $(function() {
 
       //fire up the map
       initMap('searchMap');
-   
-      this.user = new User();
-      this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
-      this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
-      this.userLoginButton.render();
-    	this.userLoginFields = new UserLoginFields({ model: this.user, el: $('#form1')});
-  	  this.userLoginMessage = new UserLoginMessage( {model: this.user, el: $('#login_msg')});
-  		this.userLoginMessage.render();
     },
 
   });
