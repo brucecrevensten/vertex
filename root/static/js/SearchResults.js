@@ -203,6 +203,8 @@ var SearchResultsView = Backbone.View.extend(
 	    $("#error-message").hide();
 	    $("#results-banner").hide();
 		$('#before-search-msg').show();
+          $('#active-filters').hide();
+
   },
 
   showResults: function() {
@@ -212,6 +214,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#platform_facets').show();
     $("#error-message").hide();
     $("#results-banner").hide();
+      $('#active-filters').show();
 
   },
 
@@ -223,15 +226,17 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $('#platform_facets').hide();
     this.clearOverlays();
+      $('#active-filters').show();
 
   },
 
   showError: function(jqXHR) {
-	$('#before-search-msg').hide();
+          $('#active-filters').show();
+
+	  $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").hide();
     $("#error-message").show();
-    console.log(jqXHR);
     var errorText;
     switch( jqXHR.status ) {
       case '400': errorText = 'Some search fields were missing or invalid, and your search could not be completed.';
@@ -246,6 +251,8 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showNoResults: function() {
+      $('#active-filters').show();
+
 	$('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").show();
