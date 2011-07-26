@@ -31,11 +31,11 @@ var DataProductFiles = Backbone.Collection.extend( {
 var DataProductFilesView = Backbone.View.extend( {
 
   renderForProfile: function(o) {
-
+    var disabled = false;
     if( _.isUndefined( o ) ) { 
       disabled = false;
     } else {
-      var disabled = (o.disabled == true) ? true : false;
+      disabled = (o.disabled == true) ? true : false;
     }
 
     var l = jQuery('<ul/>', { 'class': 'downloads'});
@@ -47,18 +47,27 @@ var DataProductFilesView = Backbone.View.extend( {
       if( 'BROWSE' == e.processingType ) { return; }
    
       var li = jQuery('<li/>');
-      
-      li.append( jQuery('<a/>', {
-        'href': (disabled) ? '#' : e.url, // deactivate the link if user isn't logged in
-        'class': 'tool_download',
-        'target': '_blank'
-      }).button( {
-        'disabled': disabled,
-        'icons': {
-          'primary': "ui-icon-circle-arrow-s"
-        },
-        label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
-      }) );
+      if(disabled) {
+        li.append(jQuery('<div/>', {
+          'class':'tool_download'
+        }).button({
+          'disabled': true,
+          'icons': {
+              'primary': "ui-icon-circle-arrow-s"
+            }, 
+                      label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) }) );
+      } else {
+        li.append( jQuery('<a/>', {
+          'href': e.url,
+          'class': 'tool_download',
+          'target': '_blank'
+        }).button( {
+          'icons': {
+            'primary': "ui-icon-circle-arrow-s"
+          },
+          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
+        }) );
+      }
 
       li.append( $('<button>Add to queue</button>', {
         'class': 'tool_enqueuer',
