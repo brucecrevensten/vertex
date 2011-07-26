@@ -10,7 +10,7 @@ var PostFilters = Backbone.Model.extend(
         new LegacyFacet( { 'platform':'JERS-1','offset':20} )
       ];
 
-      self = this;
+      var self = this;
 
       _.each( this.postFilters, function(e, i, l) {
 
