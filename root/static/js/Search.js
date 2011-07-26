@@ -329,11 +329,15 @@ var DateFilter = BaseFilter.extend(
 		begin_date.setDate(begin_date.getDate() - num_days);
 		return begin_date;
 	},
+
+  reset: function() {
+    var today = new Date();
+    this.set({"start":this.format_date(this.get_date_N_years_ago(1))});
+    this.set({"end":this.format_date(today)});
+  },
 	
 	initialize: function() {
-		var today = new Date();
-		this.set({"start":this.format_date(this.get_date_N_years_ago(1))});
-		this.set({"end":this.format_date(today)});
+    this.reset();
 	},
 
   getWidget: function() { 
