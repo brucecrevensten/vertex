@@ -1,7 +1,0 @@
-<h1>Search results</h1>
-<p>This is a default template that should not, normally, be reached by using the search service.  This page shows debug information that can be used in development.</p>
-<h2>Exception information</h2>
-<ul>
-<li><strong>Message: </strong>[% message %]</li>
-<li><strong>Param: </strong>[% parameter %]</li>
-<li><strong>Error: </strong>[% error %]</li>
