@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <title>Alaska Satellite Facility Data Portal</title>
 
-<link rel="shortcut icon" href="/favicon.ico" type="image/xicon" />
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/reset.css') %]" />
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/demo_table_jui.css') %]" />
