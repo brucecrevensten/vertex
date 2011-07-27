@@ -45,7 +45,7 @@ var SearchResults = Backbone.Collection.extend(
           sizeText: AsfUtility.bytesToString(data[i].BYTES),
           md5sum: data[i].MD5SUM,
           filename: data[i].FILENAME
-        }, {silent: true});
+        });
       }
     },
 
@@ -75,6 +75,7 @@ var SearchResults = Backbone.Collection.extend(
       
             this.build(this.data);
             this.trigger('refresh');
+
 			var count = this.length;
 			$("#srCount").empty();
 			$("#srCount").html(_.template("<p><%= COUNT %> results</p>", {"COUNT": count}));
@@ -170,7 +171,6 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
 var SearchResultsView = Backbone.View.extend(
 {
 
-  li: '',
   dataTable: null,
   hasRendered: false,
   initialize: function() {
@@ -286,7 +286,6 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function() {
 	
-    this.li = '';
     $(this.el).empty();
     if( 0 == this.collection.length ) {
       this.clearOverlays();
@@ -298,22 +297,15 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.each( function( e, i, l ) {
      
       var d = e.toJSON();
-      //d['acquisitionDateText'] = $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', d.ACQUISITIONDATE));
-      //var li = jQuery('<li/>', {'class':'productRow'}).attr('product_id', d.id);
-      var li = '<li class="productRow" product_id="' + d.id + '">';
-      li += ur.srThumbnail( e );
-      li += _.template( this.getPlatformRowTemplate( d.PLATFORM) , d );
-      //$(li).find('img').error( function() { $(this).remove(); });
-      //alert(li);
-      var b = '<div class="productRowTools"><button class="sr_more_info">More information&hellip;</button></div>';
-      //var b = $('<div/>', { 'class':'productRowTools' }
-      //).append( $('<button>More information&hellip;</button>').button( { 'text':false, 'icons':{'primary':'ui-icon-help'}}));
-      var k = '<div class="tool_enqueuer" product_id="' + d.id + '" role="button" title=" ">' + _.template('\
-<input type="checkbox" id="<%= id %>_queue_toggler"/><label for="<%= id %>_queue_toggler">&nbsp;</label>\
-', { id: d.id }
-        );
-      k += '</div>'
-      /*var k = $('<div/>', { 'class':'tool_enqueuer' }
+      d['acquisitionDateText'] = $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', d.ACQUISITIONDATE));
+      var li = jQuery('<li/>', {'class':'productRow'}).attr('product_id', d.id);
+      li.append( ur.srThumbnail( e ));
+      li.append( _.template( this.getPlatformRowTemplate( d.PLATFORM) , d ) );
+      li.find('img').error( function() { $(this).remove(); });
+      var b = $('<div/>', { 'class':'productRowTools' }
+      ).append( $('<button>More information&hellip;</button>').button( { 'text':false, 'icons':{'primary':'ui-icon-help'}}));
+      
+      var k = $('<div/>', { 'class':'tool_enqueuer' }
       ).html( 
         _.template('\
 <input type="checkbox" id="<%= id %>_queue_toggler" /><label for="<%= id %>_queue_toggler">&nbsp;</label>\
@@ -344,10 +336,8 @@ var SearchResultsView = Backbone.View.extend(
       });
 
       b.append(k);
-     */ 
-      b += k;
-      var c = '<ul style="display:none" class="granuleProductList" id="gpl_' + d.id + '">';
-      //var c = $('<ul/>', { 'style':'display:none', 'class':'granuleProductList', 'id':'gpl_'+d.id } );
+      
+      var c = $('<ul/>', { 'style':'display:none', 'class':'granuleProductList', 'id':'gpl_'+d.id } );
 
       //TODO: refactor this into DataProductFile view/model/something
       e.files.each( function( q, w, r ) {
@@ -355,9 +345,8 @@ var SearchResultsView = Backbone.View.extend(
         // skip if BROWSE
         if( 'BROWSE' == q.get('processingType')) { return; }
 
-        //var lit = $('<li/>');
-        var lit = '<li><button class="tool_enqueuer" title="Add to download queue" id="b_' + q.id + '" product_file_id="' + q.id + '" product_id="' + q.get('productId') + '" displayName="' + q.get('processingTypeDisplay') + '" sizeText="' + q.get('sizeText') + '">" Add to queue...</button></li>';
-        /*var btn = $('<button>Add to queue...</button>', {
+        var lit = $('<li/>');
+        var btn = $('<button>Add to queue...</button>', {
           'class': 'tool_enqueuer',
           'title': 'Add to download queue'
         }).attr('product_id', q.get('productId'));
@@ -388,17 +377,14 @@ var SearchResultsView = Backbone.View.extend(
           );
           lit.append(btn);
           c.append(lit);
-          */
-          c += lit;
+    
     });
-      c += '</ul>';
-      li += b + c + '<div style="clear: both"></div>';
-      //li.append(b);
-      //li.append(c);
-      //li.append('<div style="clear: both"></div>');
 
-      //v = new DataProductView( { model: e } );
-      /*
+      li.append(b);
+      li.append(c);
+      li.append('<div style="clear: both"></div>');
+
+      v = new DataProductView( { model: e } );
       li.bind( "click", { id: e.id, view: v }, function(e) {
 		 $("#product_profile").empty();
         $("#product_profile").html( e.data.view.render().el );
@@ -414,96 +400,10 @@ var SearchResultsView = Backbone.View.extend(
           }
         );
       });
-*/
-      //$(this.el).append(li);
-      li += '</li>';
-      this.li += li;
+
+      $(this.el).append(li);
 
     }, this); // end iteration over collection
-    $(this.el).append(this.li);
-    $(this.el).find('img').error( function() { $(this).remove(); });
-
-    /***************
-     COMMENTED OUT JQUERYUI BUTTON
-    */
-    //$('.sr_more_info').button( { 'text':false, 'icons':{'primary':'ui-icon-help'}});
-    $('div.tool_enqueuer').click( function(e) {
-        var product_id = $(this).attr('product_id');
-        if( true != _.isUndefined( SearchApp.searchResultsView.currentProduct )) {
-          if( product_id != SearchApp.searchResultsView.currentProduct ) {
-            $('#'+SearchApp.searchResultsView.currentProduct+'_queue_toggler').click();
-          } 
-        }
-        if( product_id == SearchApp.searchResultsView.currentProduct ) {
-          SearchApp.searchResultsView.currentProduct = undefined;
-        } else {
-          SearchApp.searchResultsView.currentProduct = product_id;
-        }
-        $('#gpl_'+product_id).toggle();
-        e.stopPropagation();
-      });
-
-    /***************
-     COMMENTED OUT JQUERYUI BUTTON
-    */
-    /*
-    $('div.tool_enqueuer').button( 
-        { 
-          'text':false,
-          'icons':
-            {
-              'primary':'ui-icon-circle-plus',
-              'secondary':'ui-icon-triangle-1-s'
-            }
-        }   
-      );
-    */
-
-    $('button.tool_enqueuer').click( function(e2) {
-            e2.stopPropagation();
-            if ( $(this).prop('disabled') == 'disabled' ) { return false; }
-            if ( $(this).prop('selected') == 'selected' ) {
-              $(this).toggleClass('tool-dequeue');
-              $(this).prop('selected','false');
-              SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
-              $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
-            } else {
-              $(this).toggleClass('tool-dequeue');
-              $(this).prop('selected','selected');
-              SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
-              $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
-            }
-          }
-          );
-    $('li.productRow').bind('click', function(e) {
-        var id = $(this).attr('product_id');
-        var m = SearchApp.searchResults.get(id);
-        var v = new DataProductView({'model': m});
-        $("#product_profile").empty();
-        $("#product_profile").html( v.render().el );
-        $("#product_profile").dialog(
-          {
-            modal: true,
-            width: 'auto',
-      minWidth: 400,
-            draggable: false,
-            resizable: false,
-            title: id,
-            position: "center"
-          }
-        );
-      }); 
-
-
-    /***************
-     COMMENTED OUT JQUERYUI BUTTON
-    */
-    /*
-    $('button.tool_enqueuer').each(function(el) { $(this).button( {
-      'label':$(this).attr('displayName') + ' (' + $(this).attr('sizeText') + ')',
-      'icons': { 'primary':'ui-icon-circle-plus'}
-    })});
-    */
 
     $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('#searchResults li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
