@@ -1,11 +1,13 @@
 # Serve static content directly
-<VirtualHost *:80>
-  Servername dataportal.daac.asf.alaska.edu
-  ServerAlias dataportal
-  DocumentRoot  /usr/asf/eng/ursa2/root
-  Alias /static /usr/asf/eng/ursa2/root/static
-  CustomLog logs/dataportal.daac.asf.alaska.edu/access_log combined
-  ErrorLog logs/dataportal.daac.asf.alaska.edu/error_log
+LoadModule ssl_module modules/mod_ssl.so
+Listen 443
+<VirtualHost 137.229.86.335:443>
+  Servername vertex.daac.asf.alaska.edu
+  ServerAlias vertex
+  DocumentRoot  /usr/asf/eng/ursa2/lib/perl5/URSA2/root
+  Alias /static /usr/asf/eng/ursa2/lib/perl5/URSA2/root/static
+  CustomLog logs/vertex.daac.asf.alaska.edu/access_log combined
+  ErrorLog logs/vertex.daac.asf.alaska.edu/error_log
 
   # Set timeouts for the application both during idle & working states
   # max execution time = 30 minutes (default = 5 minutes)
@@ -20,10 +22,22 @@
   # max bytes for incoming request = 32MB (default = 128k)
   MaxRequestLen 3435978386
 
+  SSLEngine on
+  SSLProtocol all -SSLv2
+  SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+  SSLCertificateFile /etc/httpd/conf/ssl.crt/daac.asf.alaska.edu.crt
+  SSLCertificateKeyFile /etc/httpd/conf/ssl.key/daac.asf.alaska.edu.key
+
   <Location /static>
       SetHandler default-handler
   </Location>
 
+  Alias /services/search/json /usr/asf/eng/ursa2/bin/ursa2_fastcgi.pl/services/search/json/
+  Alias /services/search/param /usr/asf/eng/ursa2/bin/ursa2_fastcgi.pl/services/search/param/
+  Alias /services/authentication /usr/asf/eng/ursa2/bin/ursa2_fastcgi.pl/services/authentication/
+  Alias /services/destroy_session /usr/asf/eng/ursa2/bin/ursa2_fastcgi.pl/services/destroy_session/
+  Alias /services/feedback /usr/asf/eng/ursa2/bin/ursa2_fastcgi.pl/services/feedback/
+  Alias /favicon.ico /usr/asf/eng/ursa2/lib/perl5/URSA2/root/favicon.ico
   Alias / /usr/asf/eng/ursa2/bin/ursa2_fastcgi.pl/portal/
 
   <Location />
@@ -31,10 +45,5 @@
     Order allow,deny
     Allow from all
     AddHandler fcgid-script .pl
-  </Location>
-  # Do not allow authentication over non-ssl connections!
-  <Location /services/authentication>
-    Order deny,allow
-    Deny from all
   </Location>
 </VirtualHost>
