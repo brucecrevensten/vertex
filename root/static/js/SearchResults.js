@@ -95,6 +95,131 @@ var SearchResults = Backbone.Collection.extend(
         }
       }).results;
 
+    },
+
+    comparator: function(m) {
+      var retval = 0;
+      var platform = m.get('PLATFORM');
+      var beam = m.get('BEAMMODETYPE');
+      var offnadir = m.get('OFFNADIRANGLE');
+      var acqdate = m.get('ACQUISITIONDATE');
+      acqdate = 90000000 - acqdate.replace(/^(\d\d\d\d)-(\d\d)-(\d\d).+/, "$1$2$3");
+      var platvals = {
+        'UAVSAR':     100000000000,
+        'ALOS':       200000000000,
+        'RADARSAT-1': 300000000000,
+        'ERS-1':      400000000000,
+        'ERS-2':      500000000000,
+        'JERS-1':     600000000000
+      };
+      var beamvals = {
+        'UAVSAR':     {
+          'POL':  {
+            'NA': 100000000
+          },
+        },
+        'ALOS':       {
+          'FBS':  {
+            '21.5': 100000000,
+            '34.3': 200000000,
+            '41.5': 300000000,
+            '50.8': 400000000,
+            'NA': 600000000,
+          },
+          'FBD':  {
+            '34.3': 700000000,
+            'NA': 800000000,
+          },
+          'PLR':  {
+            '21.5': 900000000,
+            '23.1': 1000000000,
+            'NA': 1100000000,
+          },
+          'WB1':  {
+            '27.1': 1200000000,
+            'NA': 1300000000
+          },
+        },
+        'RADARSAT-1': {
+          'EH3':  {
+            'NA': 100000000,
+          },
+          'EH5':  {
+            'NA': 200000000,
+          },
+          'EH6':  {
+            'NA': 300000000,
+          },
+          'EL1':  {
+            'NA': 400000000,
+          },
+          'FN1':  {
+            'NA': 500000000,
+          },
+          'FN2':  {
+            'NA': 600000000,
+          },
+          'FN3':  {
+            'NA': 700000000,
+          },
+          'FN4':  {
+            'NA': 800000000,
+          },
+          'FN5':  {
+            'NA': 900000000,
+          },
+          'SNA':  {
+            'NA': 1000000000,
+          },
+          'SNB':  {
+            'NA': 1100000000,
+          },
+          'SWA':  {
+            'NA': 1200000000,
+          },
+          'SWB':  {
+            'NA': 1300000000,
+          },
+          'ST1':  {
+            'NA': 1400000000,
+          },
+          'ST2':  {
+            'NA': 1500000000,
+          },
+          'ST3':  {
+            'NA': 1600000000,
+          },
+          'ST4':  {
+            'NA': 1700000000,
+          },
+          'ST5':  {
+            'NA': 1800000000,
+          },
+          'ST6':  {
+            'NA': 1900000000,
+          },
+          'ST7':  {
+            'NA': 2000000000,
+          },
+        },
+        'ERS-1':      {
+          'STD':  {
+            'NA': 100000000,
+          },
+        },
+        'ERS-2':      {
+          'STD':  {
+            'NA': 100000000,
+          },
+        },
+        'JERS-1': {
+          'STD':  {
+            'NA': 100000000,
+          },
+        },
+      };
+      retval = platvals[platform]+beamvals[platform][beam][offnadir]+acqdate;
+      return(retval);
     }
   }
 );
