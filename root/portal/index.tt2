@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>Alaska Satellite Facility Data Portal</title>
+<title>Vertex: ASF's Data Portal</title>
 
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
@@ -48,7 +48,7 @@
 	
 	<div>
   <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
- 	<h1>&nbsp;Un&ndash;Named Reworked Search Assistant <span style="color: #888;">2.0</span></h1>
+ 	<h1>&nbsp;Vertex: ASF's Data Portal</h1>
 	
 	
     <div id="tools_menu">
