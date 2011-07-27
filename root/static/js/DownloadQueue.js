@@ -135,11 +135,9 @@ var DownloadQueueView = Backbone.View.extend(
 	},
 
 	handle_change_event: function() {
-		console.log("LENGTH: " + this.collection.length);
 		if (this.collection.length > 0) {
 			this.setConfirmUnload(true);
 		} else {
-			console.log("UNLOAD PAGE = FALSE");
 			this.setConfirmUnload(false);
 		}
 	},
@@ -239,7 +237,6 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
         	'icons': {
           	'primary':'ui-icon-circle-minus'}
 		}).click(jQuery.proxy(function() {
-			console.log("UPDATE");
 			this.clear_queue_all();
 			this.collection.trigger('queue:remove');
 		}, this));
