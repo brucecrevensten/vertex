@@ -34,7 +34,7 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=div#platform_facets.ui-accordion div.ui-accordion-content ul li:nth-child(1) button.ui-button</td>
-	<td>ALOS-PALSAR</td>
+	<td>ALOS PALSAR</td>
 </tr>
 </tbody></table>
 </body>

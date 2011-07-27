@@ -33,18 +33,18 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>css=html body div#wrapper div#contents div#leftColumn div#platform_facets button.ui-button</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementPresent</td>
-	<td>css=html body div.ui-dialog div.ui-dialog-buttonpane div.ui-dialog-buttonset button.ui-button:nth-child(3)</td>
+	<td>css=div#platform_facets button:nth-child(1)</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=html body div.ui-dialog div.ui-dialog-buttonpane div.ui-dialog-buttonset button.ui-button:nth-child(3) span.ui-button-text</td>
-	<td>Filter</td>
+	<td>css=html body div.ui-dialog div.ui-dialog-buttonpane div.ui-dialog-buttonset button.ui-button:nth-child(1) span.ui-button-text</td>
+	<td>Close</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=html body div.ui-dialog div.ui-dialog-buttonpane div.ui-dialog-buttonset button.ui-button:nth-child(2) span.ui-button-text</td>
+	<td>Reset</td>
 </tr>
 </tbody></table>
 </body>

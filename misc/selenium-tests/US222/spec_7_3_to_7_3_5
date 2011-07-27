@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="https://testdataportal.daac.asf.alaska.edu/" />
-<title>spec_6_6</title>
+<title>spec_7_3_to_7_3_5</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">spec_6_6</td></tr>
+<tr><td rowspan="1" colspan="3">spec_7_3_to_7_3_5</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -23,63 +23,48 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Date</td>
+	<td>id=triggerSearch</td>
 	<td></td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>id=filter_end</td>
-	<td>2010-07-28</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>link=Platforms</td>
+	<td>waitForElementPresent</td>
+	<td>link=Filter By Platform</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>id=pf_UA</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=pf_A3</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=pf_E2</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=pf_R1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=pf_J1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>triggerSearch</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForTextPresent</td>
-	<td>No results were found</td>
+	<td>verifyElementPresent</td>
+	<td>css=html body div#wrapper div#contents div#rightColumn ul#searchResults</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=#results-banner &gt; strong</td>
-	<td>No results were found</td>
+	<td>css=h4[title=ALOS PALSAR sensor: High Resolution Observation Mode (single polarization)]</td>
+	<td>ALOS PALSAR FBS2011-01-30</td>
 </tr>
 <tr>
-	<td>verifyTextNotPresent</td>
-	<td>css=html body div#wrapper div#contents div#leftColumn div#platform_facets</td>
-	<td>ALOS</td>
+	<td>verifyText</td>
+	<td>css=span.beam</td>
+	<td>FBS</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=span.date</td>
+	<td>2011-01-30</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=li.productRow &gt; p</td>
+	<td>Frame 1300, Path 255</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//ul[@id='searchResults']/li/p[2]</td>
+	<td>Off-Nadir 34.3°</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>css=li.productRow &gt; img</td>
+	<td></td>
 </tr>
 </tbody></table>
 </body>

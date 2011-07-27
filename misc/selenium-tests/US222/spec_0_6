@@ -23,12 +23,12 @@
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//html/body/div/footer/div/div[5]/a@href</td>
+	<td>//html/body/div/footer/div/div[4]/a@href</td>
 	<td>http://www.uaf.edu</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//html/body/div/footer/div/div[6]/a@href</td>
+	<td>//html/body/div/footer/div/div[5]/a@href</td>
 	<td>http://esdis.eosdis.nasa.gov/</td>
 </tr>
 <tr>
@@ -43,12 +43,12 @@
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//html/body/div/footer/div/div[5]/a/img@src</td>
+	<td>//html/body/div/footer/div/div[4]/a/img@src</td>
 	<td>../static/images/uaf-logo.png</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//html/body/div/footer/div/div[6]/a/img@src</td>
+	<td>//html/body/div/footer/div/div[5]/a/img@src</td>
 	<td>../static/images/nasa-logo.png</td>
 </tr>
 </tbody></table>
