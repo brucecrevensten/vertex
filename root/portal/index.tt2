@@ -50,9 +50,10 @@
 	
 	
     <div id="tools_menu">
-		<div id="login_msg"></div>
-      <div id="queue_summary"></div>
+		  <div id="login_msg"></div>
       <div id="user_tools"></div>
+      <div id="feedbackButton"></div>
+      <div id="queue_summary"></div>
     </div>
 	</div>
   </header>
@@ -144,7 +145,6 @@
 </div>
 
   </div> <!-- end contents -->
-<div id="feedbackButton"></div>
 <div id="feedbackForm"></div>
   <footer>
     <div id="centerer">

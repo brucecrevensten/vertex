@@ -231,8 +231,6 @@ Accept a comment and store it in the database.
 sub feedback :Local {
   my ( $self, $c ) = @_;
 
-  URSA2->log->debug(Dumper($c));
-  
   my $r = URSA2::FeedbackRequest->factory( $c->request );
   eval {
     $r->decode();
