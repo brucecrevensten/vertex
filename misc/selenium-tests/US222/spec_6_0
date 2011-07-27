@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://testapi.daac.asf.alaska.edu/portal" />
+<link rel="selenium.base" href="https://testdataportal.daac.asf.alaska.edu/" />
 <title>spec_6_0</title>
 </head>
 <body>
@@ -28,13 +28,13 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>link=Filter By Platform &amp; Product</td>
+	<td>link=Filter By Platform</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>css=div#platform_facets.ui-accordion div.ui-accordion-content ul li:nth-child(1) button.ui-button</td>
-	<td>Processing Type</td>
+	<td>ALOS-PALSAR</td>
 </tr>
 </tbody></table>
 </body>

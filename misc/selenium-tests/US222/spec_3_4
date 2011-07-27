@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://testapi.daac.asf.alaska.edu/portal" />
+<link rel="selenium.base" href="https://testdataportal.daac.asf.alaska.edu/" />
 <title>spec_3_4</title>
 </head>
 <body>
@@ -13,20 +13,34 @@
 </thead><tbody>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#download_queue_formats input#download_type_metalink.tool_download</td>
+	<td>id=download_type_metalink</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyElementPresent</td>
-	<td>css=div#download_queue_formats input#download_type_csv.tool_download</td>
-	<td></td>
+	<td>verifyValue</td>
+	<td>id=download_type_metalink</td>
+	<td>Bulk Download (.metalink)</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#download_queue_formats input#download_type_kml.tool_download</td>
+	<td>id=download_type_csv</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>verifyValue</td>
+	<td>id=download_type_csv</td>
+	<td>Download Metadata (.csv)</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=download_type_kml</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyValue</td>
+	<td>id=download_type_kml</td>
+	<td>Google Earth (.kml)</td>
+</tr>
 </tbody></table>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://testapi.daac.asf.alaska.edu/portal" />
+<link rel="selenium.base" href="https://testdataportal.daac.asf.alaska.edu/" />
 <title>spec_5_3_2</title>
 </head>
 <body>
@@ -19,7 +19,7 @@
 <tr>
 	<td>verifyAttribute</td>
 	<td>css=div#leftColumn div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(2) div.composite_checkbox_wrapper label@for</td>
-	<td>*ALOS</td>
+	<td>*ALOS-PALSAR</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
@@ -48,7 +48,7 @@
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(2) div.composite_checkbox_wrapper input#pf_ALOS</td>
+	<td>css=div#filters.ui-accordion div#filter_platform.ui-accordion-content li:nth-child(2) div.composite_checkbox_wrapper input#pf_ALOS-PALSAR</td>
 	<td></td>
 </tr>
 <tr>

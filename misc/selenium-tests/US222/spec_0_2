@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://testapi.daac.asf.alaska.edu/portal" />
+<link rel="selenium.base" href="https://testdataportal.daac.asf.alaska.edu/" />
 <title>spec_0_2</title>
 </head>
 <body>
@@ -13,13 +13,8 @@
 </thead><tbody>
 <tr>
 	<td>verifyAttribute</td>
-	<td>//html/body/div/header/img@src</td>
-	<td>https://testdataportal.daac.asf.alaska.edu/</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//html/body/div/header/h1</td>
-	<td>ASF Dataportal</td>
+	<td>css=header div a@href</td>
+	<td>https:/testdataportal.daac.asf.alaska.edu/</td>
 </tr>
 </tbody></table>
 </body>

@@ -29,7 +29,7 @@
 <tr>
 	<td>verifyAttribute</td>
 	<td>//html/body/div/footer/div/div[6]/a@href</td>
-	<td>http://www.nasa.gov</td>
+	<td>http://esdis.eosdis.nasa.gov/</td>
 </tr>
 <tr>
 	<td>verifyAttribute</td>
@@ -51,7 +51,6 @@
 	<td>//html/body/div/footer/div/div[6]/a/img@src</td>
 	<td>../static/images/nasa-logo.png</td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

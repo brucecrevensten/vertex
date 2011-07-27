@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://testapi.daac.asf.alaska.edu/portal" />
+<link rel="selenium.base" href="https://testdataportal.daac.asf.alaska.edu/" />
 <title>spec_6_6</title>
 </head>
 <body>
@@ -28,7 +28,12 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//*[@id=&quot;pf_ALOS&quot;]</td>
+	<td>id=pf_ALOS-PALSAR</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_ERS-2</td>
 	<td></td>
 </tr>
 <tr>
