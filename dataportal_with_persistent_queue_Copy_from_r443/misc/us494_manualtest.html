@@ -1,0 +1,379 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Manual Tests</title>
+
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="https://github.com/malsup/form/raw/master/jquery.form.js?v2.43"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('#accordion').accordion({ autoHeight: false, collapsible: true });
+        $('button').button();
+        $("#datepickerStart").datepicker({ dateFormat: 'yy-mm-dd' });
+        $("#datepickerEnd").datepicker({ dateFormat: 'yy-mm-dd' });
+
+        var options = {
+            target: "#response",            // target element(s) to be updated with server response
+            beforeSubmit: showRequest,  // pre-submit callback
+            success: showResponse       // post-submit callback
+        }
+
+        //$('#generic_search').ajaxForm(options);
+        $('form').ajaxForm(options)
+        .ajaxError(function(e, xhr, settings, exception){
+            $('#error').html('<fieldset><legend>Error</legend><p>status: ' + xhr.status+ ' '+ xhr.statusText+'</p><p>xhr object: '+ JSON.stringify(xhr) + '</p><p>settings object: '+ JSON.stringify(settings) +'</p><p>exception object: ' + JSON.stringify(exception) +'</p></fieldset>').show();
+        });
+        /*$('#generic_search').submit(function(){
+            // inside event callbacks 'this' is the DOM element so we first
+            // wrap it in a jQuery object and then invoke ajaxSubmit
+            $(this).ajaxSubmit(options);
+
+            // !!! Important !!!
+            // always return false to prevent standard browser submit and page navigation
+            return false;
+        });
+        */
+    });
+
+     // pre-submit callback
+    function showRequest(formData, jqForm, options) {
+        // formData is an array; here we use $.param to convert it to a string to display it
+        // but the form plugin does this for you automatically when it submits the data
+        var queryString = $.param(formData);
+
+        // jqForm is a jQuery object encapsulating the form element.  To access the
+        // DOM element for the form do this:
+        // var formElement = jqForm[0];
+        $('#response').hide();
+        $('#error').hide();
+
+        $('#server_query').html('<fieldset><legend>Query</legend><p>Submiting: ' + queryString+'</p></fieldset>').show();
+
+        // here we could return false to prevent the form from being submitted;
+        // returning anything other than false will allow the form submit to continue
+        return true;
+    }
+
+    // post-submit callback
+    function showResponse(responseText, statusText, xhr, $form)  {
+        // for normal html responses, the first argument to the success callback
+        // is the XMLHttpRequest object's responseText property
+
+        // if the ajaxForm method was passed an Options Object with the dataType
+        // property set to 'xml' then the first argument to the success callback
+        // is the XMLHttpRequest object's responseXML property
+
+        // if the ajaxForm method was passed an Options Object with the dataType
+        // property set to 'json' then the first argument to the success callback
+       // is the json data object returned by the server
+
+        $('#response').html('<fieldset><legend>Response</legend><p>status: ' + JSON.stringify(statusText) + '</p><p>response: ' + JSON.stringify(responseText) + '</p><p>xhr: '+ JSON.stringify(xhr) + '<p>form info: '+ JSON.stringify($form)+'</p></fieldset>').show();
+    }
+    </script>
+
+  </head>
+  <body>
+    <fieldset><legend>Response Section</legend>
+        <div id="server_query"></div>
+        <div id="response"></div>
+        <div id="error"></div>
+    </fieldset>
+
+    <div id="accordion">
+        <h3><a href="#">URL Based Search</a></h3>
+        <div id="generic_test">
+            <form id="url_based_search" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search/param">
+                <label>Enter url params
+                    <input id="urlbased" type=text></input>
+                </label>
+                <button type=submit>Search</button>
+            </form>
+        </div>
+
+        <h3><a href="#"> Test Search API</a></h3>
+        <div id="gen_search_div">
+            <form id="generic_search" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                <fieldset><legend>Bounding Box</legend>
+                    <label>bbox (w,s,e,n)
+                        <input id=bbox name=bbox type=text value="-50.0,50.0,-50.0,50.0"></input>
+                    </label>
+                </fieldset>
+
+                <fieldset><legend>Download Format</legend>
+                    <label>metalink
+                        <input id=format name=format type=radio value="metalink" checked=True></input>
+                    </label>
+                    <label>csv
+                        <input id=format name=format type=radio value="csv"></input>
+                    </label>
+                </fieldset>
+
+                <fieldset><legend>Platform</legend>
+                    <label>all
+                        <input name=platform type=checkbox value="all" checked=True></input>
+                    </label>
+                    <label>E1
+                        <input name=platform type=checkbox value="E1"></input>
+                    </label>
+                    <label>E2
+                        <input name=platform type=checkbox value="E2"></input>
+                    </label>
+                    <label>R1
+                        <input name=platform type=checkbox value="R1"></input>
+                    </label>
+                    <label>J1
+                        <input name=platform type=checkbox value="J1"></input>
+                    </label>
+                    <label>ALOS
+                        <input name=platform type=checkbox value="ALOS"></input>
+                    </label>
+                </fieldset>
+
+                <fieldset><legend>Beam Mode</legend>
+                    <label>any
+                        <input name=beam type=checkbox value="any" checked=True></input>
+                    </label>
+                    <label>FBS
+                        <input name=beam type=checkbox value="FBS"></input>
+                    </label>
+                    <label>FBD
+                        <input name=beam type=checkbox value="FBD"></input>
+                    </label>
+                    <label>PLR
+                        <input name=beam type=checkbox value="PLR"></input>
+                    </label>
+                </fieldset>
+
+                <fieldset><legend>Processing Level</legend>
+                    <label>all
+                        <input name=processing type=checkbox value="any" checked=True></input>
+                    </label>
+                    <label>L0
+                        <input name=processing type=checkbox value="L0"></input>
+                    </label>
+                    <label>L1
+                        <input name=processing type=checkbox value="L1"></input>
+                    </label>
+                    <label>L1.0
+                        <input name=processing type=checkbox value="L1.0"></input>
+                    </label>
+                    <label>L1.1
+                        <input name=processing type=checkbox value="L1.1"></input>
+                    </label>
+                    <label>L1.5
+                        <input name=processing type=checkbox value="L1.5"></input>
+                    </label>
+                    <label>browse
+                        <input name=processing type=checkbox value="browse"></input>
+                    </label>
+                </fieldset>
+
+                <fieldset><legend>Dates</legend>
+                    <label>Start Date
+                        <input id="datepickerStart" name="start" type=date></input>
+                    </label>
+                    <label>End Date
+                        <input id="datepickerEnd" name="end" type=date></input>
+                    </label>
+                </fieldset>
+
+                <fieldset><legend>Specific Granules</legend>
+                    <label><textarea name=granule_list rows=5></textarea>
+                </fieldset>
+                <button type=submit>Search</button>
+            </form>
+        </div>
+
+        <h3><a href="#">Specific Manual Tests</a></h3>
+        <div id="manual_tests">
+            <fieldset><legend>2.1 - Bounding Box</legend>
+                <fieldset><legend>2.1.0</legend>
+                    <form id="test2.1" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>bbox (w,s,e,n)
+                            <input id=bbox name=bbox type=text value="-50.0,50.0,-50.0,50.0"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+
+                    </form>
+                </fieldset>
+                <fieldset><legend>2.1.1</legend>
+                    <form id="test2.1.1" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>bbox
+                            <input id=bbox name=bbox type=text placeholder="leave empty"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+            </fieldset>
+
+            <fieldset><legend>2.2 - Platform</legend>
+                <fieldset><legend>2.2.0</legend>
+                <form id="test2.2" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                    <label>all
+                        <input name=platform type=checkbox value="all" checked=True></input>
+                    </label>
+                    <label>E1
+                        <input name=platform type=checkbox value="E1"></input>
+                    </label>
+                    <label>E2
+                        <input name=platform type=checkbox value="E2"></input>
+                    </label>
+                    <label>R1
+                        <input name=platform type=checkbox value="R1"></input>
+                    </label>
+                    <label>J1
+                        <input name=platform type=checkbox value="J1"></input>
+                    </label>
+                    <label>ALOS
+                        <input name=platform type=checkbox value="ALOS"></input>
+                    </label>
+                    <button type=submit>Run Test</button>
+                </form>
+                </fieldset>
+                <fieldset><legend>2.2.1</legend>
+                    <form id="test2.2.1" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                    <label>Invalid Platform
+                        <input name=platform type=checkbox value="garbage" checked=True></input>
+                    </label>
+                    <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+            </fieldset>
+
+            <fieldset><legend>2.3 - Start Search Date</legend>
+                <fieldset><legend>2.3.0</legend>
+                    <form id="test2.3" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>Start Date
+                            <input id=start name=start type=date value="1995-01-30"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+                <fieldset><legend>2.3.1</legend>
+                    <form id="test2.3.1" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>Invalid Start Date
+                            <input id=start name=start type=date value="1995-01.30"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+            </fieldset>
+
+            <fieldset><legend>2.4 - End Search Date</legend>
+                <fieldset><legend>2.4.0</legend>
+                    <form id="test2.4" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>End Date
+                            <input id=end name=end type=date value="2011-01-30"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+                <fieldset><legend>2.4.1</legend>
+                    <form id="test2.4.1" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>Invalid End Date
+                            <input id=end name=end type=date value="2011-01.30"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+            </fieldset>
+
+            <fieldset><legend>2.5 - Download Format</legend>
+                <fieldset><legend>2.5.0</legend>
+                    <form id="test2.5" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>metalink
+                            <input name=format type=radio value="metalink" checked=True></input>
+                        </label>
+                        <label>csv
+                            <input name=format type=radio value="csv"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+                <fieldset><legend>2.5.1</legend>
+                    <form id="test2.5.1" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>Invalid Format
+                            <input name=format type=radio value="garbage" checked=True></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+
+            </fieldset>
+
+            <fieldset><legend>2.6 - Processing Level</legend>
+                <fieldset><legend>2.6.0</legend>
+                    <form id="test2.6" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>all
+                            <input name=processing type=checkbox value="any" checked=True></input>
+                        </label>
+                        <label>L0
+                            <input name=processing type=checkbox value="L0"></input>
+                        </label>
+                        <label>L1
+                            <input name=processing type=checkbox value="L1"></input>
+                        </label>
+                        <label>L1.0
+                            <input name=processing type=checkbox value="L1.0"></input>
+                        </label>
+                        <label>L1.1
+                            <input name=processing type=checkbox value="L1.1"></input>
+                        </label>
+                        <label>L1.5
+                            <input name=processing type=checkbox value="L1.5"></input>
+                        </label>
+                        <label>browse
+                            <input name=processing type=checkbox value="browse"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+                <fieldset><legend>2.6.1</legend>
+                    <form id="test2.6.1" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>Invalid Input
+                            <input name=processing type=checkbox value="garbage" checked=True></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+            </fieldset>
+
+            <fieldset><legend>2.7 - Beam Modes</legend>
+                <fieldset><legend>2.7.0</legend>
+                    <form id="test2.7" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>any
+                            <input name=beam type=checkbox value="any" checked=True></input>
+                        </label>
+                        <label>FBS
+                            <input name=beam type=checkbox value="FBS"></input>
+                        </label>
+                        <label>FBD
+                            <input name=beam type=checkbox value="FBD"></input>
+                        </label>
+                        <label>PLR
+                            <input name=beam type=checkbox value="PLR"></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+                <fieldset><legend>2.7.1</legend>
+                    <form id="test2.7.1" method="post" enctype="application/x-www-form-urlencoded" action="https://testapi.daac.asf.alaska.edu/services/search">
+                        <label>Invalid Input
+                            <input name=beam type=checkbox value="garbage" checked=True></input>
+                        </label>
+                        <button type=submit>Run Test</button>
+                    </form>
+                </fieldset>
+            </fieldset>
+        </div>
+
+    </div>
+
+    </div>
+  </body>
+</html>

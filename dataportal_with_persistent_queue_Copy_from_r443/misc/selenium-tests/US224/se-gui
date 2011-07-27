@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="se-gui-spec-1.0">spec_1_0</a></td></tr>
+<tr><td><a href="se-spec-1.2">spec_1_2</a></td></tr>
+<tr><td><a href="se-spec-1.6.2">spec_1_6_2</a></td></tr>
+<tr><td><a href="se-spec-2">spec_2</a></td></tr>
+<tr><td><a href="se-spec-2.4">spec_2_4</a></td></tr>
+<tr><td><a href="se-spec-2.4.3">spec_2_4_3</a></td></tr>
+<tr><td><a href="se-spec-2.5">spec_2_5</a></td></tr>
+<tr><td><a href="se-spec-2.5.1">spec_2_5_1</a></td></tr>
+<tr><td><a href="se-spec-2.6">spec_2_6</a></td></tr>
+<tr><td><a href="se-spec-2.6.1">spec_2_6_1</a></td></tr>
+<tr><td><a href="se-spec-2.7">spec_2_7</a></td></tr>
+<tr><td><a href="se-spec-2.8">spec_2_8</a></td></tr>
+<tr><td><a href="se-spec-2.9">spec_2_9</a></td></tr>
+<tr><td><a href="se-spec-3">spec_3</a></td></tr>
+<tr><td><a href="se-spec-3.1">spec_3_1</a></td></tr>
+<tr><td><a href="se-spec-3.2">spec_3_2</a></td></tr>
+<tr><td><a href="se-spec-3.3">spec_3_3</a></td></tr>
+</tbody></table>
+</body>
+</html>

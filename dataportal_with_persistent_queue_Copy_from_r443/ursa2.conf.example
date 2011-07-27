@@ -1,0 +1,32 @@
+name URSA2
+
+# URL to where users will be directed for information on how
+# to use the API.
+api_user_information_url http://www.asf.alaska.edu/program/sdc/asf_api
+
+# Set to 'true' to include google analytics code, 'false' if not
+include_google_analytics = false
+
+# set to 'true' to include ems tracker, 'false' if not
+include_ems_tracker = false
+
+<Model::DBI>
+   # Database connection string. Should be in the format:
+   # dbi:DriverName:database_name
+   # Valid database_names for ASF are: DAACDEV, DAACTEST, and DAACPROD
+   dsn dbi:Oracle:CHANGEME
+   username CHANGEME
+   password CHANGEME
+   <options>
+    AutoCommit 0
+   </options>
+</Model::DBI>
+
+<Model::User>
+  # Cookie configuration for the User Model.
+  <cookie>
+    name datapool
+    expires +12M
+    domain localhost.local
+  </cookie>
+</Model::User>
