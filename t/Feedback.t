@@ -12,6 +12,9 @@ BEGIN { use_ok 'URSA2::Controller::services' }
 
 use ok "Test::WWW::Mechanize::Catalyst" => "URSA2";
 
+SKIP: {
+  skip 'Skipping tests requiring a database connection.', 10;
+
 my $surn = 'services/feedback/param';
 my $jurn = 'services/feedback/json';
 
@@ -50,9 +53,6 @@ is($mech->status(), Apache2::Const::HTTP_BAD_REQUEST,
 # These tests require a DB connection.
 # set TEST_DATABASE=1 to run these tests.
 ################
-SKIP: {
-  skip 'Skipping tests requiring a database connection.', 4
-  unless $ENV{'TEST_DATABASE'};
   $mech->post($surn, { 'comment' => $comment, 'userid' => $userid,
     'email' => $email, 'name' => $name});
   is($mech->status, Apache2::Const::HTTP_OK,
