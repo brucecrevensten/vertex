@@ -85,6 +85,7 @@ var DownloadQueueSummaryView = Backbone.View.extend(
     _.bindAll(this, "render");
     this.collection.bind("add", this.render);
     this.collection.bind("remove", this.render);
+	this.collection.bind("reset", this.render);
   },
 
   // Creates a button that can pop the real DownloadQueue
@@ -118,7 +119,41 @@ var DownloadQueueView = Backbone.View.extend(
   initialize: function() {
     _.bindAll(this, "render");
     this.collection.bind('queue:remove', this.render );
+	this.collection.bind('add', jQuery.proxy(this.handle_change_event,this));
+	this.collection.bind('remove', jQuery.proxy(this.handle_change_event, this));
+	this.collection.bind('reset', jQuery.proxy(this.handle_change_event, this));
   },
+
+	clear_queue_all: function() {		
+		this.collection.each( function(thing ) { 
+					$("#b_"+thing.id).toggleClass('tool-dequeue');
+					$("#b_"+thing.id).prop('selected','false');
+					$("#b_"+thing.id).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+		} );
+		
+		this.collection.reset();
+	},
+
+	handle_change_event: function() {
+		console.log("LENGTH: " + this.collection.length);
+		if (this.collection.length > 0) {
+			this.setConfirmUnload(true);
+		} else {
+			console.log("UNLOAD PAGE = FALSE");
+			this.setConfirmUnload(false);
+		}
+	},
+	
+ setConfirmUnload: function(on) {
+	if (on) {
+		window.onbeforeunload = function() {
+			return "You have items in your queue! If you leave the page then your queue will be emptied.";
+		}
+	} else {
+		window.onbeforeunload = function() { return "Are you sure you want to leave? Your current search results will be lost.";}
+	}
+  
+},
  
   // Renders the main download queue
   render: function() {
@@ -179,6 +214,7 @@ var DownloadQueueView = Backbone.View.extend(
 </thead>\
 <tbody> <%= table %> </tbody>\
 </table>\
+<div style="margin-top: 1ex;" id="clear_queue_all"></div>\
 <h4 style="margin: 1em 0; font-weight: bold;">About bulk download</h4>\
 <p style="margin: 1em 0; line-height: 120%;">\
 This search tool uses the <strong>.metalink</strong> format to support bulk downloads of data.<br/>\
@@ -196,6 +232,19 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
 ', pageTemplate ));
 
       $(this.el).find('#get_bulk_download').button({ icons: { primary: "ui-icon-newwin" }});
+
+	$(this.el).find('#clear_queue_all').button(
+		{	
+			'label': 'Clear Queue',
+        	'icons': {
+          	'primary':'ui-icon-circle-minus'}
+		}).click(jQuery.proxy(function() {
+			console.log("UPDATE");
+			this.clear_queue_all();
+			this.collection.trigger('queue:remove');
+		}, this));
+
+
       $(this.el).find('a.remove').button(
         {
           'label': 'Remove',

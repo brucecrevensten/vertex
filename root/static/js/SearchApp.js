@@ -1,5 +1,6 @@
 $(function() {
-	
+
+		
   window.SearchAppView = Backbone.View.extend({	
     
     initialize: function() {
@@ -16,6 +17,7 @@ $(function() {
     // init search behaviors
     this.searchParameters = new SearchParameters();
     this.postFilters = new PostFilters();
+
 
     this.searchResults = new SearchResults();
     this.searchResults.searchParameters = this.searchParameters;
@@ -37,12 +39,21 @@ $(function() {
       }
     );
 
+    this.downloadQueue = new DownloadQueue();
+    this.downloadQueueView = new DownloadQueueView( 
+      { 
+        collection: this.downloadQueue,
+        el: $("#download_queue")
+      } 
+    );
+
     this.searchResultsView = new SearchResultsView(
       {
         'postFilters': this.postFilters,
         'collection': this.searchResults,
         'el': $("#searchResults"),
-		'model': this.user
+		'model': this.user,
+		'downloadQueue': this.downloadQueue
       }
     );
 
@@ -58,13 +69,6 @@ $(function() {
       collection: this.searchResults
     });
 
-    this.downloadQueue = new DownloadQueue();
-    this.downloadQueueView = new DownloadQueueView( 
-      { 
-        collection: this.downloadQueue,
-        el: $("#download_queue")
-      } 
-    );
     this.downloadQueueSummaryView = new DownloadQueueSummaryView( 
       { 
         collection: this.downloadQueue,
@@ -121,9 +125,12 @@ $(function() {
     },
 
   });
-  
-  window.SearchApp = new SearchAppView;
 
+
+  window.SearchApp = new SearchAppView;
+window.onbeforeunload = function() {
+	return "Are you sure you want to leave? Your current search results will be lost.";
+}
 	// Instead of using serialzeArray() we can use serializeJSON to return JSON formatted form data. 
 	$.fn.serializeJSON=function() {
 		var json = {};
@@ -216,4 +223,8 @@ var ActiveSearchFiltersView = Backbone.View.extend(
     $(this.el).append(ul);
     return this;
   }
+
+  
+
+
 });

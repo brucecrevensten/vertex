@@ -306,6 +306,8 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
+	
+	this.options.downloadQueue.bind('queue:remove', this.render);
 
    	this.model.bind('authSuccess', this.render);
 
