@@ -269,15 +269,18 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
       });
 
       $(this.el).find("#download_type_metalink").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Bulk Download (.metalink)'} ).click( function() {
-        $('#format_specifier').val( 'metalink');
+        window.onbeforeunload = null;
+		$('#format_specifier').val( 'metalink');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_csv").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Download Metadata (.csv)'} ).click( function() {
-        $('#format_specifier').val( 'csv');
+        window.onbeforeunload = null;
+		$('#format_specifier').val( 'csv');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_kml").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Google Earth (.kml)'} ).click( function() {
-        $('#format_specifier').val( 'kml');
+        window.onbeforeunload = null;
+		$('#format_specifier').val( 'kml');
         $('#download_queue_form').submit();
       });
 
@@ -306,7 +309,8 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
         title: _.template("Download queue (<%= summary %>)", { 'summary':this.collection.getTextSummary() }),
         position: "top"
       }
-    );
+    ).bind('dialogclose', jQuery.proxy(function() { this.handle_change_event()}, this)); //refresh every time it closes
+	
   
     return this;
     
