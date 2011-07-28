@@ -1,0 +1,27 @@
+How to create and run the tests.
+
+1. From the Selenium IDE, click on a spec. Go to File->Export Test Case as...
+2. Browse to the python-tests/firefox directory for the user story
+3. save the spec as a python file, eg. spec_0.py
+4. repeat for all the specs.
+
+5. Open a terminal and browse to selenium-tests/<User Story>/python-tests
+6. type: svn mkdir googlechrome iexplorer safari
+7. type: cp firefox/* googlechrome/
+8. repeat for each browser
+9. cd googlechrome
+10. perl -pi -e 's/chrome/googlechrome/g' *.py
+11. cd ../iexplorer
+12. perl -pi -e 's/chrome/iehtr/g' *.py
+13. cd ../safari
+14. perl -pi -e 's/chrome/safari/g' *.py
+
+start the selenium server
+15. cd to the selenium-server directory
+16. java -jar selenium-server-standalone-<version-number>.jar
+
+run tests
+17. cd <User Story>/python-tests/firefox
+18. v selenium-rc
+19. rm *.pyc
+20. nosetests --processes=2 *.py
