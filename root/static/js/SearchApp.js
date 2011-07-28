@@ -218,9 +218,8 @@ var ActiveSearchFiltersView = Backbone.View.extend(
             // this doesn't get painted in the DOM, but doesn't hurt to note this case
             beams.push( '(No beam modes match)' );
           } else {
-        
             _.each( e.beam, function( e, i, l ) {
-              beamsOffNadirs.push(e.substring(1, 3));
+              beams.push(e.substring(1, 3));
             });
           }
           postFilterItems.push(beams.join(' / '));
