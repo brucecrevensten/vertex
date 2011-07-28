@@ -262,10 +262,14 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   tagName: "form",
 
   events: { 
-    "change input" : "changed",
+    "change input" : "triggerChange",
   },
   initialize: function() {
-    this.model.bind( 'change', jQuery.proxy( this.render, this) );
+    this.model.bind( 'change', $.proxy( this.render, this) );
+    this.model.bind( 'change:throttled', _.throttle( $.proxy( this.changed, this), 750) );
+  },
+  triggerChange: function() {
+    this.model.trigger('change:throttled');
   },
   changed: function(e) {
 
@@ -280,13 +284,18 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     var direction = $(this.el).find('input[name="direction"]:checked').val();
     var path = $(this.el).find('input[name="path"]').val();
     var frame = $(this.el).find('input[name="frame"]').val();
-
-    this.model.set({
+    var self = this;
+    
+    self.model.set({
       'beamoffnadir': beamoffnadir,
       'direction': direction,
       'path': path,
       'frame': frame
     });
+
+  },
+  doChange: function(beamoffnadir, direction, path, frame) {
+    
   },
   beamModes: [
     {
@@ -483,9 +492,7 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
         label: "RADARSAT-1"
       }
     );
-
     return this;
- 
   }
 });
                                            
@@ -493,11 +500,14 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
   events: {
-   "change input" : "changed",
+   "change input" : "triggerChange",
   },
   initialize: function() {
-    this.render();
-    this.model.bind( 'change', jQuery.proxy( this.render, this) );
+    this.model.bind( 'change', $.proxy( this.render, this) );
+    this.model.bind( 'change:throttled', _.throttle( $.proxy( this.changed, this), 750) );
+  },
+  triggerChange: function() {
+    this.model.trigger('change:throttled');
   },
   changed: function(e) {
     this.model.clear( { silent: true });
@@ -689,11 +699,14 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
   events: {
-   "change input" : "changed",
+   "change input" : "triggerChange",
   },
   initialize: function() {
-    this.render();
-    this.model.bind( 'change', jQuery.proxy( this.render, this) );
+    this.model.bind( 'change', $.proxy( this.render, this) );
+    this.model.bind( 'change:throttled', _.throttle( $.proxy( this.changed, this), 750) );
+  },
+  triggerChange: function() {
+    this.model.trigger('change:throttled');
   },
   changed: function(e) {
     this.model.clear( { silent: true });
