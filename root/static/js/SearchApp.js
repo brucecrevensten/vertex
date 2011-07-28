@@ -115,6 +115,7 @@ $(function() {
 		  
 	      e.data.sr.trigger('clear_results');
 		  e.data.srv.showBeforeSearchMessage();
+			$("#srCount").empty()
         });
 
       //fire up the map
