@@ -14,7 +14,6 @@ var SearchResults = Backbone.Collection.extend(
 
       // TODO: possible memory leak here, if the associated things aren't deallocated
       // when we reset this main collection.
-
       this.reset();
       var dp;
 		
@@ -52,6 +51,7 @@ var SearchResults = Backbone.Collection.extend(
     filter: function() {
       var d = this.postFilters.applyFilters( this.data );
       this.build( d );
+      this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
     },
 
     fetchSearchResults: function() {
@@ -68,6 +68,7 @@ var SearchResults = Backbone.Collection.extend(
           context: this,
           success: function(data, textStatus, jqXHR) {
             this.data = data.results.rows.ROW;
+            this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
             // Fetch distinct platforms that were found
             this.platforms = _.uniq( _.pluck( this.data, 'PLATFORM') );
@@ -75,10 +76,6 @@ var SearchResults = Backbone.Collection.extend(
       
             this.build(this.data);
             this.trigger('refresh');
-
-			var count = this.length;
-			$("#srCount").empty();
-			$("#srCount").html(_.template("<p><%= COUNT %> results</p>", {"COUNT": count}));
 
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -321,10 +318,6 @@ var SearchResultsView = Backbone.View.extend(
     this.showBeforeSearchMessage();
   },
 
-  renderLength: function() {
-    return _.template('<h3><%= length %> results found</h3>', this.collection);
-  },
-
   showBeforeSearchMessage: function() {
 		$('#async-spinner').hide();
 	    $('#searchResults').hide();
@@ -344,6 +337,8 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#results-banner").hide();
       $('#active-filters').show();
+    $('#srCount').show();
+      $('#srProcLevelTool').show();
 
   },
 
@@ -354,13 +349,17 @@ var SearchResultsView = Backbone.View.extend(
     $('#searchResults').hide();
     $("#error-message").hide();
     $('#platform_facets').hide();
+    $('#srCount').hide();
     this.clearOverlays();
       $('#active-filters').show();
+      $('#srProcLevelTool').hide();
 
   },
 
   showError: function(jqXHR) {
           $('#active-filters').show();
+    $('#srCount').hide();
+      $('#srProcLevelTool').hide();
 
 	  $('#before-search-msg').hide();
     $("#async-spinner").hide();
@@ -381,6 +380,7 @@ var SearchResultsView = Backbone.View.extend(
 
   showNoResults: function() {
       $('#active-filters').show();
+    $('#srCount').hide();
 
 	$('#before-search-msg').hide();
     $("#async-spinner").hide();
@@ -539,7 +539,23 @@ var SearchResultsView = Backbone.View.extend(
     this.clearOverlays();
     this.renderOnMap();
     this.resetHeight();
+
+    if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
+      $("#srCount").empty().html(_.template("<%= total %> results found",
+        { 'total' : this.collection.unfilteredProductCount }
+      ));
+
+          
+    } else {
+          $("#srCount").empty().html(_.template("<span><%= filtered %> filtered from</span> <%= total %> results",
+        { 
+          'total' : this.collection.unfilteredProductCount,
+          'filtered' : this.collection.filteredProductCount
+        }
+      ));
     
+    }
+
     return this;
 
   },

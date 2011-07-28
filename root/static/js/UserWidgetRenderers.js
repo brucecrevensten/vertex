@@ -54,6 +54,7 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
     if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM')) {
       return;
     } else {
+      if( 'none' == m.toJSON()['THUMBNAIL'] ) { return; }
       return _.template('<img title="<%= GRANULENAME %>" src="<%= THUMBNAIL %>" />', m.toJSON());
     }
   }

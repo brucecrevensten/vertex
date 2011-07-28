@@ -109,7 +109,7 @@ $(function() {
           e.data.spv.render();
 
 		  e.data.sr.data = {};
-		  e.data.sr.reset();
+		  e.data.sr.reset(); // can't be silent here, must be loud
 		  e.data.srv.render();
 		  
 	      e.data.sr.trigger('clear_results');
@@ -194,21 +194,35 @@ var ActiveSearchFiltersView = Backbone.View.extend(
         }
         if( e.beamoffnadir ) {
           var beamsOffNadirs = [];
-          _.each( e.beamoffnadir, function( e, i, l ) {
 
-            if( 'WB1' != e ) {
-              beamsOffNadirs.push(e.substr(0, 3) + ' (' + e.substr(3) + '&deg;)');
-            } else {
-              beamsOffNadirs.push('WB1');
-            }
-          });
+          if( _.isEqual( ['empty'], e.beamoffnadir )) {
+            // this doesn't get painted in the DOM, but doesn't hurt to note this case
+            beamsOffNadirs.push( '(No beam modes match)' );
+          } else {
+            _.each( e.beamoffnadir, function( e, i, l ) {
+
+              if( 'WB1' != e ) {
+                beamsOffNadirs.push(e.substr(0, 3) + ' (' + e.substr(3) + '&deg;)');
+              } else {
+                beamsOffNadirs.push('WB1');
+              }
+            });
+          }
           postFilterItems.push(beamsOffNadirs.join(' / '));
+          
         }
         if( e.beam ) {
           var beams = [];
-          _.each( e.beam, function( e, i, l ) {
-            beamsOffNadirs.push(e.substring(1, 3));
-          });
+
+          if( _.isEqual( ['empty'], e.beam )) {
+            // this doesn't get painted in the DOM, but doesn't hurt to note this case
+            beams.push( '(No beam modes match)' );
+          } else {
+        
+            _.each( e.beam, function( e, i, l ) {
+              beamsOffNadirs.push(e.substring(1, 3));
+            });
+          }
           postFilterItems.push(beams.join(' / '));
         }
 

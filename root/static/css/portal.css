@@ -124,6 +124,7 @@ legend {
   border-top: 1px solid #888;
   overflow: auto;
   height: 600px;
+  width: 385px !important;
 }
 
 #searchResults li {
@@ -513,8 +514,13 @@ input.login_fields {
 
 #srCount {
   float: right;
-  font-weight: bold;
-  font-variant: small-caps
+  text-align: right;
+  font-size: 16pt !important;
+}
+
+#srCount span {
+  font-size: 12pt !important;
+  color: #888;
 }
 
 #clear_queue_all {

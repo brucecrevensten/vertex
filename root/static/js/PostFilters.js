@@ -34,6 +34,7 @@ var PostFilters = Backbone.Model.extend(
     },
     
     applyFilters: function( data ) {
+
       for( var i in this.postFilters ) {
         data = this.postFilters[i].filter(data);
       }
@@ -62,7 +63,7 @@ var PostFiltersView = Backbone.View.extend(
   },
   // platforms: array of platform names present in search results
   render: function(platforms) {
-	 this.model.reset();
+	  // this.model.reset(); ******** MARC FIX FOR BAD POST FILTER STATE
     this.setWidgets();
     var render = false;
     $(this.el).accordion("destroy");
@@ -116,91 +117,6 @@ var ProcessingFacetButton = BaseWidget.extend( {
   }
 });
 
-/* TODO deprecate / re-implement elsewhere
-var ProcessingFacetDialog = BaseWidget.extend( {
-
-  className: "platformFacet",
-  tagName: "form",
-
-  events: { 
-    "change input" : "changed",
-  },
-  initialize: function() {
-    this.render();
-    this.model.unbind('change');
-    this.model.bind( 'change', jQuery.proxy( this.render, this) );
-  },
-  changed: function(e) {
-    this.model.clear( { silent: true });
-    var direction = $(this.el).find('input[name="direction"]:checked').val();
-    var path = $(this.el).find('input[name="path"]').val();
-    var frame = $(this.el).find('input[name="frame"]').val();
-
-    this.model.set({
-      beamoffnadir: beamoffnadir,
-      direction: direction,
-      path: path,
-      frame: frame
-    }, { silent: true });
-  },
- 
-  render: function() {
-
-    $(this.el).empty();
-    var checked = this.model.get('procTypes');
-    var ul = $('<ul/>');
-    _.each( this.model.get('procTypes'), function(procType) {
-      var p = this.model.processingTypes.get(procType).toJSON();
-      var rowData = {
-        "id":"procinfo_"+p.id.replace('.','_'),
-        "procType":p.id,
-        "ifChecked": ( _.indexOf(checked, procType) > -1 ) ? 'checked="checked"' : '',
-        "name":p.display,
-        "description":p.description
-      };
-      var i = $('<li>').html( _.template('\
-<div class="composite_checkbox_wrapper">\
-<input type="checkbox" id="<%= id %>" <%= ifChecked %> name="processingTypeSelector" value="<%= procType %>" /><label style="text-align: left; width: 160px;" for="<%= id %>"><%= name %></label>\
-<button style="display:inline-block;" procType="<%= procType %>" title="<%= description %>">?</button>\
-</div>\
-', rowData));
-      $(i).find('.composite_checkbox_wrapper').buttonset();
-      $(i).find('input').button().click( function() {
-        if( true == $(this).prop('checked') ) {
-          $(this).button( "option", "icons", { primary: "ui-icon-check" });
-        } else {
-          $(this).button( "option", "icons", {} );
-        }
-      });
-     
-      $(i).find('input:checkbox:checked').button( "option", "icons", { primary: "ui-icon-check" }).prop('checked', true);
-      $(i).find('button').button( { icons: { primary: "ui-icon-info"}, text: false}).click( function() { return false; });
-      ul.append(i);
-    }, this);
-
-    $(this.el).append(ul);
-
-    $(this.el).dialog({
-      width: 220,
-      modal: false,
-      draggable: true,
-      resizable: false,
-      title: "Product processing choices",
-      position: [20,90],
-      buttons: {
-        "Cancel": function() { $(this).dialog('close'); },
-        "Reset": jQuery.proxy( function() {
-          this.model.reset();
-          this.render();
-        }, this),
-        "Filter": function() { SearchApp.searchResults.filter(); }
-      }
-    });
-
-  }
-    
-});
-*/
 
 var PlatformFacet = BaseFilter.extend( {
 
@@ -296,6 +212,7 @@ var AlosFacet = PlatformFacet.extend(
       return new AlosFacetButton({model: this});
     },
     filter: function( d ) {
+
       var f = this.toJSON();
       
       // only do filtering on this platform
@@ -335,7 +252,7 @@ var AlosFacet = PlatformFacet.extend(
           });
       }
       return _.union(a, d);
-    }
+    } 
 
   }
 );
@@ -351,9 +268,15 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     this.model.bind( 'change', jQuery.proxy( this.render, this) );
   },
   changed: function(e) {
+
     this.model.clear( { silent: true });
     var beamoffnadir  = [];
     $(this.el).find('.beamSelector :checked').each( function(i, el) { beamoffnadir.push( $(el).val() ); });
+
+    // If no beam modes are selected, choose an invalid key for filtering so the platform
+    // doesn't show up at all
+    if( true == _.isEmpty(beamoffnadir) ) { beamoffnadir.push( 'empty' ); }
+
     var direction = $(this.el).find('input[name="direction"]:checked').val();
     var path = $(this.el).find('input[name="path"]').val();
     var frame = $(this.el).find('input[name="frame"]').val();
@@ -404,6 +327,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     $(this.el).empty();
 
     var b = jQuery('<div/>');
+
     this.renderButtonset( this.model.toJSON(), 'beamoffnadir', b, this.beamModes, 'a3', 'offnadir');
 
     var fs = jQuery('<fieldset/>').html( jQuery('<legend>Beam Modes & Off-Nadir Angles</legend>')).append(b);
@@ -498,6 +422,7 @@ var RadarsatFacet = PlatformFacet.extend(
       return new RadarsatFacetButton({model: this});
     },
     filter: function( d ) {
+
       var f = this.toJSON();
       
       // only do filtering on this platform
@@ -578,6 +503,9 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
     this.model.clear( { silent: true });
     var beam = [];
     $(this.el).find('.beamSelector :checked').each( function(i, el) { beam.push( $(el).val() ); });
+
+    if( true == _.isEmpty(beam) ) { beam.push( 'empty' ); }
+
     var direction = $(this.el).find('input[name="direction"]:checked').val();
     var path = $(this.el).find('input[name="path"]').val();
     var frame = $(this.el).find('input[name="frame"]').val();
@@ -695,6 +623,7 @@ var LegacyFacet = PlatformFacet.extend(
       return new LegacyFacetButton({model: this});
     },
     filter: function( d ) {
+
       var f = this.toJSON();
       
       var p = this.platform;
