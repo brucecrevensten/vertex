@@ -5,7 +5,8 @@ $(function() {
     
     initialize: function() {
 	
-	  this.user = new User();
+	    this.user = new User();
+
       this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
       this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
       this.userLoginButton.render();

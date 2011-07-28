@@ -45,6 +45,10 @@ header h1 a span {
   font-size: 18pt !important;
 }
 
+header h1 a span span {
+  font-size: 10pt !important;
+}
+
 header h1 a:hover {
   text-decoration: none;
 }

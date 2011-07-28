@@ -146,6 +146,7 @@ var PlatformFacet = BaseFilter.extend( {
   }
 
 } ); 
+
 var PlatformFacetView = BaseWidget.extend( {
 
   // selected = this.model.toJSON

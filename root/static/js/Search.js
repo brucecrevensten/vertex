@@ -99,9 +99,6 @@ var BaseFilter = Backbone.Model.extend(
 }
 );
 
-
-
-// TODO: put in csv-to-coord array utility functions
 var GeographicFilter = BaseFilter.extend(
 {
   name: "GeographicFilter",

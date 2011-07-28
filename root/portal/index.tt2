@@ -48,7 +48,7 @@
 	
 	<div>
     <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
- 	  <h1><a href="#">&nbsp;Vertex <span>ASF&rsquo;s Data Portal</span></a></h1>
+ 	  <h1><a href="#">&nbsp;Vertex <span>ASF&rsquo;s Data Portal<span>&nbsp;&beta;eta</span></a></h1>
     <div id="tools_menu">
 		  <div id="login_msg"></div>
       <div id="user_tools"></div>
@@ -57,7 +57,6 @@
     </div>
 	</div>
   </header>
-
 
   <div id="login_dialog" style="display: none">
   	<div id="login_feedback" class="msg"></div>

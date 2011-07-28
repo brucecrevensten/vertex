@@ -85,11 +85,19 @@ var DownloadQueueSummaryView = Backbone.View.extend(
     _.bindAll(this, "render");
     this.collection.bind("add", this.render);
     this.collection.bind("remove", this.render);
-	this.collection.bind("reset", this.render);
+	 this.collection.bind("reset", this.render);
   },
 
   // Creates a button that can pop the real DownloadQueue
   render:function() {
+
+    // Easter egg!
+    var icon;
+    if( true != _.isUndefined( window.SearchApp ) ) {
+      icon = ( 'jgarron' == SearchApp.user.get('userid')) ? 'ui-icon-cart' : 'ui-icon-folder-open';
+    } else {
+      icon = 'ui-icon-folder-open';
+    }
 
     var c = ( 0 == this.collection.length ) ? 'empty' : 'nonempty'; // will store class for styling nonempty queue button
 
@@ -97,7 +105,7 @@ var DownloadQueueSummaryView = Backbone.View.extend(
       {
         disabled: ( 0 == this.collection.length ) ? true : false,
         icons: {
-          primary: 'ui-icon-folder-open'
+          primary: icon
         },
         label: _.template('Download queue <span class="<%= className %>">(<%= summary %>)</span>', { summary: this.collection.getTextSummary(), className: c })
       }
