@@ -103,10 +103,11 @@ $(function() {
       }, this)).focus();//.click(); ///// Add .click() to make app begin searching immediately
 
       $('#resetSearch').button(
-        { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults, srv:this.searchResultsView }, function(e) {
+        { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults, srv:this.searchResultsView, pf: this.postFilters }, function(e) {
           e.data.sp.setDefaults();
           e.data.spv.setWidgets();
           e.data.spv.render();
+          e.data.pf.reset();
 
 		  e.data.sr.data = {};
 		  e.data.sr.reset(); // can't be silent here, must be loud
