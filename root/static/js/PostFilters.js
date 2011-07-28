@@ -479,6 +479,7 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
   },
   openDialog: function(e) {
     var v = new RadarsatFacetDialog( { model: this.model } );
+ 	v.render();
   },
   render: function() {
     $(this.el).button(
@@ -676,6 +677,7 @@ var LegacyFacetButton = PlatformFacetView.extend( {
   },
   openDialog: function(e) {
     var v = new LegacyFacetDialog( { model: this.model } );
+ 	v.render();
   },
   render: function() {
     $(this.el).button(
