@@ -33,9 +33,20 @@ text-decoration: underline;
   height: 735px;
 }
 
-header h1 {
+header h1 a {
   font-size: 18pt !important;
   font-weight: bold;
+  text-decoration:none;
+  color: black;
+}
+
+header h1 a span {
+  color: #ccc;
+  font-size: 18pt !important;
+}
+
+header h1 a:hover {
+  text-decoration: none;
 }
 
 header {

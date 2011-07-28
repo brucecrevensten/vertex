@@ -47,15 +47,13 @@
   <header>
 	
 	<div>
-  <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
- 	<h1>&nbsp;Vertex: ASF's Data Portal</h1>
-	
-	
+    <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
+ 	  <h1><a href="#">&nbsp;Vertex <span>ASF&rsquo;s Data Portal</span></a></h1>
     <div id="tools_menu">
 		  <div id="login_msg"></div>
       <div id="user_tools"></div>
-      <div id="feedbackButton"></div>
       <div id="queue_summary"></div>
+      <div id="feedbackButton"></div>
     </div>
 	</div>
   </header>
@@ -163,7 +161,7 @@
           Email: uso@asf.alaska.edu<br/>
         <br/>
           2011 &copy; Alaska Satellite Facility
-          ASF Dataportal V[% c.config.version %]
+          Vertex: ASF&rsquo;s Data Portal V[% c.config.version %]
         </p>
       </div>
       <div>
