@@ -63,7 +63,7 @@ var PostFiltersView = Backbone.View.extend(
   },
   // platforms: array of platform names present in search results
   render: function(platforms) {
-	  // this.model.reset(); ******** MARC FIX FOR BAD POST FILTER STATE
+	this.model.reset();
     this.setWidgets();
     var render = false;
     $(this.el).accordion("destroy");
