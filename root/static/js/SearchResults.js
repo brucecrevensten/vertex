@@ -402,7 +402,7 @@ var SearchResultsView = Backbone.View.extend(
       case 'UAVSAR':
         return '\
   <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
-  <p><%= MISSIONNAME %> <%= GRANULENAME %></p>\
+  <p><%= MISSIONNAME %></p>\
 ';
         break;
       default: return '\
