@@ -133,6 +133,7 @@ var DataProductView = Backbone.View.extend(
 <li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
 <li><span>Off Nadir Angle</span>: <%= OFFNADIRANGLE %>&deg;</li>\
 <li><span>Frequency</span>: L-Band</li>\
+<li><span>Polarization</span>: <%= POLARIZATION %></li>\
 </ul>\
 ';
         case 'UAVSAR': return '\
@@ -141,6 +142,7 @@ var DataProductView = Backbone.View.extend(
 <li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
 <li><span>Frequency</span>: L-Band</li>\
+<li><span>Polarization</span>: <%= POLARIZATION %></li>\
 </ul>\
 ';
         case 'JERS-1': return '\
@@ -151,6 +153,7 @@ var DataProductView = Backbone.View.extend(
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
 <li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
 <li><span>Frequency</span>: L-Band</li>\
+<li><span>Polarization</span>: <%= POLARIZATION %></li>\
 </ul>\
 ';
         default: return '\
@@ -161,6 +164,7 @@ var DataProductView = Backbone.View.extend(
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
 <li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
 <li><span>Frequency</span>: C-Band</li>\
+<li><span>Polarization</span>: <%= POLARIZATION %></li>\
 </ul>\
 ';
 
