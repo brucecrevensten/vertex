@@ -294,9 +294,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     });
 
   },
-  doChange: function(beamoffnadir, direction, path, frame) {
-    
-  },
   beamModes: [
     {
       title: "FBS (Fine Beam Single Polarization)",
