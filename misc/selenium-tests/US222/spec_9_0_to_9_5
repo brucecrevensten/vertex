@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="https://testdataportal.daac.asf.alaska.edu/" />
+<link rel="selenium.base" href="https://testvertex.daac.asf.alaska.edu/" />
 <title>spec_9_0_to_9_5</title>
 </head>
 <body>
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 	<td>waitForTextPresent</td>
-	<td>Big Island, HI UA_BigIsl_32904_11021_012_110503_L090_CX_01</td>
+	<td>Big Island, HI</td>
 	<td></td>
 </tr>
 <tr>
