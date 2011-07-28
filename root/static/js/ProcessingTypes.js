@@ -12,7 +12,7 @@ var processingTypes = new ProcessingTypes(
     {"level":"L1","id":"BROWSE512","display":"Browse Image (512x512px)","description":"512 x 512 pixel browse image."},
     {"level":"L1","id":"THUMBNAIL","display":"Thumbnail","description":"Thumbnail image."},
     {"level":"L0","id":"L0","display":"Level Zero","description":"Raw signal SAR data processed into frames with an accompanying CEOS format leader file."},
-    {"level":"L1","id":"L1","display":"Detected Image","description":"Fully processed SAR data which only contains the amplitude information. Image does not require any further SAR processing to be visualized."},
+    {"level":"L1","id":"L1","display":"Level One Image","description":"Fully processed SAR data which only contains the amplitude information. Image does not require any further SAR processing to be visualized."},
     {"level":"L1","id":"STOKES","display":"Compressed Stokes Matrix","description":"AIRSAR compressed Stokes matrix formatted data for software compatibility (http://airsar.jpl.nasa.gov/data/data_format.pdf). 10 bytes per pixel."},
     {"level":"L1","id":"COMPLEX","display":"Multi-look Complex","description":"Calibrated multi-look data, cross products, floating point format, three files 8 bytes per pixel, three files 4 bytes per pixel, little endian."},
     {"level":"L1","id":"PROJECTED","display":"Ground Projected","description":"Calibrated complex data, cross products projected to the ground in simple geographic coordinates (latitude, longitude). There is a fixed number of looks for each pixel. Floating point, little endian, 8 or 4 bytes per pixel."},
