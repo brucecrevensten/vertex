@@ -68,12 +68,12 @@
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=ul#searchResults li:nth-child(4) img</td>
+	<td>css=ul#searchResults li:nth-child(1) img</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementNotPresent</td>
-	<td>css=css=ul#searchResults li:nth-child(1) img</td>
+	<td>css=ul#searchResults li:nth-child(4) img</td>
 	<td></td>
 </tr>
 <tr>
@@ -84,11 +84,6 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=div.ui-state-highlight.ui-corner-all &gt; p</td>
-	<td>This granule has a restricted browse product, and you must log in to view it.</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>css=#hanger &gt; div &gt; div.ui-widget &gt; div.ui-state-highlight.ui-corner-all &gt; p</td>
 	<td>This granule’s products are restricted, and you must log in to download them.</td>
 </tr>
 </tbody></table>

@@ -133,12 +133,7 @@
 </tr>
 <tr>
 	<td>verifyElementNotPresent</td>
-	<td>css=ul#searchResults li.productRow ul#gpl_R1_61127_ST6_F287.granuleProductList li button.tool-dequeue</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyElementNotPresent</td>
-	<td>css=ul#searchResults li.productRow ul#gpl_R1_61127_ST6_F287.granuleProductList li button.inQueue</td>
+	<td>css=ul#searchResults li.productRow ul#gpl_R1_61127_ST6_F287.granuleProductList li button#b_R1_61127_ST6_F287_L1.tool-dequeue</td>
 	<td></td>
 </tr>
 <tr>

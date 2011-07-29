@@ -39,7 +39,7 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=h4[title=ALOS PALSAR sensor: High Resolution Observation Mode (single polarization)]</td>
-	<td>ALOS PALSAR FBS2011-01-30</td>
+	<td>ALOS PALSAR FBS2010-11-30</td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -49,17 +49,17 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=span.date</td>
-	<td>2011-01-30</td>
+	<td>2010-11-30</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>css=li.productRow &gt; p</td>
-	<td>Frame 1300, Path 255</td>
+	<td>Frame 1300, Path 246</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//ul[@id='searchResults']/li/p[2]</td>
-	<td>Off-Nadir 34.3°</td>
+	<td>Off-Nadir 21.5°</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>

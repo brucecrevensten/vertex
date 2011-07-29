@@ -17,13 +17,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>assertLocation</td>
-	<td>https://testvertex.daac.asf.alaska.edu/</td>
-	<td></td>
+	<td>verifyText</td>
+	<td>link=Vertex ASF’s Data Portal βeta</td>
+	<td>Vertex ASF’s Data Portal βeta</td>
 </tr>
 <tr>
 	<td>verifyTitle</td>
-	<td>Alaska Satellite Facility Data Portal</td>
+	<td>exact:Vertex: ASF's Data Portal</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertLocation</td>
+	<td>https://testvertex.daac.asf.alaska.edu/</td>
 	<td></td>
 </tr>
 </tbody></table>

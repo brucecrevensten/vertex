@@ -104,27 +104,27 @@
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul[2]/li/a/span[2]</td>
-	<td>Ground Projected Complex (2.68 GB)</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//div[@id='hanger']/ul[2]/li[2]/a/span[2]</td>
 	<td>Annotation file / Metadata (20.68 KB)</td>
 </tr>
 <tr>
 	<td>verifyText</td>
+	<td>//div[@id='hanger']/ul[2]/li[2]/a/span[2]</td>
+	<td>Ground Projected Complex (2.29 GB)</td>
+</tr>
+<tr>
+	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul[2]/li[3]/a/span[2]</td>
-	<td>Compressed Stokes Matrix (611.56 MB)</td>
+	<td>Compressed Stokes Matrix (536.82 MB)</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul[2]/li[4]/a/span[2]</td>
-	<td>Multi-look Complex (2.13 GB)</td>
+	<td>GoogleEarth KMZ (277.67 MB)</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul[2]/li[5]/a/span[2]</td>
-	<td>GoogleEarth KMZ (337.17 MB)</td>
+	<td>Multi-look Complex (1.88 GB)</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
@@ -154,12 +154,12 @@
 <tr>
 	<td>verifyText</td>
 	<td>//table[@id='download_queue_table']/tbody/tr/td[2]</td>
-	<td>Annotation file / Metadata</td>
+	<td>GoogleEarth KMZ</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//table[@id='download_queue_table']/tbody/tr[2]/td[2]</td>
-	<td>Multi-look Complex</td>
+	<td>Ground Projected Complex</td>
 </tr>
 </tbody></table>
 </body>

@@ -58,7 +58,7 @@
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>css=img[title=ALPSRP267271300]</td>
+	<td>css=img[title=ALPSRP258371300]</td>
 	<td></td>
 </tr>
 <tr>
@@ -79,12 +79,12 @@
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul/li[2]</td>
-	<td>exact:Orbit: 26727</td>
+	<td>exact:Orbit: 25837</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul/li[3]</td>
-	<td>exact:Path: 255</td>
+	<td>exact:Path: 246</td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -94,12 +94,12 @@
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul/li[5]</td>
-	<td>Acquisition Date: 2011-01-30</td>
+	<td>Acquisition Date: 2010-11-30</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul/li[6]</td>
-	<td>Faraday rotation: 0.714053°</td>
+	<td>Faraday rotation: 2.654968°</td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -109,7 +109,7 @@
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul/li[8]</td>
-	<td>Off Nadir Angle: 34.3°</td>
+	<td>Off Nadir Angle: 21.5°</td>
 </tr>
 <tr>
 	<td>verifyText</td>
@@ -154,7 +154,7 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=div#queue_summary span.ui-button-text</td>
-	<td>Download queue (3 items, 1.77 GB)</td>
+	<td>Download queue (3 items, 1.21 GB)</td>
 </tr>
 </tbody></table>
 </body>
