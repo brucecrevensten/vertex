@@ -141,7 +141,7 @@ var SearchResults = Backbone.Collection.extend(
           'EH3':  {
             'NA': 100000000,
           },
-          'EH5':  {
+          'EH4':  {
             'NA': 200000000,
           },
           'EH6':  {
@@ -197,6 +197,15 @@ var SearchResults = Backbone.Collection.extend(
           },
           'ST7':  {
             'NA': 2000000000,
+          },
+          'WD1': {
+            'NA': 2100000000,
+          },
+          'WD2': {
+            'NA': 2200000000,
+          },
+          'WD3': {
+            'NA': 2300000000,
           },
         },
         'ERS-1':      {

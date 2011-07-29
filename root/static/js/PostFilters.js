@@ -402,7 +402,7 @@ var RadarsatFacet = PlatformFacet.extend(
       direction: 'any',
       beam: [
         'EH3',
-        'EH5',
+        'EH4',
         'EH6',
         'EL1',
         'FN1',
@@ -420,7 +420,10 @@ var RadarsatFacet = PlatformFacet.extend(
         'ST4',
         'ST5',
         'ST6',
-        'ST7'
+        'ST7',
+        'WD1',
+        'WD2',
+        'WD3'
       ]
     },
     platform: 'RADARSAT-1',
@@ -531,7 +534,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       group: "ehib",
       modes: [
         { label: "EH3 (51.8&deg;)", value: "EH3" },
-        { label: "EH5 (54.5&deg;)", value: "EH5" },
+        { label: "EH4 (54.5&deg;)", value: "EH4" },
         { label: "EH6 (57.3&deg;)", value: "EH6" }
       ]
     },
@@ -576,7 +579,15 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
         { label: "ST6 (41.5&deg;)", value: "ST6" },
         { label: "ST7 (44.9&deg;)", value: "ST7" }
       ]
-    }
+    },
+    { title: "Wide Beam; Off-Nadir 20-45&deg;",
+      group: "wd",
+      modes: [
+        { label: "WD1 (20&deg;)", value: "WD1" },
+        { label: "WD2 (20&deg;)", value: "WD2" },
+        { label: "WD3 (20&deg;)", value: "WD3" },
+      ]
+    },
   ],
   render: function() {
     $(this.el).empty();
