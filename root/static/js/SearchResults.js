@@ -230,7 +230,11 @@ var SearchResults = Backbone.Collection.extend(
           },
         },
       };
-      retval = platvals[platform]+beamvals[platform][beam][offnadir]+acqdate;
+      if(undefined === beamvals[platform][beam][offnadir]) {
+        retval = platvals[platform]+9900000000+acqdate;
+      } else {
+        retval = platvals[platform]+beamvals[platform][beam][offnadir]+acqdate;
+      }
       return(retval);
     }
   }
