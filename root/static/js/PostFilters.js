@@ -207,6 +207,7 @@ var AlosFacet = PlatformFacet.extend(
         'PLR21.5',
         'PLR23.1',
         'WB1',
+        'WB2'
       ]
     },
     getWidget: function() {
@@ -245,7 +246,7 @@ var AlosFacet = PlatformFacet.extend(
 
       if( f.beamoffnadir.length ) {
           a = _.reject( a, function(row) {
-            if(row.BEAMMODETYPE == 'WB1') {
+            if((row.BEAMMODETYPE == 'WB1') || (row.BEAMMODETYPE == 'WB2')) {
               return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE));
             } else {
               return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE.concat(row.OFFNADIRANGLE)));
@@ -327,7 +328,14 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       modes: [
         { label: "27.1&deg;", value: "WB1" }
       ]
-    }
+    },
+    {
+      title: "WB2 (ScanSAR Burst Mode 2)",
+      group: "WB2",
+      modes: [
+        { label: "27.1&deg;", value: "WB2" }
+      ]
+    },
   ],
   render: function() {
 
