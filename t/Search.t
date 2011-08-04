@@ -244,7 +244,7 @@ SKIP: {
 
   $mech->post($surn, {'bbox' => '-135,64.5,-135.1,64.6', granule_list=>'R1_35587_SWB_F356,R1_34558_SWB_F356,R1_34601_SWB_F357', format=>'list'});
   @list = split/,/, $mech->content();
-  is_deeply([sort @list], [qw(R1_34601_SWB_F357 R1_34601_SWB_F357 R1_35587_SWB_F356 R1_35587_SWB_F356)], '2.9.1: granule_list overrides other search params if present');
+  is_deeply([sort @list], [qw(R1_34558_SWB_F356 R1_34558_SWB_F356 R1_34601_SWB_F357 R1_34601_SWB_F357 R1_35587_SWB_F356 R1_35587_SWB_F356)], '2.9.1: granule_list overrides other search params if present');
   #is( $mech->content(), q(R1_34558_SWB_F356,R1_34558_SWB_F356,R1_34601_SWB_F357,R1_34601_SWB_F357,R1_35587_SWB_F356,R1_35587_SWB_F356,), '2.9.1: granule_list overrides other search params if present');
 
   $mech->post($surn, { granule_list=>'R1_35587_SWB_F356,R1_34558_SWB_F356,R1_34601_SWB_F357', processing => 'BROWSE', format => 'list' });
