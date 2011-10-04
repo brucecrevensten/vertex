@@ -7,11 +7,14 @@ var SearchResults = Backbone.Collection.extend(
     platforms: [], 
     error: '',
 
-    initialize: function() {},
+    initialize: function() {
+
+
+    },
 
     // build the nested model structure of DataProducts and DataProductFiles
     build: function(data) {
-
+this.trigger('build');
       // TODO: possible memory leak here, if the associated things aren't deallocated
       // when we reset this main collection.
       this.reset();
@@ -49,6 +52,8 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     filter: function() {
+      this.trigger('filter');
+
       var d = this.postFilters.applyFilters( this.data );
       this.build( d );
       this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
@@ -67,7 +72,7 @@ var SearchResults = Backbone.Collection.extend(
           dataType: "jsonp",
           context: this,
           success: function(data, textStatus, jqXHR) {
-            this.data = data.results.rows.ROW;
+            this.data = data;
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
             // Fetch distinct platforms that were found
@@ -317,52 +322,45 @@ var SearchResultsView = Backbone.View.extend(
   initialize: function() {
     _.bindAll(this, "render");
 
-    
+
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
-	
-	this.options.downloadQueue.bind('queue:remove', this.render);
 
-   	this.model.bind('authSuccess', this.render);
+    this.options.downloadQueue.bind('queue:remove', this.render);
+    this.model.bind('authSuccess', this.render);
 
     // Observe changes to the post-filters
     this.options.postFilters.bind('change', this.render);
 
-    _.each( this.postFilters, function(e, i, l) {
-      e.bind('change', this.render);
-    }, this);
-    
     this.showBeforeSearchMessage();
   },
 
   showBeforeSearchMessage: function() {
-		$('#async-spinner').hide();
-	    $('#searchResults').hide();
-	    $('#platform_facets').hide();
-	    $("#error-message").hide();
-	    $("#results-banner").hide();
-		$('#before-search-msg').show();
-          $('#active-filters').hide();
-
+    $('#async-spinner').hide();
+    $('#searchResults').hide();
+    $('#platform_facets').hide();
+    $("#error-message").hide();
+    $("#results-banner").hide();
+    $('#before-search-msg').show();
+    $('#active-filters').hide();
   },
 
   showResults: function() {
-	$('#before-search-msg').hide();
+    $('#before-search-msg').hide();
     $('#async-spinner').hide();
     $('#searchResults').show();
     $('#platform_facets').show();
     $("#error-message").hide();
     $("#results-banner").hide();
-      $('#active-filters').show();
+    $('#active-filters').show();
     $('#srCount').show();
-      $('#srProcLevelTool').show();
-
+    $('#srProcLevelTool').show();
   },
 
   showSearching: function() {
-	$('#before-search-msg').hide();
+    $('#before-search-msg').hide();
     $('#async-spinner').show();
     $("#results-banner").hide();
     $('#searchResults').hide();
@@ -370,17 +368,15 @@ var SearchResultsView = Backbone.View.extend(
     $('#platform_facets').hide();
     $('#srCount').hide();
     this.clearOverlays();
-      $('#active-filters').show();
-      $('#srProcLevelTool').hide();
-
+    $('#active-filters').show();
+    $('#srProcLevelTool').hide();
   },
 
   showError: function(jqXHR) {
-          $('#active-filters').show();
+    $('#active-filters').show();
     $('#srCount').hide();
-      $('#srProcLevelTool').hide();
-
-	  $('#before-search-msg').hide();
+    $('#srProcLevelTool').hide();
+    $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").hide();
     $("#error-message").show();
@@ -398,10 +394,9 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showNoResults: function() {
-      $('#active-filters').show();
+    $('#active-filters').show();
     $('#srCount').hide();
-
-	$('#before-search-msg').hide();
+    $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").show();
     $("#error-message").hide();
@@ -409,6 +404,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#platform_facets').hide();
     this.clearOverlays();
   },
+
   getPlatformRowTemplate: function( p ) {
     switch(p) {
       case 'ALOS':
@@ -431,129 +427,46 @@ var SearchResultsView = Backbone.View.extend(
     }
   },
   render: function() {
-	
-    $(this.el).empty();
+	  
+    this.trigger('render');
+    var el = $(this.el);
+    var parent = el.parent();
+    el.detach();
+    el.empty();
     if( 0 == this.collection.length ) {
       this.clearOverlays();
       this.showNoResults();
       return this;
     }
-
+    var li = '';
     var ur = SearchApp.user.getWidgetRenderer();
-    this.collection.each( function( e, i, l ) {
-     
-      var d = e.toJSON();
-      d['acquisitionDateText'] = $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', d.ACQUISITIONDATE));
-      var li = jQuery('<li/>', {'class':'productRow'}).attr('product_id', d.id);
-      li.append( ur.srThumbnail( e ));
-      li.append( _.template( this.getPlatformRowTemplate( d.PLATFORM) , d ) );
-      li.find('img').error( function() { $(this).remove(); });
-      var b = $('<div/>', { 'class':'productRowTools' }
-      ).append( $('<button>More information&hellip;</button>').button( { 'text':false, 'icons':{'primary':'ui-icon-help'}}));
-      
-      var k = $('<div/>', { 'class':'tool_enqueuer' }
-      ).html( 
-        _.template('\
-<input type="checkbox" id="<%= id %>_queue_toggler" /><label for="<%= id %>_queue_toggler">&nbsp;</label>\
-', { id: d.id }
-        )
-      ).button( 
-        { 
-          'text':false,
-          'icons':
-            {
-              'primary':'ui-icon-circle-plus',
-              'secondary':'ui-icon-triangle-1-s'
-            }
-        }
-      ).bind('click', { 'd':d }, function(e) {
-        if( true != _.isUndefined( SearchApp.searchResultsView.currentProduct )) {
-          if( e.data.d.id != SearchApp.searchResultsView.currentProduct ) {
-            $('#'+SearchApp.searchResultsView.currentProduct+'_queue_toggler').click();
-          } 
-        }
-        if( e.data.d.id == SearchApp.searchResultsView.currentProduct ) {
-          SearchApp.searchResultsView.currentProduct = undefined;
-        } else {
-          SearchApp.searchResultsView.currentProduct = e.data.d.id;
-        }
-        $('#gpl_'+e.data.d.id).toggle();
-        e.stopPropagation();
-      });
-
-      b.append(k);
-      
-      var c = $('<ul/>', { 'style':'display:none', 'class':'granuleProductList', 'id':'gpl_'+d.id } );
-
-      //TODO: refactor this into DataProductFile view/model/something
-      e.files.each( function( q, w, r ) {
-        
-        // skip if BROWSE
-        if( 'BROWSE' == q.get('processingType')) { return; }
-
-        var lit = $('<li/>');
-        var btn = $('<button>Add to queue...</button>', {
-          'class': 'tool_enqueuer',
-          'title': 'Add to download queue'
-        }).attr('product_id', q.get('productId'));
-        btn.attr('product_file_id', q.id);
-		    btn.attr('id', "b_"+q.id);
-        btn.click( function(e2) {
-            e2.stopPropagation();
-            if ( $(this).prop('disabled') == 'disabled' ) { return false; }
-            if ( $(this).prop('selected') == 'selected' ) {
-              $(this).toggleClass('tool-dequeue');
-              $(this).prop('selected','false');
-              SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
-              $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
-            } else {
-              $(this).toggleClass('tool-dequeue');
-              $(this).prop('selected','selected');
-              SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
-              $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
-            }
-          }
-          ).button(
-            {
-              'label': q.get('processingTypeDisplay') + ' (' + q.get('sizeText') + ')',
-              'icons': {
-                'primary':'ui-icon-circle-plus'
-              }
-            }
-          );
-          lit.append(btn);
-          c.append(lit);
     
-    });
+    // This loop need to be tight.
+    this.collection.each( function( model, i, l ) {
+      
+      var d = model.toJSON();
+      li += '<li class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">';
+            
+      // confirmed OK for tight loop
+      li += ur.srThumbnail( model );
+      
+      // suck up the performance of the template interpolation here because otherwise the code is nasty
+      li += _.template( this.getPlatformRowTemplate( d.PLATFORM ), d);
+      li += '<div class="productRowTools"><button>More information&hellip;</button>';
+      li += '<button onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="queue_toggler" product_id="'+d.id+'">Show files&hellip;</button>';
+      li += '</div></li>';
 
-      li.append(b);
-      li.append(c);
-      li.append('<div style="clear: both"></div>');
+    }, this);
 
-      v = new DataProductView( { model: e } );
-      li.bind( "click", { id: e.id, view: v }, function(e) {
-		  $("#product_profile").empty();
-        $("#product_profile").html( e.data.view.render().el );
-        $("#product_profile").dialog(
-          {
-            modal: true,
-            width: 'auto',
-			minWidth: 400,
-            draggable: false,
-            resizable: false,
-            title: e.data.id,
-            position: "center"
-          }
-        );
-      });
+    // TODO remove, after benchmarking?
+    //li.find('img').error( function() { $(this).remove(); });
 
-      $(this.el).append(li);
-
-    }, this); // end iteration over collection
-
+    el.html(li);
+    parent.append(el);
+/*
     $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('#searchResults li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
-
+*/
     this.showResults();
     this.clearOverlays();
     this.renderOnMap();
@@ -562,11 +475,9 @@ var SearchResultsView = Backbone.View.extend(
     if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
       $("#srCount").empty().html(_.template("<%= total %> results found",
         { 'total' : this.collection.unfilteredProductCount }
-      ));
-
-          
+      )); 
     } else {
-          $("#srCount").empty().html(_.template("<span><%= filtered %> filtered from</span> <%= total %> results",
+      $("#srCount").empty().html(_.template("<span><%= filtered %> filtered from</span> <%= total %> results",
         { 
           'total' : this.collection.unfilteredProductCount,
           'filtered' : this.collection.filteredProductCount

@@ -1,91 +1,96 @@
 $(function() {
 
-		
-  window.SearchAppView = Backbone.View.extend({	
-    
-    initialize: function() {
-	
-	    this.user = new User();
+window.SearchAppView = Backbone.View.extend({	
 
-      this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
-      this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
-      this.userLoginButton.render();
-    	this.userLoginFields = new UserLoginFields({ model: this.user, el: $('#form1')});
-  	  this.userLoginMessage = new UserLoginMessage( {model: this.user, el: $('#login_msg')});
-  		this.userLoginMessage.render();
-    
+  initialize: function() {
 
-    // init search behaviors
+    this.user = new User();
+
+    this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
+    this.userLoginButton = new UserLoginButton( { model: this.user, el: $('#user_tools') });
+    this.userLoginButton.render();
+    this.userLoginFields = new UserLoginFields({ model: this.user, el: $('#form1')});
+    this.userLoginMessage = new UserLoginMessage( {model: this.user, el: $('#login_msg')});
+    this.userLoginMessage.render();
     this.searchParameters = new SearchParameters();
     this.postFilters = new PostFilters();
-
-
     this.searchResults = new SearchResults();
     this.searchResults.searchParameters = this.searchParameters;
     this.searchResults.postFilters = this.postFilters;
     this.searchResults.postFilters.bind('change', jQuery.proxy( this.searchResults.filter, this.searchResults) ); // manual binding between two models
-    
+
     this.searchParametersView = new SearchParametersView( 
-      { 
-        model: this.searchParameters, 
-        el: $("#filters") 
-      }
+    { 
+      model: this.searchParameters, 
+      el: $("#filters") 
+    }
     );
     this.searchParametersView.render();  
 
     this.activeSearchFiltersView = new ActiveSearchFiltersView(
-      { 
-        'searchParameters': this.searchParameters,
-        'postFilters': this.postFilters
-      }
+    { 
+      'searchParameters': this.searchParameters,
+      'postFilters': this.postFilters
+    }
     );
 
     this.downloadQueue = new DownloadQueue();
     this.downloadQueueView = new DownloadQueueView( 
-      { 
-        collection: this.downloadQueue,
-        el: $("#download_queue")
-      } 
+    { 
+      collection: this.downloadQueue,
+      el: $("#download_queue")
+    } 
     );
 
     this.searchResultsView = new SearchResultsView(
-      {
-        'postFilters': this.postFilters,
-        'collection': this.searchResults,
-        'el': $("#searchResults"),
-		'model': this.user,
-		'downloadQueue': this.downloadQueue
-      }
+    {
+      'postFilters': this.postFilters,
+      'collection': this.searchResults,
+      'el': $("#searchResults"),
+      'model': this.user,
+      'downloadQueue': this.downloadQueue
+    }
     );
 
     this.postFiltersView = new PostFiltersView(
-      {
-        'searchResults': this.searchResults,
-        'model': this.postFilters,
-        'el': $("#platform_facets")
-      }
+    {
+      'searchResults': this.searchResults,
+      'model': this.postFilters,
+      'el': $("#platform_facets")
+    }
     );
 
-    this.searchResultsProcTool = new SearchResultsProcessingWidget( {
-      collection: this.searchResults
+    // Hack to ensure buttons look "off" after filtering/rendering clicks occur
+    $('#platform_facets fieldset button').live('click', function() {
+      $(this).removeClass("ui-state-focus");
     });
+
+    this.searchResultsProcTool = new SearchResultsProcessingWidget(
+    {
+      collection: this.searchResults
+    }
+    );
 
     this.downloadQueueSummaryView = new DownloadQueueSummaryView( 
-      { 
-        collection: this.downloadQueue,
-        el: $("#queue_summary")
-      }
+    { 
+      collection: this.downloadQueue,
+      el: $("#queue_summary")
+    }
     );
     this.downloadQueueSummaryView.render();
+    
     //TODO:move this
     $("#queue_summary").bind("click", this.downloadQueueView.render );
-    
-    this.downloadQueueSearchResultsView = new DownloadQueueSearchResultsView( {
+
+    this.downloadQueueSearchResultsView = new DownloadQueueSearchResultsView(
+    {
       collection: this.downloadQueue 
-    });
+    }
+    );
+    
     //TODO: move this
     this.downloadQueueSearchResultsView.setSearchResultsView(this.searchResultsView);
-    
+
     this.downloadQueueMapView = new DownloadQueueMapView( {
       collection: this.downloadQueue
     });
@@ -93,49 +98,65 @@ $(function() {
     this.downloadQueueMapView.setSearchResultsView(this.searchResultsView);
 
     $('#triggerSearch').button(
-      {
-        icons: {
-          primary: "ui-icon-search"
-        },
-        label: "Search"
-      }).bind("click", jQuery.proxy( function(e) {
-        this.searchResultsView.showSearching();
-        this.searchResults.fetchSearchResults(); // initial population
-      }, this)).focus();//.click(); ///// Add .click() to make app begin searching immediately
+    {
+      icons: {
+        primary: "ui-icon-search"
+      },
+      label: "Search"
+    }
+    ).bind("click", jQuery.proxy( function(e) {
+      this.searchResultsView.showSearching();
+      this.searchResults.fetchSearchResults();
+    }
+    , this)).focus();//.click(); ///// Add .click() to make app begin searching immediately
 
-      $('#resetSearch').button(
-        { icons: { primary: "ui-icon-refresh"}, label: "Reset"}).bind("click", { sp: this.searchParameters, spv: this.searchParametersView, sr: this.searchResults, srv:this.searchResultsView, pf: this.postFilters }, function(e) {
-          e.data.sp.setDefaults();
-          e.data.spv.setWidgets();
-          e.data.spv.render();
-          e.data.pf.reset();
-
-		  e.data.sr.data = {};
-		  e.data.sr.reset(); // can't be silent here, must be loud
-		  e.data.srv.render();
-		  
-	      e.data.sr.trigger('clear_results');
-		  e.data.srv.showBeforeSearchMessage();
-			$("#srCount").empty()
-        });
-
-      //fire up the map
-      initMap('searchMap');
-
-      v = new FeedbackButton();
-      v.render();
+    $('#resetSearch').button(
+    { 
+      icons: { primary: "ui-icon-refresh"}, 
+      label: "Reset"
+    }
+    ).bind("click",
+    { 
+      sp: this.searchParameters,
+      spv: this.searchParametersView,
+      sr: this.searchResults,
+      srv:this.searchResultsView,
+      pf: this.postFilters
+    }, function(e) {
       
-    },
+      e.data.sp.setDefaults();
+      e.data.spv.setWidgets();
+      e.data.spv.render();
+      e.data.pf.reset();
 
-  });
+      e.data.sr.data = {};
+      e.data.sr.reset(); // can't be silent here, must be loud
+      e.data.srv.render();
 
+      e.data.sr.trigger('clear_results');
+      e.data.srv.showBeforeSearchMessage();
+      $("#srCount").empty()
+    });
 
-  window.SearchApp = new SearchAppView;
+    //fire up the map
+    initMap('searchMap');
+
+    v = new FeedbackButton();
+    v.render();
+
+  }
+});
+
+window.SearchApp = new SearchAppView;  
+
+  /*
 window.onbeforeunload = function() {
 	return "Are you sure you want to leave? Your current search results will be lost.";
-}
-	// Instead of using serialzeArray() we can use serializeJSON to return JSON formatted form data. 
-	$.fn.serializeJSON=function() {
+}*/
+
+
+// Instead of using serialzeArray() we can use serializeJSON to return JSON formatted form data. 
+$.fn.serializeJSON=function() {
 		var json = {};
 		jQuery.map($(this).serializeArray(), function(n, i){
 			json[n['name']] = n['value'];
@@ -151,6 +172,8 @@ var ActiveSearchFiltersView = Backbone.View.extend(
     _.bindAll(this);
     this.options.searchParameters.bind('change', this.render);
     this.options.postFilters.bind('change', this.render);
+
+
   },
   render: function() {
     

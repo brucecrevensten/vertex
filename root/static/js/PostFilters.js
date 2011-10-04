@@ -2,6 +2,7 @@ var PostFilters = Backbone.Model.extend(
   {
     postFilters: [],
     initialize: function() {
+
       this.postFilters = [
         new AlosFacet(),
         new RadarsatFacet(),
@@ -13,7 +14,6 @@ var PostFilters = Backbone.Model.extend(
       var self = this;
 
       _.each( this.postFilters, function(e, i, l) {
-
         e.bind('change', function(filter) {
           self.trigger('change:postfilter', filter);
         })
@@ -34,7 +34,7 @@ var PostFilters = Backbone.Model.extend(
     },
     
     applyFilters: function( data ) {
-
+      this.trigger('applyFilters');
       for( var i in this.postFilters ) {
         data = this.postFilters[i].filter(data);
       }
@@ -48,6 +48,8 @@ var PostFiltersView = Backbone.View.extend(
   widgets: [],
   initialize: function() {
     _.bindAll(this, 'render');
+    
+    this.setWidgets();
 
     this.options.searchResults.bind('refresh', this.render);
     this.options.searchResults.bind('add', this.render);
@@ -57,18 +59,20 @@ var PostFiltersView = Backbone.View.extend(
   setWidgets: function() {
     this.widgets = [];
     for ( var i in this.model.postFilters ) {
-      // TODO: another possible memory leak here if the widgets aren't getting destroyed
       this.widgets.push(this.model.postFilters[i].getWidget());
     }
   },
+
   // platforms: array of platform names present in search results
   render: function(platforms) {
-	this.model.reset();
-    this.setWidgets();
+
+	  this.model.reset();
+    var el = $(this.el);
     var render = false;
-    $(this.el).accordion("destroy");
-    $(this.el).empty();
-    var d = jQuery('<div/>');
+    
+    el.accordion("destroy");
+    el.empty();
+    
     var u = jQuery('<ul/>');
 
     for ( var i in this.widgets ) {
@@ -78,45 +82,21 @@ var PostFiltersView = Backbone.View.extend(
       } 
     }
     if ( render ) {
+      var d = jQuery('<div/>');
+      
       var r = jQuery('<button/>').click( jQuery.proxy( function(e) {
         this.model.reset();
- 
       }, this ) ).button( { icons: { primary: 'ui-icon-refresh'}, label: 'Reset all filters'});
 
       d.append(u);
       d.append(r);
-      $(this.el).append( jQuery('<h3><a href="#">Filter By Platform</a></h3>')).append(d).accordion();
+      
+      el.append( jQuery('<h3><a href="#">Filter By Platform</a></h3>')).append(d).accordion();
     }
     return this;
   }
 
 });
-
-var ProcessingFacetButton = BaseWidget.extend( {
-  name: "Processing Type",
-  tagName: "button",
-  initialize: function() {
-    _.bindAll(this, "render", "openDialog");
-  },
-  events: {
-    "click" : "openDialog"
-  },
-  openDialog: function(e) {
-    var v = new ProcessingFacetDialog( { model: this.model } );
-  },
-  render: function() {
-    $(this.el).button(
-      {
-        icons: {
-          primary: "ui-icon-zoomin"
-        },
-        label: this.name
-      }
-    );
-    return this;
-  }
-});
-
 
 var PlatformFacet = BaseFilter.extend( {
 
@@ -156,9 +136,9 @@ var PlatformFacetView = BaseWidget.extend( {
   // id = string, ID fragment to prepend in dynamically-generated elements
   // param = string, name of http parameter
   renderButtonset: function( selected, key, el, source, id, name) {
-
+    el = $(el);
     for( var i in source ) {
-      $(el).append( _.template('<h5><%= title %></h5>', source[i] ));
+      el.append( _.template('<h5><%= title %></h5>', source[i] ));
       newEl = jQuery('<div/>', {
         id: id+"_"+source[i].group,
         "class": "beamSelector"
@@ -166,7 +146,7 @@ var PlatformFacetView = BaseWidget.extend( {
       newEl.prop('beam', source[i].group);
       for( var j in source[i].modes ) {
         idVal = source[i].modes[j].value.replace('.','_');
-        $(newEl).append( 
+        newEl.append( 
           _.template(
             '<input type="checkbox" class="beamSelector" name="<%= name %>[]" value="<%= value %>" <%= ifChecked %> id="<%= id %>_<%= group %>_<%= idValue %>" /><label for="<%= id %>_<%= group %>_<%= idValue %>"><%= label %></label>',
             {
@@ -181,10 +161,8 @@ var PlatformFacetView = BaseWidget.extend( {
           )
         )
       }
-      $(el).append( newEl );
-      $(el).find('.beamSelector').each(function(index) {
-        $(this).buttonset();
-      });
+      newEl.buttonset();
+      el.append( newEl );
     }
   }
 
@@ -210,11 +188,14 @@ var AlosFacet = PlatformFacet.extend(
         'WB2'
       ]
     },
+    initialize: function() {
+    },
     getWidget: function() {
       return new AlosFacetButton({model: this});
     },
-    filter: function( d ) {
 
+    filter: function( d ) {
+      this.trigger('filter');
       var f = this.toJSON();
       
       // only do filtering on this platform
@@ -264,31 +245,29 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   tagName: "form",
 
   events: { 
-    "change input" : "triggerChange",
+    "change input" : "changed",
   },
-  initialize: function() {
-    this.model.bind( 'change', $.proxy( this.render, this) );
-    this.model.bind( 'change:throttled', _.throttle( $.proxy( this.changed, this), 750) );
-  },
-  triggerChange: function() {
-    this.model.trigger('change:throttled');
-  },
-  changed: function(e) {
 
-    this.model.clear( { silent: true });
+  initialize: function() {
+    _.bindAll(this);
+  },
+
+  changed: function(e) {
+    this.model.clear( { silent: true } );
     var beamoffnadir  = [];
-    $(this.el).find('.beamSelector :checked').each( function(i, el) { beamoffnadir.push( $(el).val() ); });
+    var el = $(this.el);
+
+    el.find('.beamSelector :checked').each( function(i, el) { beamoffnadir.push( el.value ); });
 
     // If no beam modes are selected, choose an invalid key for filtering so the platform
     // doesn't show up at all
     if( true == _.isEmpty(beamoffnadir) ) { beamoffnadir.push( 'empty' ); }
 
-    var direction = $(this.el).find('input[name="direction"]:checked').val();
-    var path = $(this.el).find('input[name="path"]').val();
-    var frame = $(this.el).find('input[name="frame"]').val();
-    var self = this;
+    var direction = el.find('input[name="direction"]:checked').val();
+    var path = el.find('input[name="path"]').val();
+    var frame = el.find('input[name="frame"]').val();
     
-    self.model.set({
+    this.model.set({
       'beamoffnadir': beamoffnadir,
       'direction': direction,
       'path': path,
@@ -296,6 +275,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     });
 
   },
+
   beamModes: [
     {
       title: "FBS (Fine Beam Single Polarization)",
@@ -337,44 +317,35 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       ]
     },
   ],
+  renderHtml: function() {
+      
+      var el = $(this.el);
+      el.empty();
+      var b = jQuery('<div/>');
+      this.renderButtonset( this.model.toJSON(), 'beamoffnadir', b, this.beamModes, 'a3', 'offnadir');
+
+      var fs = jQuery('<fieldset/>').html( jQuery('<legend>Beam Modes & Off-Nadir Angles</legend>')).append(b);
+      el.append(fs);
+
+      var d = new DirectionWidgetComponent( { model: this.model });
+      var fs = jQuery('<fieldset/>').html( jQuery('<legend>Flight Direction</legend>')).append(d.render().el);
+      el.append(fs);
+
+      var p = new PathFrameWidgetComponent( { model: this.model });
+      p.legend = 'Path/Frame';
+      p.pathLabel = 'Path';
+
+      el.append( p.render().el );
+      this.hasRendered = true;
+
+  },
   render: function() {
 
-    $(this.el).empty();
+    if( true !== this.hasRendered ) {
+      this.renderHtml();
+    }
 
-    var b = jQuery('<div/>');
-
-    this.renderButtonset( this.model.toJSON(), 'beamoffnadir', b, this.beamModes, 'a3', 'offnadir');
-
-    var fs = jQuery('<fieldset/>').html( jQuery('<legend>Beam Modes & Off-Nadir Angles</legend>')).append(b);
-    $(this.el).append(fs);
-
-    var d = new DirectionWidgetComponent( { model: this.model });
-    var fs = jQuery('<fieldset/>').html( jQuery('<legend>Flight Direction</legend>')).append(d.render().el);
-    $(this.el).append(fs);
-
-    var p = new PathFrameWidgetComponent( { model: this.model });
-    p.legend = 'Path/Frame';
-    p.pathLabel = 'Path';
-
-    $(this.el).append( p.render().el );
-
-  }
-  
-});
- 
-var AlosFacetButton = PlatformFacetView.extend( {
-  name: "ALOS",
-  tagName: "button",
-  initialize: function() {
-    _.bindAll(this, "render", "openDialog");
-  },
-  events: {
-    "click" : "openDialog"
-  },
-  openDialog: function(e) {
-    var v = new AlosFacetDialog( { model: this.model } );
-    v.render();
-    $(v.el).dialog({
+    $(this.el).dialog({
       width: 300,
       modal: false,
       draggable: true,
@@ -384,10 +355,28 @@ var AlosFacetButton = PlatformFacetView.extend( {
       buttons: {
         "Close": function() { $(this).dialog('close'); },
         "Reset": jQuery.proxy( function() {
-          this.model.reset();
+          this.model.set(this.model.defaults);
+          this.renderHtml();
         }, this)
       }
     });
+  }
+  
+});
+ 
+var AlosFacetButton = PlatformFacetView.extend( {
+  name: "ALOS",
+  tagName: "button",
+  initialize: function() {
+    _.bindAll(this, "render", "openDialog");
+
+    this.dialog = new AlosFacetDialog( { model: this.model } );
+  },
+  events: {
+    "click" : "openDialog"
+  },
+  openDialog: function(e) {
+    this.dialog.render();
   },
   render: function() {
     $(this.el).button(
@@ -436,11 +425,13 @@ var RadarsatFacet = PlatformFacet.extend(
     },
     platform: 'RADARSAT-1',
     name: "RADARSAT-1",
+
     getWidget: function() {
       return new RadarsatFacetButton({model: this});
     },
+    
     filter: function( d ) {
-
+      this.trigger('filter');
       var f = this.toJSON();
       
       // only do filtering on this platform
@@ -485,14 +476,17 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
   tagName: "button",
   initialize: function() {
     _.bindAll(this, "render", "openDialog");
+    this.dialog = new RadarsatFacetDialog( { model: this.model } );
   },
+
   events: {
     "click" : "openDialog"
   },
+
   openDialog: function(e) {
-    var v = new RadarsatFacetDialog( { model: this.model } );
- 	v.render();
+ 	  this.dialog.render();
   },
+
   render: function() {
     $(this.el).button(
       {
@@ -510,25 +504,23 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
   events: {
-   "change input" : "triggerChange",
+   "change input" : "changed",
   },
   initialize: function() {
-    this.model.bind( 'change', $.proxy( this.render, this) );
-    this.model.bind( 'change:throttled', _.throttle( $.proxy( this.changed, this), 750) );
-  },
-  triggerChange: function() {
-    this.model.trigger('change:throttled');
+    _.bindAll(this);
   },
   changed: function(e) {
+    var el = $(this.el);
+
     this.model.clear( { silent: true });
     var beam = [];
-    $(this.el).find('.beamSelector :checked').each( function(i, el) { beam.push( $(el).val() ); });
+    el.find('.beamSelector :checked').each( function(i, el) { beam.push( el.value ); });
 
     if( true == _.isEmpty(beam) ) { beam.push( 'empty' ); }
 
-    var direction = $(this.el).find('input[name="direction"]:checked').val();
-    var path = $(this.el).find('input[name="path"]').val();
-    var frame = $(this.el).find('input[name="frame"]').val();
+    var direction = el.find('input[name="direction"]:checked').val();
+    var path = el.find('input[name="path"]').val();
+    var frame = el.find('input[name="frame"]').val();
 
     this.model.set({
       beam: beam,
@@ -536,6 +528,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       path: path,
       frame: frame
     });
+
   },
   beamModes: [
     { title: "Extended High Incidence Beam, Off-Nadir 52-58&deg;",
@@ -597,25 +590,32 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       ]
     },
   ],
-  render: function() {
-    $(this.el).empty();
-
+  renderHtml: function() {
+    var el = $(this.el);
+    el.empty();
     var b = jQuery('<div/>');
     this.renderButtonset( this.model.toJSON(), 'beam', b, this.beamModes, 'r1', 'beam');
 
     var fs = jQuery('<fieldset/>').html( jQuery('<legend>Beam Modes</legend>')).append(b);
-    $(this.el).append(fs);
+    el.append(fs);
 
     var d = new DirectionWidgetComponent( { model: this.model });
     var fs = jQuery('<fieldset/>').html( jQuery('<legend>Flight Direction</legend>')).append(d.render().el);
-    $(this.el).append(fs);
+    el.append(fs);
 
     var p = new PathFrameWidgetComponent( { model: this.model });
     p.legend = 'Orbit/Frame';
     p.pathLabel = 'Orbit';
 
-    $(this.el).append( p.render().el );
-
+    el.append( p.render().el );
+    this.hasRendered = true;
+  },
+  render: function() {
+    
+    if( true !== this.hasRendered ) {
+      this.renderHtml();
+    }
+    
     $(this.el).dialog({
       width: 700,
       modal: false,
@@ -626,8 +626,8 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       buttons: {
         "Close": function() { $(this).dialog('close'); },
         "Reset": jQuery.proxy( function() {
-          this.model.reset();
-          this.render();
+          this.model.set(this.model.defaults);
+          this.renderHtml();
         }, this)
       }
     });
@@ -690,14 +690,14 @@ var LegacyFacetButton = PlatformFacetView.extend( {
   tagName: "button",
   initialize: function() {
     this.name = this.model.platform;
+    this.dialog = new LegacyFacetDialog( { model: this.model } );
     _.bindAll(this, "render", "openDialog");
   },
   events: {
     "click" : "openDialog"
   },
   openDialog: function(e) {
-    var v = new LegacyFacetDialog( { model: this.model } );
- 	v.render();
+ 	  this.dialog.render();
   },
   render: function() {
     $(this.el).button(
@@ -718,36 +718,38 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
   events: {
-   "change input" : "triggerChange",
+   "change input" : "changed",
   },
-  initialize: function() {
-    this.model.bind( 'change', $.proxy( this.render, this) );
-    this.model.bind( 'change:throttled', _.throttle( $.proxy( this.changed, this), 750) );
-  },
-  triggerChange: function() {
-    this.model.trigger('change:throttled');
-  },
+  
   changed: function(e) {
+    var el = $(this.el);
     this.model.clear( { silent: true });
     this.model.set({
-      'direction': $(this.el).find('input[name="direction"]:checked').val(),
-      'path': $(this.el).find('input[name="path"]').val(),
-      'frame': $(this.el).find('input[name="frame"]').val()
+      'direction': el.find('input[name="direction"]:checked').val(),
+      'path': el.find('input[name="path"]').val(),
+      'frame': el.find('input[name="frame"]').val()
     });
   },
- 
-  render: function() {
-    $(this.el).empty();
+  renderHtml: function() {
+    var el = $(this.el);
 
+    el.empty();
     var d = new DirectionWidgetComponent( { model: this.model });
     var fs = jQuery('<fieldset/>').html( jQuery('<legend>Flight Direction</legend>')).append(d.render().el);
-    $(this.el).append(fs);
+    el.append(fs);
 
     var p = new PathFrameWidgetComponent( { model: this.model });
     p.legend = 'Orbit/Frame';
     p.pathLabel = 'Orbit';
 
-    $(this.el).append( p.render().el );
+    el.append( p.render().el );
+    this.hasRendered = true;
+  },
+  render: function() {
+
+    if( true !== this.hasRendered ) {
+      this.renderHtml();
+    }
 
     $(this.el).dialog({
       width: 300,
@@ -759,7 +761,7 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
       buttons: {
         "Close": function() { $(this).dialog('close'); },
         "Reset": jQuery.proxy( function() {
-          this.model.reset();
+          this.model.set(this.model.defaults);
           this.render();
         }, this)
       }

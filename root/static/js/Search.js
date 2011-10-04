@@ -3,6 +3,7 @@ var SearchParameters = Backbone.Model.extend(
     filters: [],
 
     initialize: function() {
+
       this.setupPreFilters();
     },
 
@@ -50,6 +51,7 @@ var SearchParametersView = Backbone.View.extend(
   widgets: [],
 
   initialize: function() {
+
     this.setWidgets();
     _.bindAll(this, 'render');
   },
@@ -80,6 +82,9 @@ var SearchParametersView = Backbone.View.extend(
 
 var BaseWidget = Backbone.View.extend(
 {
+  initialize: function() {
+
+  },
   tagName: "div",
   hide: function() {
     $(this.el).hide();
@@ -92,8 +97,10 @@ var BaseWidget = Backbone.View.extend(
 
 var BaseFilter = Backbone.Model.extend(
 {
+  initialize: function() {
+  },
   reset: function() {
-    this.set( this.defaults );
+    this.set( this.defaults, { silent: true } );
     this.trigger('reset');
   }
 }
@@ -101,6 +108,9 @@ var BaseFilter = Backbone.Model.extend(
 
 var GeographicFilter = BaseFilter.extend(
 {
+  initialize: function() {
+
+  },
   name: "GeographicFilter",
 
   markers: new Array(),
@@ -148,6 +158,7 @@ var GeographicWidget = BaseWidget.extend(
   clickListener: null,
   
   initialize: function() {
+
     _.bindAll(this, 'changed');
   },
 
@@ -332,6 +343,7 @@ var DateFilter = BaseFilter.extend(
   },
 	
 	initialize: function() {
+
     this.reset();
 	},
 
@@ -348,6 +360,7 @@ var DateWidget = BaseWidget.extend(
   id: "date_widget",
   initialize: function() {
     _.bindAll(this, "render");
+
   },
   events : {
     "change input" : "changed"
@@ -391,6 +404,9 @@ var DateWidget = BaseWidget.extend(
 
 var PlatformFilter = BaseFilter.extend(
   {
+    inifialize: function() {
+
+    },
     name: "PlatformFilter",
     defaults: {
       platform: AsfPlatformConfig.platform
@@ -409,6 +425,7 @@ var PlatformWidget = BaseWidget.extend(
     platformTypes: AsfPlatformConfig.platformTypes,
     initialize: function() {
       _.bindAll(this, 'render', 'renderPlatformInfo')
+
     },
 
     events : {

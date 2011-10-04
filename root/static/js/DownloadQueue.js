@@ -1,7 +1,7 @@
 var DownloadQueue = Backbone.Collection.extend(
 {
   url: AsfDataportalConfig.apiUrl,
-  model:DataProductFile,
+  model: DataProductFile,
 
   getSizeInBytes:function() {
     return _.reduce(

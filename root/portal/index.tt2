@@ -8,8 +8,7 @@
 
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/reset.css') %]" />
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/demo_table_jui.css') %]" />
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/ui-darkness/jquery-ui-1.8.13.custom.css') %]" />
-<link rel="stylesheet" type="text/css" href="../static/css/jquery.loadmask.css" />
+<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/ui-darkness/jquery-ui-1.8.16.custom.css') %]" />
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/portal.css') %]" />
 
 <!-- enable html5 element formatting with older IE versions -->
@@ -20,8 +19,8 @@
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfConfig.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfPlatformConfig.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.6.2.min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-ui-1.8.13.custom.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.6.4.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-ui-1.8.16.custom.min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.dataTables.min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfUtility.js') %]"></script>

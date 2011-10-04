@@ -19,7 +19,7 @@ var DataProductFile = Backbone.Model.extend( {
  */
   initialize: function() {
     this.set( {
-       'acquisitionDateText': $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('acquisitionDate')))
+       'acquisitionDateText': $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('acquisitionDate').substring(0,10)))
     });
   }
 } );
@@ -41,7 +41,6 @@ var DataProductFilesView = Backbone.View.extend( {
     var l = jQuery('<ul/>', { 'class': 'downloads'});
     this.collection.each( function(el, i, list) {
 
-   
       e = el.toJSON();
       // Skip if type = BROWSE
       if( 'BROWSE' == e.processingType ) { return; }
@@ -55,7 +54,7 @@ var DataProductFilesView = Backbone.View.extend( {
           'icons': {
               'primary': "ui-icon-circle-arrow-s"
             }, 
-                      label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) }) );
+            label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) }) );
       } else {
         li.append( jQuery('<a/>', {
           'href': e.url,
@@ -110,11 +109,99 @@ var DataProduct = Backbone.Model.extend({
     this.set({
       'ASCENDINGDESCENDING': AsfUtility.ucfirst( this.get('ASCENDINGDESCENDING')),
       'acquisitionDateText': ( true != _.isUndefined( this.get('ACQUISITIONDATE') ) ) ?
-        $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('ACQUISITIONDATE'))) : '',
+        $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('ACQUISITIONDATE').substring(0,10))) : '',
       'FARADAYROTATION': fdr
     });
   }
 });
+
+window.stopEventPropagation = function(event) {
+    if (typeof event.stopPropagation != "undefined") {
+        event.stopPropagation();
+    } else {
+        event.cancelBubble = true;
+    }
+}
+
+window.showInlineProductFiles = function(event, product) {
+  
+  stopEventPropagation( event );
+
+  if( true !== _.isUndefined( SearchApp.searchResultsView.currentProduct )
+      || product === SearchApp.searchResultsView.currentProduct ) {
+      // destroy the old one
+      $('#gpl_'+SearchApp.searchResultsView.currentProduct).remove();
+      //$('#'+SearchApp.searchResultsView.currentProduct+'_queue_toggler').click();
+  }
+
+  if( product === SearchApp.searchResultsView.currentProduct ) {
+    // user toggled already-open row, unmark current product
+    SearchApp.searchResultsView.currentProduct = undefined;
+  } else {
+    // render product list
+    SearchApp.searchResultsView.currentProduct = product;
+    var model = SearchApp.searchResults.get( product );
+
+    var c = $('<ul/>', { 'class':'granuleProductList', 'id':'gpl_'+product } );
+    model.files.each( function( file, w, r ) {
+      
+      // skip if BROWSE
+      if( 'BROWSE' == file.get('processingType')) { return; }
+
+      var lit = $('<li/>');
+      var btn = $('<button>Add to queue...</button>', {
+        'class': 'tool_enqueuer',
+        'title': 'Add to download queue',
+        'id': "b_"+file.id
+      }).attr('product_id', file.get('productId'))
+      .attr('product_file_id', file.id)
+      .bind( 'click', function(event) {
+          event.stopPropagation();
+          var el = $(this);
+          if ( el.prop('disabled') == 'disabled' ) { return false; }
+          if ( el.prop('selected') == 'selected' ) {
+            el.toggleClass('tool-dequeue');
+            el.prop('selected','false');
+            SearchApp.downloadQueue.remove( SearchApp.searchResults.get( el.attr('product_id') ).files.get( el.attr('product_file_id') ));
+            el.button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+          } else {
+            el.toggleClass('tool-dequeue');
+            el.prop('selected','selected');
+            SearchApp.downloadQueue.add( SearchApp.searchResults.get( el.attr('product_id')).files.get( el.attr('product_file_id')) );
+            el.button( "option", "icons", { primary: "ui-icon-circle-minus" } );
+          }
+        }
+        ).button(
+          {
+            'label': file.get('processingTypeDisplay') + ' (' + file.get('sizeText') + ')',
+            'icons': {
+              'primary':'ui-icon-circle-plus'
+            }
+          }
+        );
+        lit.append(btn);
+        c.append(lit);
+    });
+    $('#result_row_'+product).append(c);
+  }        
+}
+
+window.showProductProfile = function(product) {
+  var v = new DataProductView( { 'model': window.SearchApp.searchResults.get(product) } );
+  $("#product_profile").empty().unbind().html( v.render().el ).dialog(
+    {
+      modal: true,
+      width: 'auto',
+      minWidth: 400,
+      draggable: false,
+      resizable: false,
+      title: product,
+      position: "center"
+    }
+  );
+  return false;
+
+};
 
 var DataProductView = Backbone.View.extend(
   {
@@ -172,9 +259,8 @@ var DataProductView = Backbone.View.extend(
     },
 
     render: function() {
-      $(this.el).empty();
       var ur = SearchApp.user.getWidgetRenderer();
-		$(this.el).empty();
+		  $(this.el).empty();
       $(this.el).html( ur.ppBrowse( this.model ));
       var p3 = $(
         '<div/>',{'id':'hanger'}

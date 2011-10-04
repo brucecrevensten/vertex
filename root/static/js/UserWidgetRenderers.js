@@ -50,12 +50,13 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
       return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { collection: m.files } ).renderForProfile( { 'disabled': true }));
     }
   },
+  // This code is in the critical rendering loop -- avoid _.template()
   srThumbnail: function( m ) {
     if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM')) {
       return;
     } else {
-      if( 'none' == m.toJSON()['THUMBNAIL'] ) { return; }
-      return _.template('<img title="<%= GRANULENAME %>" src="<%= THUMBNAIL %>" />', m.toJSON());
+      if( 'none' == m.get('THUMBNAIL') ) { return; }
+      return '<img title="'+m.get('GRANULENAME')+'" src="'+m.get('THUMBNAIL')+'" />';
     }
   }
 		

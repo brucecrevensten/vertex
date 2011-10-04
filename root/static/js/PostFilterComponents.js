@@ -30,6 +30,7 @@ var PathFrameWidgetComponent = BaseWidget.extend({
 
 var DirectionWidgetComponent = BaseWidget.extend(
   {
+
     title: "Direction",
     titleId: "direction_widget_title",
     tagName: "div",
