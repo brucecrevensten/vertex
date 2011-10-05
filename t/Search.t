@@ -157,7 +157,7 @@ SKIP: {
   $mech->post_ok($surn, { granule_list => 'R1_63549_ST1_F165,R1_65186_ST3_F291', format => 'json', processing => 'L0' });
   my $json = from_json( $mech->content() );
   my $f = 1;
-  foreach my $g ( @{$json->{'rows'}}) {
+  foreach my $g ( @{$json}) {
     if ( $g->{'PROCESSINGTYPE'} ne 'L0' ) {
       $f = 0;
     }

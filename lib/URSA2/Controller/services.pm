@@ -56,14 +56,20 @@ sub search :Path {
     my $r = URSA2::SearchRequest->factory( $c->request );
     $r->decode();
     $r->validate();
+    my $searchModel;
+    if($r->format && ($r->format eq 'json' || $r->format eq 'jsonp')) {
+      $searchModel = $c->model('Search::JSON');
+    } else {
+      $searchModel = $c->model('Search');
+    }
       
     # TODO: move these into a shallow object hierarchy
     if ( $r->isCountRequest() ) {
-      $t->{results} = $c->model('Search')->getResultsCount($r);
+      $t->{results} = $searchModel->getResultsCount($r);
     } elsif ( $r->isProductList() ) {
-      $t->{results} = $c->model('Search')->getResultsByProductList($r->products);
+      $t->{results} = $searchModel->getResultsByProductList($r->products);
     } elsif ( $r->isGranuleList() ) {
-      $t->{results} = $c->model('Search')->getResultsByGranuleList($r);
+      $t->{results} = $searchModel->getResultsByGranuleList($r);
     } else {
       # search based on spatial + other criteria
 
@@ -72,7 +78,7 @@ sub search :Path {
       }
 
       $c->stats->profile('starting search...');
-      $t->{results} = $c->model('Search')->getResults( $r );
+      $t->{results} = $searchModel->getResults( $r );
       $c->stats->profile('...finished search.');
     }
 
@@ -90,14 +96,22 @@ sub search :Path {
       }
     }
 
-    if ( !defined($t->{results}) || 0 == scalar( @{$t->{results}} )) {
+    if(!defined($t->{'results'})) {
+      DbNoResults->throw();
+    } elsif(ref($t->{'results'}) eq 'ARRAY' && !scalar(@{$t->{'results'}})) {
+      DbNoResults->throw();
+    } elsif(ref($t->{'results'}) eq 'SCALAR' && !$t->{'results'}) {
       DbNoResults->throw();
     }
 
     $c->stats->profile('finished search, starting performing transformation...'); 
-    $t->{format} = $r->format;
-    $t->transform( $c );
-    $c->stats->profile('finished transformation.');
+    if($r->format && ($r->format eq 'json' || $r->format eq 'jsonp')) {
+      $t->{'output'} = $t->{'results'};
+    } else {
+      $t->{format} = $r->format;
+      $t->transform( $c );
+      $c->stats->profile('finished transformation.');
+    }
   };
 
   my $e;

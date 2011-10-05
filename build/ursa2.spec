@@ -42,6 +42,7 @@ Requires: perl(Exception::Class::Base)
 Requires: perl(XML::LibXML) <= 1.69
 Requires: perl(XML::LibXSLT)
 Requires: perl(JSON)
+Requires: perl(JSON::XS)
 Requires: perl(Catalyst::View::TT)
 Requires: perl(CGI::Session)
 Requires: perl(CGI::Session::Driver::oracle)
