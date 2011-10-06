@@ -152,7 +152,6 @@ Throws: InvalidParameter if the provided bbox is invalid
 sub bbox {
   my ($self, $bbox) = @_;
   my @bbox_arr;
-  my $e;
 
   if (!defined($bbox)) {
     # if we don't have a BBOX, this may be an invalid parameter,
@@ -163,33 +162,32 @@ sub bbox {
 
 
   @bbox_arr = split(/\,/, $bbox);
+  my ($w, $s, $e, $n) = @bbox_arr;
   my $a = scalar(grep { defined $_ } @bbox_arr );
   if ( 4 != $a ) {
     InvalidParameter->throw( parameter=>'bbox', value=>$bbox, message=>'bbox was not a list of four comma-separated floats');
   }
 
-  if( 0 == URSA2::Validators->validatePoint($bbox_arr[0], $bbox_arr[1])
-    || 0 == URSA2::Validators->validatePoint($bbox_arr[2], $bbox_arr[3])) {
+  if( 0 == URSA2::Validators->validatePoint($w, $s)
+    || 0 == URSA2::Validators->validatePoint($e, $n)) {
     InvalidParameter->throw( parameter=>'bbox', message=>'derived lat/long boundary point(s) invalid');
   }
 
   my $t;
   # make the points always correspond to w / s / e / n
-  if ( $bbox_arr[0] > $bbox_arr[2] ) {
-    $t = $bbox_arr[0];
-    $bbox_arr[0] = $bbox_arr[2];
-    $bbox_arr[2] = $t;
+  if ( $w > $e ) {
+    $t = $w; $w = $e; $e = $t;
   }
 
-  if ( $bbox_arr[1] > $bbox_arr[3] ) { 
-    $t = $bbox_arr[1];
-    $bbox_arr[1] = $bbox_arr[3];
-    $bbox_arr[3] = $t;
+  if ( $s > $n ) { 
+    $t = $s; $s = $n; $n = $t;
   }
 
-  #TODO fix case where we cross +/- 180
-
-
+  # always use minimal span: if span >180 degrees lon, span the other way
+  if ( $e - $w > 180.0 ) {
+    $t = $w; $w = $e; $e = $t;
+    $t = $s; $s = $n; $n = $t;
+  }
 
   return [$bbox_arr[0], $bbox_arr[1], $bbox_arr[2], $bbox_arr[3]];
 
