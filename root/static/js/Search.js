@@ -273,6 +273,10 @@ var GeographicWidget = BaseWidget.extend(
       var s = Math.min(sw.lat(), ne.lat()).toFixed(2);
       var e = Math.max(sw.lng(), ne.lng()).toFixed(2);
       var n = Math.max(sw.lat(), ne.lat()).toFixed(2);
+      if(e - w > 180.0) {  // swap if it spans the antemeridian so we always use the shortest path
+        var t = w; w = e; e = t;
+        t = n; n = s; s = t;
+      }
       var latLngBounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(s, w),
         new google.maps.LatLng(n, e));
@@ -287,13 +291,16 @@ var GeographicWidget = BaseWidget.extend(
     if(bounds) {
       var sw = bounds.getSouthWest();
       var ne = bounds.getNorthEast();
+      var w = Math.min(sw.lng(), ne.lng()).toFixed(2);
+      var s = Math.min(sw.lat(), ne.lat()).toFixed(2);
+      var e = Math.max(sw.lng(), ne.lng()).toFixed(2);
+      var n = Math.max(sw.lat(), ne.lat()).toFixed(2);
+      if(e - w > 180.0) {  // swap if it spans the antemeridian so we always use the shortest path
+        var t = w; w = e; e = t;
+        t = n; n = s; s = t;
+      }
       var target = $('#filter_bbox');
-      target.val([
-        Math.min(sw.lng(), ne.lng()).toFixed(2),
-        Math.min(sw.lat(), ne.lat()).toFixed(2),
-        Math.max(sw.lng(), ne.lng()).toFixed(2),
-        Math.max(sw.lat(), ne.lat()).toFixed(2)
-      ].join(','));
+      target.val([w, s, e, n].join(','));
       var data = {};
       data[target.attr('name')] = target.attr('value');
       this.model.set(data);
