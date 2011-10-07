@@ -8,13 +8,13 @@ var SearchResults = Backbone.Collection.extend(
     error: '',
 
     initialize: function() {
-
+      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('SearchResults:'+e)} )}
 
     },
 
     // build the nested model structure of DataProducts and DataProductFiles
     build: function(data) {
-this.trigger('build');
+      this.trigger('build');
       // TODO: possible memory leak here, if the associated things aren't deallocated
       // when we reset this main collection.
       this.reset();
@@ -254,6 +254,9 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
     this.collection.bind('clear_results', this.clear_results);
+    
+    if(AsfConfig.debug) { this.bind('all', function(e) { console.log('SearchResultsProcessingWidget:'+e)} )}
+
   },
   clear_results: function() {
 		$(this.el).empty();
@@ -322,6 +325,7 @@ var SearchResultsView = Backbone.View.extend(
   initialize: function() {
     _.bindAll(this, "render");
 
+      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('SearchResultsView:'+e)} )}
 
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
@@ -429,15 +433,18 @@ var SearchResultsView = Backbone.View.extend(
   render: function() {
 	  
     this.trigger('render');
-    var el = $(this.el);
-    var parent = el.parent();
-    el.detach();
-    el.empty();
+
     if( 0 == this.collection.length ) {
       this.clearOverlays();
       this.showNoResults();
       return this;
     }
+
+    var el = $(this.el);
+    var parent = el.parent();
+    el.detach();
+    el.empty();
+    
     var li = '';
     var ur = SearchApp.user.getWidgetRenderer();
     
@@ -485,7 +492,7 @@ var SearchResultsView = Backbone.View.extend(
       ));
     
     }
-
+    this.trigger('render:finish');
     return this;
 
   },
@@ -617,4 +624,3 @@ var SearchResultsView = Backbone.View.extend(
   activePoly: null
 }
 );
-

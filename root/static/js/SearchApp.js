@@ -102,6 +102,7 @@ window.SearchAppView = Backbone.View.extend({
       icons: {
         primary: "ui-icon-search"
       },
+      disabled: true,
       label: "Search"
     }
     ).bind("click", jQuery.proxy( function(e) {
@@ -136,6 +137,8 @@ window.SearchAppView = Backbone.View.extend({
       e.data.sr.trigger('clear_results');
       e.data.srv.showBeforeSearchMessage();
       $("#srCount").empty()
+      $("#triggerSearch").button('disable').focus();
+
     });
 
     //fire up the map
@@ -172,6 +175,7 @@ var ActiveSearchFiltersView = Backbone.View.extend(
     _.bindAll(this);
     this.options.searchParameters.bind('change', this.render);
     this.options.postFilters.bind('change', this.render);
+      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('ActiveSearchFiltersView:'+e)} )}
 
 
   },

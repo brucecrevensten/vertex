@@ -51,6 +51,14 @@ sub search :Path {
 
   $c->stats->profile('preparing to perform search...');
 
+  if( $c->config->{static_shunt} == 1 ) {
+    use File::Slurp;
+    my $response = read_file('/tmp/static.jsonp');
+    $c->response->body( $c->request->param('callback').'('.$response.')' );
+    $c->response->content_type( 'application/json' );
+    return;
+   }
+
   eval {
     # decode and validate the request, throws Invalid/Missing exceptions if needed
     my $r = URSA2::SearchRequest->factory( $c->request );

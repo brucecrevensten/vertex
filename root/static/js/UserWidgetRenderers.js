@@ -53,9 +53,9 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
   // This code is in the critical rendering loop -- avoid _.template()
   srThumbnail: function( m ) {
     if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM')) {
-      return;
+      return ''; // return empty string for concatenation
     } else {
-      if( 'none' == m.get('THUMBNAIL') ) { return; }
+      if( 'none' == m.get('THUMBNAIL') ) { return ''; } // return empty string for concatenation
       return '<img title="'+m.get('GRANULENAME')+'" src="'+m.get('THUMBNAIL')+'" />';
     }
   }
