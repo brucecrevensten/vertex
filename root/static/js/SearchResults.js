@@ -499,19 +499,16 @@ var SearchResultsView = Backbone.View.extend(
   renderOnMap: function() {
 
     e = this.collection.at(0).toJSON();
-    this.leastLat = Math.min( e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
-    this.mostLat = Math.max( e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
-    this.leastLon = Math.min( e.NEARSTARTLON, e.FARSTARTLON, e.FARENDLON, e.NEARENDLON );
-    this.mostLon = Math.max( e.NEARSTARTLON, e.FARSTARTLON, e.FARENDLON, e.NEARENDLON );
+    this.bounds = new google.maps.LatLngBounds();
 
     this.collection.each( function( dp, i, l ) {
 
         e = dp.toJSON();
-
-        this.leastLat = Math.min( this.leastLat, e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
-        this.mostLat = Math.max( this.mostLat, e.NEARSTARTLAT, e.FARSTARTLAT, e.FARENDLAT, e.NEARENDLAT );
-        this.leastLon = Math.min( this.leastLon, e.NEARSTARTLON, e.FARSTARTLON, e.FARENDLON, e.NEARENDLON );
-        this.mostLon = Math.max( this.mostLon, e.NEARSTARTLON, e.FARSTARTLON, e.FARENDLON, e.NEARENDLON );
+        
+        this.bounds.extend(new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON));
+        this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
+        this.bounds.extend(new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON));
+        this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
 
         this.mo[ e.id ] = new google.maps.Polygon({
             paths: new Array(
@@ -533,11 +530,7 @@ var SearchResultsView = Backbone.View.extend(
 
     }, this);
 
-    searchMap.fitBounds( new google.maps.LatLngBounds(
-      new google.maps.LatLng( this.leastLat, this.leastLon ),
-      new google.maps.LatLng( this.mostLat, this.mostLon )
-    ));
-    
+    searchMap.fitBounds( this.bounds );
   },
   clearOverlays: function() {
 
