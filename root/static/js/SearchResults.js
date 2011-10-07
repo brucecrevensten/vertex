@@ -452,16 +452,20 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.each( function( model, i, l ) {
       
       var d = model.toJSON();
-      li += '<li class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">';
-            
-      // confirmed OK for tight loop
-      li += ur.srThumbnail( model );
-      
-      // suck up the performance of the template interpolation here because otherwise the code is nasty
-      li += _.template( this.getPlatformRowTemplate( d.PLATFORM ), d);
-      li += '<div class="productRowTools"><button>More information&hellip;</button>';
-      li += '<button onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="queue_toggler" product_id="'+d.id+'">Show files&hellip;</button>';
-      li += '</div></li>';
+      li += '<li class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
+      + ur.srThumbnail( model )
+      + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
+      + '<div class="productRowTools">'
+      + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
+      + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
+      + '<span class="ui-button-text">More information&hellip;</span>'
+      + '</button>'
+      + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
+      + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
+      + '<span class="ui-button-text">Show files&hellip;</span>'
+      + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
+      + '</div>'
+      + '</div><div style="clear:both;"></div></li>';
 
     }, this);
 
@@ -470,10 +474,10 @@ var SearchResultsView = Backbone.View.extend(
 
     el.html(li);
     parent.append(el);
-/*
+
     $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('#searchResults li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
-*/
+
     this.showResults();
     this.clearOverlays();
     this.renderOnMap();
