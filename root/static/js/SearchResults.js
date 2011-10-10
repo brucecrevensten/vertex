@@ -533,7 +533,7 @@ var SearchResultsView = Backbone.View.extend(
             strokeColor: '#333333',
             strokeOpacity: 0.5,
             strokeWeight: 2,
-            zIndex: 1000 + i,
+            zIndex: 1000,
             clickable: true
           });
         this.mo[ e.id ].setMap(searchMap);
@@ -572,7 +572,7 @@ var SearchResultsView = Backbone.View.extend(
         fillOpacity: 0.5,
         strokeColor: '#336699',
         strokeOpacity: 0.5,
-        zIndex: 1500
+        zIndex: 10001 // just above the search area bbox zindex
       });
     } else {
       e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({

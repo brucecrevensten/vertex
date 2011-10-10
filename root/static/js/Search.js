@@ -262,7 +262,7 @@ var GeographicWidget = BaseWidget.extend(
     fillColor: '#0066CC',
     fillOpacity: 0.5,
     clickable: false,
-    zIndex: 500 //always be below the granule overlays, which start at 1000
+    zIndex: 10000 //always be above the granule overlays, which start at 1000
   }), 
 
   updateSearchAreaOverlay: function() {
