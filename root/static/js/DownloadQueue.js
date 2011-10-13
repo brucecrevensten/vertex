@@ -36,6 +36,8 @@ var DownloadQueueSearchResultsView = Backbone.View.extend({
     _.bindAll(this, "render");
     this.collection.bind("add", this.render);
     this.collection.bind("remove", this.render);
+	this.collection.bind("add", this.alter_cookie);
+	this.collection.bind("remove", this.alter_cookie);
 
     //TODO: bind this to the 'render' event on the search results
   },
@@ -123,13 +125,48 @@ var DownloadQueueView = Backbone.View.extend(
   {
   // this div is already present in the static DOM upon page load
   id: "download_queue",
+ 	q_obj: "q_cookie_",
 
   initialize: function() {
     _.bindAll(this, "render");
+
     this.collection.bind('queue:remove', this.render );
-	this.collection.bind('add', jQuery.proxy(this.handle_change_event,this));
-	this.collection.bind('remove', jQuery.proxy(this.handle_change_event, this));
-	this.collection.bind('reset', jQuery.proxy(this.handle_change_event, this));
+
+	this.collection.bind("add", jQuery.proxy(function() {
+		this.alter_cookie();
+	}, this));
+
+	this.convert_cookie_to_queue();
+	
+	
+  },
+
+
+	convert_cookie_to_queue: function() {
+		console.log("convert_cookie_to_queue");
+		var cookie = $.cookie(this.q_obj);
+	//	console.log(cookie);
+		if (cookie != null) {
+			var dp_list = cookie.split('++');
+			_.each(dp_list, jQuery.proxy(function(thing) {
+				this.collection.add(JSON.parse(thing));
+			}, this));
+		}
+	},
+
+	alter_cookie: function() {
+		var cookie="";
+		
+		// Holds an array of serialized data products
+		var dp_json_list = [];
+		
+		_.each(this.collection.toArray(), function(thing) {
+			dp_json_list.push( JSON.stringify(thing.toJSON()) );// = JSON.stringify(thing.toJSON());
+		});
+		
+		cookie = dp_json_list.join("++");
+		console.log(cookie);
+		$.cookie(this.q_obj, JSON.stringify(this.collection.toJSON()), { expires: 7 });
   },
 
 	clear_queue_all: function() {		
@@ -140,26 +177,8 @@ var DownloadQueueView = Backbone.View.extend(
 		} );
 		
 		this.collection.reset();
+		$.cookie(this.q_obj, null);
 	},
-
-	handle_change_event: function() {
-		if (this.collection.length > 0) {
-			this.setConfirmUnload(true);
-		} else {
-			this.setConfirmUnload(false);
-		}
-	},
-	
- setConfirmUnload: function(on) {
-	if (on) {
-		window.onbeforeunload = function() {
-			return "You have items in your queue! If you leave the page then your queue will be emptied.";
-		}
-	} else {
-		window.onbeforeunload = function() { return "Are you sure you want to leave? Your current search results will be lost.";}
-	}
-  
-},
  
   // Renders the main download queue
   render: function() {
@@ -277,18 +296,15 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
       });
 
       $(this.el).find("#download_type_metalink").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Bulk Download (.metalink)'} ).click( function() {
-        window.onbeforeunload = null;
-		$('#format_specifier').val( 'metalink');
+        $('#format_specifier').val( 'metalink');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_csv").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Download Metadata (.csv)'} ).click( function() {
-        window.onbeforeunload = null;
-		$('#format_specifier').val( 'csv');
+        $('#format_specifier').val( 'csv');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_kml").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Google Earth (.kml)'} ).click( function() {
-        window.onbeforeunload = null;
-		$('#format_specifier').val( 'kml');
+        $('#format_specifier').val( 'kml');
         $('#download_queue_form').submit();
       });
 
