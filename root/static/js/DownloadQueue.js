@@ -148,17 +148,18 @@ var DownloadQueueView = Backbone.View.extend(
 
 	convert_cookie_to_queue: function() {
 		
-		var cookie = $.cookie(this.q_obj);
-
+	//	var cookie = $.cookie(this.q_obj);
+	var cookie = $.storage.get(this.q_obj);
+	
 		if (cookie != null) {
 			var dp_list = cookie.split('++');
 			_.each(dp_list, jQuery.proxy(function(thing) {
 				this.collection.add(JSON.parse(thing));
 			}, this));
 		}
-		var cookie2 = $.cookie(this.q_obj);
-		console.log("convert_cookie_to_queue");
-		console.log(cookie2);
+	//	var cookie2 = $.cookie(this.q_obj);
+	//	console.log("convert_cookie_to_queue");
+	//	console.log(cookie2);
 	},
 
 	alter_cookie: function() {
@@ -172,11 +173,12 @@ var DownloadQueueView = Backbone.View.extend(
 		});
 		
 		cookie = dp_json_list.join("++");
-		$.cookie(this.q_obj, null);
-		$.cookie(this.q_obj, JSON.stringify(this.collection.toJSON()), { expires: 7 });
-		console.log("altered Cookie");
-	var c = $.cookie(this.q_obj);
-		console.log(c);
+	//	$.cookie(this.q_obj, null);
+	//	$.cookie(this.q_obj, JSON.stringify(this.collection.toJSON()), { expires: 7 });
+		$.storage.set(this.q_obj, JSON.stringify(this.collection.toJSON()));
+//		console.log("altered Cookie");
+//	var c = $.cookie(this.q_obj);
+//		console.log(c);
   },
 
 	clear_queue_all: function() {		

@@ -3,7 +3,8 @@ $(function() {
 window.SearchAppView = Backbone.View.extend({	
 
   initialize: function() {
-
+	$.storage = new $.store();
+	
     this.user = new User();
 
     this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
