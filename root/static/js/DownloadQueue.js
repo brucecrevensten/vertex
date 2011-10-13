@@ -135,6 +135,10 @@ var DownloadQueueView = Backbone.View.extend(
 	this.collection.bind("add", jQuery.proxy(function() {
 		this.alter_cookie();
 	}, this));
+	
+	this.collection.bind("remove", jQuery.proxy(function() {
+		this.alter_cookie();
+	}, this));
 
 	this.convert_cookie_to_queue();
 	
@@ -143,15 +147,18 @@ var DownloadQueueView = Backbone.View.extend(
 
 
 	convert_cookie_to_queue: function() {
-		console.log("convert_cookie_to_queue");
+		
 		var cookie = $.cookie(this.q_obj);
-	//	console.log(cookie);
+
 		if (cookie != null) {
 			var dp_list = cookie.split('++');
 			_.each(dp_list, jQuery.proxy(function(thing) {
 				this.collection.add(JSON.parse(thing));
 			}, this));
 		}
+		var cookie2 = $.cookie(this.q_obj);
+		console.log("convert_cookie_to_queue");
+		console.log(cookie2);
 	},
 
 	alter_cookie: function() {
@@ -165,8 +172,11 @@ var DownloadQueueView = Backbone.View.extend(
 		});
 		
 		cookie = dp_json_list.join("++");
-		console.log(cookie);
+		$.cookie(this.q_obj, null);
 		$.cookie(this.q_obj, JSON.stringify(this.collection.toJSON()), { expires: 7 });
+		console.log("altered Cookie");
+	var c = $.cookie(this.q_obj);
+		console.log(c);
   },
 
 	clear_queue_all: function() {		
@@ -278,12 +288,16 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
         }
       ).bind( "click", { 'collection':this.collection }, function(e) {
         $( e.currentTarget.parentNode.parentNode ).hide('blind');
+		console.log("CLICKING REMOVE");
+		console.log("Found: " + "HELLO");
+		console.log("THE product id element is: " +  $(e.currentTarget).attr('product_id'));
         e.data.collection.remove( SearchApp.searchResults.get( $(e.currentTarget).attr('product_id') ).files.get( $(e.currentTarget).attr('product_file_id') ));
         e.data.collection.trigger('queue:remove');
 		
 		$("#b_"+$(e.currentTarget).attr('product_file_id')).toggleClass('tool-dequeue');
 		$("#b_"+$(e.currentTarget).attr('product_file_id')).prop('selected','false');
 		$("#b_"+$(e.currentTarget).attr('product_file_id')).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+			
 				
       });
 
@@ -333,7 +347,7 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
         title: _.template("Download queue (<%= summary %>)", { 'summary':this.collection.getTextSummary() }),
         position: "top"
       }
-    ).bind('dialogclose', jQuery.proxy(function() { this.handle_change_event()}, this)); //refresh every time it closes
+    );//.bind('dialogclose', jQuery.proxy(function() { this.handle_change_event()}, this)); //refresh every time it closes
 	
   
     return this;
