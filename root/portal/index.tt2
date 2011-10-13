@@ -86,8 +86,10 @@
       <div id="filters"></div>
       <div style="margin: 1em 0;" id="platform_facets"></div>
       <div style="margin: 1em 0;">
+
         <button id="triggerSearch"></button>
-        <button id="resetSearch"></button>
+		<button id="stopSearch"></button>
+		<button id="resetSearch"></button>
       </div>
     </div>
 

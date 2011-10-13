@@ -97,19 +97,6 @@ window.SearchAppView = Backbone.View.extend({
     //TODO: move this
     this.downloadQueueMapView.setSearchResultsView(this.searchResultsView);
 
-    $('#triggerSearch').button(
-    {
-      icons: {
-        primary: "ui-icon-search"
-      },
-      disabled: true,
-      label: "Search"
-    }
-    ).bind("click", jQuery.proxy( function(e) {
-      this.searchResultsView.showSearching();
-      this.searchResults.fetchSearchResults();
-    }
-    , this)).focus();//.click(); ///// Add .click() to make app begin searching immediately
 
     $('#resetSearch').button(
     { 
@@ -130,6 +117,7 @@ window.SearchAppView = Backbone.View.extend({
       e.data.spv.render();
       e.data.pf.reset();
 
+
       e.data.sr.data = {};
       e.data.sr.reset(); // can't be silent here, must be loud
       e.data.srv.render();
@@ -140,6 +128,17 @@ window.SearchAppView = Backbone.View.extend({
       $("#triggerSearch").button('disable').focus();
 
     });
+
+
+	this.searchButtonState = new SearchButtonState(); // defaults to searchState as opposed to stopSearchSta
+    this.searchButtonView = new SearchButtonView( 
+				{ 
+					"el": $("#triggerSearch"), 
+					"el2": $("#stopSearch"),
+					"model": this.searchButtonState
+				} );
+				
+	this.searchButtonView.render();
 
     //fire up the map
     initMap('searchMap');
@@ -152,7 +151,7 @@ window.SearchAppView = Backbone.View.extend({
 
 window.SearchApp = new SearchAppView;  
 
-  /*
+ /*
 window.onbeforeunload = function() {
 	return "Are you sure you want to leave? Your current search results will be lost.";
 }*/
@@ -166,7 +165,8 @@ $.fn.serializeJSON=function() {
 		});
 		return json;
 	};
-});
+}
+);
 
 var ActiveSearchFiltersView = Backbone.View.extend(
 {

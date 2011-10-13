@@ -63,7 +63,8 @@ var SearchResults = Backbone.Collection.extend(
 
       this.data = {}; // flush previous result set
 
-      var results = $.ajax(
+     // var results = 
+	var xhr = $.ajax(
         {
           type: "GET",
           url: this.url,
@@ -95,7 +96,9 @@ var SearchResults = Backbone.Collection.extend(
 			        this.trigger('clear_results');
           }
         }
-      }).results;
+      });
+		
+		return xhr;
 
     },
 

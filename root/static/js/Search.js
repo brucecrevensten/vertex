@@ -514,3 +514,126 @@ var PlatformWidget = BaseWidget.extend(
     }
   }
 );
+
+
+var SearchButtonState = Backbone.Model.extend({
+	defaults: {
+		state: 'searchButtonState', // Possible States: 'searchButton', 'stopButton'
+	}
+});
+
+var SearchButtonView = Backbone.View.extend({
+	initialize: function() {
+			//if (this.model.get('state') == 'searchButtonState') {
+				console.log("SearchButtonState == searchButtonState");
+			//	$(this.el).button().unbind("click");
+			//	$(this.el).empty();
+			
+			console.log(this.options);
+			
+			this.el2 = this.options.el2;
+
+				$(this.el).button(
+				      {
+				        icons: {
+				          primary: "ui-icon-search"
+				        },
+				        label: "Search"
+				      }).bind("click", jQuery.proxy( function(e) {
+
+
+				        SearchApp.searchResultsView.showSearching();
+
+				        var xhr = SearchApp.searchResults.fetchSearchResults(); 
+
+						this.bind('abortSearch', function() {
+							xhr.abort(); 
+
+						});
+
+						this.model.set({'state': 'stopButtonState'});
+						this.render();
+
+				      }, this)).focus();
+		//	 } 
+
+//			if (this.model.get('state') == 'stopButtonState') {
+			//	$(this.el2).button().unbind("click");
+			//	$(this.el2).empty();
+				 $(this.el2).button(
+			        { icons: { primary: "ui-icon-refresh"}, label: "Stop Search"}).bind("click", jQuery.proxy( function(e) {
+						this.trigger('abortSearch');
+						console.log("triggered abortSearch");
+						this.model.set({'state': 'searchButtonState'});
+						SearchApp.searchResultsView.showBeforeSearchMessage();
+						this.render();
+				      }, this));
+				
+				console.log("THIS EL2");
+				console.log(this.el2);
+				$(this.el2).hide();
+	//		}
+		
+	},
+	render: function() {
+		console.log("Rendering SearchButtonView");
+		
+			if (this.model.get('state') == 'searchButtonState') {
+				$(this.el).show();
+				$(this.el2).hide();
+			} 
+			
+			if (this.model.get('state') == 'stopButtonState')  {
+				
+				$(this.el2).show();
+				$(this.el).hide();
+			}
+		
+			
+		
+		
+	/*	if (this.model.get('state') == 'searchButtonState') {
+			console.log("SearchButtonState == searchButtonState");
+			$(this.el).button().unbind("click");
+			$(this.el).empty();
+			
+			$(this.el).button(
+			      {
+			        icons: {
+			          primary: "ui-icon-search"
+			        },
+			        label: "Search"
+			      }).bind("click", jQuery.proxy( function(e) {
+				
+					
+			        SearchApp.searchResultsView.showSearching();
+			
+			        var xhr = SearchApp.searchResults.fetchSearchResults(); 
+					
+					this.bind('abortSearch', function() {
+						xhr.abort(); 
+						
+					});
+					
+					this.model.set({'state': 'stopButtonState'});
+					this.render();
+
+			      }, this)).focus();
+		 } 
+		
+		if (this.model.get('state') == 'stopButtonState') {
+			$(this.el).button().unbind("click");
+			$(this.el).empty();
+			 $(this.el).button(
+		        { icons: { primary: "ui-icon-refresh"}, label: "Stop Search"}).bind("click", jQuery.proxy( function(e) {
+					this.trigger('abortSearch');
+					console.log("triggered abortSearch");
+					this.model.set({'state': 'searchButtonState'});
+					SearchApp.searchResultsView.showBeforeSearchMessage();
+					this.render();
+			      }, this));
+		}
+		*/
+	}
+	
+});
