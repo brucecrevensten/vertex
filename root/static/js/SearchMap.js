@@ -9,7 +9,8 @@ function initMap(mapContainer) {
     {
       center: initLatLng,
       mapTypeId: google.maps.MapTypeId.TERRAIN,
-      zoom:4
+      zoom:4,
+      streetViewControl:false
     });
 }
 
