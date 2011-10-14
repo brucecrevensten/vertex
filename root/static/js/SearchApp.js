@@ -138,6 +138,9 @@ window.SearchAppView = Backbone.View.extend({
 					"el2": $("#stopSearch"),
 					"model": this.searchButtonState
 				} );
+    this.searchResults.bind('refresh', jQuery.proxy(function(e) {
+      this.searchButtonView.model.set({'state': 'searchButtonState'});
+    }, this));
 				
 	this.searchButtonView.render();
 

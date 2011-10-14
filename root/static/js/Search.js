@@ -523,110 +523,47 @@ var SearchButtonState = Backbone.Model.extend({
 });
 
 var SearchButtonView = Backbone.View.extend({
-	initialize: function() {
-			//if (this.model.get('state') == 'searchButtonState') {
-			//	$(this.el).button().unbind("click");
-			//	$(this.el).empty();
-			
-			this.el2 = this.options.el2;
+  xhr: null,
+  initialize: function() {
+    this.el2 = this.options.el2;
+    this.model.bind('change', this.render, this);
 
-				$(this.el).button(
-				      {
-				        icons: {
-				          primary: "ui-icon-search"
-				        },
-				        label: "Search"
-				      }).bind("click", jQuery.proxy( function(e) {
+    $(this.el).button({
+      icons: {
+        primary: "ui-icon-search"
+      },
+        label: "Search"
+    }).bind("click", jQuery.proxy( function(e) {
+      SearchApp.searchResultsView.showSearching();
+      this.xhr = SearchApp.searchResults.fetchSearchResults(); 
+      this.model.set({'state': 'stopButtonState'});
+    }, this)).focus();
 
+    $(this.el).bind('abortSearch', function() {
+      this.xhr.abort();
+    });
 
-				        SearchApp.searchResultsView.showSearching();
+    $(this.el2).button({
+      icons: {
+        primary: "ui-icon-refresh"},
+        label: "Stop Search"
+    }).bind("click", jQuery.proxy( function(e) {
+      this.trigger('abortSearch');
+      this.model.set({'state': 'searchButtonState'});
+      SearchApp.searchResultsView.showBeforeSearchMessage();
+    }, this));
 
-				        var xhr = SearchApp.searchResults.fetchSearchResults(); 
+    $(this.el2).hide();
+  },
 
-						this.bind('abortSearch', function() {
-							xhr.abort(); 
-
-						});
-
-						this.model.set({'state': 'stopButtonState'});
-						this.render();
-
-				      }, this)).focus();
-		//	 } 
-
-//			if (this.model.get('state') == 'stopButtonState') {
-			//	$(this.el2).button().unbind("click");
-			//	$(this.el2).empty();
-				 $(this.el2).button(
-			        { icons: { primary: "ui-icon-refresh"}, label: "Stop Search"}).bind("click", jQuery.proxy( function(e) {
-						this.trigger('abortSearch');
-						this.model.set({'state': 'searchButtonState'});
-						SearchApp.searchResultsView.showBeforeSearchMessage();
-						this.render();
-				      }, this));
-				
-				$(this.el2).hide();
-	//		}
-		
-	},
-	render: function() {
-		
-			if (this.model.get('state') == 'searchButtonState') {
-				$(this.el).show();
-				$(this.el2).hide();
-			} 
-			
-			if (this.model.get('state') == 'stopButtonState')  {
-				
-				$(this.el2).show();
-				$(this.el).hide();
-			}
-		
-			
-		
-		
-	/*	if (this.model.get('state') == 'searchButtonState') {
-			console.log("SearchButtonState == searchButtonState");
-			$(this.el).button().unbind("click");
-			$(this.el).empty();
-			
-			$(this.el).button(
-			      {
-			        icons: {
-			          primary: "ui-icon-search"
-			        },
-			        label: "Search"
-			      }).bind("click", jQuery.proxy( function(e) {
-				
-					
-			        SearchApp.searchResultsView.showSearching();
-			
-			        var xhr = SearchApp.searchResults.fetchSearchResults(); 
-					
-					this.bind('abortSearch', function() {
-						xhr.abort(); 
-						
-					});
-					
-					this.model.set({'state': 'stopButtonState'});
-					this.render();
-
-			      }, this)).focus();
-		 } 
-		
-		if (this.model.get('state') == 'stopButtonState') {
-			$(this.el).button().unbind("click");
-			$(this.el).empty();
-			 $(this.el).button(
-		        { icons: { primary: "ui-icon-refresh"}, label: "Stop Search"}).bind("click", jQuery.proxy( function(e) {
-					this.trigger('abortSearch');
-					console.log("triggered abortSearch");
-					this.model.set({'state': 'searchButtonState'});
-					SearchApp.searchResultsView.showBeforeSearchMessage();
-					this.render();
-			      }, this));
-		}
-		*/
-	}
-	
+  render: function() {
+    if (this.model.get('state') == 'searchButtonState') {
+      $(this.el).show();
+      $(this.el2).hide();
+    } 
+    if (this.model.get('state') == 'stopButtonState')  {
+      $(this.el2).show();
+      $(this.el).hide();
+    }
+  },
 });
