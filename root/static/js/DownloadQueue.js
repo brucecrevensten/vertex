@@ -147,8 +147,6 @@ var DownloadQueueView = Backbone.View.extend(
 
 
 	convert_cookie_to_queue: function() {
-		
-	//	var cookie = $.cookie(this.q_obj);
 	var cookie = $.storage.get(this.q_obj);
 	
 		if (cookie != null) {
@@ -157,9 +155,7 @@ var DownloadQueueView = Backbone.View.extend(
 				this.collection.add(JSON.parse(thing));
 			}, this));
 		}
-	//	var cookie2 = $.cookie(this.q_obj);
-	//	console.log("convert_cookie_to_queue");
-	//	console.log(cookie2);
+	
 	},
 
 	alter_cookie: function() {
@@ -173,12 +169,7 @@ var DownloadQueueView = Backbone.View.extend(
 		});
 		
 		cookie = dp_json_list.join("++");
-	//	$.cookie(this.q_obj, null);
-	//	$.cookie(this.q_obj, JSON.stringify(this.collection.toJSON()), { expires: 7 });
 		$.storage.set(this.q_obj, JSON.stringify(this.collection.toJSON()));
-//		console.log("altered Cookie");
-//	var c = $.cookie(this.q_obj);
-//		console.log(c);
   },
 
 	clear_queue_all: function() {		
@@ -290,16 +281,35 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
         }
       ).bind( "click", { 'collection':this.collection }, function(e) {
         $( e.currentTarget.parentNode.parentNode ).hide('blind');
-		console.log("CLICKING REMOVE");
-		console.log("Found: " + "HELLO");
-		console.log("THE product id element is: " +  $(e.currentTarget).attr('product_id'));
-        e.data.collection.remove( SearchApp.searchResults.get( $(e.currentTarget).attr('product_id') ).files.get( $(e.currentTarget).attr('product_file_id') ));
-        e.data.collection.trigger('queue:remove');
-		
-		$("#b_"+$(e.currentTarget).attr('product_file_id')).toggleClass('tool-dequeue');
-		$("#b_"+$(e.currentTarget).attr('product_file_id')).prop('selected','false');
-		$("#b_"+$(e.currentTarget).attr('product_file_id')).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+		if (SearchApp.searchResults.get( $(e.currentTarget).attr('product_id')) == undefined ||
+			SearchApp.searchResults.get( $(e.currentTarget).attr('product_id')) == null) {	
+				var file_id=-1;
+				e.data.collection.each(function(el, i, list) { 
+					if (el.get("id") == $(e.currentTarget).attr('product_file_id')) {
+						file_id = i;
+					}
+				});
+				if (file_id>-1) {
+					e.data.collection.remove(e.data.collection.at(file_id));
+					e.data.collection.trigger('queue:remove');
+					
+						$("#b_"+$(e.currentTarget).attr('product_file_id')).toggleClass('tool-dequeue');
+						$("#b_"+$(e.currentTarget).attr('product_file_id')).prop('selected','false');
+						$("#b_"+$(e.currentTarget).attr('product_file_id')).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+
+				}
 			
+			}else {
+        		e.data.collection.remove( SearchApp.searchResults.get( $(e.currentTarget).attr('product_id') ).files.get( $(e.currentTarget).attr('product_file_id') ));
+				e.data.collection.trigger('queue:remove');
+				
+					$("#b_"+$(e.currentTarget).attr('product_file_id')).toggleClass('tool-dequeue');
+					$("#b_"+$(e.currentTarget).attr('product_file_id')).prop('selected','false');
+					$("#b_"+$(e.currentTarget).attr('product_file_id')).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+
+			}
+	
+	
 				
       });
 
