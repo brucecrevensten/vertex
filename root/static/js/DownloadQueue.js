@@ -7,7 +7,7 @@ var DownloadQueue = Backbone.Collection.extend(
     return _.reduce(
       this.pluck("bytes"),
       function(memo, size) {
-        return memo + size;
+        return Number(memo) + Number(size);
       },
       0
     );
@@ -26,7 +26,7 @@ var DownloadQueue = Backbone.Collection.extend(
       }
       t = t + ', ' + AsfUtility.bytesToString( this.getSizeInBytes() ); 
     }
-    return t; 
+    return t;
   }
 }
 );
