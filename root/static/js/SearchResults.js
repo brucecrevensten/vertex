@@ -336,7 +336,11 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('remove', this.render);
 
     this.options.downloadQueue.bind('queue:remove', this.render);
-    this.model.bind('authSuccess', this.render);
+   
+ 	this.model.bind('authSuccess', jQuery.proxy(function() {
+		this.render('authSuccess');
+	},this)
+	);
 
     // Observe changes to the post-filters
     this.options.postFilters.bind('change', this.render);
@@ -433,14 +437,15 @@ var SearchResultsView = Backbone.View.extend(
 ';
     }
   },
-  render: function() {
-	  
+  render: function(args) {
     this.trigger('render');
 
-    if( 0 == this.collection.length ) {
+    if( 0 == this.collection.length) {
       this.clearOverlays();
-      this.showNoResults();
-      return this;
+	  if (args != "authSuccess") {
+      	this.showNoResults();
+  	  }
+	  return this;
     }
 
     var el = $(this.el);
