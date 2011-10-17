@@ -539,7 +539,7 @@ var SearchButtonView = Backbone.View.extend({
       this.model.set({'state': 'stopButtonState'});
     }, this)).focus();
 
-    $(this.el).bind('abortSearch', function() {
+    this.bind('abortSearch', function() {
       this.xhr.abort();
     });
 
