@@ -25,7 +25,23 @@ var DataProductFile = Backbone.Model.extend( {
 } );
 
 var DataProductFiles = Backbone.Collection.extend( { 
-  model: DataProductFile
+  model: DataProductFile,
+  comparator: function(m) {
+    var ptype = m.get('processingType');
+    var porder = {
+      'L0': 0,
+      'L1': 1,
+      'L1.0': 2,
+      'L1.1': 3,
+      'L1.5': 4,
+      'METADATA': 5,
+      'STOKES': 6,
+      'COMPLEX': 7,
+      'PROJECTED': 8,
+      'KMZ': 9,
+    };
+    return porder[ptype];
+  }
 });
 
 var DataProductFilesView = Backbone.View.extend( {
