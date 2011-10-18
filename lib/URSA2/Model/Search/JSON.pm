@@ -114,6 +114,14 @@ sub doQuery {
       message => Dumper($@)
     );
   }
+  # Numify strings that only contain numbers.
+  foreach my $row (@{$res}) {
+    foreach my $key (keys(%{$row})) {
+      if($row->{$key} && $row->{$key} =~ /^(-)?\d+(\.\d+)?$/) {
+        $row->{$key} +=0;
+      }
+    }
+  }
   return(JSON::XS->new->utf8->encode($res));
 }
 

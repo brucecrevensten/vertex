@@ -7,7 +7,7 @@ var DownloadQueue = Backbone.Collection.extend(
     return _.reduce(
       this.pluck("bytes"),
       function(memo, size) {
-        return Number(memo) + Number(size);
+        return memo + size;
       },
       0
     );
