@@ -202,7 +202,7 @@
 // var NTPT_PGREFTOP = true;
 // var NTPT_NOINITIALTAG = false;
 </script>
-<script language="JavaScript" src="js/ntpagetag.js"></script>
+<script language="JavaScript" src="[% c.uri_for('/static/js/ntpagetag.js') %]"></script>
 <!-- END: EMS Page Tag -->
 <!-- BEGIN: EMS Page Tag No Script -->
 <noscript>
