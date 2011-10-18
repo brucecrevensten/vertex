@@ -30,7 +30,7 @@ var PostFilters = Backbone.Model.extend(
 
     reset: function() {
       for( var i in this.postFilters ) {
-        this.postFilters[i].reset();
+        this.postFilters[i].set(this.postFilters[i].defaults);
       }
     },
     
@@ -257,7 +257,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   initialize: function() {
     _.bindAll(this);
           if(AsfConfig.debug) { this.bind('all', function(e) { console.log('AlosFacetDialog:'+e)} )}
-
+    this.model.bind('change', this.renderHtml, this);
   },
 
   changed: function(e) {
@@ -508,7 +508,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   initialize: function() {
     _.bindAll(this);
           if(AsfConfig.debug) { this.bind('all', function(e) { console.log('RadarsatFacetDialog:'+e)} )}
-
+    this.model.bind('change', this.renderHtml, this);
   },
   changed: function(e) {
     var el = $(this.el);
@@ -719,6 +719,7 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   initialize: function() {
     _.bindAll(this);
     if(AsfConfig.debug) { this.bind('all', function(e) { console.log('LegacyFacetDialog['+this.model.platform+']:'+e)} )}  
+    this.model.bind('change', this.renderHtml, this);
   },
   changed: function(e) {
     var el = $(this.el);
