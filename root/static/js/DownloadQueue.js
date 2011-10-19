@@ -181,7 +181,7 @@ var DownloadQueueView = Backbone.View.extend(
 		} );
 		
 		this.collection.reset();
-		$.cookie(this.q_obj, null);
+    this.alter_cookie();
 	},
  
   // Renders the main download queue
