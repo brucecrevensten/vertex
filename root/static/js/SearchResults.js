@@ -59,7 +59,7 @@ var SearchResults = Backbone.Collection.extend(
       this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
     },
 
-    fetchSearchResults: function() {
+    fetchSearchResults: function(searchURL, searchData) {
 
       this.data = {}; // flush previous result set
 
@@ -67,8 +67,8 @@ var SearchResults = Backbone.Collection.extend(
 	var xhr = $.ajax(
         {
           type: "GET",
-          url: this.url,
-          data: this.searchParameters.toJSON(),
+          url: searchURL,
+          data: searchData,
           processData: true,
           dataType: "jsonp",
           context: this,

@@ -81,7 +81,8 @@ sub search :Path {
     } else {
       # search based on spatial + other criteria
 
-      if( (!defined($r->polygon) && !defined($r->bbox)) && ( !$r->frame && !$r->path)) {
+      if( ( (!defined($r->polygon) && !defined($r->bbox)) && ( !$r->frame && !$r->path) && 
+			 !defined($r->granule_list))) {
         MissingParameter->throw( parameter=>'Spatial constraint (bbox or polygon)' );
       }
 

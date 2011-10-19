@@ -3,9 +3,14 @@ var SearchParameters = Backbone.Model.extend(
     filters: [],
 
     initialize: function() {
-
       this.setupPreFilters();
     },
+
+	update: function() {
+		for (var i=0; i<this.filters.length; i++) {
+			this.filters[i].update();
+		}
+	},
 
 	getGeographicFilter: function() {
 		return this.filters[0];
@@ -15,7 +20,8 @@ var SearchParameters = Backbone.Model.extend(
       this.filters = [
         new GeographicFilter(),
         new DateFilter(),
-        new PlatformFilter()
+        new PlatformFilter(),
+        new GranuleFilter()
       ];
 
       this.setDefaults();
@@ -27,7 +33,7 @@ var SearchParameters = Backbone.Model.extend(
         }, this));
       }
       this.bind("change:filter", function(filter) {
-        this.set( filter.toJSON() );
+		this.setAttr(filter.toJSON());
       });
 
     },
@@ -36,13 +42,38 @@ var SearchParameters = Backbone.Model.extend(
       // initialize default values from the widgets
       for( var i in this.filters ) {
         this.filters[i].reset();
-        this.set( this.filters[i].toJSON() );
+		this.setAttr(this.filters[i].toJSON());
+	
       }
-    },
+   
+ 	},
+
+	setAttr: function(json) {
+		var set=true;
+		for (i in json) {
+			if (i=="bbox") {
+				if (json[i] == null || json[i] == "") {
+					set=false;
+				}
+			}
+		}
+		
+		if (set) {
+			this.set( json );
+		}
+	},
 
     defaults: {
         format:"jsonp"
     },
+
+	stripEmptyJSON: function(json) {
+		for (i in json) {
+			if (json[i] == null || json[i] == "") {
+				delete json;
+			}
+		}
+	}
   }
 );
 
@@ -76,7 +107,16 @@ var SearchParametersView = Backbone.View.extend(
       navigation: true
     });
     return this;
-  }
+  },
+
+  disable: function() {
+		$(this.el).attr('disabled', 'disabled');
+		this.render();
+  },
+  enable: function() {
+		$(this.el).removeAttr('disabled');
+		this.render();
+  } 
 
 });
 
@@ -91,7 +131,7 @@ var BaseWidget = Backbone.View.extend(
   },
   show: function() {
     $(this.el).show();
-  }
+  },
 }
 );
 
@@ -102,6 +142,9 @@ var BaseFilter = Backbone.Model.extend(
   reset: function() {
     this.set( this.defaults, { silent: true } );
     this.trigger('reset');
+  },
+  update: function() {
+	
   }
 }
 );
@@ -129,14 +172,10 @@ var GeographicFilter = BaseFilter.extend(
     }
     this.markers = new Array();
     this.set({ "bbox": ""});
-    if(window.searchMap) {
-      window.searchMap.panTo(new google.maps.LatLng(65,-150));
-      window.searchMap.setZoom(4);
-    }
   },
 
   validate: function(attrs) {
-			if (attrs.bbox != "") {
+		/*	if (attrs.bbox != "") {
 				$("#triggerSearch").empty();
 				$("#triggerSearch").button(
 			      {
@@ -148,7 +187,7 @@ var GeographicFilter = BaseFilter.extend(
 			    }).focus();
 			} else {
 					$("#triggerSearch").attr('disabled', true);
-			}
+			}*/
   }
 
 }
@@ -164,6 +203,16 @@ var GeographicWidget = BaseWidget.extend(
   initialize: function() {
 
     _.bindAll(this, 'changed');
+  },
+
+
+  disable: function() {
+		$('#filter_bbox').attr('disabled', true);
+	//	this.render();
+  },
+  enable: function() {
+		$('#filter_bbox').removeAttr('disabled');
+	//	this.render();
   },
 
   events : {
@@ -450,7 +499,6 @@ var PlatformWidget = BaseWidget.extend(
     },
 
     render: function() {
-
       $(this.el).empty();
       var checked = this.model.toJSON()["platform"];
       for( var key in this.platformTypes ) {
@@ -519,6 +567,87 @@ var PlatformWidget = BaseWidget.extend(
   }
 );
 
+var GranuleFilter = BaseFilter.extend(
+{ 
+	
+  name: "GranuleFilter",
+  reset: function() {
+    this.set({"granule_list":""});
+  },
+  initialize: function() {
+    this.reset();
+  },
+  getWidget: function() { 
+    return new GranuleWidget({model:this});
+  },
+  update: function() {
+	console.log("Granule Filter Update");
+	this.parseGranules($('#filter_granule_list').val());
+  },
+	parseGranules: function(text) {
+		var granules=[];
+		var lines = text.split('\n');
+
+		for (var l=0; l<lines.length; l++) {
+			if (lines[l].match(',') != null) { 			// comma delimited
+				var fields = lines[l].split(',');
+				for (var f=0; f<fields.length; f++) {
+					granules.push(fields[f]);
+				}
+			} else if (lines[l].match('\s+')) {		// whitespace delimited
+				charList=lines[l].split('');
+				var word="";
+				for (var c=0; c<charList.length; c++) {
+					if (charList[c]==' ' || charList[c]=='\t') {	
+						if (word != "") {
+							granules.push(word);
+						}
+						word="";
+						continue;
+					}
+					word += charList[c]; 
+				}
+			
+		    } else {
+				granules.push(lines[l]);
+			}
+	    }
+	
+		// create comma delimited string of granules
+		var granuleString="";
+		for (var i=0; i<granules.length-1; i++) {
+			granuleString += granules[i] + "," 
+		}
+		granuleString += granules[granules.length-1];
+		
+		this.set({"granule_list": granuleString});
+		
+		return {"granule_list": granuleString};
+	}
+});
+
+var GranuleWidget = BaseWidget.extend(
+{
+  title: "Granule List",
+  titleId: "granule_widget_title",
+  tagName: "div",
+  id: "granule_widget",
+  initialize: function() {
+    _.bindAll(this, "render");
+  },
+
+  render: function() {
+
+		$(this.el).html(
+	      _.template('\
+	        <p>Enter a list of granule names. Note: this option will supercede other search parameters.</p>\
+	        <label for="filter_granule_list">Granule list:</label>\
+	        <textarea id="filter_granule_list" name="filter_granule_list"><%= granule_list %></textarea>', this.model.toJSON())
+	    );
+
+	return this;
+  }
+});
 
 var SearchButtonState = Backbone.Model.extend({
 	defaults: {
@@ -538,8 +667,10 @@ var SearchButtonView = Backbone.View.extend({
       },
         label: "Search"
     }).bind("click", jQuery.proxy( function(e) {
+	  SearchApp.searchResults.searchParameters.update();
       SearchApp.searchResultsView.showSearching();
-      this.xhr = SearchApp.searchResults.fetchSearchResults(); 
+
+      this.xhr = SearchApp.searchResults.fetchSearchResults(AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON()); 
       this.model.set({'state': 'stopButtonState'});
     }, this)).focus();
 
