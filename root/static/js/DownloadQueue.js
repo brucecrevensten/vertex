@@ -152,8 +152,9 @@ var DownloadQueueView = Backbone.View.extend(
 		if (cookie != null) {
 			var dp_list = cookie.split('++');
 			_.each(dp_list, jQuery.proxy(function(thing) {
-				this.collection.add(JSON.parse(thing));
+				this.collection.add(JSON.parse(thing), {silent: true});
 			}, this));
+      this.alter_cookie();
 		}
 	
 	},
