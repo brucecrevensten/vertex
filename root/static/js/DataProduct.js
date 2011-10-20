@@ -128,6 +128,9 @@ var DataProduct = Backbone.Model.extend({
         $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('ACQUISITIONDATE').substring(0,10))) : '',
       'FARADAYROTATION': fdr
     });
+    if(this.get('BEAMMODETYPE') == 'POL') {
+      this.set({'BEAMMODETYPE': 'PolSAR'});
+    }
   }
 });
 

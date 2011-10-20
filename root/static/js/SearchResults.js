@@ -119,7 +119,7 @@ var SearchResults = Backbone.Collection.extend(
       };
       var beamvals = {
         'UAVSAR':     {
-          'POL':  {
+          'PolSAR':  {
             'NA': 100000000
           },
         },
