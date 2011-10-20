@@ -16,6 +16,10 @@ var SearchParameters = Backbone.Model.extend(
 		return this.filters[0];
 	},	
 	
+	getGranuleFilter: function() {
+		return this.filters[3];
+	},
+	
     setupPreFilters: function() {
       this.filters = [
         new GeographicFilter(),
@@ -107,15 +111,6 @@ var SearchParametersView = Backbone.View.extend(
       navigation: true
     });
     return this;
-  },
-
-  disable: function() {
-		$(this.el).attr('disabled', 'disabled');
-		this.render();
-  },
-  enable: function() {
-		$(this.el).removeAttr('disabled');
-		this.render();
   } 
 
 });
@@ -152,7 +147,6 @@ var BaseFilter = Backbone.Model.extend(
 var GeographicFilter = BaseFilter.extend(
 {
   initialize: function() {
-
   },
   name: "GeographicFilter",
 
@@ -162,7 +156,7 @@ var GeographicFilter = BaseFilter.extend(
     bbox: "",
   },
   getWidget: function() {
-    return new GeographicWidget({model:this});
+		return new GeographicWidget({model:this});
   },
 
   reset: function() {
@@ -175,6 +169,7 @@ var GeographicFilter = BaseFilter.extend(
   },
 
   validate: function(attrs) {
+		this.trigger('update');
 		/*	if (attrs.bbox != "") {
 				$("#triggerSearch").empty();
 				$("#triggerSearch").button(
@@ -203,16 +198,6 @@ var GeographicWidget = BaseWidget.extend(
   initialize: function() {
 
     _.bindAll(this, 'changed');
-  },
-
-
-  disable: function() {
-		$('#filter_bbox').attr('disabled', true);
-	//	this.render();
-  },
-  enable: function() {
-		$('#filter_bbox').removeAttr('disabled');
-	//	this.render();
   },
 
   events : {
@@ -260,8 +245,13 @@ var GeographicWidget = BaseWidget.extend(
 <p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South<br />(or use the map)<br />Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
-', this.model.toJSON())
-    );
+', this.model.toJSON()));/*.find('input').bind('input',jQuery.proxy(function() {	
+				this.model.trigger('update');	
+				},this));*/
+				
+	$(this.el).find('input').bind('input',jQuery.proxy(function() {	
+			this.model.trigger('update');	
+		},this));
     this.renderMap();
 
     return this;
@@ -581,7 +571,6 @@ var GranuleFilter = BaseFilter.extend(
     return new GranuleWidget({model:this});
   },
   update: function() {
-	console.log("Granule Filter Update");
 	this.parseGranules($('#filter_granule_list').val());
   },
 	parseGranules: function(text) {
@@ -632,18 +621,31 @@ var GranuleWidget = BaseWidget.extend(
   titleId: "granule_widget_title",
   tagName: "div",
   id: "granule_widget",
+
   initialize: function() {
-    _.bindAll(this, "render");
+    _.bindAll(this, "changed");
+	//this.render();
+	
   },
 
-  render: function() {
+  events : {
+    "change input" : "changed"
+  },
 
-		$(this.el).html(
+  changed: function(evt) {
+	},
+
+
+  render: function() {
+		var v = $(this.el).html(
 	      _.template('\
 	        <p>Enter a list of granule names. Note: this option will supercede other search parameters.</p>\
 	        <label for="filter_granule_list">Granule list:</label>\
-	        <textarea id="filter_granule_list" name="filter_granule_list"><%= granule_list %></textarea>', this.model.toJSON())
-	    );
+	        <textarea cols=35 rows=10 style="resize: none;" id="filter_granule_list" name="filter_granule_list"><%= granule_list %></textarea>', this.model.toJSON())
+	    ).find('textarea').bind('input',jQuery.proxy(function() {	
+				this.model.trigger('update');	
+		
+		},this));
 
 	return this;
   }
@@ -658,38 +660,72 @@ var SearchButtonState = Backbone.Model.extend({
 var SearchButtonView = Backbone.View.extend({
   xhr: null,
   initialize: function() {
-    this.el2 = this.options.el2;
-    this.model.bind('change', this.render, this);
+		_.bindAll(this);
+		
+   	 	this.el2 = this.options.el2;
+		this.geographicFilter = this.options.geographicFilter;
+		this.granuleFilter = this.options.granuleFilter;
+		
+	    this.model.bind('change', this.render, this);
+	
+		this.geographicFilter.bind('update', this.toggleButton);
+		this.granuleFilter.bind('update', this.toggleButton);
+		
+	    $(this.el).button({
+	      icons: {
+	        primary: "ui-icon-search"
+	      },
+	        label: "Search"
+	    }).bind("click", jQuery.proxy( function(e) {
+		  SearchApp.searchResults.searchParameters.update();
+	      SearchApp.searchResultsView.showSearching();
 
-    $(this.el).button({
-      icons: {
-        primary: "ui-icon-search"
-      },
-        label: "Search"
-    }).bind("click", jQuery.proxy( function(e) {
-	  SearchApp.searchResults.searchParameters.update();
-      SearchApp.searchResultsView.showSearching();
+	      this.xhr = SearchApp.searchResults.fetchSearchResults(AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON()); 
+	      this.model.set({'state': 'stopButtonState'});
+	    }, this)).focus();
 
-      this.xhr = SearchApp.searchResults.fetchSearchResults(AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON()); 
-      this.model.set({'state': 'stopButtonState'});
-    }, this)).focus();
+	    this.bind('abortSearch', function() {
+	      this.xhr.abort();
+	    });
 
-    this.bind('abortSearch', function() {
-      this.xhr.abort();
-    });
+	    $(this.el2).button({
+	      icons: {
+	        primary: "ui-icon-refresh"},
+	        label: "Stop Search"
+	    }).bind("click", jQuery.proxy( function(e) {
+	      this.trigger('abortSearch');
+	      this.model.set({'state': 'searchButtonState'});
+	      SearchApp.searchResultsView.showBeforeSearchMessage();
+	    }, this));
 
-    $(this.el2).button({
-      icons: {
-        primary: "ui-icon-refresh"},
-        label: "Stop Search"
-    }).bind("click", jQuery.proxy( function(e) {
-      this.trigger('abortSearch');
-      this.model.set({'state': 'searchButtonState'});
-      SearchApp.searchResultsView.showBeforeSearchMessage();
-    }, this));
-
-    $(this.el2).hide();
+	    $(this.el2).hide();
   },
+
+	toggleButton: function() {
+		
+		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() == "") ||
+		($('#filter_bbox').val() == "" && $('#filter_granule_list').val() != "")    ) {
+				$("#triggerSearch").empty();
+				$("#triggerSearch").button(
+			      {
+			        icons: {
+			          primary: "ui-icon-search"
+			        },
+			        label: "Search",
+					disabled: false
+			    });
+			} else {
+					$("#triggerSearch").empty();
+					$("#triggerSearch").button(
+				      {
+				        icons: {
+				          primary: "ui-icon-search"
+				        },
+				        label: "Search",
+						disabled: true
+				    }).focus();
+			}
+	},
 
   render: function() {
     if (this.model.get('state') == 'searchButtonState') {

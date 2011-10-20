@@ -131,13 +131,18 @@ window.SearchAppView = Backbone.View.extend({
     });
 
 
-	this.searchButtonState = new SearchButtonState(); // defaults to searchState as opposed to stopSearchSta
+	this.searchButtonState = new SearchButtonState(); // defaults to searchState as opposed to stopSearchState
     this.searchButtonView = new SearchButtonView( 
 				{ 
 					"el": $("#triggerSearch"), 
 					"el2": $("#stopSearch"),
-					"model": this.searchButtonState
+					"model": this.searchButtonState,
+					"geographicFilter": this.searchParameters.getGeographicFilter(),
+					"granuleFilter": this.searchParameters.getGranuleFilter()
 				} );
+	this.geoFilter = this.searchParameters.getGeographicFilter();
+	
+	this.searchButtonView.toggleButton();
     this.searchResults.bind('refresh', jQuery.proxy(function(e) {
       this.searchButtonView.model.set({'state': 'searchButtonState'});
     }, this));
