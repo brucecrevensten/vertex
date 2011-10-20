@@ -74,6 +74,8 @@ var SearchResults = Backbone.Collection.extend(
           context: this,
           success: function(data, textStatus, jqXHR) {
             this.data = data;
+
+            this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
             // Fetch distinct platforms that were found
