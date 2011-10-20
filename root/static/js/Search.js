@@ -166,6 +166,10 @@ var GeographicFilter = BaseFilter.extend(
     }
     this.markers = new Array();
     this.set({ "bbox": ""});
+    if(window.searchMap) {
+      window.searchMap.panTo(new google.maps.LatLng(65,-150));
+      window.searchMap.setZoom(4);
+    }
   },
 
   validate: function(attrs) {
