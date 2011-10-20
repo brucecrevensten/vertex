@@ -120,7 +120,7 @@ var DataProduct = Backbone.Model.extend({
     this.files = new DataProductFiles();
     var fdr = this.get('FARADAYROTATION');
     if(_.isNumber(fdr)) {
-      fdr.toFixed(2);
+      fdr = fdr.toFixed(2);
     }
     this.set({
       'ASCENDINGDESCENDING': AsfUtility.ucfirst( this.get('ASCENDINGDESCENDING')),
