@@ -92,6 +92,10 @@
         <button id="triggerSearch"></button>
 		<button id="stopSearch"></button>
 		<button id="resetSearch"></button>
+		<div>
+			<br />
+			<div id="searchMessage"></div> 
+		<div>
       </div>
     </div>
 

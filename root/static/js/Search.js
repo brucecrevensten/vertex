@@ -729,6 +729,14 @@ var SearchButtonView = Backbone.View.extend({
 						disabled: true
 				    }).focus();
 			}
+			
+		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() != "")) {
+			$('#searchMessage').empty();
+			$('#searchMessage').append('<font color = "red"><p><b>The Geographic Filter cannot be used in conjunction with the Granule Filter.<b></p></font>');
+			$('#searchMessage').append('<font color = "red"><p><b>Please choose only one of these filters at a time.<b></p></font>');
+		} else {
+				$('#searchMessage').empty();
+		}	
 	},
 
   render: function() {
