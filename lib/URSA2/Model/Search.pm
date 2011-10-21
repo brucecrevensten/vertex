@@ -308,7 +308,7 @@ sub buildSpatialQuery {
 sub buildListQuery {
   my ($self, $field, $list) = @_;
   if ( defined($list) && scalar @{$list} ) {
-    return ' AND '.$field.' IN ('.join( ',', map { $self->dbQuote($_) } @{$list} ).') ';
+    return ' AND UPPER('.$field.") IN (".join( ',', map { $self->dbQuote(uc($_)) } @{$list} ).') ';
   }
   return '';
 }
