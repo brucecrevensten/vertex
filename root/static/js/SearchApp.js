@@ -79,6 +79,9 @@ window.SearchAppView = Backbone.View.extend({
     }
     );
     this.downloadQueueSummaryView.render();
+    this.user.bind("authSuccess", this.downloadQueueSummaryView.render);
+    this.user.bind("authError", this.downloadQueueSummaryView.render);
+    this.user.bind("authRefresh", this.downloadQueueSummaryView.render);
     
     //TODO:move this
     $("#queue_summary").bind("click", this.downloadQueueView.render );
