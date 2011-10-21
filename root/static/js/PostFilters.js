@@ -2,7 +2,6 @@ var PostFilters = Backbone.Model.extend(
   {
     postFilters: [],
     initialize: function() {
-      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('PostFilters:'+e)} )}
       this.trigger('initialize');
       this.postFilters = [
         new AlosFacet(),
@@ -49,7 +48,6 @@ var PostFiltersView = Backbone.View.extend(
   widgets: [],
   initialize: function() {
     _.bindAll(this, 'render');
-          if(AsfConfig.debug) { this.bind('all', function(e) { console.log('PostFiltersView:'+e)} )}
     this.setWidgets();
 
     this.options.searchResults.bind('refresh', this.render);
@@ -193,7 +191,6 @@ var AlosFacet = PlatformFacet.extend(
       ]
     },
     initialize: function() {
-            if(AsfConfig.debug) { this.bind('all', function(e) { console.log('AlosFacet:'+e)} )}
 
     },
     getWidget: function() {
@@ -256,7 +253,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
   initialize: function() {
     _.bindAll(this);
-          if(AsfConfig.debug) { this.bind('all', function(e) { console.log('AlosFacetDialog:'+e)} )}
     this.model.bind('change', this.renderHtml, this);
   },
 
@@ -377,7 +373,6 @@ var AlosFacetButton = PlatformFacetView.extend( {
   tagName: "button",
   initialize: function() {
     _.bindAll(this);
-      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('AlosFacetButton:'+e)} )}
       this.trigger('initialize');
     this.dialog = new AlosFacetDialog( { model: this.model } );
   },
@@ -397,7 +392,6 @@ var AlosFacetButton = PlatformFacetView.extend( {
 var RadarsatFacet = PlatformFacet.extend(
   {
     initialize: function() {
-      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('RadarsatFacet:'+e)} )}
       
     },
     defaults: {
@@ -484,7 +478,6 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
   initialize: function() {
     _.bindAll(this);
     this.dialog = new RadarsatFacetDialog( { model: this.model } );
-    if(AsfConfig.debug) { this.bind('all', function(e) { console.log('RadarsatFacetButton:'+e)} )}
   },
   render: function() {
     $(this.el).button(
@@ -507,7 +500,6 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     _.bindAll(this);
-          if(AsfConfig.debug) { this.bind('all', function(e) { console.log('RadarsatFacetDialog:'+e)} )}
     this.model.bind('change', this.renderHtml, this);
   },
   changed: function(e) {
@@ -646,8 +638,6 @@ var LegacyFacet = PlatformFacet.extend(
     },
     initialize: function(d) {
       this.platform = d.platform;
-            if(AsfConfig.debug) { this.bind('all', function(e) { console.log('LegacyFacet['+this.platform+']:'+e)} )}
-
       this.offset = d.offset;
     },
     getWidget: function() {
@@ -695,7 +685,6 @@ var LegacyFacetButton = PlatformFacetView.extend( {
     this.name = this.model.platform;
     this.dialog = new LegacyFacetDialog( { model: this.model } );
     _.bindAll(this);
-    if(AsfConfig.debug) { this.bind('all', function(e) { console.log('LegacyFacetButton['+this.name+']:'+e)} )}
   },
   render: function() {
     $(this.el).button(
@@ -718,7 +707,6 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   },
   initialize: function() {
     _.bindAll(this);
-    if(AsfConfig.debug) { this.bind('all', function(e) { console.log('LegacyFacetDialog['+this.model.platform+']:'+e)} )}  
     this.model.bind('change', this.renderHtml, this);
   },
   changed: function(e) {

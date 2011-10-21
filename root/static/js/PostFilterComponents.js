@@ -1,6 +1,5 @@
 var PathFrameWidgetComponent = BaseWidget.extend({
   initialize: function() {
-          if(AsfConfig.debug) { this.bind('all', function(e) { console.log('PathFrameWidgetComponent:'+e)} )}
 
   },
   events: {
@@ -45,7 +44,6 @@ var DirectionWidgetComponent = BaseWidget.extend(
       "DESCENDING":"Descending" // key must match value returned by API
     },
     initalize: function() {
-                if(AsfConfig.debug) { this.bind('all', function(e) { console.log('DirectionWidgetComponent:'+e)} )}
 
     },
     events : {

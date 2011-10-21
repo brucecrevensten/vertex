@@ -645,8 +645,11 @@ var SearchButtonView = Backbone.View.extend({
 	      },
 	        label: "Search"
 	    }).bind("click", jQuery.proxy( function(e) {
-		  SearchApp.searchResults.searchParameters.update();
+		    
+        // Reset certain state aspects when triggering a new search
+        SearchApp.searchResults.searchParameters.update();
 	      SearchApp.searchResultsView.showSearching();
+        SearchApp.postFilters.reset(); // flush any filters the user had set up previously
 
 	      this.xhr = SearchApp.searchResults.fetchSearchResults(AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON()); 
 	      this.model.set({'state': 'stopButtonState'});

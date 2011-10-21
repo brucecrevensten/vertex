@@ -181,15 +181,13 @@ var ActiveSearchFiltersView = Backbone.View.extend(
 {
   el: '#active-filters-list',
   initialize: function() {
+
     _.bindAll(this);
     this.options.searchParameters.bind('change', this.render);
     this.options.postFilters.bind('change', this.render);
-      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('ActiveSearchFiltersView:'+e)} )}
-
 
   },
   render: function() {
-    
     $('#active-filters').show();
     $(this.el).empty();
     var p = this.options.searchParameters.get('platform');
@@ -214,59 +212,74 @@ var ActiveSearchFiltersView = Backbone.View.extend(
 
     var postFilterText;
     if( true != _.isUndefined( this.options.postFilters ) ) {
-      _.each( this.options.postFilters.toJSON(), function(e, i, l) {
+      
+      // We want to iterate over the list of post filters, hence
+      // the unfortunate syntax below
+      _.each( this.options.postFilters.postFilters, function(e, i, l) {
+
+        var f = e.toJSON();
 
         var postFilterItems = [];
-        if( e.direction && 'any' != e.direction ) {
-          postFilterItems.push( AsfUtility.ucfirst( e.direction ) );
+        if( f.direction && 'any' != f.direction ) {
+          postFilterItems.push( AsfUtility.ucfirst( f.direction ) );
         }
-        if( e.path ) {
+        if( f.path ) {
           // ALOS = special case
           if( 'ALOS' == i ) {
-            postFilterItems.push( 'Path(s) ' + e.path);
+            postFilterItems.push( 'Path(s) ' + f.path);
           } else {
-            postFilterItems.push( 'Orbit(s) ' + e.path);
+            postFilterItems.push( 'Orbit(s) ' + f.path);
           }
         }
-        if( e.frame ) {
-          postFilterItems.push('Frame(s) '+e.frame)  
+        if( f.frame ) {
+          postFilterItems.push('Frame(s) '+f.frame)  
         }
-        if( e.beamoffnadir ) {
+
+        // ALOS case
+        if( f.beamoffnadir ) {
           var beamsOffNadirs = [];
-
-          if( _.isEqual( ['empty'], e.beamoffnadir )) {
-            // this doesn't get painted in the DOM, but doesn't hurt to note this case
-            beamsOffNadirs.push( '(No beam modes match)' );
+          if ( _.isEqual( f.beamoffnadir, e.defaults.beamoffnadir ) ) {
+            // this either means that _all_ beam modes are selected, so don't paint anything
           } else {
-            _.each( e.beamoffnadir, function( e, i, l ) {
-
-              if( 'WB1' != e ) {
-                beamsOffNadirs.push(e.substr(0, 3) + ' (' + e.substr(3) + '&deg;)');
-              } else {
-                beamsOffNadirs.push('WB1');
-              }
-            });
-          }
-          postFilterItems.push(beamsOffNadirs.join(' / '));
-          
+            
+            if( _.isEqual( ['empty'], f.beamoffnadir ) ) {
+              // No beam modes selected
+              beamsOffNadirs.push('(No beam modes selected)');
+            } else { 
+              _.each( f.beamoffnadir, function( e, i, l ) {
+                if( 'WB1' == e ) {
+                  beamsOffNadirs.push('WB1');
+                } else if( 'WB2' == e ) {
+                  beamsOffNadirs.push('WB1');                
+                } else {
+                  beamsOffNadirs.push(e.substr(0, 3) + ' (' + e.substr(3) + '&deg;)');
+                }
+              });
+            postFilterItems.push(beamsOffNadirs.join(' / '));
+            }
+          }          
         }
-        if( e.beam ) {
+
+        // RADARSAT case
+        if( f.beam ) {
           var beams = [];
-
-          if( _.isEqual( ['empty'], e.beam )) {
-            // this doesn't get painted in the DOM, but doesn't hurt to note this case
-            beams.push( '(No beam modes match)' );
+          if( _.isEqual( f.beam, e.defaults.beam) ) {
+            // All beam modes selected, don't display anything
           } else {
-            _.each( e.beam, function( e, i, l ) {
-              beams.push(e.substring(1, 3));
-            });
+            if( _.isEqual( ['empty'], e.beam )) {
+              beams.push( '(No beam modes selected)' );            
+            } else {
+              _.each( f.beam, function( e, i, l ) {
+                beams.push(e.substring(1, 3));
+              });
+            }
+            postFilterItems.push(beams.join(' / '));
           }
-          postFilterItems.push(beams.join(' / '));
         }
 
-        if( true != _.isEmpty( postFilterItems) ) {
+        if( true != _.isEmpty( postFilterItems ) ) {
           ul.append(
-            _.template('<li><%= postFilters %></li>', { 'postFilters': i + ': '+postFilterItems.join(', ') } )
+            _.template('<li><%= postFilters %></li>', { 'postFilters': e.platform + ': '+postFilterItems.join(', ') } )
           );
         }
 

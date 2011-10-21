@@ -8,7 +8,6 @@ var SearchResults = Backbone.Collection.extend(
     error: '',
 
     initialize: function() {
-      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('SearchResults:'+e)} )}
 
     },
 
@@ -259,9 +258,6 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
     this.collection.bind('clear_results', this.clear_results);
-    
-    if(AsfConfig.debug) { this.bind('all', function(e) { console.log('SearchResultsProcessingWidget:'+e)} )}
-
   },
   clear_results: function() {
 		$(this.el).empty();
@@ -329,8 +325,6 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
-
-      if(AsfConfig.debug) { this.bind('all', function(e) { console.log('SearchResultsView:'+e)} )}
 
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
