@@ -579,43 +579,9 @@ var GranuleFilter = BaseFilter.extend(
   },
 	parseGranules: function(text) {
 		var granules=[];
-		var lines = text.split('\n');
-
-		for (var l=0; l<lines.length; l++) {
-			if (lines[l].match(',') != null) { 			// comma delimited
-				var fields = lines[l].split(',');
-				for (var f=0; f<fields.length; f++) {
-					granules.push(fields[f]);
-				}
-			} else if (lines[l].match('\s+')) {		// whitespace delimited
-				charList=lines[l].split('');
-				var word="";
-				for (var c=0; c<charList.length; c++) {
-					if (charList[c]==' ' || charList[c]=='\t') {	
-						if (word != "") {
-							granules.push(word);
-						}
-						word="";
-						continue;
-					}
-					word += charList[c]; 
-				}
-			
-		    } else {
-				granules.push(lines[l]);
-			}
-	    }
-	
-		// create comma delimited string of granules
-		var granuleString="";
-		for (var i=0; i<granules.length-1; i++) {
-			granuleString += granules[i] + "," 
-		}
-		granuleString += granules[granules.length-1];
-		
+		var granules = text.split(/\n+|,|\s+|\t+/);
+    var granuleString = granules.join(',');
 		this.set({"granule_list": granuleString});
-		
-		return {"granule_list": granuleString};
 	}
 });
 
@@ -628,8 +594,6 @@ var GranuleWidget = BaseWidget.extend(
 
   initialize: function() {
     _.bindAll(this, "changed");
-	//this.render();
-	
   },
 
   events : {
