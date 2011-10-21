@@ -51,7 +51,7 @@ sub search :Path {
 
   $c->stats->profile('preparing to perform search...');
 
-  if( $c->config->{static_shunt} == 1 ) {
+  if( $c->config->{static_shunt}  ) {
     use File::Slurp;
     my $response = read_file('/tmp/static.jsonp');
     $c->response->body( $c->request->param('callback').'('.$response.')' );
