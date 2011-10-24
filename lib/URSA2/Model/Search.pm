@@ -1,4 +1,4 @@
-package URSA2::Model::Search;
+ Was tpackage URSA2::Model::Search;
 
 use strict;
 use warnings;
@@ -308,7 +308,11 @@ sub buildSpatialQuery {
 sub buildListQuery {
   my ($self, $field, $list) = @_;
   if ( defined($list) && scalar @{$list} ) {
-    return ' AND UPPER('.$field.") IN (".join( ',', map { $self->dbQuote(uc($_)) } @{$list} ).') ';
+    if($field =~ /^granulename$/i) {
+      return " AND UPPER($field) IN (".join( ',', map { $self->dbQuote(uc($_)) } @{$list} ).') ';
+    } else {
+      return " AND $field IN (".join( ',', map { $self->dbQuote($_) } @{$list} ).') ';
+    }
   }
   return '';
 }
