@@ -167,8 +167,8 @@ var GeographicFilter = BaseFilter.extend(
     this.markers = new Array();
     this.set({ "bbox": ""});
     if(window.searchMap) {
-      window.searchMap.panTo(new google.maps.LatLng(65,-150));
-      window.searchMap.setZoom(4);
+      window.searchMap.panTo(new google.maps.LatLng(40,-100));
+      window.searchMap.setZoom(2);
     }
   },
 
@@ -392,7 +392,7 @@ var DateFilter = BaseFilter.extend(
 
   reset: function() {
     var today = new Date();
-    this.set({"start":this.format_date(this.get_date_N_years_ago(1))});
+    this.set({"start":this.format_date(this.get_date_N_years_ago(2))});
     this.set({"end":this.format_date(today)});
   },
 	
