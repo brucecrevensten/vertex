@@ -1,4 +1,4 @@
- Was tpackage URSA2::Model::Search;
+package URSA2::Model::Search;
 
 use strict;
 use warnings;
