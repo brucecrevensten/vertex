@@ -45,8 +45,10 @@ sub recordFeedback {
   }
   
   # Set up the various fields for the email version of the feedback
-  my $to_aref = ['asf-vertex@googlegroups.com'];                                                                        #TODO: move to config
-  my $subject = 'Web Feedback from ' . $args->{'name'} . ' (' . ($args->{'userid'} or 'guest') . ')';
+  my $to_aref = [URSA2->config->{'feedback_email'}];
+  my $stamp = `date -u '+%D'`;
+  chomp $stamp;
+  my $subject = 'Web Feedback from ' . $args->{'name'} . ' (' . ($args->{'userid'} or 'guest') . ') - ' . $stamp;
   my $msg_aref = [$args->{'comment'}];
   my $mail_from = $args->{'email'};
   my $reply_to = $args->{'email'};
@@ -62,7 +64,7 @@ sub recordFeedback {
   push(@head, "X-Mailer: ASFMail\n");
   
   # Connect to SMTP server
-  my $mail_server = 'smtp.asf.alaska.edu';                                                                          #TODO: move to config
+  my $mail_server = URSA2->config->{'smtp_server'};
   my $mailer = Net::SMTP->new($mail_server, Timeout => 60)
     or (URSA2->log->debug("$0: cannot open server '$mail_server' for writing: $!\n") and return);
 

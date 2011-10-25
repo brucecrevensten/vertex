@@ -556,9 +556,6 @@ input.login_fields {
 
 #feedbackForm a {
   color: #00ebf5;
-}
-
-#feedbackForm a:hover {
   text-decoration: underline;
 }
 

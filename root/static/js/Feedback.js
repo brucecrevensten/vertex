@@ -35,7 +35,7 @@ var FeedbackForm = Backbone.View.extend({
 		$(this.el).html(
 '<form>\
 <p>We welcome your comments!  If you need direct support or help, please contact ASF User Support at uso@asf.alaska.edu or at (907) 474-6166.</p><br />\
-<p class="alert">This form will send your comment to our publicly-accessible support group mailing list, which can be found at <a href="http://groups.google.com/group/asf-vertex">http://groups.google.com/group/asf-vertex</a></p>\
+<p class="alert">Submitting this form will send your comments to our Vertex support group mailing list and discussion forum which can be accessed directly at <a href="http://groups.google.com/group/asf-vertex">http://groups.google.com/group/asf-vertex</a></p>\
 <div>\
 <label for="fc_name">Name (Required)</label><input id="fc_name" class="required" size="30" name="name" />\
 </div>\
