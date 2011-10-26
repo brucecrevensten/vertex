@@ -5,8 +5,14 @@ var Feedback = Backbone.Model.extend({
 		'email':'unknown'
 	},
 	validate: function(attrs) {
+                if( true == _.isUndefined( attrs.name ) || 0 == attrs.name ) {
+			return { 'type':'local', 'message':'"Name" field is required to submit this form.'};
+                }
+                if( true == _.isUndefined( attrs.email ) || 0 == attrs.email ) {
+			return { 'type':'local', 'message':'"Email" field is required to submit this form.'}
+                }
 		if( true == _.isUndefined( attrs.comment ) || 0 == attrs.comment ) {
-			return { 'type':'local', 'message':'Comment field is required to submit this form.'};
+			return { 'type':'local', 'message':'"Comment" field is required to submit this form.'};
 		}
 	}
 });
@@ -95,7 +101,7 @@ Your feedback has been recorded.\
 									{ 
 										// Error local (validation) or remote (server trouble?)
 										if( true != _.isUndefined( response.type ) && 'local' == response.type ) {
-											alert('"Comments" field is required to submit feedback.');
+											alert(response.message);
 										} else {
 											$(this.el).html(
 	'<div class="ui-widget">\

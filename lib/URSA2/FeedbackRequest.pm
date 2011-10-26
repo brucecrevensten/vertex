@@ -51,6 +51,8 @@ sub decode {
 sub validate {
   my $self = shift;
   URSA2::Validators->required($self->{comment});
+  URSA2::Validators->required($self->{name});
+  URSA2::Validators->required($self->{email});
 }
 
 sub factory {
