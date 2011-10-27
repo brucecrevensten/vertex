@@ -48,11 +48,6 @@ var SearchResults = Backbone.Collection.extend(
           filename: data[i].FILENAME
         });
       }
-
-	console.log("Search Results Size: " + this.size());
-	this.each(function( model, i, l ) {   
-		console.log(model);
-	});
     },
 
     filter: function() {
@@ -63,24 +58,22 @@ var SearchResults = Backbone.Collection.extend(
       this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
     },
 
-    fetchSearchResults: function(searchURL, searchData) {
+    fetchSearchResults: function(searchURL, searchData, callback) {
 
       this.data = {}; // flush previous result set
 
      // var results = 
 	var xhr = $.ajax(
         {
-          type: "POST",
+          type: "GET",
           url: searchURL,
           data: searchData,
           processData: true,
-          dataType: "jsonp",
+      //    dataType: "jsonp",
           context: this,
           success: function(data, textStatus, jqXHR) {
             this.data = data;
-
-			console.log("Ajax Success");
-
+			
             this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
@@ -90,7 +83,9 @@ var SearchResults = Backbone.Collection.extend(
       
             this.build(this.data);
             this.trigger('refresh');
-
+			if (callback != null) {
+				callback();
+			}
         },
         error: function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
