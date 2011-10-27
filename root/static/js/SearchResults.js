@@ -65,7 +65,7 @@ var SearchResults = Backbone.Collection.extend(
      // var results = 
 	var xhr = $.ajax(
         {
-          type: "GET",
+          type: "POST",
           url: searchURL,
           data: searchData,
           processData: true,

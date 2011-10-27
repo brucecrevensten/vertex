@@ -134,7 +134,7 @@ it("Should create a datatable and load it with fixture data via ajax request to 
 	var fakeUrl = "/fakeUrl";
     server = sinon.fakeServer.create();
 
-	server.respondWith("GET", fakeUrl,
+	server.respondWith("POST", fakeUrl,
                        [200, { "Content-Type": "application/json" },
                         JSON.stringify(Fixtures2.arrayJSON50)]);
 
