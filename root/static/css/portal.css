@@ -550,6 +550,15 @@ input.login_fields {
   line-height: 120% !important;
 }
 
+#feedbackForm p.alert {
+  color: #00ebf5;
+}
+
+#feedbackForm a {
+  color: #00ebf5;
+  text-decoration: underline;
+}
+
 #feedbackForm label {
   display: block;
 }
