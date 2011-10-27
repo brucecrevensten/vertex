@@ -31,7 +31,7 @@ var SearchResults = Backbone.Collection.extend(
         }
 
         // Create the DataProductFile, add to the collection in the DataProduct
-        dp.files.add( {
+        dp.files.add( { 
           thumbnail: data[i].THUMBNAIL,
           productId: data[i].GRANULENAME,
           id: data[i].ID,
@@ -48,6 +48,11 @@ var SearchResults = Backbone.Collection.extend(
           filename: data[i].FILENAME
         });
       }
+
+	console.log("Search Results Size: " + this.size());
+	this.each(function( model, i, l ) {   
+		console.log(model);
+	});
     },
 
     filter: function() {
@@ -73,6 +78,8 @@ var SearchResults = Backbone.Collection.extend(
           context: this,
           success: function(data, textStatus, jqXHR) {
             this.data = data;
+
+			console.log("Ajax Success");
 
             this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
@@ -435,7 +442,8 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function(args) {
     this.trigger('render');
-
+	console.log("Search Results View Render");
+	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
       this.clearOverlays();
 	  if (args != "authSuccess") {
