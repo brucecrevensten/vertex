@@ -132,6 +132,8 @@ window.SearchAppView = Backbone.View.extend({
 
     });
 
+  
+
 
 	this.searchButtonState = new SearchButtonState(); // defaults to searchState as opposed to stopSearchState
     this.searchButtonView = new SearchButtonView( 

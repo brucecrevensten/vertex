@@ -59,7 +59,7 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     fetchSearchResults: function(searchURL, searchData, callback) {
-      console.log("fetchSearchResults");
+      
       this.data = {}; // flush previous result set
 
      // var results = 
@@ -72,9 +72,9 @@ var SearchResults = Backbone.Collection.extend(
           dataType: "json",
           context: this,
           success: function(data, textStatus, jqXHR) {
-            console.log("Success");
+            
             this.data = data;
-			     console.log(data);
+			     
             this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
@@ -337,7 +337,7 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
 
-    this.options.downloadQueue.bind('queue:remove', this.render);
+    //this.options.downloadQueue.bind('queue:remove', this.render);
    
  	this.model.bind('authSuccess', jQuery.proxy(function() {
 		this.render('authSuccess');
@@ -441,6 +441,15 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function(args) {
     this.trigger('render');
+    console.log("RENDER");
+
+
+
+   /* if (this.dataTable==null) {
+      console.log("datatable is null");
+    } else {
+      console.log("not null");
+    }*/
 
 	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
@@ -451,12 +460,23 @@ var SearchResultsView = Backbone.View.extend(
 	  return this;
     }
 
-    var el = $(this.el);
-    var parent = el.parent();
-    el.detach();
-    el.empty();
-    
+   // $('#searchResults_wrapper').empty();
+    //$('#searchResults_wrapper').remove();
+    $('#con').empty(); 
+   // $('#con').html('<table id="searchResults" width="450" style="margin:20px 0px 20px 0px;"></table>');
+    var el = $('<table id="searchResults" width="450" style="margin:20px 0px 20px 0px;"></table>');
+  
+    //var parent = $('#rightColumn');//el.parent();
+   // el.detach();
+
+
+    //$('#searchResults_wrapper').detach();
+    //$('#searchResults_wrapper').empty();
+
+   // el.empty();
+   
    // var li = '';
+  
     var ur = SearchApp.user.getWidgetRenderer();
     /***** Implementing Data table ******/
    //  var ur = this.user.getWidgetRenderer();
@@ -465,7 +485,7 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.each( function( model, i, l ) {   
           var d = model.toJSON();
         
-         li = '<tr><td width="370" class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
+         li = '<tr><td class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
           + ur.srThumbnail( model )
           + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
           + '<div class="productRowTools">'
@@ -483,13 +503,47 @@ var SearchResultsView = Backbone.View.extend(
       li_2 += li;
       }, this);
 
+      var tableHtml =
+         //   '<table id="searchResultsTable" style="margin:20px 0px 20px 0px;">'+
+              '<thead>'+
+                '<tr>'+
+                  '<th>sdfsdf</th>'+
+                '</tr>'+
+              '</thead>'+
+              '<tbody>'+
+                li_2 +
+              '</tbody>';
+           // '</table>'+'</div>'; 
+        el.html(tableHtml);
 
+          $('#con').append(el);
     
     //  console.log($('#tableBody'));
    // $('#searchResults').find('tbody').html(li_2);
 
       // Generate the table and populate it html generated from data products
-    var tableHtml =
+ 
+
+   /*if( $('#searchResults_wrapper').length > 0) {
+      console.log("searchResults Wrapper is not null");
+      console.log($('#searchResults_wrapper'));
+      console.log("IN HERERERE")
+      console.log(el);
+      $('#searchResults_wrapper').detach();
+      //$('#searchResults_wrapper').remove();
+      //
+        
+
+   console.log("THIS IS MY ELMENT");
+   console.log(el);
+
+    
+    console.log(el);
+    parent.append(el);
+
+   } else {
+     console.log("searchResults Wrapper is null");
+        var tableHtml =
          //   '<table id="searchResultsTable" style="margin:20px 0px 20px 0px;">'+
               '<thead>'+
                 '<tr>'+
@@ -498,11 +552,19 @@ var SearchResultsView = Backbone.View.extend(
               '</thead>'+
               '<tbody>'+
                 li_2 +
-              '</tbody>'+
+              '</tbody>';
            // '</table>'+'</div>'; 
 
-    el.html(tableHtml);
-    parent.append(el);
+         el.html(tableHtml);
+       
+       
+   }*/
+    // parent.append(el);
+  //  console.log($('#searchResults_wrapper'));
+
+    
+
+   // console.log($(el));
   
     // Generate the table and populate it html generated from data products
   /*  var tableHtml =
@@ -521,21 +583,23 @@ var SearchResultsView = Backbone.View.extend(
    // $('body').append(tableHtml);
 
     // Enhance the table using a DataTable object. 
-    var dataTable = $('#searchResults').dataTable(
+     this.dataTable = $('#searchResults').dataTable(
       { 
          // "bJQueryUI":true,
           "bProcessing": true,
          // "sPaginationType": "full_numbers",
-          "bAutoWidth": false,
+          "bAutoWidth": true,
           "aoColumns": [
             {"sWidth": "100%"}
           ],
           "bDestroy": true,     // destroy old table
           "sScrollY": "500px",
-          "iDisplayLength": 100,
+          "iDisplayLength": 1000,
           "bLengthChange": false
 
     });
+
+  
   
 
 

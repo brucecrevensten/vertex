@@ -631,21 +631,11 @@ input.login_fields {
 #feedbackForm div {
   margin: 1em;
 }
-/*
-#testTable tbody tr td:hover {
- 	cursor:pointer;
-	background-color: #ff0 !important;
+.dataTables_scrollBody {
+  width: 400px;
 }
 
-#tableTest td{
-	padding:1ex;
+.dataTables_scrollHead {
+  display:none;
 }
-
-#tableTest {
-	text-align:center; 
-	width:400px;
-}*/
-
-/*table.display td { white-space: nowrap; }
-*/
 

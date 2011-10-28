@@ -46,7 +46,7 @@ var DownloadQueueSearchResultsView = Backbone.View.extend({
     this.srv.bind("render", this.render);
   },
   render: function() {
-    $(SearchApp.searchResultsView.el).find('li.productRow').removeClass('inQueue');
+    $(SearchApp.searchResultsView.el).find('.productRow').removeClass('inQueue');
     this.collection.each( function(m) {
       $(SearchApp.searchResultsView.el).find('[product_id="'+m.get('productId')+'"]').addClass('inQueue');
     });
@@ -176,6 +176,7 @@ var DownloadQueueView = Backbone.View.extend(
   },
 
 	clear_queue_all: function() {		
+    $(SearchApp.searchResultsView.el).find('.productRow').removeClass('inQueue');
 		this.collection.each( function(thing ) { 
 					$("#b_"+thing.id).toggleClass('tool-dequeue');
 					$("#b_"+thing.id).prop('selected','false');

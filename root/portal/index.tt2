@@ -92,6 +92,7 @@
         <button id="triggerSearch"></button>
 		<button id="stopSearch"></button>
 		<button id="resetSearch"></button>
+    
 		<div>
 			<br />
 			<div id="searchMessage"></div> 
@@ -148,10 +149,9 @@
 	    <div id="srProcLevelTool"></div>
 		</div>
 
-     
-            <table id="searchResults" width="400" style="margin:20px 0px 20px 0px;">
-             
-            </table>
+    <div id="con">
+      <table id="searchResults" style="margin:20px 0px 20px 0px;"></table>
+    </div>
 </div>
 
   </div> <!-- end contents -->

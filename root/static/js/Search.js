@@ -566,7 +566,7 @@ var GranuleFilter = BaseFilter.extend(
 	
   name: "GranuleFilter",
   reset: function() {
-    this.set({"granule_list":"ALPSRP250201160"});
+    this.set({"granule_list":""});
   },
   initialize: function() {
     this.reset();
