@@ -103,7 +103,7 @@ Precondition: $granuleList is a comma-separated list of granule names, validated
 sub getResultsByGranuleList {
 
   my ($self, $r) = @_;
-  my $fragment = $self->buildListQuery( 'granuleName', $r->granule_list) . 
+  my $fragment = $self->buildBigListQuery( 'granuleName', $r->granule_list) . 
   $self->buildListQuery('processingType', $r->processing);
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelectXml . $fragment;
@@ -114,7 +114,7 @@ sub getResultsByGranuleList {
 sub getResultsByProductList {
 
   my ($self, $products) = @_;
-  my $fragment = $self->buildListQuery( 'filename', $products );
+  my $fragment = $self->buildBigListQuery( 'filename', $products );
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelectXml . $fragment;
   return $self->doQuery($sql);
@@ -315,6 +315,30 @@ sub buildListQuery {
     }
   }
   return '';
+}
+
+sub buildBigListQuery {
+  my ($self, $field, $list) = @_;
+  
+  my $insertSql = q(
+    insert into session_temp_table (
+      id
+    ) values (
+      UPPER(?)
+    )
+  );
+
+  $self->dbh->do(q(delete from session_temp_table));
+
+  my $sth = $self->dbh->prepare($insertSql);
+
+  foreach my $row (@{$list}) {
+    $sth->execute($row);
+  }
+
+  return(qq(
+    AND UPPER($field) in (select id from session_temp_table)
+  ));
 }
 
 sub buildBeamQuery {
