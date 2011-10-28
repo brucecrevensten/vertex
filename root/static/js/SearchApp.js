@@ -1,5 +1,4 @@
 $(function() {
-
 window.SearchAppView = Backbone.View.extend({	
 
   initialize: function() {

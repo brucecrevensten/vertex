@@ -441,7 +441,7 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function(args) {
     this.trigger('render');
-	console.log("Search Results View Render");
+
 	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
       this.clearOverlays();
@@ -465,7 +465,7 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.each( function( model, i, l ) {   
           var d = model.toJSON();
         
-         li = '<tr><td class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
+         li = '<tr><td width="370" class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
           + ur.srThumbnail( model )
           + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
           + '<div class="productRowTools">'
@@ -490,7 +490,7 @@ var SearchResultsView = Backbone.View.extend(
 
       // Generate the table and populate it html generated from data products
     var tableHtml =
-            '<table id="searchResultsTable" style="margin:20px 0px 20px 0px;">'+
+         //   '<table id="searchResultsTable" style="margin:20px 0px 20px 0px;">'+
               '<thead>'+
                 '<tr>'+
                   '<th></th>'+
@@ -499,9 +499,8 @@ var SearchResultsView = Backbone.View.extend(
               '<tbody>'+
                 li_2 +
               '</tbody>'+
-            '</table>'+'</div>'; 
+           // '</table>'+'</div>'; 
 
-            console.log(tableHtml)
     el.html(tableHtml);
     parent.append(el);
   
@@ -519,19 +518,23 @@ var SearchResultsView = Backbone.View.extend(
               '</tbody>'+
             '</table>'+'</div>'; */
             
-   console.log("HEREHEHREHRH");
    // $('body').append(tableHtml);
 
     // Enhance the table using a DataTable object. 
-    var dataTable = $('#searchResultsTable').dataTable(
+    var dataTable = $('#searchResults').dataTable(
       { 
-          "bJQueryUI":true,
+         // "bJQueryUI":true,
           "bProcessing": true,
-          "sPaginationType": "full_numbers",
+         // "sPaginationType": "full_numbers",
           "bAutoWidth": false,
           "aoColumns": [
             {"sWidth": "100%"}
-          ]
+          ],
+          "bDestroy": true,     // destroy old table
+          "sScrollY": "500px",
+          "iDisplayLength": 100,
+          "bLengthChange": false
+
     });
   
 
@@ -568,9 +571,10 @@ var SearchResultsView = Backbone.View.extend(
     parent.append(el);
 //
 */
-
-    $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
-    $('#searchResults li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
+    $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
+    $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
+   // $('#searchResults tbody tr td ul li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
+    //$('#searchResults tbody tr td ul li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
 
     this.showResults();
     this.clearOverlays();
