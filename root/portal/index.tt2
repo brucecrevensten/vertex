@@ -147,7 +147,18 @@
 		<div id="srCount"></div>
 	    <div id="srProcLevelTool"></div>
 		</div>
-      <ul id="searchResults"></ul>
+
+        <div id="searchResults" style="width:400px; margin:0 auto;">
+            <table id="searchResultsTable" style="margin:20px 0px 20px 0px;">
+              <thead>
+                <tr>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+              </tbody>
+            </table>
+        </div>
 </div>
 
   </div> <!-- end contents -->

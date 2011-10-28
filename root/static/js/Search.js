@@ -68,7 +68,7 @@ var SearchParameters = Backbone.Model.extend(
 	},
 
     defaults: {
-        format:"jsonp"
+        format:"json"
     },
 
 	stripEmptyJSON: function(json) {
@@ -566,7 +566,7 @@ var GranuleFilter = BaseFilter.extend(
 	
   name: "GranuleFilter",
   reset: function() {
-    this.set({"granule_list":""});
+    this.set({"granule_list":"ALPSRP250201160"});
   },
   initialize: function() {
     this.reset();

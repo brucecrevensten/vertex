@@ -59,7 +59,7 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     fetchSearchResults: function(searchURL, searchData, callback) {
-
+      console.log("fetchSearchResults");
       this.data = {}; // flush previous result set
 
      // var results = 
@@ -69,11 +69,12 @@ var SearchResults = Backbone.Collection.extend(
           url: searchURL,
           data: searchData,
           processData: true,
-      //    dataType: "jsonp",
+          dataType: "json",
           context: this,
           success: function(data, textStatus, jqXHR) {
+            console.log("Success");
             this.data = data;
-			
+			     console.log(data);
             this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
@@ -83,11 +84,14 @@ var SearchResults = Backbone.Collection.extend(
       
             this.build(this.data);
             this.trigger('refresh');
+            
+
 			if (callback != null) {
 				callback();
 			}
         },
         error: function(jqXHR, textStatus, errorThrown) {
+          console.log(textStatus);
           switch(jqXHR.status) {
             // todo: move this gui code into the view objects
             case 204:
@@ -452,11 +456,92 @@ var SearchResultsView = Backbone.View.extend(
     el.detach();
     el.empty();
     
-    var li = '';
+   // var li = '';
     var ur = SearchApp.user.getWidgetRenderer();
+    /***** Implementing Data table ******/
+   //  var ur = this.user.getWidgetRenderer();
+    var li="";
+    var li_2="";
+    this.collection.each( function( model, i, l ) {   
+          var d = model.toJSON();
+        
+         li = '<tr><td class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
+          + ur.srThumbnail( model )
+          + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
+          + '<div class="productRowTools">'
+          + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
+          + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
+          + '<span class="ui-button-text">More information&hellip;</span>'
+          + '</button>'
+          + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
+          + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
+          + '<span class="ui-button-text">Show files&hellip;</span>'
+          + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
+          + '</div>'
+          + '</div><div style="clear:both;"></div></td></tr>';
+  
+      li_2 += li;
+      }, this);
+
+
     
+    //  console.log($('#tableBody'));
+   // $('#searchResults').find('tbody').html(li_2);
+
+      // Generate the table and populate it html generated from data products
+    var tableHtml =
+            '<table id="searchResultsTable" style="margin:20px 0px 20px 0px;">'+
+              '<thead>'+
+                '<tr>'+
+                  '<th></th>'+
+                '</tr>'+
+              '</thead>'+
+              '<tbody>'+
+                li_2 +
+              '</tbody>'+
+            '</table>'+'</div>'; 
+
+            console.log(tableHtml)
+    el.html(tableHtml);
+    parent.append(el);
+  
+    // Generate the table and populate it html generated from data products
+  /*  var tableHtml =
+            '<div id="container" style="width:400px; margin:0 auto;">'+
+            '<table id="searchResults" style="margin:20px 0px 20px 0px;">'+
+              '<thead>'+
+                '<tr>'+
+                  '<th></th>'+
+                '</tr>'+
+              '</thead>'+
+              '<tbody>'+
+                li_2 +
+              '</tbody>'+
+            '</table>'+'</div>'; */
+            
+   console.log("HEREHEHREHRH");
+   // $('body').append(tableHtml);
+
+    // Enhance the table using a DataTable object. 
+    var dataTable = $('#searchResultsTable').dataTable(
+      { 
+          "bJQueryUI":true,
+          "bProcessing": true,
+          "sPaginationType": "full_numbers",
+          "bAutoWidth": false,
+          "aoColumns": [
+            {"sWidth": "100%"}
+          ]
+    });
+  
+
+
+    /*****                          ******/
+
+/*
+///////
     // This loop need to be tight.
-    this.collection.each( function( model, i, l ) {
+   this.collection.each( function( model, i, l ) {
       
       var d = model.toJSON();
       li += '<li class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
@@ -481,6 +566,8 @@ var SearchResultsView = Backbone.View.extend(
 
     el.html(li);
     parent.append(el);
+//
+*/
 
     $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('#searchResults li.productRow').live('mouseleave', { view: this }, this.removeHighlight );

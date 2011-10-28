@@ -147,7 +147,9 @@ var DownloadQueueView = Backbone.View.extend(
 
 
 	convert_cookie_to_queue: function() {
+   
 	var cookie = $.storage.get(this.q_obj);
+
 	
 		if (cookie != null) {
 			var dp_list = cookie.split('++');

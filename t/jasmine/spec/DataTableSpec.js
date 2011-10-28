@@ -151,7 +151,28 @@ it("Should create a datatable and load it with fixture data via ajax request to 
 	
 	// Make sure that the SearchResults Collection has data
 	expect(this.searchResults.size()).toBeGreaterThan(0);
+
+
+	/** Possible start on a unit test for interacting with the download Queue ***/ 
+	// Create a Download Queue object and make sure it works with the data table. This means that you can add products to the queue
+	// by clicking buttons in the datatable search results. 
+	// Dependencies that need to be fixed
+ /*	$.storage = new $.store();
+
+	$('body').append('<div id="download_queue"></div>');
+	this.downloadQueue = new DownloadQueue();
+	
+	this.downloadQueueView = new DownloadQueueView( 
+    { 
+      collection: this.downloadQueue,
+      el: $("#download_queue")
+    } 
+    );
+    SearchApp.downloadQueue = this.downloadQueue;
+    SearchApp.downloadQueueView = this.downloadQueueView; */
+/******   *** * ** * ** * **  ** * **********                     ****/
+
+ });	
+
 });
-			
-		
-});
+	

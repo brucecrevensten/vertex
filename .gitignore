@@ -1,6 +1,6 @@
+.gitignore
 ursa2.conf
 Log4perl.conf
 root/static/js/AsfConfig.js
 root/static/js/Fixtures3.js
 .DS_Store
-.gitignore
