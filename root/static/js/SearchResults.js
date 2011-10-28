@@ -87,11 +87,10 @@ var SearchResults = Backbone.Collection.extend(
             
 
 			if (callback != null) {
-				callback();
+				callback(); // this is for using sinon spys in unit tests
 			}
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          console.log(textStatus);
           switch(jqXHR.status) {
             // todo: move this gui code into the view objects
             case 204:
@@ -441,15 +440,6 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function(args) {
     this.trigger('render');
-    console.log("RENDER");
-
-
-
-   /* if (this.dataTable==null) {
-      console.log("datatable is null");
-    } else {
-      console.log("not null");
-    }*/
 
 	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
@@ -460,26 +450,11 @@ var SearchResultsView = Backbone.View.extend(
 	  return this;
     }
 
-   // $('#searchResults_wrapper').empty();
-    //$('#searchResults_wrapper').remove();
     $('#con').empty(); 
-   // $('#con').html('<table id="searchResults" width="450" style="margin:20px 0px 20px 0px;"></table>');
-    var el = $('<table id="searchResults" width="450" style="margin:20px 0px 20px 0px;"></table>');
-  
-    //var parent = $('#rightColumn');//el.parent();
-   // el.detach();
 
-
-    //$('#searchResults_wrapper').detach();
-    //$('#searchResults_wrapper').empty();
-
-   // el.empty();
-   
-   // var li = '';
+    var el = $('<table id="searchResults" width="375" style="margin:20px 0px 20px 0px;"></table>');
   
     var ur = SearchApp.user.getWidgetRenderer();
-    /***** Implementing Data table ******/
-   //  var ur = this.user.getWidgetRenderer();
     var li="";
     var li_2="";
     this.collection.each( function( model, i, l ) {   
@@ -504,83 +479,18 @@ var SearchResultsView = Backbone.View.extend(
       }, this);
 
       var tableHtml =
-         //   '<table id="searchResultsTable" style="margin:20px 0px 20px 0px;">'+
               '<thead>'+
                 '<tr>'+
-                  '<th>sdfsdf</th>'+
+                  '<th></th>'+
                 '</tr>'+
               '</thead>'+
               '<tbody>'+
                 li_2 +
               '</tbody>';
-           // '</table>'+'</div>'; 
         el.html(tableHtml);
 
-          $('#con').append(el);
+        $('#con').append(el); // append the table to it's container
     
-    //  console.log($('#tableBody'));
-   // $('#searchResults').find('tbody').html(li_2);
-
-      // Generate the table and populate it html generated from data products
- 
-
-   /*if( $('#searchResults_wrapper').length > 0) {
-      console.log("searchResults Wrapper is not null");
-      console.log($('#searchResults_wrapper'));
-      console.log("IN HERERERE")
-      console.log(el);
-      $('#searchResults_wrapper').detach();
-      //$('#searchResults_wrapper').remove();
-      //
-        
-
-   console.log("THIS IS MY ELMENT");
-   console.log(el);
-
-    
-    console.log(el);
-    parent.append(el);
-
-   } else {
-     console.log("searchResults Wrapper is null");
-        var tableHtml =
-         //   '<table id="searchResultsTable" style="margin:20px 0px 20px 0px;">'+
-              '<thead>'+
-                '<tr>'+
-                  '<th></th>'+
-                '</tr>'+
-              '</thead>'+
-              '<tbody>'+
-                li_2 +
-              '</tbody>';
-           // '</table>'+'</div>'; 
-
-         el.html(tableHtml);
-       
-       
-   }*/
-    // parent.append(el);
-  //  console.log($('#searchResults_wrapper'));
-
-    
-
-   // console.log($(el));
-  
-    // Generate the table and populate it html generated from data products
-  /*  var tableHtml =
-            '<div id="container" style="width:400px; margin:0 auto;">'+
-            '<table id="searchResults" style="margin:20px 0px 20px 0px;">'+
-              '<thead>'+
-                '<tr>'+
-                  '<th></th>'+
-                '</tr>'+
-              '</thead>'+
-              '<tbody>'+
-                li_2 +
-              '</tbody>'+
-            '</table>'+'</div>'; */
-            
-   // $('body').append(tableHtml);
 
     // Enhance the table using a DataTable object. 
      this.dataTable = $('#searchResults').dataTable(
@@ -595,51 +505,12 @@ var SearchResultsView = Backbone.View.extend(
           "bDestroy": true,     // destroy old table
           "sScrollY": "500px",
           "iDisplayLength": 1000,
-          "bLengthChange": false
-
+          "bLengthChange": false // do not allow users to change the default page length
     });
 
-  
-  
-
-
-    /*****                          ******/
-
-/*
-///////
-    // This loop need to be tight.
-   this.collection.each( function( model, i, l ) {
-      
-      var d = model.toJSON();
-      li += '<li class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
-      + ur.srThumbnail( model )
-      + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
-      + '<div class="productRowTools">'
-      + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
-      + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
-      + '<span class="ui-button-text">More information&hellip;</span>'
-      + '</button>'
-      + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
-      + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
-      + '<span class="ui-button-text">Show files&hellip;</span>'
-      + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
-      + '</div>'
-      + '</div><div style="clear:both;"></div></li>';
-
-    }, this);
-
-    // TODO remove, after benchmarking?
-    //li.find('img').error( function() { $(this).remove(); });
-
-    el.html(li);
-    parent.append(el);
-//
-*/
     $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
-   // $('#searchResults tbody tr td ul li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
-    //$('#searchResults tbody tr td ul li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
-
+   
     this.showResults();
     this.clearOverlays();
     this.renderOnMap();

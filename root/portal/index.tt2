@@ -138,11 +138,6 @@
         </div>
       </div>
 
-      <div class="ui-widget">
-        <div id="active-filters" class="ui-state-highlight ui-corner-all">
-          <div id="active-filters-list"></div>
-        </div>
-      </div>
 		
 		<div>
 		<div id="srCount"></div>

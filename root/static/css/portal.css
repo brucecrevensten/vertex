@@ -1,5 +1,5 @@
 body {
-  /* background: url(../images/satellitebackground.png); */
+   background: url(../images/satellitebackground.png); 
 }
 
 body * {
@@ -28,7 +28,7 @@ text-decoration: underline;
   border: 2px solid #eee;
   padding: 1.5em;
   margin: 1em auto;
-  width: 1250px;
+  width: 1300px;
   position: relative;
   height: 735px;
 }
@@ -631,9 +631,7 @@ input.login_fields {
 #feedbackForm div {
   margin: 1em;
 }
-.dataTables_scrollBody {
-  width: 400px;
-}
+
 
 .dataTables_scrollHead {
   display:none;
