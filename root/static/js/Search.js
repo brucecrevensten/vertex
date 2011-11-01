@@ -673,7 +673,7 @@ var SearchButtonView = Backbone.View.extend({
   },
 
 	toggleButton: function() {
-		
+		//ntptEventTag('ev=search');
 		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() == "") ||
 		($('#filter_bbox').val() == "" && $('#filter_granule_list').val() != "")    ) {
 				$("#triggerSearch").empty();
