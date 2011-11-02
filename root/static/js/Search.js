@@ -493,6 +493,7 @@ var PlatformWidget = BaseWidget.extend(
     },
 
     render: function() {
+      //ntptEventTag('ev=viewPlatform');
       $(this.el).empty();
       var checked = this.model.toJSON()["platform"];
       for( var key in this.platformTypes ) {
@@ -645,7 +646,7 @@ var SearchButtonView = Backbone.View.extend({
 	      },
 	        label: "Search"
 	    }).bind("click", jQuery.proxy( function(e) {
-		    
+		   //ntptEventTag('ev=startSearch'); 
         // Reset certain state aspects when triggering a new search
         SearchApp.searchResults.searchParameters.update();
 	      SearchApp.searchResultsView.showSearching();
@@ -673,7 +674,6 @@ var SearchButtonView = Backbone.View.extend({
   },
 
 	toggleButton: function() {
-		//ntptEventTag('ev=search');
 		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() == "") ||
 		($('#filter_bbox').val() == "" && $('#filter_granule_list').val() != "")    ) {
 				$("#triggerSearch").empty();
