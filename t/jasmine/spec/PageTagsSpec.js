@@ -11,8 +11,20 @@ var SearchApp = {
   },
   searchResultsView: { },
   postFilters: { },
+  user: { },
 };
 
+SearchApp.searchResults.get = function(arg) {
+  return new Backbone.Model({
+    'BEAMMODEDESC': 'Mock',
+    'BEAMMODETYPE': 'Mock',
+    'FRAMENUMBER': 'Mock',
+    'ORBIT': 'Mock',
+    'acquisitionDateText': 'Mock',
+    'ASCENDINGDESCENDING': 'Mock',
+    'POLARIZATION': 'Mock',
+  });
+};
 SearchApp.searchResults.searchParameters.update = function(arg) {
   return arg;
 };
@@ -25,7 +37,16 @@ SearchApp.searchResultsView.showBeforeSearchMessage = function(arg) {
 SearchApp.postFilters.reset = function(arg) {
   return arg;
 };
-
+SearchApp.user.getWidgetRenderer = function(arg) {
+  return {
+    ppBrowse: function(arg) {
+      return(arg);
+    },
+    ppFileList: function(arg) {
+      return(arg);
+    },
+  };
+};
 SearchApp.searchResults.fetchSearchResults = function(arg) {
   return {
     abort: function(arg) {
@@ -33,7 +54,6 @@ SearchApp.searchResults.fetchSearchResults = function(arg) {
     },
   };
 };
-
 SearchApp.searchResults.searchParameters.toJSON = function(arg) {
   return arg;
 };
@@ -82,10 +102,14 @@ describe('EMS PageTags', function() {
 
   // Spec 16.1.4
   it('Clicking the "Reset" button should generate a PageTag event', function() {
+    // Due to where the Reset button is setup (in SearchApp.js) this test
+    // will have to manual.
   });
 
   // Spec 16.1.5
-  it('Clicking to view the platform profile should generate a PageTag event', function() {
+  it('Clicking to view the product profile should generate a PageTag event', function() {
+    showProductProfile('testGranule');
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=showProductProfile');
   });
 
   // Spec 16.1.6
