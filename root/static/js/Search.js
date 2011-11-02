@@ -439,9 +439,6 @@ var DateWidget = BaseWidget.extend(
         minDate: new Date(1990, 1 - 1, 1),
         yearRange: '1990:'+today.getFullYear()
     });
-    start_date = $(this.el).find('#filter_start').datepicker().val();
-    $(this.el).find('#filter_start').datepicker("setDate", start_date);
-
     $(this.el).find('#filter_end').datepicker({
         dateFormat: 'yy-mm-dd',
         changeMonth: true,
@@ -449,9 +446,6 @@ var DateWidget = BaseWidget.extend(
         minDate: new Date(1990, 1 - 1, 1),
         yearRange: '1990:'+today.getFullYear()
     });
-    end_date = $(this.el).find('#filter_end').datepicker().val();
-    $(this.el).find('#filter_end').datepicker("setDate", end_date);
-
     return this;
   }
 });

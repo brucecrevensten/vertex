@@ -1,82 +1,25 @@
-// Mock out the PageTag functions that we should be calling.
-ntptEventTag = jasmine.createSpy();
-ntptAddPair = jasmine.createSpy();
-ntptDropPair = jasmine.createSpy();
-
-
-// Mock out various SearchApp methods that need to be called.
-var SearchApp = {
-  searchResults: {
-    searchParameters: { },
-  },
-  searchResultsView: { },
-  postFilters: { },
-  user: { },
-};
-
-SearchApp.searchResults.get = function(arg) {
-  return new Backbone.Model({
-    'BEAMMODEDESC': 'Mock',
-    'BEAMMODETYPE': 'Mock',
-    'FRAMENUMBER': 'Mock',
-    'ORBIT': 'Mock',
-    'acquisitionDateText': 'Mock',
-    'ASCENDINGDESCENDING': 'Mock',
-    'POLARIZATION': 'Mock',
-  });
-};
-SearchApp.searchResults.searchParameters.update = function(arg) {
-  return arg;
-};
-SearchApp.searchResultsView.showSearching = function(arg) {
-  return arg;
-};
-SearchApp.searchResultsView.showBeforeSearchMessage = function(arg) {
-  return arg;
-};
-SearchApp.postFilters.reset = function(arg) {
-  return arg;
-};
-SearchApp.user.getWidgetRenderer = function(arg) {
-  return {
-    ppBrowse: function(arg) {
-      return(arg);
-    },
-    ppFileList: function(arg) {
-      return(arg);
-    },
-  };
-};
-SearchApp.searchResults.fetchSearchResults = function(arg) {
-  return {
-    abort: function(arg) {
-      return arg;
-    },
-  };
-};
-SearchApp.searchResults.searchParameters.toJSON = function(arg) {
-  return arg;
-};
+beforeEach( function() {
+  jasmine.getFixtures().fixturesPath = 'spec/fixtures';
+  loadFixtures('SearchApp.html');
+  window.SearchApp = new SearchAppView;
+});
 
 describe('EMS PageTags', function() {
+  beforeEach( function() {
+    // Mock out the PageTag functions that we should be calling.
+    ntptEventTag = jasmine.createSpy();
+    ntptAddPair = jasmine.createSpy();
+    ntptDropPair = jasmine.createSpy();
+  });
   // Spec 16.1.1
-  it('Clicking the "Search" button should generate a PageTag event', function() {
-    var startSearch = $('<button id="triggerSearch"></button>');
-    var stopSearch = $('<button id="stopSearch"></button>');
-    var searchButtonState = new SearchButtonState();
-    var searchButtonView = new SearchButtonView({
-      "model": searchButtonState,
-      "el": startSearch,
-      "el2": stopSearch,
-      "geographicFilter": new GeographicFilter(),
-      "granuleFilter": new GranuleFilter()
-      });
-    startSearch.click();
+  it('16.1.1 - Clicking the "Search" button should generate a PageTag event', function() {
+    var searchButton = SearchApp.searchButtonView;
+    searchButton.el.click();
     expect(ntptEventTag).toHaveBeenCalledWith('ev=startSearch');
   });
 
   // Spec 16.1.2
-  it('Clicking platform info buttons should generate a PageTag event', function() {
+  it('16.1.2 - Clicking platform info buttons should generate a PageTag event', function() {
     var platformFilter = new PlatformFilter();
     var platformWidget = new PlatformWidget({model: platformFilter});
     platformWidget.render();
@@ -84,40 +27,34 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.3
-  it('Clicking the "Stop Search" button should generate a PageTag event', function() {
-    var startSearch = $('<button id="triggerSearch"></button>');
-    var stopSearch = $('<button id="stopSearch"></button>');
-    var searchButtonState = new SearchButtonState();
-    var searchButtonView = new SearchButtonView({
-      "model": searchButtonState,
-      "el": startSearch,
-      "el2": stopSearch,
-      "geographicFilter": new GeographicFilter(),
-      "granuleFilter": new GranuleFilter()
-      });
-    startSearch.click();
-    stopSearch.click();
+  it('16.1.3 - Clicking the "Stop Search" button should generate a PageTag event', function() {
+    var searchButton = SearchApp.searchButtonView;
+    searchButton.el.click();
+    searchButton.el2.click();
     expect(ntptEventTag).toHaveBeenCalledWith('ev=stopSearch');
   });
 
   // Spec 16.1.4
-  it('Clicking the "Reset" button should generate a PageTag event', function() {
-    // Due to where the Reset button is setup (in SearchApp.js) this test
-    // will have to manual.
+  it('16.1.4 - Clicking the "Reset" button should generate a PageTag event', function() {
+    var resetButton = $('#resetSearch');
+    resetButton.click();
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=resetSearch');
   });
 
   // Spec 16.1.5
-  it('Clicking to view the product profile should generate a PageTag event', function() {
+  it('16.1.5 - Clicking to view the product profile should generate a PageTag event', function() {
     showProductProfile('testGranule');
     expect(ntptEventTag).toHaveBeenCalledWith('ev=showProductProfile');
   });
 
   // Spec 16.1.6
   it('Clicking the browse image in the profile page should generate a PageTag event', function() {
+    // This may have to be a manual test.
   });
 
   // Spec 16.1.7
   it('"Add all by type" events generate a PageTag event that records processing type', function() {
+    
   });
 
   // Spec 16.1.8

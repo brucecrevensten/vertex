@@ -79,7 +79,7 @@
 
     <div id="platform_profile" style="display: none;"></div>
     <div id="product_profile" style="display: none;"></div>
-    <div id="download_queue""><table id="download_queue_table" style="width: 100%"></table></div>
+    <div id="download_queue"><table id="download_queue_table" style="width: 100%"></table></div>
     <div id="platform_facet" style="display: none;"></div>
 
 	
