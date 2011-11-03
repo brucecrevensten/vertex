@@ -21,6 +21,7 @@ var FeedbackButton = Backbone.View.extend( {
 	el: '#feedbackButton',
 	render: function() {
 		$(this.el).html( '<a>Feedback</a>' ).click( function() {
+      ntptEventTag('ev=somethingBad');
 			var v = new FeedbackForm( { model: new Feedback() } );
 			v.render();
 		}).button({
@@ -71,6 +72,7 @@ var FeedbackForm = Backbone.View.extend({
 					},
 				"Send Feedback": $.proxy( function()
 					{
+            ntptEventTag('ev=somethingBad');
 						this.model.save( $(this.el).find('form').serializeJSON(),
 							{
 								success: $.proxy( function(model, response)

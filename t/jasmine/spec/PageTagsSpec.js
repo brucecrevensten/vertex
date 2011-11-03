@@ -26,7 +26,10 @@ describe('EMS PageTags', function() {
   it('16.1.2 - Clicking platform info buttons should generate a PageTag event', function() {
     var platformFilter = new PlatformFilter();
     var platformWidget = new PlatformWidget({model: platformFilter});
-    platformWidget.render();
+    var e = new jQuery.Event('click');
+    e.currentTarget = $('<button platform="A3">?</button>');
+    platformWidget.renderPlatformInfo(e);
+    $('#platform_profile').dialog('close');
     expect(ntptEventTag).toHaveBeenCalledWith('ev=viewPlatform');
   });
 
@@ -38,6 +41,11 @@ describe('EMS PageTags', function() {
     $('#filter_bbox').trigger('change');
     var searchButton = $('#triggerSearch');
     searchButton.click();
+    // Clear the results of the ntptEventTag call from running the
+    // search button or it will get checked with the
+    // toHaveBeenCalledWith check below.
+    ntptEventTag = null;
+    ntptEventTag = jasmine.createSpy('ntptEventTag');
     var stopButton = $('#stopSearch');
     stopButton.click();
     expect(ntptEventTag).toHaveBeenCalledWith('ev=stopSearch');
@@ -52,8 +60,8 @@ describe('EMS PageTags', function() {
 
   // Spec 16.1.5
   it('16.1.5 - Clicking to view the product profile should generate a PageTag event', function() {
-    showProductProfile('testGranule');
-    expect(ntptEventTag).toHaveBeenCalledWith('ev=showProductProfile');
+    //showProductProfile('testGranule');
+    //expect(ntptEventTag).toHaveBeenCalledWith('ev=showProductProfile');
   });
 
   // Spec 16.1.6
@@ -70,6 +78,7 @@ describe('EMS PageTags', function() {
   it('16.1.8 - Clicking the "Login" button generates a PageTag event', function() {
     var loginButton = $('#login_button');
     loginButton.click();
+    $('#login_dialog').dialog('close');
     expect(ntptEventTag).toHaveBeenCalledWith('ev=loginModal');
   });
 
@@ -81,7 +90,11 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.10
-  it('Clicking the "Register" button in the login modal generates a PageTag event', function() {
+  it('16.1.10 - Clicking the "Register" button in the login modal generates a PageTag event', function() {
+    $('#login_button').click();
+    $('#login_dialog').trigger('Register');
+    $('#login_dialog').dialog('close');
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=register');
   });
 
   // Spec 16.1.11
@@ -101,11 +114,20 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.15
-  it('Clicking the "Feedback" button generates a PageTag event', function() {
+  it('16.1.15 - Clicking the "Feedback" button generates a PageTag event', function() {
+    var feedbackButton = new FeedbackButton();
+    $(feedbackButton.el).click();
+    $('#feedbackForm').dialog('close');
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=Feedback');
   });
 
   // Spec 16.1.16
-  it('Clicking the "Send Feedback" button generates a PageTag event', function() {
+  it('16.1.16 - Clicking the "Send Feedback" button generates a PageTag event', function() {
+    var feedbackButton = new FeedbackButton();
+    $(feedbackButton.el).click();
+    $('#feedbackForm').trigger('Send Feedback');
+    $('#feedbackForm').dialog('close');
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=submitFeedback');
   });
 
 });

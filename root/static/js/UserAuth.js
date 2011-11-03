@@ -111,7 +111,7 @@ var UserLoginView = Backbone.View.extend(
 	    },
 	
 		login: function() {
-      ntptEventTag('ev=somethingbad');
+      ntptEventTag('ev=somethingBad');
 			this.model.set($(this.el).find('form').serializeJSON());
 			this.model.authenticate();
 		},
@@ -125,6 +125,7 @@ var UserLoginView = Backbone.View.extend(
 				modal: true,
 				buttons: {
 					"Register": function(){
+            ntptEventTag('ev=somethingBad');
 						window.open('http://www.asf.alaska.edu/program/sdc/proposals');
   						return false;
 					},

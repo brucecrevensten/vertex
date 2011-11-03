@@ -487,7 +487,6 @@ var PlatformWidget = BaseWidget.extend(
     },
 
     render: function() {
-      //ntptEventTag('ev=viewPlatform');
       $(this.el).empty();
       var checked = this.model.toJSON()["platform"];
       for( var key in this.platformTypes ) {
@@ -520,6 +519,7 @@ var PlatformWidget = BaseWidget.extend(
       return this;
     },
     renderPlatformInfo: function(e) {
+      ntptEventTag('ev=somethingBad');
       var platform = $(e.currentTarget).attr('platform');
       $('#platform_profile').html(
         _.template( '\
@@ -640,7 +640,7 @@ var SearchButtonView = Backbone.View.extend({
 	      },
 	        label: "Search"
 	    }).bind("click", jQuery.proxy( function(e) {
-		   //ntptEventTag('ev=startSearch'); 
+		    ntptEventTag('ev=somethingBad'); 
         // Reset certain state aspects when triggering a new search
         SearchApp.searchResults.searchParameters.update();
 	      SearchApp.searchResultsView.showSearching();
@@ -651,7 +651,7 @@ var SearchButtonView = Backbone.View.extend({
 	    }, this)).focus();
 
 	    this.bind('abortSearch', function() {
-		   //ntptEventTag('ev=stopSearch'); 
+		   ntptEventTag('ev=somethingBad'); 
 	      this.xhr.abort();
 	    });
 
