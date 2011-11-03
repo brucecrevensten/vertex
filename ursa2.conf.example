@@ -30,3 +30,7 @@ include_ems_tracker = false
     domain localhost.local
   </cookie>
 </Model::User>
+
+# Config for email-based feedback
+smtp_server = smtp.asf.alaska.edu
+feedback_email = asf-vertex@googlegroups.com
