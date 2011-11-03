@@ -524,12 +524,6 @@ button.tool_enqueuer.tool-dequeue:hover {
   background-color: #FFF88E !important;
 }
 
-/* this rule is specific to highlighting the DataTable active sorting column */
-/* mk .datatable tbody tr:hover td.sorting_1 {
-  background-color: #FFF940 !important;
-}*/
-
-
 .datatable tbody tr {
   cursor: pointer;
 }
@@ -542,18 +536,9 @@ button.tool_enqueuer.tool-dequeue:hover {
   background-color: #e2e2e2;
 }
 
-/* mk .datatable tr.even td.sorting_1 {
-  background-color: #e8e8e8;
-}*/
-
 .datatable tbody td.left-adjusted {
   text-align: left;
 }
-
-/*mk
-.datatable tr.odd td.sorting_1 {
-  background-color: #d8d8d8;
-}*/
 
 .datatable tr.selected.even {
   background-color: #399ec2;
@@ -562,15 +547,7 @@ button.tool_enqueuer.tool-dequeue:hover {
 .datatable tr.selected {
   background-color: #288db1;
 }
-/* mk 
-.datatable tr.selected.even td.sorting_1 {
-  background-color: #399ec2;
-}*/
 
-/* mk
-.datatable tr.selected.odd td.sorting_1 {
-  background-color: #288db1;
-} */
 
 .datatable {
   width: 100%;

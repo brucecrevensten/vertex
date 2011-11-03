@@ -335,8 +335,6 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
-
-    //this.options.downloadQueue.bind('queue:remove', this.render);
    
  	this.model.bind('authSuccess', jQuery.proxy(function() {
 		this.render('authSuccess');
@@ -495,9 +493,7 @@ var SearchResultsView = Backbone.View.extend(
     // Enhance the table using a DataTable object. 
      this.dataTable = $('#searchResults').dataTable(
       { 
-         // "bJQueryUI":true,
           "bProcessing": true,
-         // "sPaginationType": "full_numbers",
           "bAutoWidth": true,
           "aoColumns": [
             {"sWidth": "100%"}
