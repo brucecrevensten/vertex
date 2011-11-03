@@ -10,6 +10,8 @@ describe('EMS PageTags', function() {
     ntptEventTag = jasmine.createSpy('ntptEventTag');
     ntptAddPair = jasmine.createSpy('ntptAddPair');
     ntptDropPair = jasmine.createSpy('ntptDropPair');
+    window.alert = jasmine.createSpy('alert');
+    window.open = jasmine.createSpy('open');
   });
   // Spec 16.1.1
   it('16.1.1 - Clicking the "Search" button should generate a PageTag event', function() {
@@ -92,7 +94,13 @@ describe('EMS PageTags', function() {
   // Spec 16.1.10
   it('16.1.10 - Clicking the "Register" button in the login modal generates a PageTag event', function() {
     $('#login_button').click();
-    $('#login_dialog').trigger('Register');
+    // Clear the results of the ntptEventTag call from running the
+    // search button or it will get checked with the
+    // toHaveBeenCalledWith check below.
+    ntptEventTag = null;
+    ntptEventTag = jasmine.createSpy('ntptEventTag');
+    var buttons = $('#login_dialog').dialog('option', 'buttons');
+    buttons['Register']();
     $('#login_dialog').dialog('close');
     expect(ntptEventTag).toHaveBeenCalledWith('ev=register');
   });
@@ -125,7 +133,13 @@ describe('EMS PageTags', function() {
   it('16.1.16 - Clicking the "Send Feedback" button generates a PageTag event', function() {
     var feedbackButton = new FeedbackButton();
     $(feedbackButton.el).click();
-    $('#feedbackForm').trigger('Send Feedback');
+    // Clear the results of the ntptEventTag call from running the
+    // search button or it will get checked with the
+    // toHaveBeenCalledWith check below.
+    ntptEventTag = null;
+    ntptEventTag = jasmine.createSpy('ntptEventTag');
+    var buttons = $('#feedbackForm').dialog('option', 'buttons');
+    buttons['Send Feedback']();
     $('#feedbackForm').dialog('close');
     expect(ntptEventTag).toHaveBeenCalledWith('ev=submitFeedback');
   });

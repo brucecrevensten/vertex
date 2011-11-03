@@ -72,7 +72,9 @@ var FeedbackForm = Backbone.View.extend({
 					},
 				"Send Feedback": $.proxy( function()
 					{
-            ntptEventTag('ev=somethingBad');
+            if(typeof ntptEventTag == 'function') {
+              ntptEventTag('ev=somethingBad');
+            }
 						this.model.save( $(this.el).find('form').serializeJSON(),
 							{
 								success: $.proxy( function(model, response)
