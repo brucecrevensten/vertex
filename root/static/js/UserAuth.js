@@ -111,7 +111,9 @@ var UserLoginView = Backbone.View.extend(
 	    },
 	
 		login: function() {
-      ntptEventTag('ev=somethingBad');
+      if(typeof ntptEventTag == 'function') {
+        ntptEventTag('ev=login');
+      }
 			this.model.set($(this.el).find('form').serializeJSON());
 			this.model.authenticate();
 		},
@@ -125,7 +127,9 @@ var UserLoginView = Backbone.View.extend(
 				modal: true,
 				buttons: {
 					"Register": function(){
-            ntptEventTag('ev=somethingBad');
+            if(typeof ntptEventTag == 'function') {
+              ntptEventTag('ev=register');
+            }
 						window.open('http://www.asf.alaska.edu/program/sdc/proposals');
   						return false;
 					},
@@ -230,7 +234,9 @@ var UserLoginButton = Backbone.View.extend( {
 	},
 	
 	login_button_action: function() {
-    ntptEventTag('ev=somethingbad');
+    if(typeof ntptEventTag == 'function') {
+      ntptEventTag('ev=loginModal');
+    }
 		SearchApp.userLoginView.render();
 		return this;
 	},

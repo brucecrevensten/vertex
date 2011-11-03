@@ -126,7 +126,7 @@ describe('EMS PageTags', function() {
     var feedbackButton = new FeedbackButton();
     $(feedbackButton.el).click();
     $('#feedbackForm').dialog('close');
-    expect(ntptEventTag).toHaveBeenCalledWith('ev=Feedback');
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=feedback');
   });
 
   // Spec 16.1.16
