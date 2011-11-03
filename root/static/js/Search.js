@@ -651,6 +651,7 @@ var SearchButtonView = Backbone.View.extend({
 	    }, this)).focus();
 
 	    this.bind('abortSearch', function() {
+		   //ntptEventTag('ev=stopSearch'); 
 	      this.xhr.abort();
 	    });
 

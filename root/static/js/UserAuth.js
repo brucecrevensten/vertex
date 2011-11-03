@@ -111,6 +111,7 @@ var UserLoginView = Backbone.View.extend(
 	    },
 	
 		login: function() {
+      ntptEventTag('ev=somethingbad');
 			this.model.set($(this.el).find('form').serializeJSON());
 			this.model.authenticate();
 		},
@@ -228,6 +229,7 @@ var UserLoginButton = Backbone.View.extend( {
 	},
 	
 	login_button_action: function() {
+    ntptEventTag('ev=somethingbad');
 		SearchApp.userLoginView.render();
 		return this;
 	},

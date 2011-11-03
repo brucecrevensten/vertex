@@ -115,7 +115,7 @@ window.SearchAppView = Backbone.View.extend({
       srv:this.searchResultsView,
       pf: this.postFilters
     }, function(e) {
-      
+     //ntptEventTag('ev=resetSearch'); 
       e.data.sp.setDefaults();
       e.data.spv.setWidgets();
       e.data.spv.render();
@@ -161,7 +161,7 @@ window.SearchAppView = Backbone.View.extend({
   }
 });
 
-window.SearchApp = new SearchAppView;  
+//window.SearchApp = new SearchAppView;  
 
  /*
 window.onbeforeunload = function() {

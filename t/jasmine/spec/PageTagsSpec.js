@@ -7,14 +7,18 @@ beforeEach( function() {
 describe('EMS PageTags', function() {
   beforeEach( function() {
     // Mock out the PageTag functions that we should be calling.
-    ntptEventTag = jasmine.createSpy();
-    ntptAddPair = jasmine.createSpy();
-    ntptDropPair = jasmine.createSpy();
+    ntptEventTag = jasmine.createSpy('ntptEventTag');
+    ntptAddPair = jasmine.createSpy('ntptAddPair');
+    ntptDropPair = jasmine.createSpy('ntptDropPair');
   });
   // Spec 16.1.1
   it('16.1.1 - Clicking the "Search" button should generate a PageTag event', function() {
-    var searchButton = SearchApp.searchButtonView;
-    searchButton.el.click();
+    var geofilter = SearchApp.searchParameters.getGeographicFilter();
+    geofilter.set({'bbox': '-180,-90,180,90'});
+    $('#filter_bbox').val('-180,-90,180,90');
+    $('#filter_bbox').trigger('change');
+    var searchButton = $('#triggerSearch');
+    searchButton.click();
     expect(ntptEventTag).toHaveBeenCalledWith('ev=startSearch');
   });
 
@@ -28,9 +32,14 @@ describe('EMS PageTags', function() {
 
   // Spec 16.1.3
   it('16.1.3 - Clicking the "Stop Search" button should generate a PageTag event', function() {
-    var searchButton = SearchApp.searchButtonView;
-    searchButton.el.click();
-    searchButton.el2.click();
+    var geofilter = SearchApp.searchParameters.getGeographicFilter();
+    geofilter.set({'bbox': '-180,-90,180,90'});
+    $('#filter_bbox').val('-180,-90,180,90');
+    $('#filter_bbox').trigger('change');
+    var searchButton = $('#triggerSearch');
+    searchButton.click();
+    var stopButton = $('#stopSearch');
+    stopButton.click();
     expect(ntptEventTag).toHaveBeenCalledWith('ev=stopSearch');
   });
 
@@ -58,11 +67,17 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.8
-  it('Clicking the "Login" button generates a PageTag event', function() {
+  it('16.1.8 - Clicking the "Login" button generates a PageTag event', function() {
+    var loginButton = $('#login_button');
+    loginButton.click();
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=loginModal');
   });
 
   // Spec 16.1.9
-  it('Clicking the "Login" button in the login modal generates a PageTag event', function() {
+  it('16.1.9 - Clicking the "Login" button in the login modal generates a PageTag event', function() {
+    var userLoginView = SearchApp.userLoginView;
+    userLoginView.login();
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=login');
   });
 
   // Spec 16.1.10
