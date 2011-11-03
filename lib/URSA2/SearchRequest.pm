@@ -45,6 +45,16 @@ sub end {
   return $self->{end};
 }
 
+sub repeat_start {
+  my $self = shift;
+  return $self->{repeat_start};
+}
+
+sub repeat_end {
+  my $self = shift;
+  return $self->{repeat_end};
+}
+
 sub bbox {
   my $self = shift;
   return $self->{bbox};
@@ -130,6 +140,8 @@ sub decode {
 
   $self->{start} = $self->{requests}->param('start');
   $self->{end} = $self->{requests}->param('end');
+  $self->{repeat_start} = $self->{requests}->param('repeat_start');
+  $self->{repeat_end} = $self->{requests}->param('repeat_end');
   $self->{limit} = $self->{requests}->param('limit');
   $self->{bbox} = $self->{requests}->param('bbox');
   $self->{polygon} = $self->{requests}->param('polygon');
@@ -165,6 +177,8 @@ sub validate {
   $self->{beam} = URSA2::Validators->beam( $self->{beam} );
   $self->{start} = URSA2::Validators->start( $self->{start} );
   $self->{end} = URSA2::Validators->end( $self->{end} );
+  $self->{repeat_start} = URSA2::Validators->repeat_start( $self->{repeat_start} );
+  $self->{repeat_end} = URSA2::Validators->repeat_end( $self->{repeat_end} );
   $self->{processing} = URSA2::Validators->processing( $self->{processing} );
   $self->{format} = URSA2::Validators->format( $self->{format} );
   $self->{platform} = URSA2::Validators->platform( $self->{platform} );
