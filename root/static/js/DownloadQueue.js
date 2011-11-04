@@ -228,7 +228,7 @@ var DownloadQueueView = Backbone.View.extend(
 
       $(this.el).html(
         _.template('\
-<form id="download_queue_form" action="<%= url %>">\
+<form id="download_queue_form" action="<%= url %>" method="POST">\
 <%= restricted %>\
 <table class="datatable" id="download_queue_table">\
 <thead>\
