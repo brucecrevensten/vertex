@@ -108,7 +108,7 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.7
-  it('"16.1.7 - Add all by type" events generate a PageTag event that records processing type', function() {
+  it('16.1.7 - "Add all by type" events generate a PageTag event that records processing type', function() {
     var geofilter = SearchApp.searchParameters.getGeographicFilter();
     geofilter.set({'bbox': '-180,-90,180,90'});
     $('#filter_bbox').val('-180,-90,180,90');
