@@ -206,7 +206,9 @@ window.showInlineProductFiles = function(event, product) {
 }
 
 window.showProductProfile = function(product) {
-  ntptEventTag('ev=somethingBad');
+  if(typeof ntptEventTag == 'function') {
+    ntptEventTag('ev=showProductProfile');
+  }
   var v = new DataProductView( { 'model': window.SearchApp.searchResults.get(product) } );
   $("#product_profile").empty().unbind().html( v.render().el ).dialog(
     {

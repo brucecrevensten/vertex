@@ -69,8 +69,20 @@ describe('EMS PageTags', function() {
 
   // Spec 16.1.5
   it('16.1.5 - Clicking to view the product profile should generate a PageTag event', function() {
-    //showProductProfile('testGranule');
-    //expect(ntptEventTag).toHaveBeenCalledWith('ev=showProductProfile');
+    var geofilter = SearchApp.searchParameters.getGeographicFilter();
+    geofilter.set({'bbox': '-180,-90,180,90'});
+    $('#filter_bbox').val('-180,-90,180,90');
+    $('#filter_bbox').trigger('change');
+    var searchButton = $('#triggerSearch');
+    searchButton.click();
+    // Clear the results of the ntptEventTag call from running the
+    // search button or it will get checked with the
+    // toHaveBeenCalledWith check below.
+    ntptEventTag = null;
+    ntptEventTag = jasmine.createSpy('ntptEventTag');
+    showProductProfile('E2_81917_STD_F305');
+    $('#product_profile').dialog('close');
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=showProductProfile');
   });
 
   // Spec 16.1.6
