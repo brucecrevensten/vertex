@@ -14,6 +14,7 @@ describe('EMS PageTags', function() {
     });
 
     // Mock out the PageTag functions that we should be calling.
+    ntptLinkTag = jasmine.createSpy('ntptLinkTag');
     ntptEventTag = jasmine.createSpy('ntptEventTag');
     ntptAddPair = jasmine.createSpy('ntptAddPair');
     ntptDropPair = jasmine.createSpy('ntptDropPair');
@@ -86,8 +87,17 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.6
-  it('Clicking the browse image in the profile page should generate a PageTag event', function() {
-    // This may have to be a manual test.
+  it('16.1.6 - Clicking the browse image in the profile page should generate a PageTag event', function() {
+    var geofilter = SearchApp.searchParameters.getGeographicFilter();
+    geofilter.set({'bbox': '-180,-90,180,90'});
+    $('#filter_bbox').val('-180,-90,180,90');
+    $('#filter_bbox').trigger('change');
+    var searchButton = $('#triggerSearch');
+    searchButton.click();
+    showProductProfile('E2_81917_STD_F305');
+    $('#product_profile a').click();
+    $('#product_profile').dialog('close');
+    expect(ntptLinkTag).toHaveBeenCalledWith($('#product_profile a').get(0));
   });
 
   // Spec 16.1.7

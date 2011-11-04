@@ -30,6 +30,11 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
       var s = m.files.select( function(row) { return ( 'BROWSE' == row.get('processingType') ) } );
       if ( s[0] ) {
         t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank', 'title':m.get('GRANULENAME') } ).html( t );
+        t.click(function() {
+          if(typeof ntptLinkTag == 'function') {
+            return ntptLinkTag(this);
+          }
+        });
       }     
 		} else {
       this.ppWidth = 500; // missing image = make narrow  
