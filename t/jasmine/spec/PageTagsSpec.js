@@ -1,6 +1,7 @@
 describe('EMS PageTags', function() {
-  beforeEach( function() {
 
+  beforeEach( function() {
+    $.storage.del('q_cookie_');
     jasmine.getFixtures().fixturesPath = 'spec/fixtures';
     loadFixtures('SearchApp.html');
     window.SearchApp = new SearchAppView;
@@ -21,6 +22,12 @@ describe('EMS PageTags', function() {
     window.alert = jasmine.createSpy('alert');
     window.open = jasmine.createSpy('open');
   });
+
+  afterEach( function() {
+    $.storage.del('q_cookie_');
+  });
+
+
   // Spec 16.1.1
   it('16.1.1 - Clicking the "Search" button should generate a PageTag event', function() {
     var geofilter = SearchApp.searchParameters.getGeographicFilter();
@@ -101,8 +108,23 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.7
-  it('"Add all by type" events generate a PageTag event that records processing type', function() {
-    
+  it('"16.1.7 - Add all by type" events generate a PageTag event that records processing type', function() {
+    var geofilter = SearchApp.searchParameters.getGeographicFilter();
+    geofilter.set({'bbox': '-180,-90,180,90'});
+    $('#filter_bbox').val('-180,-90,180,90');
+    $('#filter_bbox').trigger('change');
+    var searchButton = $('#triggerSearch');
+    searchButton.click();
+    // Clear the results of the ntptEventTag call from running the
+    // search button or it will get checked with the
+    // toHaveBeenCalledWith check below.
+    ntptEventTag = null;
+    ntptEventTag = jasmine.createSpy('ntptEventTag');
+
+    $('#toggleProcMenu').click();
+    var button = $('#addProductsByType li:first button');
+    button.click();
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=selectAll:' + button.attr('processing'));
   });
 
   // Spec 16.1.8

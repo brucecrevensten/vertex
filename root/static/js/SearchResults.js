@@ -299,6 +299,11 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
       ).click( function(e) {
        
         var pl = $(this).attr('processing');
+
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=selectAll:' + pl);
+        }
+
         var filesToAdd = [];
         SearchApp.searchResults.each(
           function(aProduct)
@@ -313,7 +318,8 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
             }
           );
         SearchApp.downloadQueue.add( _.union(filesToAdd), {'silent':true} ); // suspend extra flashes of queue button
-        SearchApp.downloadQueue.trigger('add'); // manually trigger to get one flash effect
+        SearchApp.downloadQueueView.alter_cookie();
+        SearchApp.downloadQueueSummaryView.render();
       }
       );
       m.append( li.append( ab ) );
