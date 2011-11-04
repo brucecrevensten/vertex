@@ -1,10 +1,9 @@
 $(function() {
-
 window.SearchAppView = Backbone.View.extend({	
 
   initialize: function() {
-	$.storage = new $.store();
-	
+	 $.storage = new $.store();
+
     this.user = new User();
 
     this.userLoginView = new UserLoginView( { model: this.user, el: $('#login_dialog') } );
@@ -132,6 +131,8 @@ window.SearchAppView = Backbone.View.extend({
       $("#triggerSearch").button('disable').focus();
 
     });
+
+  
 
 
 	this.searchButtonState = new SearchButtonState(); // defaults to searchState as opposed to stopSearchState
@@ -296,6 +297,7 @@ var ActiveSearchFiltersView = Backbone.View.extend(
 
 
 });
+
 JSON.stringify = JSON.stringify || function (obj) {
 	var t = typeof (obj);
 	if (t != "object" || obj === null) {
