@@ -1,11 +1,18 @@
-beforeEach( function() {
-  jasmine.getFixtures().fixturesPath = 'spec/fixtures';
-  loadFixtures('SearchApp.html');
-  window.SearchApp = new SearchAppView;
-});
-
 describe('EMS PageTags', function() {
   beforeEach( function() {
+
+    jasmine.getFixtures().fixturesPath = 'spec/fixtures';
+    loadFixtures('SearchApp.html');
+    window.SearchApp = new SearchAppView;
+    
+    // Mock out jQuery.ajax calls to return fixture data.
+    spyOn($, "ajax").andCallFake(function(args) {
+      waits(1000);
+      args.success(searchReturn);
+      this.abort = function() { };
+      return(this);
+    });
+
     // Mock out the PageTag functions that we should be calling.
     ntptEventTag = jasmine.createSpy('ntptEventTag');
     ntptAddPair = jasmine.createSpy('ntptAddPair');

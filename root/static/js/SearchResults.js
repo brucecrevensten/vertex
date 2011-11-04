@@ -71,7 +71,7 @@ var SearchResults = Backbone.Collection.extend(
           processData: true,
           dataType: "json",
           context: this,
-          success: function(data, textStatus, jqXHR) {
+          success: jQuery.proxy(function(data, textStatus, jqXHR) {
             
             this.data = data;
 			     
@@ -89,8 +89,8 @@ var SearchResults = Backbone.Collection.extend(
 			if (callback != null) {
 				callback(); // this is for using sinon spys in unit tests
 			}
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
+        }, this),
+        error: jQuery.proxy(function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
             // todo: move this gui code into the view objects
             case 204:
@@ -101,7 +101,7 @@ var SearchResults = Backbone.Collection.extend(
               SearchApp.searchResultsView.showError(jqXHR);
 			        this.trigger('clear_results');
           }
-        }
+        }, this)
       });
 		
 		return xhr;
