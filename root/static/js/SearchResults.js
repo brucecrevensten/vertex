@@ -31,7 +31,7 @@ var SearchResults = Backbone.Collection.extend(
         }
 
         // Create the DataProductFile, add to the collection in the DataProduct
-        dp.files.add( {
+        dp.files.add( { 
           thumbnail: data[i].THUMBNAIL,
           productId: data[i].GRANULENAME,
           id: data[i].ID,
@@ -58,8 +58,8 @@ var SearchResults = Backbone.Collection.extend(
       this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
     },
 
-    fetchSearchResults: function(searchURL, searchData) {
-
+    fetchSearchResults: function(searchURL, searchData, callback) {
+      
       this.data = {}; // flush previous result set
 
      // var results = 
@@ -69,11 +69,12 @@ var SearchResults = Backbone.Collection.extend(
           url: searchURL,
           data: searchData,
           processData: true,
-          dataType: "jsonp",
+          dataType: "json",
           context: this,
           success: function(data, textStatus, jqXHR) {
+            
             this.data = data;
-
+			     
             this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
@@ -83,7 +84,11 @@ var SearchResults = Backbone.Collection.extend(
       
             this.build(this.data);
             this.trigger('refresh');
+            
 
+			if (callback != null) {
+				callback(); // this is for using sinon spys in unit tests
+			}
         },
         error: function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
@@ -330,8 +335,6 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
-
-    this.options.downloadQueue.bind('queue:remove', this.render);
    
  	this.model.bind('authSuccess', jQuery.proxy(function() {
 		this.render('authSuccess');
@@ -436,6 +439,7 @@ var SearchResultsView = Backbone.View.extend(
   render: function(args) {
     this.trigger('render');
 
+	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
       this.clearOverlays();
 	  if (args != "authSuccess") {
@@ -444,44 +448,65 @@ var SearchResultsView = Backbone.View.extend(
 	  return this;
     }
 
-    var el = $(this.el);
-    var parent = el.parent();
-    el.detach();
-    el.empty();
-    
-    var li = '';
+    $('#con').empty(); 
+
+    var el = $('<table id="searchResults" width="375" style="margin:20px 0px 20px 0px;"></table>');
+  
     var ur = SearchApp.user.getWidgetRenderer();
+    var li="";
+    var li_2="";
+    this.collection.each( function( model, i, l ) {   
+          var d = model.toJSON();
+        
+         li = '<tr><td class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
+          + ur.srThumbnail( model )
+          + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
+          + '<div class="productRowTools">'
+          + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
+          + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
+          + '<span class="ui-button-text">More information&hellip;</span>'
+          + '</button>'
+          + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
+          + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
+          + '<span class="ui-button-text">Show files&hellip;</span>'
+          + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
+          + '</div>'
+          + '</div><div style="clear:both;"></div></td></tr>';
+  
+      li_2 += li;
+      }, this);
+
+      var tableHtml =
+              '<thead>'+
+                '<tr>'+
+                  '<th></th>'+
+                '</tr>'+
+              '</thead>'+
+              '<tbody>'+
+                li_2 +
+              '</tbody>';
+        el.html(tableHtml);
+
+        $('#con').append(el); // append the table to it's container
     
-    // This loop need to be tight.
-    this.collection.each( function( model, i, l ) {
-      
-      var d = model.toJSON();
-      li += '<li class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
-      + ur.srThumbnail( model )
-      + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
-      + '<div class="productRowTools">'
-      + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
-      + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
-      + '<span class="ui-button-text">More information&hellip;</span>'
-      + '</button>'
-      + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
-      + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
-      + '<span class="ui-button-text">Show files&hellip;</span>'
-      + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
-      + '</div>'
-      + '</div><div style="clear:both;"></div></li>';
 
-    }, this);
+    // Enhance the table using a DataTable object. 
+     this.dataTable = $('#searchResults').dataTable(
+      { 
+          "bProcessing": true,
+          "bAutoWidth": true,
+          "aoColumns": [
+            {"sWidth": "100%"}
+          ],
+          "bDestroy": true,     // destroy old table
+          "sScrollY": "500px",
+          "iDisplayLength": 1000,
+          "bLengthChange": false // do not allow users to change the default page length
+    });
 
-    // TODO remove, after benchmarking?
-    //li.find('img').error( function() { $(this).remove(); });
-
-    el.html(li);
-    parent.append(el);
-
-    $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
-    $('#searchResults li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
-
+    $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
+    $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
+   
     this.showResults();
     this.clearOverlays();
     this.renderOnMap();

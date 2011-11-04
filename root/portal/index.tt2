@@ -92,6 +92,7 @@
         <button id="triggerSearch"></button>
 		<button id="stopSearch"></button>
 		<button id="resetSearch"></button>
+    
 		<div>
 			<br />
 			<div id="searchMessage"></div> 
@@ -137,17 +138,15 @@
         </div>
       </div>
 
-      <div class="ui-widget">
-        <div id="active-filters" class="ui-state-highlight ui-corner-all">
-          <div id="active-filters-list"></div>
-        </div>
-      </div>
 		
 		<div>
 		<div id="srCount"></div>
 	    <div id="srProcLevelTool"></div>
 		</div>
-      <ul id="searchResults"></ul>
+
+    <div id="con">
+      <table id="searchResults" style="margin:20px 0px 20px 0px;"></table>
+    </div>
 </div>
 
   </div> <!-- end contents -->

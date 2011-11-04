@@ -68,7 +68,7 @@ var SearchParameters = Backbone.Model.extend(
 	},
 
     defaults: {
-        format:"jsonp"
+        format:"json"
     },
 
 	stripEmptyJSON: function(json) {
