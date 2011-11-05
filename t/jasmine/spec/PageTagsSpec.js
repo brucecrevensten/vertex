@@ -158,7 +158,28 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.13
-  it('Clicking a bulk download type in the download queue modal generates a PageTag event', function() {
+  it('16.1.13 - Clicking a bulk download type in the download queue modal generates a PageTag event', function() {
+    var geofilter = SearchApp.searchParameters.getGeographicFilter();
+    geofilter.set({'bbox': '-180,-90,180,90'});
+    $('#filter_bbox').val('-180,-90,180,90');
+    $('#filter_bbox').trigger('change');
+    var searchButton = $('#triggerSearch');
+    searchButton.click();
+    $('div.tool_enqueuer :first').click();
+    var button = $('ul.granuleProductList li button').get(0);
+    var product_file = $(button).attr('product_file_id');
+    button.click();
+    ntptEventTag.reset();
+    $('#queue_summary').click();
+    //Disable form submitting for this test.
+    $('#download_queue_form').submit(function() { return false; });
+    $('#download_type_metalink').click();
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=downloadMetalink');
+    $('#download_type_csv').click();
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=downloadCSV');
+    $('#download_type_kml').click();
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=downloadKML');
+    $('#download_queue parent').dialog('close');
   });
 
   // Spec 16.1.14
