@@ -36,7 +36,6 @@ var DownloadQueueSearchResultsView = Backbone.View.extend({
     _.bindAll(this, "render");
     this.collection.bind("add", this.render);
     this.collection.bind("remove", this.render);
-	this.collection.bind("add", this.alter_cookie);
 	this.collection.bind("remove", this.alter_cookie);
 
     //TODO: bind this to the 'render' event on the search results
