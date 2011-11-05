@@ -75,13 +75,17 @@ var DataProductFilesView = Backbone.View.extend( {
         li.append( jQuery('<a/>', {
           'href': e.url,
           'class': 'tool_download',
-          'target': '_blank'
+          'target': '_blank',
         }).button( {
           'icons': {
             'primary': "ui-icon-circle-arrow-s"
           },
           label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
-        }) );
+        }).click(function() {
+          if(typeof ntptLinkTag == 'function') {
+            return ntptLinkTag(this);
+          }
+        }));
       }
 
       li.append( $('<button>Add to queue</button>', {

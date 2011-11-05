@@ -72,7 +72,9 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.5
-  it('16.1.5, 16.1.6, 16.1.11, 16.1.12 - Product profile PageTag events', function() {
+  it('16.1.5, 16.1.6, 16.1.11, 16.1.12, 16.1.14 - Product profile PageTag events', function() {
+
+    SearchApp.user.set({'authenticated': true, 'authType': 'LEGACY'}, {'silent': true});
     var geofilter = SearchApp.searchParameters.getGeographicFilter();
     geofilter.set({'bbox': '-180,-90,180,90'});
     $('#filter_bbox').val('-180,-90,180,90');
@@ -92,6 +94,9 @@ describe('EMS PageTags', function() {
     button.click();
     expect(ntptDropPair).toHaveBeenCalledWith('product_file_id', product_file_id);
     expect(ntptEventTag).toHaveBeenCalledWith('ev=removeProductFromQueue');
+    var downloadLink = $('#product_profile ul.downloads a').get(0);
+    $(downloadLink).click()
+    expect(ntptLinkTag).toHaveBeenCalledWith($('#product_profile ul.downloads a').get(0));
     $('#product_profile').dialog('close');
   });
 
@@ -180,10 +185,6 @@ describe('EMS PageTags', function() {
     $('#download_type_kml').click();
     expect(ntptEventTag).toHaveBeenCalledWith('ev=downloadKML');
     $('#download_queue').dialog('close');
-  });
-
-  // Spec 16.1.14
-  it('Clicking an individual download link generates a PageTag event', function() {
   });
 
   // Spec 16.1.15
