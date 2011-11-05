@@ -301,7 +301,8 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
         var pl = $(this).attr('processing');
 
         if(typeof ntptEventTag == 'function') {
-          ntptEventTag('ev=selectAll:' + pl);
+          ntptAddPair('processingType', pl);
+          ntptEventTag('ev=selectAll');
         }
 
         var filesToAdd = [];

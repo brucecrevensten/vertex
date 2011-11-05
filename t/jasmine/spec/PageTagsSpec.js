@@ -113,7 +113,8 @@ describe('EMS PageTags', function() {
     $('#toggleProcMenu').click();
     var button = $('#addProductsByType li:first button');
     button.click();
-    expect(ntptEventTag).toHaveBeenCalledWith('ev=selectAll:' + button.attr('processing'));
+    expect(ntptAddPair).toHaveBeenCalledWith('processingType', button.attr('processing'));
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=selectAll');
   });
 
   // Spec 16.1.8
