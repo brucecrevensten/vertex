@@ -157,7 +157,7 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.11
-  it('16.1.11 - Adding items to the download queue generates a PageTag event', function() {
+  it('16.1.11, 16.1.12 - Adding and removing items to the download queue from the search results generates a PageTag event', function() {
     var geofilter = SearchApp.searchParameters.getGeographicFilter();
     geofilter.set({'bbox': '-180,-90,180,90'});
     $('#filter_bbox').val('-180,-90,180,90');
@@ -176,10 +176,9 @@ describe('EMS PageTags', function() {
     button.click();
     expect(ntptAddPair).toHaveBeenCalledWith('product_file_id', product_file);
     expect(ntptEventTag).toHaveBeenCalledWith('ev=addProductToQueue');
-  });
-
-  // Spec 16.1.12
-  it('Removing items from the download queue generates a PageTag event', function() {
+    button.click();
+    expect(ntptDropPair).toHaveBeenCalledWith('product_file_id', product_file);
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=removeProductFromQueue');
   });
 
   // Spec 16.1.13

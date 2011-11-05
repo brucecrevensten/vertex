@@ -183,6 +183,10 @@ window.showInlineProductFiles = function(event, product) {
           var el = $(this);
           if ( el.prop('disabled') == 'disabled' ) { return false; }
           if ( el.prop('selected') == 'selected' ) {
+            if(typeof ntptEventTag == 'function') {
+              ntptDropPair('product_file_id', $(this).attr('product_file_id'));
+              ntptEventTag('ev=removeProductFromQueue');
+            }
             el.toggleClass('tool-dequeue');
             el.prop('selected','false');
             SearchApp.downloadQueue.remove( SearchApp.searchResults.get( el.attr('product_id') ).files.get( el.attr('product_file_id') ));
