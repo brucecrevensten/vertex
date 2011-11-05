@@ -76,7 +76,7 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.5
-  it('16.1.5 - Clicking to view the product profile should generate a PageTag event', function() {
+  it('16.1.5, 16.1.6 - Product profile PageTag events', function() {
     var geofilter = SearchApp.searchParameters.getGeographicFilter();
     geofilter.set({'bbox': '-180,-90,180,90'});
     $('#filter_bbox').val('-180,-90,180,90');
@@ -89,22 +89,10 @@ describe('EMS PageTags', function() {
     ntptEventTag = null;
     ntptEventTag = jasmine.createSpy('ntptEventTag');
     showProductProfile('E2_81917_STD_F305');
-    $('#product_profile').dialog('close');
     expect(ntptEventTag).toHaveBeenCalledWith('ev=showProductProfile');
-  });
-
-  // Spec 16.1.6
-  it('16.1.6 - Clicking the browse image in the profile page should generate a PageTag event', function() {
-    var geofilter = SearchApp.searchParameters.getGeographicFilter();
-    geofilter.set({'bbox': '-180,-90,180,90'});
-    $('#filter_bbox').val('-180,-90,180,90');
-    $('#filter_bbox').trigger('change');
-    var searchButton = $('#triggerSearch');
-    searchButton.click();
-    showProductProfile('E2_81917_STD_F305');
     $('#product_profile a').click();
-    $('#product_profile').dialog('close');
     expect(ntptLinkTag).toHaveBeenCalledWith($('#product_profile a').get(0));
+    $('#product_profile').dialog('close');
   });
 
   // Spec 16.1.7
