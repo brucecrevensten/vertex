@@ -318,8 +318,7 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
             }
           );
         SearchApp.downloadQueue.add( _.union(filesToAdd), {'silent':true} ); // suspend extra flashes of queue button
-        SearchApp.downloadQueueView.alter_cookie();
-        SearchApp.downloadQueueSummaryView.render();
+        SearchApp.downloadQueue.trigger('add');
       }
       );
       m.append( li.append( ab ) );

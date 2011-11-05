@@ -95,6 +95,10 @@ var DataProductFilesView = Backbone.View.extend( {
           SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
           $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
         } else {
+          /*if(typeof ntptEventTag == 'function') {
+            ntptAddPair('product_file_id', $(this).attr('product_file_id'));
+            ntptEventTag('addProductToQueue');
+          }*/
           $(this).toggleClass('tool-dequeue');
           $(this).prop('selected','selected');
           SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
@@ -184,6 +188,10 @@ window.showInlineProductFiles = function(event, product) {
             SearchApp.downloadQueue.remove( SearchApp.searchResults.get( el.attr('product_id') ).files.get( el.attr('product_file_id') ));
             el.button( "option", "icons", { primary: "ui-icon-circle-plus" } );
           } else {
+            if(typeof ntptEventTag == 'function') {
+              ntptAddPair('product_file_id', $(this).attr('product_file_id'));
+              ntptEventTag('ev=addProductToQueue');
+            }
             el.toggleClass('tool-dequeue');
             el.prop('selected','selected');
             SearchApp.downloadQueue.add( SearchApp.searchResults.get( el.attr('product_id')).files.get( el.attr('product_file_id')) );

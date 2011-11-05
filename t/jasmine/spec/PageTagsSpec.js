@@ -157,7 +157,25 @@ describe('EMS PageTags', function() {
   });
 
   // Spec 16.1.11
-  it('Adding items to the download queue generates a PageTag event', function() {
+  it('16.1.11 - Adding items to the download queue generates a PageTag event', function() {
+    var geofilter = SearchApp.searchParameters.getGeographicFilter();
+    geofilter.set({'bbox': '-180,-90,180,90'});
+    $('#filter_bbox').val('-180,-90,180,90');
+    $('#filter_bbox').trigger('change');
+    var searchButton = $('#triggerSearch');
+    searchButton.click();
+    // Clear the results of the ntptEventTag call from running the
+    // search button or it will get checked with the
+    // toHaveBeenCalledWith check below.
+    ntptEventTag = null;
+    ntptEventTag = jasmine.createSpy('ntptEventTag');
+
+    $('div.tool_enqueuer :first').click();
+    var button = $('ul.granuleProductList li button')[0];
+    var product_file = $(button).attr('product_file_id');
+    button.click();
+    expect(ntptAddPair).toHaveBeenCalledWith('product_file_id', product_file);
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=addProductToQueue');
   });
 
   // Spec 16.1.12
