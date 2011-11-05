@@ -65,11 +65,11 @@ var PostFiltersView = Backbone.View.extend(
 
   // platforms: array of platform names present in search results
   render: function(platforms) {
-
+   
 	  this.model.reset();
     var el = $(this.el);
     var render = false;
-    
+    console.log(el);
     el.accordion("destroy");
     el.empty();
     
@@ -257,7 +257,15 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   },
 
   changed: function(e) {
-    this.model.clear( { silent: true } );
+/// I AM HERE MK
+    var beamoffnadir  = [];
+    var el = $(this.el);
+
+   el.find('.beamSelector :checked').each( function(i, el) { beamoffnadir.push( el.value ); });
+
+   console.log(beamoffnadir);
+
+   /* this.model.clear( { silent: true } );
     var beamoffnadir  = [];
     var el = $(this.el);
 
@@ -276,7 +284,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       'direction': direction,
       'path': path,
       'frame': frame
-    });
+    });*/
 
   },
 

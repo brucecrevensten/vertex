@@ -72,7 +72,9 @@ var SearchResults = Backbone.Collection.extend(
           dataType: "json",
           context: this,
           success: function(data, textStatus, jqXHR) {
-            
+          if (callback != null) {
+              callback(); // this is for using sinon spys in unit tests
+           }
             this.data = data;
 			     
             this.filteredProductCount = undefined; // Reset filtered state
@@ -83,12 +85,11 @@ var SearchResults = Backbone.Collection.extend(
             this.procTypes = _.uniq( _.pluck( this.data, 'PROCESSINGTYPE') );
       
             this.build(this.data);
-            this.trigger('refresh');
-            
 
-			if (callback != null) {
-				callback(); // this is for using sinon spys in unit tests
-			}
+            this.trigger('refresh');
+          
+
+			    
         },
         error: function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
@@ -103,7 +104,7 @@ var SearchResults = Backbone.Collection.extend(
           }
         }
       });
-		
+		  
 		return xhr;
 
     },
@@ -438,6 +439,7 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function(args) {
     this.trigger('render');
+   
 
 	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
@@ -503,6 +505,7 @@ var SearchResultsView = Backbone.View.extend(
           "iDisplayLength": 1000,
           "bLengthChange": false // do not allow users to change the default page length
     });
+
 
     $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );

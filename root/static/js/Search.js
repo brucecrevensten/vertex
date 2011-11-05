@@ -99,9 +99,9 @@ var SearchParametersView = Backbone.View.extend(
   },
 
   render: function() {
-
     $(this.el).accordion('destroy');
     $(this.el).empty();
+
     for ( var i in this.widgets ) {
       $(this.el).append( '<h3><a href="#'+this.widgets[i].model.name+'">'+this.widgets[i].title+'</a></h3>' );
       $(this.el).append( this.widgets[i].render().el );
@@ -110,6 +110,7 @@ var SearchParametersView = Backbone.View.extend(
       autoHeight: false,
       navigation: true
     });
+
     return this;
   } 
 
