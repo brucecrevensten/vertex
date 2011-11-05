@@ -325,14 +325,23 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
       });
 
       $(this.el).find("#download_type_metalink").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Bulk Download (.metalink)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadMetalink');
+        }
         $('#format_specifier').val( 'metalink');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_csv").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Download Metadata (.csv)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadCSV');
+        }
         $('#format_specifier').val( 'csv');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_kml").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Google Earth (.kml)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadKML');
+        }
         $('#format_specifier').val( 'kml');
         $('#download_queue_form').submit();
       });

@@ -179,7 +179,7 @@ describe('EMS PageTags', function() {
     expect(ntptEventTag).toHaveBeenCalledWith('ev=downloadCSV');
     $('#download_type_kml').click();
     expect(ntptEventTag).toHaveBeenCalledWith('ev=downloadKML');
-    $('#download_queue parent').dialog('close');
+    $('#download_queue').dialog('close');
   });
 
   // Spec 16.1.14
