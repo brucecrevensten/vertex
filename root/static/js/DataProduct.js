@@ -90,15 +90,19 @@ var DataProductFilesView = Backbone.View.extend( {
       }).attr('product_id', e.productId).attr('product_file_id', e.id).click( function(e) {
         if ( $(this).prop('disabled') == 'disabled' ) { return false; }
         if ( $(this).prop('selected') == 'selected' ) {
+          if(typeof ntptEventTag == 'function') {
+            ntptDropPair('product_file_id', $(this).attr('product_file_id'));
+            ntptEventTag('ev=removeProductFromQueue');
+          }
           $(this).toggleClass('tool-dequeue');
           $(this).prop('selected','false');
           SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
           $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
         } else {
-          /*if(typeof ntptEventTag == 'function') {
+          if(typeof ntptEventTag == 'function') {
             ntptAddPair('product_file_id', $(this).attr('product_file_id'));
-            ntptEventTag('addProductToQueue');
-          }*/
+            ntptEventTag('ev=addProductToQueue');
+          }
           $(this).toggleClass('tool-dequeue');
           $(this).prop('selected','selected');
           SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
