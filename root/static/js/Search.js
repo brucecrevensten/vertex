@@ -174,19 +174,6 @@ var GeographicFilter = BaseFilter.extend(
 
   validate: function(attrs) {
 		this.trigger('update');
-		/*	if (attrs.bbox != "") {
-				$("#triggerSearch").empty();
-				$("#triggerSearch").button(
-			      {
-			        icons: {
-			          primary: "ui-icon-search"
-			        },
-			        label: "Search",
-					disabled: false
-			    }).focus();
-			} else {
-					$("#triggerSearch").attr('disabled', true);
-			}*/
   }
 
 }
@@ -208,12 +195,11 @@ var GeographicWidget = BaseWidget.extend(
     "change input" : "changed"
   },
   
-  changed: function(evt) {
+  changed: jQuery.proxy(function(evt) {
     this.model.reset();
     this.model.set( { "bbox": $(this.el).find('input').val() });
     var bbox = $(this.el).find('input').val().split(/\s*,\s*/);
     bbox.reverse();
-    var selfref = this;
     
     while(bbox.length) {
       var lng = bbox.pop();
@@ -227,22 +213,22 @@ var GeographicWidget = BaseWidget.extend(
         draggable: true
       });
       google.maps.event.addListener(marker, 'drag', function() {
-        selfref.updateSearchAreaOverlay();
+        this.updateSearchAreaOverlay();
       });
       google.maps.event.addListener(marker, 'dragend', function() {
-        selfref.updateWidgetFromOverlay();
+        this.updateWidgetFromOverlay();
       });
-      selfref.model.markers.push(marker);
+      this.model.markers.push(marker);
     }
-    if(selfref.model.markers.length == 2) {
-      selfref.updateSearchAreaOverlay();
-      selfref.updateWidgetFromOverlay();
+    if(this.model.markers.length == 2) {
+      this.updateSearchAreaOverlay();
+      this.updateWidgetFromOverlay();
       searchMap.fitBounds(this.searchAreaOverlay.getBounds());
     }
 
     this.render();
   
-  },
+  }, this),
   render: function() {
     $(this.el).html(
       _.template('\
@@ -266,27 +252,26 @@ var GeographicWidget = BaseWidget.extend(
     initMap();
 
     google.maps.event.clearListeners(searchMap, 'click');
-    var selfref = this; //needed for the events below, as 'this' does not obtain closure
     if(this.clickListener == null) {
-      this.clickListener = google.maps.event.addListener(searchMap, 'click', function(event) {
-        if(selfref.model.markers.length >= 2) { return; }
+      this.clickListener = google.maps.event.addListener(searchMap, 'click', jQuery.proxy(function(event) {
+        if(this.model.markers.length >= 2) { return; }
         var marker = new google.maps.Marker({
           position: event.latLng,
           map: searchMap,
           draggable: true
         });
-        google.maps.event.addListener(marker, 'drag', function() {
-          selfref.updateSearchAreaOverlay();
-        });
-        google.maps.event.addListener(marker, 'dragend', function() {
-          selfref.updateWidgetFromOverlay();
-        });
-        selfref.model.markers.push(marker);
-        if(selfref.model.markers.length == 2) {
-          selfref.updateSearchAreaOverlay();
-          selfref.updateWidgetFromOverlay();
+        google.maps.event.addListener(marker, 'drag', jQuery.proxy(function() {
+          this.updateSearchAreaOverlay();
+        }, this));
+        google.maps.event.addListener(marker, 'dragend', jQuery.proxy(function() {
+          this.updateWidgetFromOverlay();
+        }, this));
+        this.model.markers.push(marker);
+        if(this.model.markers.length == 2) {
+          this.updateSearchAreaOverlay();
+          this.updateWidgetFromOverlay();
         }
-      });
+      }, this));
     }
 
     this.searchAreaOverlay.setMap(searchMap);
