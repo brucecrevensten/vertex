@@ -439,9 +439,6 @@ var DateWidget = BaseWidget.extend(
         minDate: new Date(1990, 1 - 1, 1),
         yearRange: '1990:'+today.getFullYear()
     });
-    start_date = $(this.el).find('#filter_start').datepicker().val();
-    $(this.el).find('#filter_start').datepicker("setDate", start_date);
-
     $(this.el).find('#filter_end').datepicker({
         dateFormat: 'yy-mm-dd',
         changeMonth: true,
@@ -449,9 +446,6 @@ var DateWidget = BaseWidget.extend(
         minDate: new Date(1990, 1 - 1, 1),
         yearRange: '1990:'+today.getFullYear()
     });
-    end_date = $(this.el).find('#filter_end').datepicker().val();
-    $(this.el).find('#filter_end').datepicker("setDate", end_date);
-
     return this;
   }
 });
@@ -525,6 +519,9 @@ var PlatformWidget = BaseWidget.extend(
       return this;
     },
     renderPlatformInfo: function(e) {
+      if(typeof ntptEventTag == 'function') {
+        ntptEventTag('ev=viewPlatform');
+      }
       var platform = $(e.currentTarget).attr('platform');
       $('#platform_profile').html(
         _.template( '\
@@ -645,7 +642,9 @@ var SearchButtonView = Backbone.View.extend({
 	      },
 	        label: "Search"
 	    }).bind("click", jQuery.proxy( function(e) {
-		    
+        if(typeof ntptEventTag == 'function') {
+		      ntptEventTag('ev=startSearch');
+        }
         // Reset certain state aspects when triggering a new search
         SearchApp.searchResults.searchParameters.update();
 	      SearchApp.searchResultsView.showSearching();
@@ -656,6 +655,9 @@ var SearchButtonView = Backbone.View.extend({
 	    }, this)).focus();
 
 	    this.bind('abortSearch', function() {
+        if(typeof ntptEventTag == 'function') {
+         ntptEventTag('ev=stopSearch'); 
+        }
 	      this.xhr.abort();
 	    });
 
@@ -673,7 +675,6 @@ var SearchButtonView = Backbone.View.extend({
   },
 
 	toggleButton: function() {
-		
 		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() == "") ||
 		($('#filter_bbox').val() == "" && $('#filter_granule_list').val() != "")    ) {
 				$("#triggerSearch").empty();
