@@ -394,6 +394,8 @@ var DateFilter = BaseFilter.extend(
     var today = new Date();
     this.set({"start":this.format_date(this.get_date_N_years_ago(2))});
     this.set({"end":this.format_date(today)});
+    this.set({"repeat_start":'1990'});
+    this.set({"repeat_end":'2015'});
   },
 	
 	initialize: function() {
@@ -429,7 +431,10 @@ var DateWidget = BaseWidget.extend(
     today = new Date();
     $(this.el).html(
       _.template('<label for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
-      <label for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>">\
+      <label for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
+      <input type="checkbox" id="filter_repeat">&nbsp;Repeat yearly<br />\
+      <label for="repeat_start">Start year (YYYY)</label><input type="text" id="filter_repeat_start" name="repeat_start" value="<%= repeat_start %>" disabled>\
+      <label for="repeat_end">End year (YYYY)</label><input type="text" id="filter_repeat_end" name="repeat_end" value="<%= repeat_end %>" disabled>\
       ', this.model.toJSON())
     );
     $(this.el).find('#filter_start').datepicker({
@@ -451,8 +456,18 @@ var DateWidget = BaseWidget.extend(
     });
     end_date = $(this.el).find('#filter_end').datepicker().val();
     $(this.el).find('#filter_end').datepicker("setDate", end_date);
-
+    $(this.el).find('#filter_repeat').bind('change', this.toggleRepeat);
+    
     return this;
+  },
+  toggleRepeat: function() {
+    if($('#filter_repeat').attr('checked')) {
+      $('#filter_repeat_start').removeAttr('disabled');
+      $('#filter_repeat_end').removeAttr('disabled');
+    } else {
+      $('#filter_repeat_start').attr('disabled', true);
+      $('#filter_repeat_end').attr('disabled', true);
+    }	
   }
 });
 
