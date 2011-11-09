@@ -148,6 +148,7 @@ var GeographicFilter = BaseFilter.extend(
 {
   initialize: function() {
   },
+
   name: "GeographicFilter",
 
   markers: new Array(),
@@ -173,7 +174,34 @@ var GeographicFilter = BaseFilter.extend(
   },
 
   validate: function(attrs) {
-		this.trigger('update');
+    if(attrs.bbox == '') {
+      return;
+    }
+    var bbox = attrs.bbox.split(/\s*,\s*/);
+    // Make sure we have the correct number of points
+    if(bbox.length != 4) {
+      return('Invalid number of points.');
+    }
+    for(var ii = 0; ii < bbox.length; ii++) {
+      // Make sure the coordinate provided is a number.
+      if(isNaN(parseFloat(bbox[ii])) || !isFinite(bbox[ii])) {
+        return('Bounding box contains a non-numeric value.');
+      }
+      // Make sure the coordinate provided is within the bounds of our
+      // coordiante system.
+      if(ii % 2) {
+        // This coordiante  should be in the range -90 to 90
+        if(bbox[ii] < -90 || bbox[ii] > 90) {
+          return('Bounding box coordiante out of range.');
+        }
+      } else {
+        // This coordiante should be in the range -90 to 90
+        if(bbox[ii] < -180 || bbox[ii] > 180) {
+          alert(bbox[ii]);
+          return('Bounding box coordiante out of range.');
+        }
+      }
+    }
   }
 
 }
@@ -192,13 +220,23 @@ var GeographicWidget = BaseWidget.extend(
   },
 
   events : {
-    "change input" : "changed"
+    "change" : "changed"
   },
   
-  changed: jQuery.proxy(function(evt) {
+  changed: function(evt) {
     this.model.reset();
-    this.model.set( { "bbox": $(this.el).find('input').val() });
-    var bbox = $(this.el).find('input').val().split(/\s*,\s*/);
+    this.model.set( { "bbox": $('#filter_bbox').val() }, {
+      error: function(model, error) {
+        alert(error);
+      }
+    });
+    var bbox = this.model.get('bbox');
+    bbox = bbox.split(/\s*,\s*/);
+    // Do not continue if the bbox is empty (failed to validate.)
+    if(bbox.length < 4) {
+      this.render();
+      return;
+    }
     bbox.reverse();
     
     while(bbox.length) {
@@ -212,12 +250,12 @@ var GeographicWidget = BaseWidget.extend(
         map: searchMap,
         draggable: true
       });
-      google.maps.event.addListener(marker, 'drag', function() {
+      google.maps.event.addListener(marker, 'drag', jQuery.proxy(function() {
         this.updateSearchAreaOverlay();
-      });
-      google.maps.event.addListener(marker, 'dragend', function() {
+      }, this));
+      google.maps.event.addListener(marker, 'dragend', jQuery.proxy(function() {
         this.updateWidgetFromOverlay();
-      });
+      }, this));
       this.model.markers.push(marker);
     }
     if(this.model.markers.length == 2) {
@@ -228,7 +266,7 @@ var GeographicWidget = BaseWidget.extend(
 
     this.render();
   
-  }, this),
+  },
   render: function() {
     $(this.el).html(
       _.template('\
