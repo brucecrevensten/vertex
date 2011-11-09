@@ -58,6 +58,7 @@ var SearchParameters = Backbone.Model.extend(
 			if (i=="bbox") {
 				if (json[i] == null || json[i] == "") {
 					set=false;
+          this.unset('bbox');
 				}
 			}
 		}
@@ -174,33 +175,37 @@ var GeographicFilter = BaseFilter.extend(
   },
 
   validate: function(attrs) {
+    var error = '';
     if(attrs.bbox == '') {
       return;
     }
     var bbox = attrs.bbox.split(/\s*,\s*/);
     // Make sure we have the correct number of points
     if(bbox.length != 4) {
-      return('Invalid number of points.');
+       error = 'Invalid number of points.';
     }
     for(var ii = 0; ii < bbox.length; ii++) {
       // Make sure the coordinate provided is a number.
       if(isNaN(parseFloat(bbox[ii])) || !isFinite(bbox[ii])) {
-        return('Bounding box contains a non-numeric value.');
+        error = 'Bounding box contains a non-numeric value.';
       }
       // Make sure the coordinate provided is within the bounds of our
       // coordiante system.
       if(ii % 2) {
         // This coordiante  should be in the range -90 to 90
         if(bbox[ii] < -90 || bbox[ii] > 90) {
-          return('Bounding box coordiante out of range.');
+          error = 'Bounding box coordiante out of range.';
         }
       } else {
         // This coordiante should be in the range -90 to 90
         if(bbox[ii] < -180 || bbox[ii] > 180) {
           alert(bbox[ii]);
-          return('Bounding box coordiante out of range.');
+          error = 'Bounding box coordiante out of range.';
         }
       }
+    }
+    if(error != '') {
+      return(error);
     }
   }
 
@@ -220,13 +225,14 @@ var GeographicWidget = BaseWidget.extend(
   },
 
   events : {
-    "change" : "changed"
+    "change input" : "changed"
   },
   
   changed: function(evt) {
     this.model.reset();
     this.model.set( { "bbox": $('#filter_bbox').val() }, {
       error: function(model, error) {
+        model.trigger('change', model);
         alert(error);
       }
     });
@@ -235,6 +241,7 @@ var GeographicWidget = BaseWidget.extend(
     // Do not continue if the bbox is empty (failed to validate.)
     if(bbox.length < 4) {
       this.render();
+      this.model.trigger('update');
       return;
     }
     bbox.reverse();
@@ -265,7 +272,7 @@ var GeographicWidget = BaseWidget.extend(
     }
 
     this.render();
-  
+    this.model.trigger('update');
   },
   render: function() {
     $(this.el).html(
@@ -273,15 +280,9 @@ var GeographicWidget = BaseWidget.extend(
 <p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South<br />(or use the map)<br />Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
-', this.model.toJSON()));/*.find('input').bind('input',jQuery.proxy(function() {	
-				this.model.trigger('update');	
-				},this));*/
+', this.model.toJSON()));
 				
-	$(this.el).find('input').bind('input',jQuery.proxy(function() {	
-			this.model.trigger('update');	
-		},this));
     this.renderMap();
-
     return this;
   },
 
@@ -289,7 +290,6 @@ var GeographicWidget = BaseWidget.extend(
 
     initMap();
 
-    google.maps.event.clearListeners(searchMap, 'click');
     if(this.clickListener == null) {
       this.clickListener = google.maps.event.addListener(searchMap, 'click', jQuery.proxy(function(event) {
         if(this.model.markers.length >= 2) { return; }
@@ -374,6 +374,7 @@ var GeographicWidget = BaseWidget.extend(
       var data = {};
       data[target.attr('name')] = target.attr('value');
       this.model.set(data);
+      this.model.trigger('update');
     }
   },
 
