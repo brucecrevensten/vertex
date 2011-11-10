@@ -3,13 +3,13 @@ var PathFrameWidgetComponent = BaseWidget.extend({
 
   },
   events: {
-    "change input" : "changed"
+ //   "change input" : "changed"
   },
   changed: function(evt){
-    var target = $(evt.currentTarget),
+  /*  var target = $(evt.currentTarget),
     data = {};
     data[target.attr('name')] = target.attr('value');
-    this.model.set(data);
+    this.model.set(data);*/
   },
 
   // A gotcha!  For ALOS this is correctly named (path) but for other platforms you expect 'orbit'.
@@ -22,8 +22,8 @@ var PathFrameWidgetComponent = BaseWidget.extend({
 
     $(this.el).addClass('pathFrameSelector').html(
       _.template('<fieldset><legend><%= legend %></legend>\
-      <label style="width: 3em; display: inline-block; text-align: right; padding-right: 1ex;"><%= pathLabel %></label><input type="text" size="10" name="path" value="<%= path %>"><br/>\
-      <label style="width: 3em; display: inline-block; text-align: right; padding-right: 1ex;">Frame</label><input type="text" size="10" name="frame" value="<%= frame %>">\
+      <label style="width: 3em; display: inline-block; text-align: right; padding-right: 1ex;"><%= pathLabel %></label><input id="alosPathText" type="text" size="10" name="path" value="<%= path %>"><br/>\
+      <label style="width: 3em; display: inline-block; text-align: right; padding-right: 1ex;">Frame</label><input id="alosFrameText"  type="text" size="10" name="frame" value="<%= frame %>">\
       </div>', rowData)
     );
     return this;

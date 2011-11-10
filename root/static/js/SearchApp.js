@@ -33,12 +33,12 @@ window.SearchAppView = Backbone.View.extend({
     /******/
       // Create the sinon server and respond with fixture data
        
-      //  var fakeUrl = "/fakeUrl";
-      //  this.server = sinon.fakeServer.create();
+        var fakeUrl = "/fakeUrl";
+        this.server = sinon.fakeServer.create();
 
-        //this.server.respondWith("POST", fakeUrl,
-          //                   [200, { "Content-Type": "application/json" },
-            //                  JSON.stringify(Fixtures2.arrayJSON50)]);
+        this.server.respondWith("POST", fakeUrl,
+                             [200, { "Content-Type": "application/json" },
+                              JSON.stringify(Fixtures2.arrayJSON50)]);
 
         
     /********/ 
@@ -54,121 +54,103 @@ window.SearchAppView = Backbone.View.extend({
         var h = $(aData[0]);
         var c = h.find("div").attr("product_id"); // might make this faster by providing lookup using iDataIndex
       
+        if (this.searchResults.get(c).get("PLATFORM") == "ALOS") {
+              if (SearchApp.filterDictionary.has('FBS 21.5')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "21.5" ) {
+                  return true;
+                } 
+              }
 
-        if (SearchApp.filterDictionary.has('FBS 21.5')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "21.5" ) {
-            return true;
-          } 
-        }
-
-        
-        if (SearchApp.filterDictionary.has('FBS 34.3')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
-            return true;
-          }   
-        } 
-        
-       if (SearchApp.filterDictionary.has('FBS 41.5')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "41.5") {
-            return true;
-          }   
-        } 
-
-                
-       if (SearchApp.filterDictionary.has('FBS 50.8')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "50.8") {
-            return true;
-          }   
-        } 
-          
-       if (SearchApp.filterDictionary.has('FBD 34.3')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBD" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
-            return true;
-          }   
-        }   
-
-        if (SearchApp.filterDictionary.has('PLR 21.5')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "21.5") {
-            return true;
-          }   
-        }   
-       
-        if (SearchApp.filterDictionary.has('PLR 23.1')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "23.1") {
-            return true;
-          }   
-        } 
-        
-        if (SearchApp.filterDictionary.has('WB1 27.1')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB1" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "27.1") {
-            return true;
-          }   
-        }    
-
-        if (SearchApp.filterDictionary.has('WB2 27.1')) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB2" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == "27.1") {
-            return true;
-          }   
-        }
-
-        if (SearchApp.filterDictionary.has('ASCENDING ALOS')) {
-          if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending" && 
-              this.searchResults.get(c).get("PLATFORM") == "ALOS") {
-            return true;
-          }   
-        }
-
-        if (SearchApp.filterDictionary.has('DESCENDING ALOS')) {
-          if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending" && 
-              this.searchResults.get(c).get("PLATFORM") == "ALOS") {
               
-            return true;
-          }   
-        }
+              if (SearchApp.filterDictionary.has('FBS 34.3')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
+                  return true;
+                }   
+              } 
+              
+             if (SearchApp.filterDictionary.has('FBS 41.5')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "41.5") {
+                  return true;
+                }   
+              } 
 
+                      
+             if (SearchApp.filterDictionary.has('FBS 50.8')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "50.8") {
+                  return true;
+                }   
+              } 
+                
+             if (SearchApp.filterDictionary.has('FBD 34.3')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBD" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
+                  return true;
+                }   
+              }   
 
+              if (SearchApp.filterDictionary.has('PLR 21.5')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "21.5") {
+                  return true;
+                }   
+              }   
+             
+              if (SearchApp.filterDictionary.has('PLR 23.1')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "23.1") {
+                  return true;
+                }   
+              } 
+              
+              if (SearchApp.filterDictionary.has('WB1 27.1')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB1" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "27.1") {
+                  return true;
+                }   
+              }    
 
-          /* if (this.searchResults.get(c).get("OFFNADIRANGLE") == "41.5") {
-            console.log("GOT ONE");
-            return true;
-          } */
+              if (SearchApp.filterDictionary.has('WB2 27.1')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB2" && 
+                    this.searchResults.get(c).get("OFFNADIRANGLE") == "27.1") {
+                  return true;
+                }   
+              }
 
-        //} 
-        
-    /*    // Filter 
-        if (SearchApp.filterDictionary['FBS 34.3'] == 1) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == 34.3) {
-            return false;
-          }   
-        }   
+              if (SearchApp.filterDictionary.has('ASCENDING ALOS')) {
+                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+                  return true;
+                }   
+              }
 
-        // Filter 
-        if (SearchApp.filterDictionary['FBS 41.5'] == 1) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == 41.5) {
-            return false;
-          }  
-        } 
+              if (SearchApp.filterDictionary.has('DESCENDING ALOS')) {
+                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                    
+                  return true;
+                }   
+              }
 
-                // Filter 
-        if (SearchApp.filterDictionary['FBS 50.8'] == 1) {
-          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-              this.searchResults.get(c).get("OFFNADIRANGLE") == 50.8) {
-            return false;
-          }  
-        } 
+             if (SearchApp.filterDictionary.has('PATHALOS')) {
+                if (this.searchResults.get(c).get("PATHNUMBER") == SearchApp.filterDictionary.val('PATHALOS')) {
+                  return true;
+                }   
+             }
+            
+             if (SearchApp.filterDictionary.has('FRAMEALOS')) {
+                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEALOS')) {
+                  return true;
+                }   
+             }
 
-        */
+             if (SearchApp.filterDictionary.has('FRAMEALOS')) {
+                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEALOS')) {
+                  return true;
+                }   
+             }
+          }
         
       if (SearchApp.filterDictionary.length==0) {
         return true;

@@ -51,11 +51,13 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     filter: function() {
-      this.trigger('filter');
+   /*   this.trigger('filter');
 
       var d = this.postFilters.applyFilters( this.data );
       this.build( d );
       this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
+
+      */
     },
 
     fetchSearchResults: function(searchURL, searchData, callback) {
@@ -356,6 +358,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#results-banner").hide();
     $('#before-search-msg').show();
     $('#active-filters').hide();
+    $('#globalSlider').hide();
   },
 
   showResults: function() {
@@ -368,6 +371,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#active-filters').show();
     $('#srCount').show();
     $('#srProcLevelTool').show();
+    $('#globalSlider').show();
   },
 
   showSearching: function() {
@@ -381,6 +385,7 @@ var SearchResultsView = Backbone.View.extend(
     this.clearOverlays();
     $('#active-filters').show();
     $('#srProcLevelTool').hide();
+    $('#globalSlider').hide();
   },
 
   showError: function(jqXHR) {
@@ -390,7 +395,9 @@ var SearchResultsView = Backbone.View.extend(
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").hide();
+    $('#globalSlider').hide();
     $("#error-message").show();
+
     var errorText;
     switch( jqXHR.status ) {
       case '400': errorText = 'Some search fields were missing or invalid, and your search could not be completed.';
@@ -413,6 +420,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#platform_facet").hide();
     $('#platform_facets').hide();
+    $('#globalSlider').hide();
     this.clearOverlays();
   },
 
@@ -513,13 +521,37 @@ var SearchResultsView = Backbone.View.extend(
     // MK - Temporary Dependence on SearchApp to test idea
     SearchApp.dataTable = this.dataTable;
 
+    $('#globalSlider').slider({
+                            min: 0, 
+                            max:100,
+                            animate: true,
+                            value: 75 
+                          }).bind("slide", 
+                          function(event, ui) {
+                              console.log("Setting to " + ui.value / 100);
+                               for (i in SearchApp.searchResultsView.mo) {
+                                    SearchApp.searchResultsView.mo[i].setOptions({
+                                      fillColor: '#777777',
+                                      fillOpacity: ui.value / 100,
+                                      strokeColor: '#333333',
+                                      strokeOpacity: 1,
+                                      zIndex: 1000
+                                    }); 
+                                  
+                                } 
+    });
+
+
     $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
+
 
     this.showResults();
     this.clearOverlays();
   this.renderOnMap();
     this.resetHeight();
+
+   
 
     if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
       $("#srCount").empty().html(_.template("<%= total %> results found",
@@ -567,9 +599,9 @@ var SearchResultsView = Backbone.View.extend(
               new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
             ),
             fillColor: '#777777',
-            fillOpacity: 0.25,
+            fillOpacity: $('#globalSlider').slider("value")/100,
             strokeColor: '#333333',
-            strokeOpacity: 0.5,
+            strokeOpacity: 1,
             strokeWeight: 2,
             zIndex: 1000,
             clickable: true
@@ -586,9 +618,9 @@ var SearchResultsView = Backbone.View.extend(
     if( this.activePoly ) {
       this.mo[this.activePoly].setOptions({
         fillColor: '#777777',
-        fillOpacity: 0.25,
+        fillOpacity: $('#globalSlider').slider("value")/100,
         strokeColor: '#333333',
-        strokeOpacity: 0.5,
+        strokeOpacity: 1,
         zIndex: 1000
       });
     }
@@ -601,15 +633,6 @@ var SearchResultsView = Backbone.View.extend(
 
   },
   removeHighlight: function(e) {
-    for (i in e.view.SearchApp.searchResultsView.mo)  {
-    e.view.SearchApp.searchResultsView.mo[i].setOptions({
-          fillColor: '#777777',
-          fillOpacity: 0.25,
-          strokeColor: '#333333',
-          strokeOpacity: 1,
-          zIndex: 1000
-        });
-      }
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
     if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), $(e.currentTarget).attr("product_id") )) {
       // It's in the DQ, turn it blue again  
@@ -623,9 +646,9 @@ var SearchResultsView = Backbone.View.extend(
     } else {
       e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
         fillColor: '#777777',
-        fillOpacity: 0.25,
+        fillOpacity: $('#globalSlider').slider("value")/100,
         strokeColor: '#333333',
-        strokeOpacity: 0.5,
+        strokeOpacity: 1,
         zIndex: 1000
       });
     }
@@ -648,9 +671,9 @@ var SearchResultsView = Backbone.View.extend(
       } else {
         e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
           fillColor: '#777777',
-          fillOpacity: 0.25,
+          fillOpacity: $('#globalSlider').slider("value")/100,
           strokeColor: '#333333',
-          strokeOpacity: 0.5,
+          strokeOpacity: 1,
           zIndex: 1000
         });
       }
@@ -669,15 +692,15 @@ var SearchResultsView = Backbone.View.extend(
     */
     e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
 
-       e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
+    e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
       fillColor: '#FFFFB4',
       fillOpacity: .75,
       strokeColor: '#FFFF00',
       strokeOpacity: 1,
-      zIndex: 10000
+      zIndex: 1500
     });
 
-    for (i in e.view.SearchApp.searchResultsView.mo) {
+   /* for (i in e.view.SearchApp.searchResultsView.mo) {
       if (i != $(e.currentTarget).attr("product_id")) {
     e.view.SearchApp.searchResultsView.mo[i].setOptions({
       fillColor: '#777777',
@@ -687,7 +710,7 @@ var SearchResultsView = Backbone.View.extend(
       zIndex: 10000
     }); 
     }
-  }
+  }*/
 
    },
   // use this array for clearing the overlays from the map when the results change(?)

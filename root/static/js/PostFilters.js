@@ -13,7 +13,7 @@ var PostFilters = Backbone.Model.extend(
 
       var self = this;
 
-      _.each( this.postFilters, function(e, i, l) {
+   /*   _.each( this.postFilters, function(e, i, l) {
         e.bind('change', function(filter) {
           self.trigger('change:postfilter', filter);
         })
@@ -23,7 +23,7 @@ var PostFilters = Backbone.Model.extend(
         var v = {};
         v[filter.platform] = filter.toJSON();
         this.set( v );
-      });
+      });*/
 
     },
 
@@ -34,11 +34,12 @@ var PostFilters = Backbone.Model.extend(
     },
     
     applyFilters: function( data ) {
-      this.trigger('applyFilters');
+     /* this.trigger('applyFilters');
       for( var i in this.postFilters ) {
         data = this.postFilters[i].filter(data);
       }
       return data;
+      */
     }
   }
 );
@@ -197,7 +198,7 @@ var AlosFacet = PlatformFacet.extend(
       return new AlosFacetButton({model: this});
     },
 
-    filter: function( d ) {
+    /* filter: function( d ) {
       this.trigger('filter');
       var f = this.toJSON();
       
@@ -238,7 +239,7 @@ var AlosFacet = PlatformFacet.extend(
           });
       }
       return _.union(a, d);
-    } 
+    } */
 
   }
 );
@@ -257,79 +258,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   },
 
   changed: function(e) {
-  ///////  var beamoffnadir  = [];
-   // var el = $(this.el);
-    
-    //console.log(el);
-    //console.log(this.el);
-  /*$(this.el).find('.beamSelector :checked').each( function(i, el) { 
-      //beamoffnadir.push( el.value ); 
-      console.log("CHECKED");
-      console.log(el.value);
-      SearchApp.filterDictionary.add(el.value);
-  });*/
-
-
-//////// GOOD CODE
-/*
-   $(this.el).find('.beamSelector').each( function(i, el) { 
-      if ($(el).attr('checked') == "checked") {
-        if (!SearchApp.filterDictionary.has(el.value)) {
-          SearchApp.filterDictionary.add(el.value);
-        }
-      } else {
-        if (SearchApp.filterDictionary.has(el.value)) {
-          SearchApp.filterDictionary.remove(el.value);
-        }
-      }
-  });
-  */
-  /////////////
-
-
-/*
-  $(this.el).find('.beamSelector :not:checked').each( function(i, el) { 
-      //beamoffnadir.push( el.value ); 
-      console.log("UNCHECKED");
-      console.log(el.value);
-      SearchApp.filterDictionary.remove(el.value);
-  });
-*/
-  ////////////////// GOOD CODE /////  SearchApp.dataTable.fnDraw();
-
-  // $(this.el).find('.beamSelector :unchecked').each( function(i, el) { beamoffnadir.push( el.value ); });
-
-  // console.log(beamoffnadir);
-
-   ///////console.log("Clicking button");
-  /**** for (i in beamoffnadir) {
-    // SearchApp.dataTable.fnFilter(beamoffnadir[i]);
-      SearchApp.filterDictionary[beamoffnadir[i]] = 1;
-   } ******/
-      
-    ///////SearchApp.dataTable.fnDraw();
-
-   /* this.model.clear( { silent: true } );
-    var beamoffnadir  = [];
-    var el = $(this.el);
-
-    el.find('.beamSelector :checked').each( function(i, el) { beamoffnadir.push( el.value ); });
-
-    // If no beam modes are selected, choose an invalid key for filtering so the platform
-    // doesn't show up at all
-    if( true == _.isEmpty(beamoffnadir) ) { beamoffnadir.push( 'empty' ); }
-
-    var direction = el.find('input[name="direction"]:checked').val();
-    var path = el.find('input[name="path"]').val();
-    var frame = el.find('input[name="frame"]').val();
-    
-    this.model.set({
-      'beamoffnadir': beamoffnadir,
-      'direction': direction,
-      'path': path,
-      'frame': frame
-    });*/
-
   },
 
   beamModes: [
@@ -398,27 +326,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   render: function() {
 
     if( true !== this.hasRendered ) {
-      this.renderHtml();
-      
-      // Beam Modes
-      $(this.el).find('.beamSelector').each( function(i, element) { 
-
-        $(element).find('input').click(function(e) {
-          var el = $(e.currentTarget);
-          SearchApp.applyFilter(el);
-        });     
-      });
-
-    // Flight Directions
-     $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
-        var curEl = $(e.currentTarget);
-        $(this.el).find('input[type="radio"]').each( function(i,element) {
-              SearchApp.filterDictionary.remove( $(element).val() + " ALOS" );
-        });
-        if (curEl.val() != "any") {
-           SearchApp.filterDictionary.add($(curEl).val() + " ALOS");
-        }
-      },this));     
+        this.renderHtml();        
     }
 
     $(this.el).dialog({
@@ -429,14 +337,60 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       title: "ALOS PALSAR Options",
       position: [30,100],
       buttons: {
-        "Apply": function() { SearchApp.dataTable.fnDraw(); /* $(this).dialog('close'); */ },
+        "Apply": function() 
+                 { 
+                    SearchApp.dataTable.fnDraw(); /* $(this).dialog('close'); */ 
+                  },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
         }, this)
       }
     }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
+        
 
+    // BIND FILTERS
+        // Beam Modes
+        $(this.el).find('.beamSelector').each( function(i, element) { 
+
+          $(element).find('input').click(function(e) {
+            var el = $(e.currentTarget);
+            SearchApp.applyFilter(el);
+          });     
+        });
+
+       // Flight Directions
+       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
+          var curEl = $(e.currentTarget);
+          $(this.el).find('input[type="radio"]').each( function(i,element) {
+                SearchApp.filterDictionary.remove( $(element).val() + " ALOS" );
+          });
+          if (curEl.val() != "any") {
+             SearchApp.filterDictionary.add($(curEl).val() + " ALOS");
+          }
+        },this));     
+
+      // ALOS Path
+     $('#alosPathText').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove('PATHALOS');
+            } else {
+               SearchApp.filterDictionary.add('PATHALOS',el.val());
+            }
+          }, this));
+
+          // ALOS FRAME
+     $('#alosFrameText').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove('FRAMEALOS');
+            } else {
+               SearchApp.filterDictionary.add('FRAMEALOS',el.val());
+            }
+          }, this));
+
+    // END BIND FILTERS
   }
   
 });

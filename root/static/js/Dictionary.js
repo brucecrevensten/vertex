@@ -7,20 +7,26 @@ var Dictionary = Backbone.Model.extend(
   		},
 
   		add: function(key, value) {
-        console.log("ADDING " + key);
+        console.log("trying to add " + key + "with " + value);
         if (key != undefined && key != null) {
     			if (value == null || value == undefined) {
   	  			value=1;
   	  		}
+          if (this.dictionary[key] == null || this.dictionary[key] == undefined) {
+            this.length = this.length + 1;
+          }
     			this.dictionary[key] = value;
-    			this.length = this.length + 1;
+          console.log(this.dictionary);
         }
   		},
 
   		remove: function(key) {
         console.log("REMOVING " + key);
+        console.log(this.dictionary);
         if (key != undefined) {
+          console.log("deleting " + key);
     			delete this.dictionary[key];
+          console.log(this.dictionary);
     			this.length = this.length - 1;
     			if (this.length < 0 ) {
     				this.length = 0;
@@ -37,7 +43,7 @@ var Dictionary = Backbone.Model.extend(
   		},
 
   		val: function(key) {
-  			if (this.dictionary[key] != undefined) {
+  			if (this.dictionary[key] != undefined && this.dictionary[key]!= null) {
   				return this.dictionary[key];
   			} else {
   				return null;
