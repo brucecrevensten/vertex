@@ -432,7 +432,7 @@ var DateWidget = BaseWidget.extend(
     $(this.el).html(
       _.template('<label for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
       <label for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
-      <input type="checkbox" id="filter_repeat">&nbsp;Repeat yearly<br />\
+      <input type="checkbox" id="filter_repeat" name="repeat_yearly">&nbsp;Repeat yearly<br />\
       <label for="repeat_start">Start year (YYYY)</label><input type="text" id="filter_repeat_start" name="repeat_start" value="<%= repeat_start %>" disabled>\
       <label for="repeat_end">End year (YYYY)</label><input type="text" id="filter_repeat_end" name="repeat_end" value="<%= repeat_end %>" disabled>\
       ', this.model.toJSON())
