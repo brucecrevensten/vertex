@@ -69,7 +69,7 @@ var PostFiltersView = Backbone.View.extend(
 	  this.model.reset();
     var el = $(this.el);
     var render = false;
-    console.log(el);
+    
     el.accordion("destroy");
     el.empty();
     
@@ -179,15 +179,15 @@ var AlosFacet = PlatformFacet.extend(
       frame: null,
       direction: 'any',
       beamoffnadir: [
-        'FBS21.5',
-        'FBS34.3',
-        'FBS41.5',
-        'FBS50.8',
-        'FBD34.3',
-        'PLR21.5',
-        'PLR23.1',
+     /*   'FBS 21.5',
+        'FBS 34.3',
+        'FBS 41.5',
+        'FBS 50.8',
+        'FBD 34.3',
+        'PLR 21.5',
+        'PLR 23.1',
         'WB1',
-        'WB2'
+        'WB2'*/
       ]
     },
     initialize: function() {
@@ -253,17 +253,61 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
   initialize: function() {
     _.bindAll(this);
-    this.model.bind('change', this.renderHtml, this);
+    this.model.bind('change', this.renderHtml, this);     
   },
 
   changed: function(e) {
-/// I AM HERE MK
-    var beamoffnadir  = [];
-    var el = $(this.el);
+  ///////  var beamoffnadir  = [];
+   // var el = $(this.el);
+    
+    //console.log(el);
+    //console.log(this.el);
+  /*$(this.el).find('.beamSelector :checked').each( function(i, el) { 
+      //beamoffnadir.push( el.value ); 
+      console.log("CHECKED");
+      console.log(el.value);
+      SearchApp.filterDictionary.add(el.value);
+  });*/
 
-   el.find('.beamSelector :checked').each( function(i, el) { beamoffnadir.push( el.value ); });
 
-   console.log(beamoffnadir);
+//////// GOOD CODE
+/*
+   $(this.el).find('.beamSelector').each( function(i, el) { 
+      if ($(el).attr('checked') == "checked") {
+        if (!SearchApp.filterDictionary.has(el.value)) {
+          SearchApp.filterDictionary.add(el.value);
+        }
+      } else {
+        if (SearchApp.filterDictionary.has(el.value)) {
+          SearchApp.filterDictionary.remove(el.value);
+        }
+      }
+  });
+  */
+  /////////////
+
+
+/*
+  $(this.el).find('.beamSelector :not:checked').each( function(i, el) { 
+      //beamoffnadir.push( el.value ); 
+      console.log("UNCHECKED");
+      console.log(el.value);
+      SearchApp.filterDictionary.remove(el.value);
+  });
+*/
+  ////////////////// GOOD CODE /////  SearchApp.dataTable.fnDraw();
+
+  // $(this.el).find('.beamSelector :unchecked').each( function(i, el) { beamoffnadir.push( el.value ); });
+
+  // console.log(beamoffnadir);
+
+   ///////console.log("Clicking button");
+  /**** for (i in beamoffnadir) {
+    // SearchApp.dataTable.fnFilter(beamoffnadir[i]);
+      SearchApp.filterDictionary[beamoffnadir[i]] = 1;
+   } ******/
+      
+    ///////SearchApp.dataTable.fnDraw();
 
    /* this.model.clear( { silent: true } );
     var beamoffnadir  = [];
@@ -293,25 +337,25 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       title: "FBS (Fine Beam Single Polarization)",
       group: "FBS",
       modes: [
-        { label: "21.5&deg;", value: "FBS21.5" },
-        { label: "34.3&deg;", value: "FBS34.3" },
-        { label: "41.5&deg;", value: "FBS41.5" },
-        { label: "50.8&deg;", value: "FBS50.8" }
+        { label: "21.5&deg;", value: "FBS 21.5" },
+        { label: "34.3&deg;", value: "FBS 34.3" },
+        { label: "41.5&deg;", value: "FBS 41.5" },
+        { label: "50.8&deg;", value: "FBS 50.8" }
       ]
     },
     {
       title: "FBD (Fine Beam Double Polarization)",
       group: "FBD",
       modes: [
-        { label: "34.3&deg", value: "FBD34.3" }
+        { label: "34.3&deg", value: "FBD 34.3" }
       ]
     },
     {
       title: "PLR (Polarimetric Mode)",
       group: "PLR",
       modes: [
-        { label: "21.5&deg;", value: "PLR21.5" },
-        { label: "23.1&deg;", value: "PLR23.1" }
+        { label: "21.5&deg;", value: "PLR 21.5" },
+        { label: "23.1&deg;", value: "PLR 23.1" }
       ]
     },
     {
@@ -355,6 +399,26 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
     if( true !== this.hasRendered ) {
       this.renderHtml();
+      
+      // Beam Modes
+      $(this.el).find('.beamSelector').each( function(i, element) { 
+
+        $(element).find('input').click(function(e) {
+          var el = $(e.currentTarget);
+          SearchApp.applyFilter(el);
+        });     
+      });
+
+    // Flight Directions
+     $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
+        var curEl = $(e.currentTarget);
+        $(this.el).find('input[type="radio"]').each( function(i,element) {
+              SearchApp.filterDictionary.remove( $(element).val() + " ALOS" );
+        });
+        if (curEl.val() != "any") {
+           SearchApp.filterDictionary.add($(curEl).val() + " ALOS");
+        }
+      },this));     
     }
 
     $(this.el).dialog({
@@ -365,13 +429,14 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       title: "ALOS PALSAR Options",
       position: [30,100],
       buttons: {
-        "Close": function() { $(this).dialog('close'); },
+        "Apply": function() { SearchApp.dataTable.fnDraw(); /* $(this).dialog('close'); */ },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
         }, this)
       }
-    });
+    }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
+
   }
   
 });

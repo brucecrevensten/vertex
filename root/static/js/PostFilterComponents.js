@@ -44,7 +44,7 @@ var DirectionWidgetComponent = BaseWidget.extend(
       "DESCENDING":"Descending" // key must match value returned by API
     },
     initalize: function() {
-
+      
     },
     events : {
       "change input" : "changed",

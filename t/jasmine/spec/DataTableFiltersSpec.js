@@ -1,4 +1,4 @@
-
+/*
 var ActiveSearchFiltersView = Backbone.View.extend(
 {
   el: '#active-filters-list',
@@ -296,4 +296,43 @@ it("Should create a datatable and load it with fixture data via ajax request to 
  });	
 
 });
+*/
+
+describe("Create a Dictionary Object", function() {
+    it("Should add and remove things from the dictionary", function() {
+        var f = new Dictionary();
+        f.add("key1", 1);
+        f.add("key2", 2);
+        expect(f.length).toEqual(2);
+        expect(f.has("key1")).toBeTruthy();
+        expect(f.has("key2")).toBeTruthy();
+        f.remove("key1");
+        expect(f.has("key1")).toBeFalsy();
+        expect(f.length).toEqual(1);
+        f.remove("key2");
+        expect(f.has("key2")).toBeFalsy();
+        expect(f.length).toEqual(0);
+    });
+
+    it("Should be able to add keys without values", function() {
+        var f = new Dictionary();
+        f.add("key3");
+        expect(f.has("key3"));
+        expect(f.val("key3")).toEqual(1);
+        f.remove("key3");
+        expect(f.val("key3")).toBeNull();
+    });
+
+    it("Should be able to clear contents", function() {
+        var f = new Dictionary();
+        f.add("alksjd");
+        f.add('alsdkj');
+        f.add('alslskjlf');
+        expect(f.length).toEqual(3);
+        f.clear();
+        expect(f.length).toEqual(0);
+    });
+
+}); 
 	
+

@@ -495,6 +495,9 @@ var SearchResultsView = Backbone.View.extend(
     // Enhance the table using a DataTable object. 
      this.dataTable = $('#searchResults').dataTable(
       { 
+           "oLanguage": {
+            "sSearch": "Find"
+           },
           "bProcessing": true,
           "bAutoWidth": true,
           "aoColumns": [
@@ -502,17 +505,20 @@ var SearchResultsView = Backbone.View.extend(
           ],
           "bDestroy": true,     // destroy old table
           "sScrollY": "500px",
-          "iDisplayLength": 1000,
+          "iDisplayLength": 1000, // default number of rows per page
           "bLengthChange": false // do not allow users to change the default page length
     });
 
 
+    // MK - Temporary Dependence on SearchApp to test idea
+    SearchApp.dataTable = this.dataTable;
+
     $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
-   
+
     this.showResults();
     this.clearOverlays();
-    this.renderOnMap();
+  this.renderOnMap();
     this.resetHeight();
 
     if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
@@ -595,7 +601,15 @@ var SearchResultsView = Backbone.View.extend(
 
   },
   removeHighlight: function(e) {
-   
+    for (i in e.view.SearchApp.searchResultsView.mo)  {
+    e.view.SearchApp.searchResultsView.mo[i].setOptions({
+          fillColor: '#777777',
+          fillOpacity: 0.25,
+          strokeColor: '#333333',
+          strokeOpacity: 1,
+          zIndex: 1000
+        });
+      }
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
     if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), $(e.currentTarget).attr("product_id") )) {
       // It's in the DQ, turn it blue again  
@@ -642,7 +656,7 @@ var SearchResultsView = Backbone.View.extend(
       }
     }
 
-    e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
+   /* e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
 
     e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
       fillColor: '#FFFFB4',
@@ -651,6 +665,30 @@ var SearchResultsView = Backbone.View.extend(
       strokeOpacity: 1,
       zIndex: 10000
     });
+
+    */
+    e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
+
+       e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
+      fillColor: '#FFFFB4',
+      fillOpacity: .75,
+      strokeColor: '#FFFF00',
+      strokeOpacity: 1,
+      zIndex: 10000
+    });
+
+    for (i in e.view.SearchApp.searchResultsView.mo) {
+      if (i != $(e.currentTarget).attr("product_id")) {
+    e.view.SearchApp.searchResultsView.mo[i].setOptions({
+      fillColor: '#777777',
+      fillOpacity: 0,
+      strokeColor: '#333333',
+      strokeOpacity: 0.05,
+      zIndex: 10000
+    }); 
+    }
+  }
+
    },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.

@@ -1,7 +1,183 @@
 $(function() {
+
+//******* In place until we update jquery ************//
+  (function(){
+    // remove layerX and layerY
+    var all = $.event.props,
+        len = all.length,
+        res = [];
+    while (len--) {
+      var el = all[len];
+      if (el != 'layerX' && el != 'layerY') res.push(el);
+    }
+    $.event.props = res;
+}());
+////////////////////
+
 window.SearchAppView = Backbone.View.extend({	
 
+  applyFilter: function(el) {       
+      if (el.attr('checked') == "checked") {
+        if (!SearchApp.filterDictionary.has( el.val() )) {
+          SearchApp.filterDictionary.add( el.val() );
+        }
+      } else {
+        if ( SearchApp.filterDictionary.has( el.val() ) ) {
+          SearchApp.filterDictionary.remove( el.val() );
+        }
+      }  
+  },
+
   initialize: function() {
+
+    /******/
+      // Create the sinon server and respond with fixture data
+       
+      //  var fakeUrl = "/fakeUrl";
+      //  this.server = sinon.fakeServer.create();
+
+        //this.server.respondWith("POST", fakeUrl,
+          //                   [200, { "Content-Type": "application/json" },
+            //                  JSON.stringify(Fixtures2.arrayJSON50)]);
+
+        
+    /********/ 
+
+
+
+
+    this.filterDictionary = new Dictionary();
+   // this.filterDictionary.add('FBS 21.5', 1);
+
+    $.fn.dataTableExt.afnFiltering.push(
+      jQuery.proxy( function( oSettings, aData, iDataIndex ) {
+        var h = $(aData[0]);
+        var c = h.find("div").attr("product_id"); // might make this faster by providing lookup using iDataIndex
+      
+
+        if (SearchApp.filterDictionary.has('FBS 21.5')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "21.5" ) {
+            return true;
+          } 
+        }
+
+        
+        if (SearchApp.filterDictionary.has('FBS 34.3')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
+            return true;
+          }   
+        } 
+        
+       if (SearchApp.filterDictionary.has('FBS 41.5')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "41.5") {
+            return true;
+          }   
+        } 
+
+                
+       if (SearchApp.filterDictionary.has('FBS 50.8')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "50.8") {
+            return true;
+          }   
+        } 
+          
+       if (SearchApp.filterDictionary.has('FBD 34.3')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBD" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
+            return true;
+          }   
+        }   
+
+        if (SearchApp.filterDictionary.has('PLR 21.5')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "21.5") {
+            return true;
+          }   
+        }   
+       
+        if (SearchApp.filterDictionary.has('PLR 23.1')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "23.1") {
+            return true;
+          }   
+        } 
+        
+        if (SearchApp.filterDictionary.has('WB1 27.1')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB1" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "27.1") {
+            return true;
+          }   
+        }    
+
+        if (SearchApp.filterDictionary.has('WB2 27.1')) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB2" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == "27.1") {
+            return true;
+          }   
+        }
+
+        if (SearchApp.filterDictionary.has('ASCENDING ALOS')) {
+          if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending" && 
+              this.searchResults.get(c).get("PLATFORM") == "ALOS") {
+            return true;
+          }   
+        }
+
+        if (SearchApp.filterDictionary.has('DESCENDING ALOS')) {
+          if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending" && 
+              this.searchResults.get(c).get("PLATFORM") == "ALOS") {
+              
+            return true;
+          }   
+        }
+
+
+
+          /* if (this.searchResults.get(c).get("OFFNADIRANGLE") == "41.5") {
+            console.log("GOT ONE");
+            return true;
+          } */
+
+        //} 
+        
+    /*    // Filter 
+        if (SearchApp.filterDictionary['FBS 34.3'] == 1) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == 34.3) {
+            return false;
+          }   
+        }   
+
+        // Filter 
+        if (SearchApp.filterDictionary['FBS 41.5'] == 1) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == 41.5) {
+            return false;
+          }  
+        } 
+
+                // Filter 
+        if (SearchApp.filterDictionary['FBS 50.8'] == 1) {
+          if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+              this.searchResults.get(c).get("OFFNADIRANGLE") == 50.8) {
+            return false;
+          }  
+        } 
+
+        */
+        
+      if (SearchApp.filterDictionary.length==0) {
+        return true;
+      }
+      return false;  
+        
+      }, this)
+  );
+
 	 $.storage = new $.store();
 
     this.user = new User();
@@ -129,7 +305,8 @@ window.SearchAppView = Backbone.View.extend({
       e.data.srv.showBeforeSearchMessage();
       $("#srCount").empty()
       $("#triggerSearch").button('disable').focus();
-
+      $("#con").html('');
+       $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>');
     });
 
   

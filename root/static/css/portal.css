@@ -614,3 +614,10 @@ input.login_fields {
   display:none;
 }
 
+#searchResults_filter label {
+  font-weight: bold;
+  margin: 0 0 1em 0;
+  padding: 1ex;
+  font-size: 12pt !important;
+
+}

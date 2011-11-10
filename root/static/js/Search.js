@@ -567,7 +567,7 @@ var GranuleFilter = BaseFilter.extend(
 	
   name: "GranuleFilter",
   reset: function() {
-    this.set({"granule_list":""});
+    this.set({"granule_list":"a"});
   },
   initialize: function() {
     this.reset();
@@ -651,9 +651,19 @@ var SearchButtonView = Backbone.View.extend({
         SearchApp.searchResults.searchParameters.update();
 	      SearchApp.searchResultsView.showSearching();
         SearchApp.postFilters.reset(); // flush any filters the user had set up previously
+        $("#con").html('');
+        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>'); 
+	      
+        this.xhr = SearchApp.searchResults.fetchSearchResults
+                        (AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON()); 
 
-	      this.xhr = SearchApp.searchResults.fetchSearchResults(AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON()); 
-	      this.model.set({'state': 'stopButtonState'});
+     /*   this.xhr = SearchApp.searchResults.fetchSearchResults
+                        (  "/fakeUrl", SearchApp.searchResults.searchParameters.toJSON());
+                      
+	      SearchApp.server.respond(); */
+
+        this.model.set({'state': 'stopButtonState'});
+       
 	    }, this)).focus();
 
 	    this.bind('abortSearch', function() {
@@ -668,6 +678,8 @@ var SearchButtonView = Backbone.View.extend({
 	      this.trigger('abortSearch');
 	      this.model.set({'state': 'searchButtonState'});
 	      SearchApp.searchResultsView.showBeforeSearchMessage();
+        $("#con").html('');
+        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>');
 	    }, this));
 
 	    $(this.el2).hide();
