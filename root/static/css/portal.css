@@ -73,6 +73,10 @@ header {
   margin: 1ex;
 }
 
+#globalSlider{
+    margin:1ex;
+}
+
 #rightColumn {
   position: absolute;
   left: 870px;
