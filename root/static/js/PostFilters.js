@@ -180,7 +180,10 @@ var AlosFacet = PlatformFacet.extend(
       frame: null,
       direction: 'any',
       beamoffnadir: [
-     /*   'FBS 21.5',
+      /* To make a checkbox default to on, place it's value in here
+       ie   
+
+        'FBS 21.5',
         'FBS 34.3',
         'FBS 41.5',
         'FBS 50.8',
@@ -197,50 +200,6 @@ var AlosFacet = PlatformFacet.extend(
     getWidget: function() {
       return new AlosFacetButton({model: this});
     },
-
-    /* filter: function( d ) {
-      this.trigger('filter');
-      var f = this.toJSON();
-      
-      // only do filtering on this platform
-      var a = _.select( d, function(row) {
-        return ( 'ALOS' == row.PLATFORM );
-      });
-      d = _.reject( d, function(row) {
-        return ( 'ALOS' == row.PLATFORM );
-      });
-
-      a = _.reject( a, function(row) {
-        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
-      });
-
-      // todo: move building the arrays to validation / setting phase? later.
-      if( f.frame ) {
-        var frames = this.buildArrayFromString(f.frame);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
-        });
-      }
-
-      if( f.path ) {
-        var paths = this.buildArrayFromString(f.path);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( paths, row.PATHNUMBER ) );
-        });
-      }
-
-      if( f.beamoffnadir.length ) {
-          a = _.reject( a, function(row) {
-            if((row.BEAMMODETYPE == 'WB1') || (row.BEAMMODETYPE == 'WB2')) {
-              return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE));
-            } else {
-              return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE.concat(row.OFFNADIRANGLE)));
-            }
-          });
-      }
-      return _.union(a, d);
-    } */
-
   }
 );
 
@@ -426,7 +385,7 @@ var RadarsatFacet = PlatformFacet.extend(
       frame: null,
       direction: 'any',
       beam: [
-        'EH3',
+       /* 'EH3',
         'EH4',
         'EH6',
         'EL1',
@@ -448,7 +407,7 @@ var RadarsatFacet = PlatformFacet.extend(
         'ST7',
         'WD1',
         'WD2',
-        'WD3'
+        'WD3'*/
       ]
     },
     platform: 'RADARSAT-1',
@@ -459,7 +418,7 @@ var RadarsatFacet = PlatformFacet.extend(
     },
     
     filter: function( d ) {
-      this.trigger('filter');
+    /*  this.trigger('filter');
       var f = this.toJSON();
       
       // only do filtering on this platform
@@ -494,7 +453,7 @@ var RadarsatFacet = PlatformFacet.extend(
           return ( -1 == _.indexOf( f.beam, row.BEAMMODETYPE ));
         });
       }
-      return _.union(a, d);
+      return _.union(a, d);*/
     }
   }
 );
@@ -522,15 +481,15 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
 var RadarsatFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
-  events: {
-   "change input" : "changed",
+ events: {
+ //  "change input" : "changed",
   },
   initialize: function() {
     _.bindAll(this);
     this.model.bind('change', this.renderHtml, this);
   },
   changed: function(e) {
-    var el = $(this.el);
+/*    var el = $(this.el);
 
     this.model.clear( { silent: true });
     var beam = [];
@@ -547,7 +506,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       direction: direction,
       path: path,
       frame: frame
-    });
+    });*/
 
   },
   beamModes: [
@@ -644,16 +603,24 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       title: "RADARSAT-1 Platform Options",
       position: [40,110],
       buttons: {
-        "Close": function() { $(this).dialog('close'); },
+        "Apply": function() { SearchApp.dataTable.fnDraw();/*$(this).dialog('close');*/ },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
         }, this)
       }
-    });
+    }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
+
+
+     $(this.el).find('.beamSelector').each( function(i, element) { 
+
+          $(element).find('input').click(function(e) {
+            var el = $(e.currentTarget);
+            SearchApp.applyFilter(el);
+          });     
+        });
   }
-}
-);
+});
 
 var LegacyFacet = PlatformFacet.extend(
   {

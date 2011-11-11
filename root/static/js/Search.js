@@ -654,11 +654,11 @@ var SearchButtonView = Backbone.View.extend({
         $("#con").html('');
         $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>'); 
 	      
-     /*   this.xhr = SearchApp.searchResults.fetchSearchResults
-                        (AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON());  */
+       this.xhr = SearchApp.searchResults.fetchSearchResults
+                        (AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON());  
 
-        this.xhr = SearchApp.searchResults.fetchSearchResults
-                        (  "/fakeUrl", SearchApp.searchResults.searchParameters.toJSON());
+      /*  this.xhr = SearchApp.searchResults.fetchSearchResults
+                        (  "/fakeUrl", SearchApp.searchResults.searchParameters.toJSON());*/
                       
 	      SearchApp.server.respond(); 
 

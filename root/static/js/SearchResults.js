@@ -359,6 +359,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#before-search-msg').show();
     $('#active-filters').hide();
     $('#globalSlider').hide();
+    $('#globalSliderStroke').hide();
   },
 
   showResults: function() {
@@ -372,6 +373,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#srCount').show();
     $('#srProcLevelTool').show();
     $('#globalSlider').show();
+     $('#globalSliderStroke').show();
   },
 
   showSearching: function() {
@@ -386,6 +388,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#active-filters').show();
     $('#srProcLevelTool').hide();
     $('#globalSlider').hide();
+     $('#globalSliderStroke').hide();
   },
 
   showError: function(jqXHR) {
@@ -396,6 +399,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#async-spinner").hide();
     $("#results-banner").hide();
     $('#globalSlider').hide();
+     $('#globalSliderStroke').hide();
     $("#error-message").show();
 
     var errorText;
@@ -421,6 +425,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#platform_facet").hide();
     $('#platform_facets').hide();
     $('#globalSlider').hide();
+     $('#globalSliderStroke').hide();
     this.clearOverlays();
   },
 
@@ -534,12 +539,33 @@ var SearchResultsView = Backbone.View.extend(
                                       fillColor: '#777777',
                                       fillOpacity: ui.value / 100,
                                       strokeColor: '#333333',
-                                      strokeOpacity: 1,
+                                      strokeOpacity: $('#globalSliderStroke').slider("value") / 100,
                                       zIndex: 1000
                                     }); 
                                   
                                 } 
     });
+
+    $('#globalSliderStroke').slider({
+                            min: 0, 
+                            max:100,
+                            animate: true,
+                            value: 100 
+                          }).bind("slide", 
+                          function(event, ui) {
+                              
+                               for (i in SearchApp.searchResultsView.mo) {
+                                    SearchApp.searchResultsView.mo[i].setOptions({
+                                      fillColor: '#777777',
+                                      fillOpacity: $('#globalSlider').slider("value")/100,
+                                      strokeColor: '#333333',
+                                      strokeOpacity: ui.value / 100,
+                                      zIndex: 1000
+                                    }); 
+                                  
+                                } 
+    });
+
 
 
     $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
@@ -648,7 +674,7 @@ var SearchResultsView = Backbone.View.extend(
         fillColor: '#777777',
         fillOpacity: $('#globalSlider').slider("value")/100,
         strokeColor: '#333333',
-        strokeOpacity: 1,
+        strokeOpacity: $('#globalSliderStroke').slider("value") / 100,
         zIndex: 1000
       });
     }
@@ -673,7 +699,7 @@ var SearchResultsView = Backbone.View.extend(
           fillColor: '#777777',
           fillOpacity: $('#globalSlider').slider("value")/100,
           strokeColor: '#333333',
-          strokeOpacity: 1,
+          strokeOpacity: $('#globalSliderStroke').slider("value") / 100,
           zIndex: 1000
         });
       }

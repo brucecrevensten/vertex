@@ -19,7 +19,7 @@ window.SearchAppView = Backbone.View.extend({
   applyFilter: function(el) {       
       if (el.attr('checked') == "checked") {
         if (!SearchApp.filterDictionary.has( el.val() )) {
-          SearchApp.filterDictionary.add( el.val() );
+          SearchApp.filterDictionary.add( el.val(), el.val() );
         }
       } else {
         if ( SearchApp.filterDictionary.has( el.val() ) ) {
@@ -33,13 +33,13 @@ window.SearchAppView = Backbone.View.extend({
     /******/
       // Create the sinon server and respond with fixture data
        
-        var fakeUrl = "/fakeUrl";
+    /*    var fakeUrl = "/fakeUrl";
         this.server = sinon.fakeServer.create();
 
         this.server.respondWith("POST", fakeUrl,
                              [200, { "Content-Type": "application/json" },
                               JSON.stringify(Fixtures2.arrayJSON50)]);
-
+*/
         
     /********/ 
 
@@ -150,7 +150,20 @@ window.SearchAppView = Backbone.View.extend({
                   return true;
                 }   
              }
+      }
+
+      if (this.searchResults.get(c).get("PLATFORM") == "RADARSAT-1") {
+          if (SearchApp.filterDictionary.has(this.searchResults.get(c).get("BEAMMODETYPE"))) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == SearchApp.filterDictionary.val(this.searchResults.get(c).get("BEAMMODETYPE")) ) {
+                  return true;
+                }   
           }
+       /*   if (SearchApp.filterDictionary.has('EH3')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == SearchApp.filterDictionary.val('EH3')) {
+                  return true;
+                }   
+          }*/
+      }
         
       if (SearchApp.filterDictionary.length==0) {
         return true;

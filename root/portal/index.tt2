@@ -108,11 +108,9 @@
 
 
     <div id="centerColumn">
-
-
-        <div id="searchMap"></div>
-
+      <div id="searchMap"></div>
       <div id="globalSlider"></div>
+      <div id="globalSliderStroke"></div>
     </div> <!-- end center column -->
 
     <div id="rightColumn">
