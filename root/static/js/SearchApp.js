@@ -1,6 +1,7 @@
 $(function() {
 
 //******* In place until we update jquery ************//
+// Gets rid of deprecation warnings that pop up in the console. 
   (function(){
     // remove layerX and layerY
     var all = $.event.props,
@@ -29,25 +30,7 @@ window.SearchAppView = Backbone.View.extend({
   },
 
   initialize: function() {
-
-    /******/
-      // Create the sinon server and respond with fixture data
-       
-    /*    var fakeUrl = "/fakeUrl";
-        this.server = sinon.fakeServer.create();
-
-        this.server.respondWith("POST", fakeUrl,
-                             [200, { "Content-Type": "application/json" },
-                              JSON.stringify(Fixtures2.arrayJSON50)]);
-*/
-        
-    /********/ 
-
-
-
-
     this.filterDictionary = new Dictionary();
-   // this.filterDictionary.add('FBS 21.5', 1);
 
     $.fn.dataTableExt.afnFiltering.push(
       jQuery.proxy( function( oSettings, aData, iDataIndex ) {
@@ -144,12 +127,6 @@ window.SearchAppView = Backbone.View.extend({
                   return true;
                 }   
              }
-
-             if (SearchApp.filterDictionary.has('FRAMEALOS')) {
-                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEALOS')) {
-                  return true;
-                }   
-             }
       }
 
       if (this.searchResults.get(c).get("PLATFORM") == "RADARSAT-1") {
@@ -158,11 +135,101 @@ window.SearchAppView = Backbone.View.extend({
                   return true;
                 }   
           }
-       /*   if (SearchApp.filterDictionary.has('EH3')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == SearchApp.filterDictionary.val('EH3')) {
+
+           if (SearchApp.filterDictionary.has('ORBITRADARSAT')) {
+                if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionary.val('ORBITRADARSAT')) {
                   return true;
                 }   
-          }*/
+             }
+            
+             if (SearchApp.filterDictionary.has('FRAMERADARSAT')) {
+                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMERADARSAT')) {
+                  return true;
+                }   
+             }
+      }
+
+
+      if (this.searchResults.get(c).get("PLATFORM") == "ERS-1") {
+          
+          if (SearchApp.filterDictionary.has('ASCENDINGERS-1')) {
+            if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+                return true;
+              }   
+            }
+
+            if (SearchApp.filterDictionary.has('DESCENDINGERS-1')) {
+              if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                  
+                return true;
+              }   
+            }
+
+           if (SearchApp.filterDictionary.has('ORBITERS-1')) {
+                if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionary.val('ORBITERS-1')) {
+                  return true;
+                }   
+             }
+            
+             if (SearchApp.filterDictionary.has('FRAMEERS-1')) {
+                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEERS-1')) {
+                  return true;
+                }   
+             }
+      }
+
+      if (this.searchResults.get(c).get("PLATFORM") == "ERS-2") {
+       if (SearchApp.filterDictionary.has('ASCENDINGERS-2')) {
+            if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+                return true;
+              }   
+            }
+
+            if (SearchApp.filterDictionary.has('DESCENDINGERS-2')) {
+              if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                  
+                return true;
+              }   
+            }
+
+           if (SearchApp.filterDictionary.has('ORBITERS-2')) {
+                if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionary.val('ORBITERS-2')) {
+                  return true;
+                }   
+             }
+            
+             if (SearchApp.filterDictionary.has('FRAMEERS-2')) {
+                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEERS-2')) {
+                  return true;
+                }   
+             }
+      }
+
+      if (this.searchResults.get(c).get("PLATFORM") == "JERS-1") {
+       if (SearchApp.filterDictionary.has('ASCENDINGJERS-1')) {
+          if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+              return true;
+            }   
+          }
+
+          if (SearchApp.filterDictionary.has('DESCENDINGJERS-1')) {
+            if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                
+              return true;
+            }   
+          }
+
+       if (SearchApp.filterDictionary.has('ORBITJERS-1')) {
+            if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionary.val('ORBITJERS-1')) {
+              return true;
+            }   
+         }
+        
+         if (SearchApp.filterDictionary.has('FRAMEJERS-1')) {
+            if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEJERS-1')) {
+              return true;
+            }   
+         }
       }
         
       if (SearchApp.filterDictionary.length==0) {
@@ -335,12 +402,6 @@ window.SearchAppView = Backbone.View.extend({
 });
 
 window.SearchApp = new SearchAppView;  
-
- /*
-window.onbeforeunload = function() {
-	return "Are you sure you want to leave? Your current search results will be lost.";
-}*/
-
 
 // Instead of using serialzeArray() we can use serializeJSON to return JSON formatted form data. 
 $.fn.serializeJSON=function() {

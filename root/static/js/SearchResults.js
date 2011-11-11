@@ -51,21 +51,13 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     filter: function() {
-   /*   this.trigger('filter');
-
-      var d = this.postFilters.applyFilters( this.data );
-      this.build( d );
-      this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
-
-      */
     },
 
     fetchSearchResults: function(searchURL, searchData, callback) {
       
       this.data = {}; // flush previous result set
 
-     // var results = 
-	var xhr = $.ajax(
+	   var xhr = $.ajax(
         {
           type: "POST",
           url: searchURL,
@@ -359,7 +351,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#before-search-msg').show();
     $('#active-filters').hide();
     $('#globalSlider').hide();
-    $('#globalSliderStroke').hide();
+   
   },
 
   showResults: function() {
@@ -373,7 +365,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#srCount').show();
     $('#srProcLevelTool').show();
     $('#globalSlider').show();
-     $('#globalSliderStroke').show();
+    
   },
 
   showSearching: function() {
@@ -388,7 +380,7 @@ var SearchResultsView = Backbone.View.extend(
     $('#active-filters').show();
     $('#srProcLevelTool').hide();
     $('#globalSlider').hide();
-     $('#globalSliderStroke').hide();
+     
   },
 
   showError: function(jqXHR) {
@@ -399,7 +391,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#async-spinner").hide();
     $("#results-banner").hide();
     $('#globalSlider').hide();
-     $('#globalSliderStroke').hide();
+  
     $("#error-message").show();
 
     var errorText;
@@ -425,7 +417,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#platform_facet").hide();
     $('#platform_facets').hide();
     $('#globalSlider').hide();
-     $('#globalSliderStroke').hide();
+    
     this.clearOverlays();
   },
 
@@ -522,8 +514,6 @@ var SearchResultsView = Backbone.View.extend(
           "bLengthChange": false // do not allow users to change the default page length
     });
 
-
-    // MK - Temporary Dependence on SearchApp to test idea
     SearchApp.dataTable = this.dataTable;
 
     $('#globalSlider').slider({
@@ -533,38 +523,19 @@ var SearchResultsView = Backbone.View.extend(
                             value: 75 
                           }).bind("slide", 
                           function(event, ui) {
-                              console.log("Setting to " + ui.value / 100);
                                for (i in SearchApp.searchResultsView.mo) {
                                     SearchApp.searchResultsView.mo[i].setOptions({
                                       fillColor: '#777777',
                                       fillOpacity: ui.value / 100,
                                       strokeColor: '#333333',
-                                      strokeOpacity: $('#globalSliderStroke').slider("value") / 100,
+                                      strokeOpacity: 1,
                                       zIndex: 1000
                                     }); 
                                   
                                 } 
     });
 
-    $('#globalSliderStroke').slider({
-                            min: 0, 
-                            max:100,
-                            animate: true,
-                            value: 100 
-                          }).bind("slide", 
-                          function(event, ui) {
-                              
-                               for (i in SearchApp.searchResultsView.mo) {
-                                    SearchApp.searchResultsView.mo[i].setOptions({
-                                      fillColor: '#777777',
-                                      fillOpacity: $('#globalSlider').slider("value")/100,
-                                      strokeColor: '#333333',
-                                      strokeOpacity: ui.value / 100,
-                                      zIndex: 1000
-                                    }); 
-                                  
-                                } 
-    });
+  
 
 
 
@@ -674,7 +645,7 @@ var SearchResultsView = Backbone.View.extend(
         fillColor: '#777777',
         fillOpacity: $('#globalSlider').slider("value")/100,
         strokeColor: '#333333',
-        strokeOpacity: $('#globalSliderStroke').slider("value") / 100,
+        strokeOpacity: 1,
         zIndex: 1000
       });
     }
@@ -699,23 +670,12 @@ var SearchResultsView = Backbone.View.extend(
           fillColor: '#777777',
           fillOpacity: $('#globalSlider').slider("value")/100,
           strokeColor: '#333333',
-          strokeOpacity: $('#globalSliderStroke').slider("value") / 100,
+          strokeOpacity: 1,
           zIndex: 1000
         });
       }
     }
 
-   /* e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
-
-    e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-      fillColor: '#FFFFB4',
-      fillOpacity: .75,
-      strokeColor: '#FFFF00',
-      strokeOpacity: 1,
-      zIndex: 10000
-    });
-
-    */
     e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
 
     e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
@@ -725,18 +685,6 @@ var SearchResultsView = Backbone.View.extend(
       strokeOpacity: 1,
       zIndex: 1500
     });
-
-   /* for (i in e.view.SearchApp.searchResultsView.mo) {
-      if (i != $(e.currentTarget).attr("product_id")) {
-    e.view.SearchApp.searchResultsView.mo[i].setOptions({
-      fillColor: '#777777',
-      fillOpacity: 0,
-      strokeColor: '#333333',
-      strokeOpacity: 0.05,
-      zIndex: 10000
-    }); 
-    }
-  }*/
 
    },
   // use this array for clearing the overlays from the map when the results change(?)

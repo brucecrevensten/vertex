@@ -175,19 +175,6 @@ var GeographicFilter = BaseFilter.extend(
 
   validate: function(attrs) {
 		this.trigger('update');
-		/*	if (attrs.bbox != "") {
-				$("#triggerSearch").empty();
-				$("#triggerSearch").button(
-			      {
-			        icons: {
-			          primary: "ui-icon-search"
-			        },
-			        label: "Search",
-					disabled: false
-			    }).focus();
-			} else {
-					$("#triggerSearch").attr('disabled', true);
-			}*/
   }
 
 }
@@ -567,7 +554,7 @@ var GranuleFilter = BaseFilter.extend(
 	
   name: "GranuleFilter",
   reset: function() {
-    this.set({"granule_list":"a"});
+    this.set({"granule_list":""});
   },
   initialize: function() {
     this.reset();
@@ -656,11 +643,6 @@ var SearchButtonView = Backbone.View.extend({
 	      
        this.xhr = SearchApp.searchResults.fetchSearchResults
                         (AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON());  
-
-      /*  this.xhr = SearchApp.searchResults.fetchSearchResults
-                        (  "/fakeUrl", SearchApp.searchResults.searchParameters.toJSON());*/
-                      
-	      SearchApp.server.respond(); 
 
         this.model.set({'state': 'stopButtonState'});
        

@@ -12,19 +12,6 @@ var PostFilters = Backbone.Model.extend(
       ];
 
       var self = this;
-
-   /*   _.each( this.postFilters, function(e, i, l) {
-        e.bind('change', function(filter) {
-          self.trigger('change:postfilter', filter);
-        })
-      });
-
-      this.bind("change:postfilter", function(filter) {
-        var v = {};
-        v[filter.platform] = filter.toJSON();
-        this.set( v );
-      });*/
-
     },
 
     reset: function() {
@@ -34,12 +21,6 @@ var PostFilters = Backbone.Model.extend(
     },
     
     applyFilters: function( data ) {
-     /* this.trigger('applyFilters');
-      for( var i in this.postFilters ) {
-        data = this.postFilters[i].filter(data);
-      }
-      return data;
-      */
     }
   }
 );
@@ -131,7 +112,6 @@ var PlatformFacet = BaseFilter.extend( {
 } ); 
 
 var PlatformFacetView = BaseWidget.extend( {
-
   // selected = this.model.toJSON
   // key = key name to use in selected.key
   // container = element into which all these items should be appended
@@ -308,7 +288,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
         
 
-    // BIND FILTERS
+    
         // Beam Modes
         $(this.el).find('.beamSelector').each( function(i, element) { 
 
@@ -330,7 +310,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
         },this));     
 
       // ALOS Path
-     $('#alosPathText').bind('input', jQuery.proxy(function(e) { 
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
             var el = $(e.currentTarget);
             if (el.val() == "") {
               SearchApp.filterDictionary.remove('PATHALOS');
@@ -340,7 +320,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
           }, this));
 
           // ALOS FRAME
-     $('#alosFrameText').bind('input', jQuery.proxy(function(e) { 
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
             var el = $(e.currentTarget);
             if (el.val() == "") {
               SearchApp.filterDictionary.remove('FRAMEALOS');
@@ -349,7 +329,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
             }
           }, this));
 
-    // END BIND FILTERS
   }
   
 });
@@ -418,42 +397,6 @@ var RadarsatFacet = PlatformFacet.extend(
     },
     
     filter: function( d ) {
-    /*  this.trigger('filter');
-      var f = this.toJSON();
-      
-      // only do filtering on this platform
-      var a = _.select( d, function(row) {
-        return ( 'RADARSAT-1' == row.PLATFORM );
-      });
-      d = _.reject( d, function(row) {
-        return ( 'RADARSAT-1' == row.PLATFORM );
-      });
-
-      a = _.reject( a, function(row) {
-        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
-      });
-
-      // todo: move building the arrays to validation / setting phase? later.
-      if( f.frame ) {
-        var frames = this.buildArrayFromString(f.frame);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
-        });
-      }
-
-      if( f.path ) {
-        var paths = this.buildArrayFromString(f.path);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( paths, row.ORBIT ) );
-        });
-      }
-
-      if( f.beam.length ) {
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( f.beam, row.BEAMMODETYPE ));
-        });
-      }
-      return _.union(a, d);*/
     }
   }
 );
@@ -481,33 +424,9 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
 var RadarsatFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
- events: {
- //  "change input" : "changed",
-  },
   initialize: function() {
     _.bindAll(this);
     this.model.bind('change', this.renderHtml, this);
-  },
-  changed: function(e) {
-/*    var el = $(this.el);
-
-    this.model.clear( { silent: true });
-    var beam = [];
-    el.find('.beamSelector :checked').each( function(i, el) { beam.push( el.value ); });
-
-    if( true == _.isEmpty(beam) ) { beam.push( 'empty' ); }
-
-    var direction = el.find('input[name="direction"]:checked').val();
-    var path = el.find('input[name="path"]').val();
-    var frame = el.find('input[name="frame"]').val();
-
-    this.model.set({
-      beam: beam,
-      direction: direction,
-      path: path,
-      frame: frame
-    });*/
-
   },
   beamModes: [
     { title: "Extended High Incidence Beam, Off-Nadir 52-58&deg;",
@@ -619,6 +538,26 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
             SearchApp.applyFilter(el);
           });     
         });
+
+             //  Path
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove('ORBITRADARSAT');
+            } else {
+               SearchApp.filterDictionary.add('ORBITRADARSAT',el.val());
+            }
+          }, this));
+
+          //  FRAME
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove('FRAMERADARSAT');
+            } else {
+               SearchApp.filterDictionary.add('FRAMERADARSAT',el.val());
+            }
+          }, this));
   }
 });
 
@@ -638,37 +577,6 @@ var LegacyFacet = PlatformFacet.extend(
       return new LegacyFacetButton({model: this});
     },
     filter: function( d ) {
-
-      var f = this.toJSON();
-      
-      var p = this.platform;
-      // only do filtering on this platform
-      var a = _.select( d, function(row) {
-        return ( p == row.PLATFORM );
-      });
-      d = _.reject( d, function(row) {
-        return ( p == row.PLATFORM );
-      });
-
-      a = _.reject( a, function(row) {
-        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
-      });
-
-      if( f.frame ) {
-        var frames = this.buildArrayFromString(f.frame);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
-        });
-      }
-
-      if( f.path ) {
-        var paths = this.buildArrayFromString(f.path);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( paths, row.ORBIT ) );
-        });
-      }
-
-      return _.union(a, d);
     }
   }
 );
@@ -696,21 +604,9 @@ var LegacyFacetButton = PlatformFacetView.extend( {
 var LegacyFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
-  events: {
-   "change input" : "changed",
-  },
   initialize: function() {
     _.bindAll(this);
     this.model.bind('change', this.renderHtml, this);
-  },
-  changed: function(e) {
-    var el = $(this.el);
-    this.model.clear( { silent: true });
-    this.model.set({
-      'direction': el.find('input[name="direction"]:checked').val(),
-      'path': el.find('input[name="path"]').val(),
-      'frame': el.find('input[name="frame"]').val()
-    });
   },
   renderHtml: function() {
     var el = $(this.el);
@@ -741,13 +637,48 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
       title: this.model.platform + " Platform Options",
       position: [50 + this.model.offset, 120 + this.model.offset ],
       buttons: {
-        "Close": function() { $(this).dialog('close'); },
+        "Apply": function() {  SearchApp.dataTable.fnDraw();/* $(this).dialog('close'); */ },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
         }, this)
       }
     });
+
+         // Flight Directions
+       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
+          var curEl = $(e.currentTarget);
+          $(this.el).find('input[type="radio"]').each( jQuery.proxy(function(i,element) {
+                SearchApp.filterDictionary.remove( $(element).val() + this.model.platform );
+          },this));
+          if (curEl.val() != "any") {
+             SearchApp.filterDictionary.add($(curEl).val() + this.model.platform, $(curEl).val());
+          }
+        },this)); 
+
+                //  Path
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+               
+              SearchApp.filterDictionary.remove("ORBIT"+this.model.platform);
+            } else {
+              SearchApp.filterDictionary.add("ORBIT"+this.model.platform,el.val());
+            }
+          }, this));
+
+          //  FRAME
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove("FRAME"+this.model.platform);
+            } else {
+               SearchApp.filterDictionary.add("FRAME"+this.model.platform,el.val());
+            }
+          }, this));
+
+
+
   }
 }
 );

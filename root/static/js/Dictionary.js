@@ -7,7 +7,6 @@ var Dictionary = Backbone.Model.extend(
   		},
 
   		add: function(key, value) {
-        console.log("trying to add " + key + "with " + value);
         if (key != undefined && key != null) {
     			if (value == null || value == undefined) {
   	  			value=1;
@@ -16,17 +15,12 @@ var Dictionary = Backbone.Model.extend(
             this.length = this.length + 1;
           }
     			this.dictionary[key] = value;
-          console.log(this.dictionary);
         }
   		},
 
   		remove: function(key) {
-        console.log("REMOVING " + key);
-        console.log(this.dictionary);
         if (key != undefined) {
-          console.log("deleting " + key);
     			delete this.dictionary[key];
-          console.log(this.dictionary);
     			this.length = this.length - 1;
     			if (this.length < 0 ) {
     				this.length = 0;
