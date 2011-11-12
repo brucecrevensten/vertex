@@ -131,6 +131,19 @@ sub validateDate {
   return undef;
 }
 
+sub validateYear {
+  my ($self, $year, $field) = @_;
+  if($year && $year !~ /^\d{4}$/) {
+    InvalidParameter->throw(
+      parameter => $field,
+      value => $year
+    );
+  } else {
+    return $year;
+  }
+  return undef;
+}
+
 sub start {
   my ($self, $start) = @_;
   return $self->validateDate($start,'start');
@@ -139,6 +152,16 @@ sub start {
 sub end {
   my ($self, $end) = @_;
   return $self->validateDate($end,'end');
+}
+
+sub repeat_start {
+  my ($self, $year) = @_;
+  return $self->validateYear($year, 'repeat_start');
+}
+
+sub repeat_end {
+  my ($self, $year) = @_;
+  return $self->validateYear($year, 'repeat_end');
 }
 
 =item bbox

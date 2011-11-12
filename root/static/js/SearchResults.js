@@ -81,11 +81,9 @@ var SearchResults = Backbone.Collection.extend(
             this.build(this.data);
 
             this.trigger('refresh');
-          
-
 			    
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
             // todo: move this gui code into the view objects
             case 204:
@@ -96,7 +94,7 @@ var SearchResults = Backbone.Collection.extend(
               SearchApp.searchResultsView.showError(jqXHR);
 			        this.trigger('clear_results');
           }
-        }
+        }, this)
       });
 		  
 		return xhr;
@@ -294,6 +292,12 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
       ).click( function(e) {
        
         var pl = $(this).attr('processing');
+
+        if(typeof ntptEventTag == 'function') {
+          ntptAddPair('processingType', pl);
+          ntptEventTag('ev=selectAll');
+        }
+
         var filesToAdd = [];
         SearchApp.searchResults.each(
           function(aProduct)
@@ -308,7 +312,7 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
             }
           );
         SearchApp.downloadQueue.add( _.union(filesToAdd), {'silent':true} ); // suspend extra flashes of queue button
-        SearchApp.downloadQueue.trigger('add'); // manually trigger to get one flash effect
+        SearchApp.downloadQueue.trigger('add');
       }
       );
       m.append( li.append( ab ) );

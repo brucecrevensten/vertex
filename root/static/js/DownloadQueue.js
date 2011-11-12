@@ -36,7 +36,6 @@ var DownloadQueueSearchResultsView = Backbone.View.extend({
     _.bindAll(this, "render");
     this.collection.bind("add", this.render);
     this.collection.bind("remove", this.render);
-	this.collection.bind("add", this.alter_cookie);
 	this.collection.bind("remove", this.alter_cookie);
 
     //TODO: bind this to the 'render' event on the search results
@@ -231,7 +230,7 @@ var DownloadQueueView = Backbone.View.extend(
 
       $(this.el).html(
         _.template('\
-<form id="download_queue_form" action="<%= url %>">\
+<form id="download_queue_form" action="<%= url %>" method="POST">\
 <%= restricted %>\
 <table class="datatable" id="download_queue_table">\
 <thead>\
@@ -326,14 +325,23 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
       });
 
       $(this.el).find("#download_type_metalink").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Bulk Download (.metalink)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadMetalink');
+        }
         $('#format_specifier').val( 'metalink');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_csv").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Download Metadata (.csv)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadCSV');
+        }
         $('#format_specifier').val( 'csv');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_kml").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Google Earth (.kml)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadKML');
+        }
         $('#format_specifier').val( 'kml');
         $('#download_queue_form').submit();
       });

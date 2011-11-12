@@ -352,7 +352,9 @@ window.SearchAppView = Backbone.View.extend({
       srv:this.searchResultsView,
       pf: this.postFilters
     }, function(e) {
-      
+      if(typeof ntptEventTag == 'function') {
+        ntptEventTag('ev=resetSearch');
+      }
       e.data.sp.setDefaults();
       e.data.spv.setWidgets();
       e.data.spv.render();

@@ -75,13 +75,17 @@ var DataProductFilesView = Backbone.View.extend( {
         li.append( jQuery('<a/>', {
           'href': e.url,
           'class': 'tool_download',
-          'target': '_blank'
+          'target': '_blank',
         }).button( {
           'icons': {
             'primary': "ui-icon-circle-arrow-s"
           },
           label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
-        }) );
+        }).click(function() {
+          if(typeof ntptLinkTag == 'function') {
+            return ntptLinkTag(this);
+          }
+        }));
       }
 
       li.append( $('<button>Add to queue</button>', {
@@ -90,11 +94,19 @@ var DataProductFilesView = Backbone.View.extend( {
       }).attr('product_id', e.productId).attr('product_file_id', e.id).click( function(e) {
         if ( $(this).prop('disabled') == 'disabled' ) { return false; }
         if ( $(this).prop('selected') == 'selected' ) {
+          if(typeof ntptEventTag == 'function') {
+            ntptDropPair('product_file_id', $(this).attr('product_file_id'));
+            ntptEventTag('ev=removeProductFromQueue');
+          }
           $(this).toggleClass('tool-dequeue');
           $(this).prop('selected','false');
           SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
           $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
         } else {
+          if(typeof ntptEventTag == 'function') {
+            ntptAddPair('product_file_id', $(this).attr('product_file_id'));
+            ntptEventTag('ev=addProductToQueue');
+          }
           $(this).toggleClass('tool-dequeue');
           $(this).prop('selected','selected');
           SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
@@ -179,11 +191,19 @@ window.showInlineProductFiles = function(event, product) {
           var el = $(this);
           if ( el.prop('disabled') == 'disabled' ) { return false; }
           if ( el.prop('selected') == 'selected' ) {
+            if(typeof ntptEventTag == 'function') {
+              ntptDropPair('product_file_id', $(this).attr('product_file_id'));
+              ntptEventTag('ev=removeProductFromQueue');
+            }
             el.toggleClass('tool-dequeue');
             el.prop('selected','false');
             SearchApp.downloadQueue.remove( SearchApp.searchResults.get( el.attr('product_id') ).files.get( el.attr('product_file_id') ));
             el.button( "option", "icons", { primary: "ui-icon-circle-plus" } );
           } else {
+            if(typeof ntptEventTag == 'function') {
+              ntptAddPair('product_file_id', $(this).attr('product_file_id'));
+              ntptEventTag('ev=addProductToQueue');
+            }
             el.toggleClass('tool-dequeue');
             el.prop('selected','selected');
             SearchApp.downloadQueue.add( SearchApp.searchResults.get( el.attr('product_id')).files.get( el.attr('product_file_id')) );
@@ -206,6 +226,9 @@ window.showInlineProductFiles = function(event, product) {
 }
 
 window.showProductProfile = function(product) {
+  if(typeof ntptEventTag == 'function') {
+    ntptEventTag('ev=showProductProfile');
+  }
   var v = new DataProductView( { 'model': window.SearchApp.searchResults.get(product) } );
   $("#product_profile").empty().unbind().html( v.render().el ).dialog(
     {

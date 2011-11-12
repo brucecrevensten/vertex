@@ -103,7 +103,7 @@ Precondition: $granuleList is a comma-separated list of granule names, validated
 sub getResultsByGranuleList {
 
   my ($self, $r) = @_;
-  my $fragment = $self->buildListQuery( 'granuleName', $r->granule_list) . 
+  my $fragment = $self->buildBigListQuery( 'granuleName', $r->granule_list) . 
   $self->buildListQuery('processingType', $r->processing);
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelectXml . $fragment;
@@ -114,7 +114,7 @@ sub getResultsByGranuleList {
 sub getResultsByProductList {
 
   my ($self, $products) = @_;
-  my $fragment = $self->buildListQuery( 'filename', $products );
+  my $fragment = $self->buildBigListQuery( 'filename', $products );
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelectXml . $fragment;
   return $self->doQuery($sql);
@@ -124,7 +124,7 @@ sub getResultsByProductList {
 sub getApiQuery {
   my ($self, $r) = @_;
   my $fragment = $self->buildListQuery('platformType', $r->platform).
-  $self->buildDateQuery($r->start, $r->end).
+  $self->buildDateQuery($r->start, $r->end, $r->repeat_start, $r->repeat_end).
   $self->buildListQuery('processingType', $r->processing).
   $self->buildListQuery('beammodetype', $r->beam).
   $self->buildDirectionQuery($r->direction).
@@ -248,25 +248,39 @@ Params:
 
 =cut
 sub buildDateQuery {
-  my ($self, $start, $end) = @_;
+  my ($self, $start, $end, $repeat_start, $repeat_end) = @_;
 
   # no dates = no restriction query
   if( !$start && !$end ) { return ''; }
-
+  
   my $fieldRef = "startTime";
+  
+  if( $start && $end && $repeat_start && $repeat_end ) {
+    my ($smon, $sday, $emon, $eday);
+    $smon = sprintf("%02d", $start->month);
+    $sday = sprintf("%02d", $start->day);
+    $emon = sprintf("%02d", $end->month);
+    $eday = sprintf("%02d", $end->day);
+    return " AND to_date('2000-' || to_char(".$fieldRef.",'MM-DD'), 'YYYY-MM-DD') between'
+      . ' to_date(".$self->dbQuote('2000-'.$smon.'-'.$sday).", 'YYYY-MM-DD') and'
+      . ' to_date(".$self->dbQuote('2000-'.$emon.'-'.$eday).", 'YYYY-MM-DD')"
+      . " AND ".$fieldRef." between "
+      . ' to_date('.$self->dbQuote($repeat_start.'-01-01').", 'YYYY-MM-DD') and"
+      . ' to_date('.$self->dbQuote($repeat_end.  '-12-31').", 'YYYY-MM-DD')";
+  } else {
+    # before end date 
+    if( !$start && $end ) {
+      return ' AND '.$fieldRef." <= TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
+    }
 
-  # before end date 
-  if( !$start && $end ) {
-    return ' AND '.$fieldRef." <= TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
+    # after start date
+    if( !$end ) {
+      return ' AND '.$fieldRef." >= TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD')";
+    }
+
+    # between two dates
+    return ' AND '.$fieldRef." BETWEEN TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD') AND TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
   }
-
-  # after start date
-  if( !$end ) {
-    return ' AND '.$fieldRef." >= TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD')";
-  }
-
-  # between two dates
-  return ' AND '.$fieldRef." BETWEEN TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD') AND TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
 }
 
 sub buildSpatialQuery {
@@ -315,6 +329,30 @@ sub buildListQuery {
     }
   }
   return '';
+}
+
+sub buildBigListQuery {
+  my ($self, $field, $list) = @_;
+  
+  my $insertSql = q(
+    insert into session_temp_table (
+      id
+    ) values (
+      UPPER(?)
+    )
+  );
+
+  $self->dbh->do(q(delete from session_temp_table));
+
+  my $sth = $self->dbh->prepare($insertSql);
+
+  foreach my $row (@{$list}) {
+    $sth->execute($row);
+  }
+
+  return(qq(
+    AND UPPER($field) in (select id from session_temp_table)
+  ));
 }
 
 sub buildBeamQuery {

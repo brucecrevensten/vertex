@@ -13,7 +13,6 @@ Packager: ASF Engineering <engineering.group@asf.alaska.edu>
 Distribution: ASF DAAC
 Vendor: Alaska Satellite Facility
 URL: http://www.asf.alaska.edu
-Source0: ursa2.tgz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: perl  
@@ -58,8 +57,6 @@ The URSA2 code base written using the Catalyst web framework.
 
 %prep
 echo Running %%prep!
-%setup -c
-/bin/chmod -Rf g+w .
 
 # clean if last build was in error
 rm -rf ${RPM_BUILD_ROOT}
