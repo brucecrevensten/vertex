@@ -99,9 +99,9 @@ var SearchParametersView = Backbone.View.extend(
   },
 
   render: function() {
-
     $(this.el).accordion('destroy');
     $(this.el).empty();
+
     for ( var i in this.widgets ) {
       $(this.el).append( '<h3><a href="#'+this.widgets[i].model.name+'">'+this.widgets[i].title+'</a></h3>' );
       $(this.el).append( this.widgets[i].render().el );
@@ -110,6 +110,7 @@ var SearchParametersView = Backbone.View.extend(
       autoHeight: false,
       navigation: true
     });
+
     return this;
   } 
 
@@ -174,19 +175,6 @@ var GeographicFilter = BaseFilter.extend(
 
   validate: function(attrs) {
 		this.trigger('update');
-		/*	if (attrs.bbox != "") {
-				$("#triggerSearch").empty();
-				$("#triggerSearch").button(
-			      {
-			        icons: {
-			          primary: "ui-icon-search"
-			        },
-			        label: "Search",
-					disabled: false
-			    }).focus();
-			} else {
-					$("#triggerSearch").attr('disabled', true);
-			}*/
   }
 
 }
@@ -631,7 +619,7 @@ var SearchButtonView = Backbone.View.extend({
 		this.geographicFilter = this.options.geographicFilter;
 		this.granuleFilter = this.options.granuleFilter;
 		
-	    this.model.bind('change', this.render, this);
+	  this.model.bind('change', this.render, this);
 	
 		this.geographicFilter.bind('update', this.toggleButton);
 		this.granuleFilter.bind('update', this.toggleButton);
@@ -649,9 +637,14 @@ var SearchButtonView = Backbone.View.extend({
         SearchApp.searchResults.searchParameters.update();
 	      SearchApp.searchResultsView.showSearching();
         SearchApp.postFilters.reset(); // flush any filters the user had set up previously
+        $("#con").html('');
+        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>'); 
+	      
+       this.xhr = SearchApp.searchResults.fetchSearchResults
+                        (AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON());  
 
-	      this.xhr = SearchApp.searchResults.fetchSearchResults(AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON()); 
-	      this.model.set({'state': 'stopButtonState'});
+        this.model.set({'state': 'stopButtonState'});
+       
 	    }, this)).focus();
 
 	    this.bind('abortSearch', function() {
@@ -669,6 +662,8 @@ var SearchButtonView = Backbone.View.extend({
 	      this.trigger('abortSearch');
 	      this.model.set({'state': 'searchButtonState'});
 	      SearchApp.searchResultsView.showBeforeSearchMessage();
+        $("#con").html('');
+        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>');
 	    }, this));
 
 	    $(this.el2).hide();

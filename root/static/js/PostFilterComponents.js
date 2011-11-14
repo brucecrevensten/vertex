@@ -2,15 +2,6 @@ var PathFrameWidgetComponent = BaseWidget.extend({
   initialize: function() {
 
   },
-  events: {
-    "change input" : "changed"
-  },
-  changed: function(evt){
-    var target = $(evt.currentTarget),
-    data = {};
-    data[target.attr('name')] = target.attr('value');
-    this.model.set(data);
-  },
 
   // A gotcha!  For ALOS this is correctly named (path) but for other platforms you expect 'orbit'.
   // since the GUI is flexible (displays correctly), the functionality is OK
@@ -44,7 +35,7 @@ var DirectionWidgetComponent = BaseWidget.extend(
       "DESCENDING":"Descending" // key must match value returned by API
     },
     initalize: function() {
-
+      
     },
     events : {
       "change input" : "changed",
