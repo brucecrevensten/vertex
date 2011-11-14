@@ -12,19 +12,6 @@ var PostFilters = Backbone.Model.extend(
       ];
 
       var self = this;
-
-      _.each( this.postFilters, function(e, i, l) {
-        e.bind('change', function(filter) {
-          self.trigger('change:postfilter', filter);
-        })
-      });
-
-      this.bind("change:postfilter", function(filter) {
-        var v = {};
-        v[filter.platform] = filter.toJSON();
-        this.set( v );
-      });
-
     },
 
     reset: function() {
@@ -34,11 +21,6 @@ var PostFilters = Backbone.Model.extend(
     },
     
     applyFilters: function( data ) {
-      this.trigger('applyFilters');
-      for( var i in this.postFilters ) {
-        data = this.postFilters[i].filter(data);
-      }
-      return data;
     }
   }
 );
@@ -65,7 +47,7 @@ var PostFiltersView = Backbone.View.extend(
 
   // platforms: array of platform names present in search results
   render: function(platforms) {
-
+   
 	  this.model.reset();
     var el = $(this.el);
     var render = false;
@@ -130,7 +112,6 @@ var PlatformFacet = BaseFilter.extend( {
 } ); 
 
 var PlatformFacetView = BaseWidget.extend( {
-
   // selected = this.model.toJSON
   // key = key name to use in selected.key
   // container = element into which all these items should be appended
@@ -179,15 +160,18 @@ var AlosFacet = PlatformFacet.extend(
       frame: null,
       direction: 'any',
       beamoffnadir: [
-        'FBS21.5',
-        'FBS34.3',
-        'FBS41.5',
-        'FBS50.8',
-        'FBD34.3',
-        'PLR21.5',
-        'PLR23.1',
+      /* To make a checkbox default to on, place it's value in here
+       ie   
+
+        'FBS 21.5',
+        'FBS 34.3',
+        'FBS 41.5',
+        'FBS 50.8',
+        'FBD 34.3',
+        'PLR 21.5',
+        'PLR 23.1',
         'WB1',
-        'WB2'
+        'WB2'*/
       ]
     },
     initialize: function() {
@@ -196,50 +180,6 @@ var AlosFacet = PlatformFacet.extend(
     getWidget: function() {
       return new AlosFacetButton({model: this});
     },
-
-    filter: function( d ) {
-      this.trigger('filter');
-      var f = this.toJSON();
-      
-      // only do filtering on this platform
-      var a = _.select( d, function(row) {
-        return ( 'ALOS' == row.PLATFORM );
-      });
-      d = _.reject( d, function(row) {
-        return ( 'ALOS' == row.PLATFORM );
-      });
-
-      a = _.reject( a, function(row) {
-        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
-      });
-
-      // todo: move building the arrays to validation / setting phase? later.
-      if( f.frame ) {
-        var frames = this.buildArrayFromString(f.frame);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
-        });
-      }
-
-      if( f.path ) {
-        var paths = this.buildArrayFromString(f.path);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( paths, row.PATHNUMBER ) );
-        });
-      }
-
-      if( f.beamoffnadir.length ) {
-          a = _.reject( a, function(row) {
-            if((row.BEAMMODETYPE == 'WB1') || (row.BEAMMODETYPE == 'WB2')) {
-              return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE));
-            } else {
-              return ( -1 == _.indexOf( f.beamoffnadir, row.BEAMMODETYPE.concat(row.OFFNADIRANGLE)));
-            }
-          });
-      }
-      return _.union(a, d);
-    } 
-
   }
 );
 
@@ -253,31 +193,10 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
   initialize: function() {
     _.bindAll(this);
-    this.model.bind('change', this.renderHtml, this);
+    this.model.bind('change', this.renderHtml, this);     
   },
 
   changed: function(e) {
-    this.model.clear( { silent: true } );
-    var beamoffnadir  = [];
-    var el = $(this.el);
-
-    el.find('.beamSelector :checked').each( function(i, el) { beamoffnadir.push( el.value ); });
-
-    // If no beam modes are selected, choose an invalid key for filtering so the platform
-    // doesn't show up at all
-    if( true == _.isEmpty(beamoffnadir) ) { beamoffnadir.push( 'empty' ); }
-
-    var direction = el.find('input[name="direction"]:checked').val();
-    var path = el.find('input[name="path"]').val();
-    var frame = el.find('input[name="frame"]').val();
-    
-    this.model.set({
-      'beamoffnadir': beamoffnadir,
-      'direction': direction,
-      'path': path,
-      'frame': frame
-    });
-
   },
 
   beamModes: [
@@ -285,25 +204,25 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       title: "FBS (Fine Beam Single Polarization)",
       group: "FBS",
       modes: [
-        { label: "21.5&deg;", value: "FBS21.5" },
-        { label: "34.3&deg;", value: "FBS34.3" },
-        { label: "41.5&deg;", value: "FBS41.5" },
-        { label: "50.8&deg;", value: "FBS50.8" }
+        { label: "21.5&deg;", value: "FBS 21.5" },
+        { label: "34.3&deg;", value: "FBS 34.3" },
+        { label: "41.5&deg;", value: "FBS 41.5" },
+        { label: "50.8&deg;", value: "FBS 50.8" }
       ]
     },
     {
       title: "FBD (Fine Beam Double Polarization)",
       group: "FBD",
       modes: [
-        { label: "34.3&deg", value: "FBD34.3" }
+        { label: "34.3&deg", value: "FBD 34.3" }
       ]
     },
     {
       title: "PLR (Polarimetric Mode)",
       group: "PLR",
       modes: [
-        { label: "21.5&deg;", value: "PLR21.5" },
-        { label: "23.1&deg;", value: "PLR23.1" }
+        { label: "21.5&deg;", value: "PLR 21.5" },
+        { label: "23.1&deg;", value: "PLR 23.1" }
       ]
     },
     {
@@ -346,7 +265,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   render: function() {
 
     if( true !== this.hasRendered ) {
-      this.renderHtml();
+        this.renderHtml();        
     }
 
     $(this.el).dialog({
@@ -357,13 +276,59 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       title: "ALOS PALSAR Options",
       position: [30,100],
       buttons: {
-        "Close": function() { $(this).dialog('close'); },
+        "Apply": function() 
+                 { 
+                    SearchApp.dataTable.fnDraw(); /* $(this).dialog('close'); */ 
+                  },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
         }, this)
       }
-    });
+    }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
+        
+
+    
+        // Beam Modes
+        $(this.el).find('.beamSelector').each( function(i, element) { 
+
+          $(element).find('input').click(function(e) {
+            var el = $(e.currentTarget);
+            SearchApp.applyFilter(el);
+          });     
+        });
+
+       // Flight Directions
+       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
+          var curEl = $(e.currentTarget);
+          $(this.el).find('input[type="radio"]').each( function(i,element) {
+                SearchApp.filterDictionary.remove( $(element).val() + " ALOS" );
+          });
+          if (curEl.val() != "any") {
+             SearchApp.filterDictionary.add($(curEl).val() + " ALOS");
+          }
+        },this));     
+
+      // ALOS Path
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove('PATHALOS');
+            } else {
+               SearchApp.filterDictionary.add('PATHALOS',el.val());
+            }
+          }, this));
+
+          // ALOS FRAME
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove('FRAMEALOS');
+            } else {
+               SearchApp.filterDictionary.add('FRAMEALOS',el.val());
+            }
+          }, this));
+
   }
   
 });
@@ -399,7 +364,7 @@ var RadarsatFacet = PlatformFacet.extend(
       frame: null,
       direction: 'any',
       beam: [
-        'EH3',
+       /* 'EH3',
         'EH4',
         'EH6',
         'EL1',
@@ -421,7 +386,7 @@ var RadarsatFacet = PlatformFacet.extend(
         'ST7',
         'WD1',
         'WD2',
-        'WD3'
+        'WD3'*/
       ]
     },
     platform: 'RADARSAT-1',
@@ -432,42 +397,6 @@ var RadarsatFacet = PlatformFacet.extend(
     },
     
     filter: function( d ) {
-      this.trigger('filter');
-      var f = this.toJSON();
-      
-      // only do filtering on this platform
-      var a = _.select( d, function(row) {
-        return ( 'RADARSAT-1' == row.PLATFORM );
-      });
-      d = _.reject( d, function(row) {
-        return ( 'RADARSAT-1' == row.PLATFORM );
-      });
-
-      a = _.reject( a, function(row) {
-        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
-      });
-
-      // todo: move building the arrays to validation / setting phase? later.
-      if( f.frame ) {
-        var frames = this.buildArrayFromString(f.frame);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
-        });
-      }
-
-      if( f.path ) {
-        var paths = this.buildArrayFromString(f.path);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( paths, row.ORBIT ) );
-        });
-      }
-
-      if( f.beam.length ) {
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( f.beam, row.BEAMMODETYPE ));
-        });
-      }
-      return _.union(a, d);
     }
   }
 );
@@ -495,33 +424,9 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
 var RadarsatFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
-  events: {
-   "change input" : "changed",
-  },
   initialize: function() {
     _.bindAll(this);
     this.model.bind('change', this.renderHtml, this);
-  },
-  changed: function(e) {
-    var el = $(this.el);
-
-    this.model.clear( { silent: true });
-    var beam = [];
-    el.find('.beamSelector :checked').each( function(i, el) { beam.push( el.value ); });
-
-    if( true == _.isEmpty(beam) ) { beam.push( 'empty' ); }
-
-    var direction = el.find('input[name="direction"]:checked').val();
-    var path = el.find('input[name="path"]').val();
-    var frame = el.find('input[name="frame"]').val();
-
-    this.model.set({
-      beam: beam,
-      direction: direction,
-      path: path,
-      frame: frame
-    });
-
   },
   beamModes: [
     { title: "Extended High Incidence Beam, Off-Nadir 52-58&deg;",
@@ -617,16 +522,44 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       title: "RADARSAT-1 Platform Options",
       position: [40,110],
       buttons: {
-        "Close": function() { $(this).dialog('close'); },
+        "Apply": function() { SearchApp.dataTable.fnDraw();/*$(this).dialog('close');*/ },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
         }, this)
       }
-    });
+    }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
+
+
+     $(this.el).find('.beamSelector').each( function(i, element) { 
+
+          $(element).find('input').click(function(e) {
+            var el = $(e.currentTarget);
+            SearchApp.applyFilter(el);
+          });     
+        });
+
+             //  Path
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove('ORBITRADARSAT');
+            } else {
+               SearchApp.filterDictionary.add('ORBITRADARSAT',el.val());
+            }
+          }, this));
+
+          //  FRAME
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove('FRAMERADARSAT');
+            } else {
+               SearchApp.filterDictionary.add('FRAMERADARSAT',el.val());
+            }
+          }, this));
   }
-}
-);
+});
 
 var LegacyFacet = PlatformFacet.extend(
   {
@@ -644,37 +577,6 @@ var LegacyFacet = PlatformFacet.extend(
       return new LegacyFacetButton({model: this});
     },
     filter: function( d ) {
-
-      var f = this.toJSON();
-      
-      var p = this.platform;
-      // only do filtering on this platform
-      var a = _.select( d, function(row) {
-        return ( p == row.PLATFORM );
-      });
-      d = _.reject( d, function(row) {
-        return ( p == row.PLATFORM );
-      });
-
-      a = _.reject( a, function(row) {
-        return ( f.direction != 'any' && row.ASCENDINGDESCENDING != f.direction ); 
-      });
-
-      if( f.frame ) {
-        var frames = this.buildArrayFromString(f.frame);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( frames, row.FRAMENUMBER ) );
-        });
-      }
-
-      if( f.path ) {
-        var paths = this.buildArrayFromString(f.path);
-        a = _.reject( a, function(row) {
-          return ( -1 == _.indexOf( paths, row.ORBIT ) );
-        });
-      }
-
-      return _.union(a, d);
     }
   }
 );
@@ -702,21 +604,9 @@ var LegacyFacetButton = PlatformFacetView.extend( {
 var LegacyFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
-  events: {
-   "change input" : "changed",
-  },
   initialize: function() {
     _.bindAll(this);
     this.model.bind('change', this.renderHtml, this);
-  },
-  changed: function(e) {
-    var el = $(this.el);
-    this.model.clear( { silent: true });
-    this.model.set({
-      'direction': el.find('input[name="direction"]:checked').val(),
-      'path': el.find('input[name="path"]').val(),
-      'frame': el.find('input[name="frame"]').val()
-    });
   },
   renderHtml: function() {
     var el = $(this.el);
@@ -747,13 +637,48 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
       title: this.model.platform + " Platform Options",
       position: [50 + this.model.offset, 120 + this.model.offset ],
       buttons: {
-        "Close": function() { $(this).dialog('close'); },
+        "Apply": function() {  SearchApp.dataTable.fnDraw();/* $(this).dialog('close'); */ },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
         }, this)
       }
     });
+
+         // Flight Directions
+       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
+          var curEl = $(e.currentTarget);
+          $(this.el).find('input[type="radio"]').each( jQuery.proxy(function(i,element) {
+                SearchApp.filterDictionary.remove( $(element).val() + this.model.platform );
+          },this));
+          if (curEl.val() != "any") {
+             SearchApp.filterDictionary.add($(curEl).val() + this.model.platform, $(curEl).val());
+          }
+        },this)); 
+
+                //  Path
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+               
+              SearchApp.filterDictionary.remove("ORBIT"+this.model.platform);
+            } else {
+              SearchApp.filterDictionary.add("ORBIT"+this.model.platform,el.val());
+            }
+          }, this));
+
+          //  FRAME
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionary.remove("FRAME"+this.model.platform);
+            } else {
+               SearchApp.filterDictionary.add("FRAME"+this.model.platform,el.val());
+            }
+          }, this));
+
+
+
   }
 }
 );
