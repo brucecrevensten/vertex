@@ -87,18 +87,17 @@ window.SearchAppView = Backbone.View.extend({
                     this.searchResults.get(c).get("OFFNADIRANGLE") == "23.1") {
                   return true;
                 }   
-              } 
+              }
               
-              if (SearchApp.filterDictionary.has('WB1 27.1')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB1" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "27.1") {
+              
+              if (SearchApp.filterDictionary.has('WB1')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB1") {
                   return true;
                 }   
               }    
 
-              if (SearchApp.filterDictionary.has('WB2 27.1')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB2" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "27.1") {
+              if (SearchApp.filterDictionary.has('WB2')) {
+                if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB2") {
                   return true;
                 }   
               }
