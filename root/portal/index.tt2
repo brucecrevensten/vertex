@@ -39,6 +39,7 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/UserAuth.js') %]"></script> 
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchApp.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/Feedback.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/Dictionary.js') %]"></script>
 
 </head>
 <body>
@@ -79,7 +80,7 @@
 
     <div id="platform_profile" style="display: none;"></div>
     <div id="product_profile" style="display: none;"></div>
-    <div id="download_queue""><table id="download_queue_table" style="width: 100%"></table></div>
+    <div id="download_queue"><table id="download_queue_table" style="width: 100%"></table></div>
     <div id="platform_facet" style="display: none;"></div>
 
 	
@@ -92,6 +93,7 @@
         <button id="triggerSearch"></button>
 		<button id="stopSearch"></button>
 		<button id="resetSearch"></button>
+    
 		<div>
 			<br />
 			<div id="searchMessage"></div> 
@@ -102,6 +104,7 @@
 
     <div id="centerColumn">
       <div id="searchMap"></div>
+      <div id="globalSlider"></div>
     </div> <!-- end center column -->
 
     <div id="rightColumn">
@@ -137,17 +140,15 @@
         </div>
       </div>
 
-      <div class="ui-widget">
-        <div id="active-filters" class="ui-state-highlight ui-corner-all">
-          <div id="active-filters-list"></div>
-        </div>
-      </div>
 		
 		<div>
 		<div id="srCount"></div>
 	    <div id="srProcLevelTool"></div>
 		</div>
-      <ul id="searchResults"></ul>
+
+    <div id="con">
+      <table id="searchResults" style="margin:20px 0px 20px 0px;"></table>
+    </div>
 </div>
 
   </div> <!-- end contents -->

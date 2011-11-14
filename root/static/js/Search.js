@@ -68,7 +68,7 @@ var SearchParameters = Backbone.Model.extend(
 	},
 
     defaults: {
-        format:"jsonp"
+        format:"json"
     },
 
 	stripEmptyJSON: function(json) {
@@ -99,9 +99,9 @@ var SearchParametersView = Backbone.View.extend(
   },
 
   render: function() {
-
     $(this.el).accordion('destroy');
     $(this.el).empty();
+
     for ( var i in this.widgets ) {
       $(this.el).append( '<h3><a href="#'+this.widgets[i].model.name+'">'+this.widgets[i].title+'</a></h3>' );
       $(this.el).append( this.widgets[i].render().el );
@@ -110,6 +110,7 @@ var SearchParametersView = Backbone.View.extend(
       autoHeight: false,
       navigation: true
     });
+
     return this;
   } 
 
@@ -174,19 +175,6 @@ var GeographicFilter = BaseFilter.extend(
 
   validate: function(attrs) {
 		this.trigger('update');
-		/*	if (attrs.bbox != "") {
-				$("#triggerSearch").empty();
-				$("#triggerSearch").button(
-			      {
-			        icons: {
-			          primary: "ui-icon-search"
-			        },
-			        label: "Search",
-					disabled: false
-			    }).focus();
-			} else {
-					$("#triggerSearch").attr('disabled', true);
-			}*/
   }
 
 }
@@ -444,9 +432,6 @@ var DateWidget = BaseWidget.extend(
         minDate: new Date(1990, 1 - 1, 1),
         yearRange: '1990:'+today.getFullYear()
     });
-    start_date = $(this.el).find('#filter_start').datepicker().val();
-    $(this.el).find('#filter_start').datepicker("setDate", start_date);
-
     $(this.el).find('#filter_end').datepicker({
         dateFormat: 'yy-mm-dd',
         changeMonth: true,
@@ -454,10 +439,13 @@ var DateWidget = BaseWidget.extend(
         minDate: new Date(1990, 1 - 1, 1),
         yearRange: '1990:'+today.getFullYear()
     });
+<<<<<<< HEAD
     end_date = $(this.el).find('#filter_end').datepicker().val();
     $(this.el).find('#filter_end').datepicker("setDate", end_date);
     $(this.el).find('#filter_repeat').bind('change', this.toggleRepeat);
     
+=======
+>>>>>>> upstream/master
     return this;
   },
   toggleRepeat: function() {
@@ -540,6 +528,9 @@ var PlatformWidget = BaseWidget.extend(
       return this;
     },
     renderPlatformInfo: function(e) {
+      if(typeof ntptEventTag == 'function') {
+        ntptEventTag('ev=viewPlatform');
+      }
       var platform = $(e.currentTarget).attr('platform');
       $('#platform_profile').html(
         _.template( '\
@@ -649,7 +640,7 @@ var SearchButtonView = Backbone.View.extend({
 		this.geographicFilter = this.options.geographicFilter;
 		this.granuleFilter = this.options.granuleFilter;
 		
-	    this.model.bind('change', this.render, this);
+	  this.model.bind('change', this.render, this);
 	
 		this.geographicFilter.bind('update', this.toggleButton);
 		this.granuleFilter.bind('update', this.toggleButton);
@@ -660,17 +651,27 @@ var SearchButtonView = Backbone.View.extend({
 	      },
 	        label: "Search"
 	    }).bind("click", jQuery.proxy( function(e) {
-		    
+        if(typeof ntptEventTag == 'function') {
+		      ntptEventTag('ev=startSearch');
+        }
         // Reset certain state aspects when triggering a new search
         SearchApp.searchResults.searchParameters.update();
 	      SearchApp.searchResultsView.showSearching();
         SearchApp.postFilters.reset(); // flush any filters the user had set up previously
+        $("#con").html('');
+        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>'); 
+	      
+       this.xhr = SearchApp.searchResults.fetchSearchResults
+                        (AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON());  
 
-	      this.xhr = SearchApp.searchResults.fetchSearchResults(AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON()); 
-	      this.model.set({'state': 'stopButtonState'});
+        this.model.set({'state': 'stopButtonState'});
+       
 	    }, this)).focus();
 
 	    this.bind('abortSearch', function() {
+        if(typeof ntptEventTag == 'function') {
+         ntptEventTag('ev=stopSearch'); 
+        }
 	      this.xhr.abort();
 	    });
 
@@ -682,13 +683,14 @@ var SearchButtonView = Backbone.View.extend({
 	      this.trigger('abortSearch');
 	      this.model.set({'state': 'searchButtonState'});
 	      SearchApp.searchResultsView.showBeforeSearchMessage();
+        $("#con").html('');
+        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>');
 	    }, this));
 
 	    $(this.el2).hide();
   },
 
 	toggleButton: function() {
-		
 		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() == "") ||
 		($('#filter_bbox').val() == "" && $('#filter_granule_list').val() != "")    ) {
 				$("#triggerSearch").empty();

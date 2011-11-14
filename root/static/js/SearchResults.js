@@ -31,7 +31,7 @@ var SearchResults = Backbone.Collection.extend(
         }
 
         // Create the DataProductFile, add to the collection in the DataProduct
-        dp.files.add( {
+        dp.files.add( { 
           thumbnail: data[i].THUMBNAIL,
           productId: data[i].GRANULENAME,
           id: data[i].ID,
@@ -51,29 +51,26 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     filter: function() {
-      this.trigger('filter');
-
-      var d = this.postFilters.applyFilters( this.data );
-      this.build( d );
-      this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
     },
 
-    fetchSearchResults: function(searchURL, searchData) {
-
+    fetchSearchResults: function(searchURL, searchData, callback) {
+      
       this.data = {}; // flush previous result set
 
-     // var results = 
-	var xhr = $.ajax(
+	   var xhr = $.ajax(
         {
           type: "POST",
           url: searchURL,
           data: searchData,
           processData: true,
-          dataType: "jsonp",
+          dataType: "json",
           context: this,
           success: function(data, textStatus, jqXHR) {
+          if (callback != null) {
+              callback(); // this is for using sinon spys in unit tests
+           }
             this.data = data;
-
+			     
             this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
@@ -82,10 +79,11 @@ var SearchResults = Backbone.Collection.extend(
             this.procTypes = _.uniq( _.pluck( this.data, 'PROCESSINGTYPE') );
       
             this.build(this.data);
-            this.trigger('refresh');
 
+            this.trigger('refresh');
+			    
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
             // todo: move this gui code into the view objects
             case 204:
@@ -96,9 +94,9 @@ var SearchResults = Backbone.Collection.extend(
               SearchApp.searchResultsView.showError(jqXHR);
 			        this.trigger('clear_results');
           }
-        }
+        }, this)
       });
-		
+		  
 		return xhr;
 
     },
@@ -294,6 +292,12 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
       ).click( function(e) {
        
         var pl = $(this).attr('processing');
+
+        if(typeof ntptEventTag == 'function') {
+          ntptAddPair('processingType', pl);
+          ntptEventTag('ev=selectAll');
+        }
+
         var filesToAdd = [];
         SearchApp.searchResults.each(
           function(aProduct)
@@ -308,7 +312,7 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
             }
           );
         SearchApp.downloadQueue.add( _.union(filesToAdd), {'silent':true} ); // suspend extra flashes of queue button
-        SearchApp.downloadQueue.trigger('add'); // manually trigger to get one flash effect
+        SearchApp.downloadQueue.trigger('add');
       }
       );
       m.append( li.append( ab ) );
@@ -330,8 +334,6 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
-
-    this.options.downloadQueue.bind('queue:remove', this.render);
    
  	this.model.bind('authSuccess', jQuery.proxy(function() {
 		this.render('authSuccess');
@@ -352,6 +354,8 @@ var SearchResultsView = Backbone.View.extend(
     $("#results-banner").hide();
     $('#before-search-msg').show();
     $('#active-filters').hide();
+    $('#globalSlider').hide();
+   
   },
 
   showResults: function() {
@@ -364,6 +368,8 @@ var SearchResultsView = Backbone.View.extend(
     $('#active-filters').show();
     $('#srCount').show();
     $('#srProcLevelTool').show();
+    $('#globalSlider').show();
+    
   },
 
   showSearching: function() {
@@ -377,6 +383,8 @@ var SearchResultsView = Backbone.View.extend(
     this.clearOverlays();
     $('#active-filters').show();
     $('#srProcLevelTool').hide();
+    $('#globalSlider').hide();
+     
   },
 
   showError: function(jqXHR) {
@@ -386,7 +394,10 @@ var SearchResultsView = Backbone.View.extend(
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").hide();
+    $('#globalSlider').hide();
+  
     $("#error-message").show();
+
     var errorText;
     switch( jqXHR.status ) {
       case '400': errorText = 'Some search fields were missing or invalid, and your search could not be completed.';
@@ -409,6 +420,8 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#platform_facet").hide();
     $('#platform_facets').hide();
+    $('#globalSlider').hide();
+    
     this.clearOverlays();
   },
 
@@ -435,7 +448,9 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function(args) {
     this.trigger('render');
+   
 
+	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
       this.clearOverlays();
 	  if (args != "authSuccess") {
@@ -444,48 +459,100 @@ var SearchResultsView = Backbone.View.extend(
 	  return this;
     }
 
-    var el = $(this.el);
-    var parent = el.parent();
-    el.detach();
-    el.empty();
-    
-    var li = '';
+    $('#con').empty(); 
+
+    var el = $('<table id="searchResults" width="375" style="margin:20px 0px 20px 0px;"></table>');
+  
     var ur = SearchApp.user.getWidgetRenderer();
+    var li="";
+    var li_2="";
+    this.collection.each( function( model, i, l ) {   
+          var d = model.toJSON();
+        
+         li = '<tr><td class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
+          + ur.srThumbnail( model )
+          + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
+          + '<div class="productRowTools">'
+          + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
+          + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
+          + '<span class="ui-button-text">More information&hellip;</span>'
+          + '</button>'
+          + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
+          + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
+          + '<span class="ui-button-text">Show files&hellip;</span>'
+          + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
+          + '</div>'
+          + '</div><div style="clear:both;"></div></td></tr>';
+  
+      li_2 += li;
+      }, this);
+
+      var tableHtml =
+              '<thead>'+
+                '<tr>'+
+                  '<th></th>'+
+                '</tr>'+
+              '</thead>'+
+              '<tbody>'+
+                li_2 +
+              '</tbody>';
+        el.html(tableHtml);
+
+        $('#con').append(el); // append the table to it's container
     
-    // This loop need to be tight.
-    this.collection.each( function( model, i, l ) {
-      
-      var d = model.toJSON();
-      li += '<li class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
-      + ur.srThumbnail( model )
-      + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
-      + '<div class="productRowTools">'
-      + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
-      + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
-      + '<span class="ui-button-text">More information&hellip;</span>'
-      + '</button>'
-      + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
-      + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
-      + '<span class="ui-button-text">Show files&hellip;</span>'
-      + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
-      + '</div>'
-      + '</div><div style="clear:both;"></div></li>';
 
-    }, this);
+    // Enhance the table using a DataTable object. 
+     this.dataTable = $('#searchResults').dataTable(
+      { 
+           "oLanguage": {
+            "sSearch": "Find"
+           },
+          "bProcessing": true,
+          "bAutoWidth": true,
+          "aoColumns": [
+            {"sWidth": "100%"}
+          ],
+          "bDestroy": true,     // destroy old table
+          "sScrollY": "500px",
+          "iDisplayLength": 1000, // default number of rows per page
+          "bLengthChange": false // do not allow users to change the default page length
+    });
 
-    // TODO remove, after benchmarking?
-    //li.find('img').error( function() { $(this).remove(); });
+    SearchApp.dataTable = this.dataTable;
 
-    el.html(li);
-    parent.append(el);
+    $('#globalSlider').slider({
+                            min: 0, 
+                            max:100,
+                            animate: true,
+                            value: 75 
+                          }).bind("slide", 
+                          function(event, ui) {
+                               for (i in SearchApp.searchResultsView.mo) {
+                                    SearchApp.searchResultsView.mo[i].setOptions({
+                                      fillColor: '#777777',
+                                      fillOpacity: ui.value / 100,
+                                      strokeColor: '#333333',
+                                      strokeOpacity: 1,
+                                      zIndex: 1000
+                                    }); 
+                                  
+                                } 
+    });
 
-    $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
-    $('#searchResults li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
+  
+
+
+
+    $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
+    $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
+
 
     this.showResults();
     this.clearOverlays();
-    this.renderOnMap();
+  this.renderOnMap();
     this.resetHeight();
+
+   
 
     if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
       $("#srCount").empty().html(_.template("<%= total %> results found",
@@ -533,9 +600,9 @@ var SearchResultsView = Backbone.View.extend(
               new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
             ),
             fillColor: '#777777',
-            fillOpacity: 0.25,
+            fillOpacity: $('#globalSlider').slider("value")/100,
             strokeColor: '#333333',
-            strokeOpacity: 0.5,
+            strokeOpacity: 1,
             strokeWeight: 2,
             zIndex: 1000,
             clickable: true
@@ -552,9 +619,9 @@ var SearchResultsView = Backbone.View.extend(
     if( this.activePoly ) {
       this.mo[this.activePoly].setOptions({
         fillColor: '#777777',
-        fillOpacity: 0.25,
+        fillOpacity: $('#globalSlider').slider("value")/100,
         strokeColor: '#333333',
-        strokeOpacity: 0.5,
+        strokeOpacity: 1,
         zIndex: 1000
       });
     }
@@ -567,7 +634,6 @@ var SearchResultsView = Backbone.View.extend(
 
   },
   removeHighlight: function(e) {
-   
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
     if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), $(e.currentTarget).attr("product_id") )) {
       // It's in the DQ, turn it blue again  
@@ -581,9 +647,9 @@ var SearchResultsView = Backbone.View.extend(
     } else {
       e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
         fillColor: '#777777',
-        fillOpacity: 0.25,
+        fillOpacity: $('#globalSlider').slider("value")/100,
         strokeColor: '#333333',
-        strokeOpacity: 0.5,
+        strokeOpacity: 1,
         zIndex: 1000
       });
     }
@@ -606,9 +672,9 @@ var SearchResultsView = Backbone.View.extend(
       } else {
         e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
           fillColor: '#777777',
-          fillOpacity: 0.25,
+          fillOpacity: $('#globalSlider').slider("value")/100,
           strokeColor: '#333333',
-          strokeOpacity: 0.5,
+          strokeOpacity: 1,
           zIndex: 1000
         });
       }
@@ -621,8 +687,9 @@ var SearchResultsView = Backbone.View.extend(
       fillOpacity: .75,
       strokeColor: '#FFFF00',
       strokeOpacity: 1,
-      zIndex: 10000
+      zIndex: 1500
     });
+
    },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.

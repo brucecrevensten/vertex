@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://testvertex.daac.asf.alaska.edu/" />
+<title>spec_1_6</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">spec_1_6</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-148.70,64.35,-146.48,65.22</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>login_button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>login_username</td>
+	<td>universal_user_test</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>login_password</td>
+	<td>testtest</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>css=div.ui-dialog div.ui-dialog-buttonpane</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>Bad username and/or password</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

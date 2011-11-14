@@ -1,0 +1,135 @@
+<div id="wrapper">
+  <header>
+	
+	<div>
+    <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
+ 	  <h1><a href="#">&nbsp;Vertex <span>ASF&rsquo;s Data Portal<span>&nbsp;&beta;eta</span></a></h1>
+    <div id="tools_menu">
+		  <div id="login_msg"></div>
+      <div id="user_tools"></div>
+      <div id="queue_summary"></div>
+      <div id="feedbackButton"></div>
+    </div>
+	</div>
+  </header>
+
+  <div id="login_dialog" style="display: none">
+  	<div id="login_feedback" class="msg"></div>
+  	<form name="form1" id="form1">
+  			<label for="login_username" class="login_fields">Name</label>
+  			<input type="text" name="userid" id="login_username" class="login_fields"  /><br />
+  			<label for="login_password" class="login_fields">Password</label>
+  			<input type="password" name="password" id="login_password" value=""  class="login_fields"/><br />
+  	</form>
+    <br />
+    <br />
+    Forgot password?  Contact ASF User Support at uso@asf.alaska.edu for assistance
+    <br />
+    <br />
+    If you do not currently have access to the restricted ASF Datapool products, please click the 'Register' button below to visit the ASF SDC proposal submission page for guidance or contact User Support at uso@asf.alaska.edu
+  </div>
+
+  <div id="contents">
+
+    <div id="platform_profile" style="display: none;"></div>
+    <div id="product_profile" style="display: none;"></div>
+    <div id="download_queue"><table id="download_queue_table" style="width: 100%"></table></div>
+    <div id="platform_facet" style="display: none;"></div>
+
+	
+    <div id="leftColumn">
+	  	
+      <div id="filters"></div>
+      <div style="margin: 1em 0;" id="platform_facets"></div>
+      <div style="margin: 1em 0;">
+
+        <button id="triggerSearch"></button>
+		<button id="stopSearch"></button>
+		<button id="resetSearch"></button>
+    
+		<div>
+			<br />
+			<div id="searchMessage"></div> 
+		</div>
+      </div>
+    </div>
+
+
+    <div id="centerColumn">
+      <div id="searchMap"></div>
+    </div> <!-- end center column -->
+
+    <div id="rightColumn">
+
+	    <!-- default search message -->
+		 <div class="ui-widget">
+	        <div id="before-search-msg" class="ui-state-highlight ui-corner-all">
+	          <strong>Please use the map and/or the search parameters on the left to select your search criteria.</strong>
+	        </div>
+	      </div>
+	
+       <!-- loading async spinner -->
+      <div class="ui-widget">
+        <div id="async-spinner" class="ui-state-highlight ui-corner-all">
+          <span class="ui-icon"></span>
+          <strong>Loading search results&hellip;</strong>
+        </div>
+      </div>
+
+      <!-- results banner -->
+      <div class="ui-widget">
+        <div id="results-banner" class="ui-state-highlight ui-corner-all"> 
+            <span class="ui-icon ui-icon-info"></span>
+            <strong>No results were found</strong> for your current search criteria.
+        </div>
+      </div>
+
+      <!-- error banner -->
+      <div class="ui-widget">
+        <div id="error-message" class="ui-state-error ui-corner-all"> 
+            <span class="ui-icon ui-icon-alert"></span>
+            <code id="error-message-text"></code>
+        </div>
+      </div>
+
+		
+		<div>
+		<div id="srCount"></div>
+	    <div id="srProcLevelTool"></div>
+		</div>
+
+    <div id="con">
+      <table id="searchResults" style="margin:20px 0px 20px 0px;"></table>
+    </div>
+</div>
+
+  </div> <!-- end contents -->
+<div id="feedbackForm"></div>
+  <footer>
+    <div id="centerer">
+      <div>
+        <a target="_blank" href="http://www.asf.alaska.edu"><img src="../static/images/asflogo-footer.png" /></a>
+      </div>
+      <div>
+        <a target="_blank" href="http://www.gi.alaska.edu"><img src="../static/images/gi-logo.png" /></a>
+      </div>
+      <div style="text-align: left; width: 15em;">
+        <h2>Alaska Satellite Facility</h2>
+        <p>
+          Phone: (907) 474-6166<br/>
+          Email: uso@asf.alaska.edu<br/>
+        <br/>
+          2011 &copy; Alaska Satellite Facility
+          Vertex: ASF&rsquo;s Data Portal V[% c.config.version %]
+        </p>
+      </div>
+      <div>
+        <a target="_blank" href="http://www.uaf.edu"><img src="../static/images/uaf-logo.png"></a>
+      </div>
+      <div>
+        <a target="_blank" href="http://esdis.eosdis.nasa.gov/"><img src="../static/images/nasa-logo.png"></a>
+      </div>
+    </div>
+    <div style="clear:both;">&nbsp;</div>
+  </footer>
+</div>

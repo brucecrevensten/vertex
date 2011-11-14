@@ -1,5 +1,5 @@
 body {
-  background: url(../images/satellitebackground.png);
+   background: url(../images/satellitebackground.png); 
 }
 
 body * {
@@ -28,7 +28,7 @@ text-decoration: underline;
   border: 2px solid #eee;
   padding: 1.5em;
   margin: 1em auto;
-  width: 1250px;
+  width: 1300px;
   position: relative;
   height: 735px;
 }
@@ -71,6 +71,10 @@ header {
   left: 270px;
   top: 0;
   margin: 1ex;
+}
+
+#globalSlider{
+    margin:1ex;
 }
 
 #rightColumn {
@@ -135,6 +139,7 @@ legend {
   width: 100%;
 }
 
+
 #searchResults {
   border-top: 1px solid #888;
   overflow: auto;
@@ -148,6 +153,14 @@ legend {
   clear: both;
   cursor: pointer;
 }
+
+#searchResults td {
+  display: block;
+  padding: 1em 1ex 1ex 1ex;
+  clear: both;
+  cursor: pointer;
+}
+
 
 #searchResults li.productRow.inQueue {
   background-color: #77aaff !important;
@@ -165,6 +178,25 @@ legend {
   color: #ddd !important;
 }
 
+/****/
+#searchResults td.productRow.inQueue {
+  background-color: #77aaff !important;
+}
+
+#searchResults td.productRow.inQueue:hover {
+  background-color: #FFFFB4 !important;
+}
+
+#searchResults td:nth-child(odd).productRow.inQueue {
+  background-color: #85afff !important; 
+}
+
+#searchResults td.productRow.inQueue h4 span.beam {
+  color: #ddd !important;
+}
+
+/****/
+
 #searchResults li ul li {
   padding: 0;
   text-align: left;
@@ -178,6 +210,23 @@ legend {
 #searchResults li ul li:hover {
   background-color: inherit;
 }
+
+/**/
+#searchResults td tr td {
+  padding: 0;
+  text-align: left;
+  margin: .5ex 0 0 1ex;
+}
+
+#searchResults td tr td:nth-child(odd) {
+  background-color: inherit;
+}
+
+#searchResults td tr td:hover {
+  background-color: inherit;
+}
+
+/**/
 
 #searchResults div {
   padding-left: 1ex;
@@ -197,6 +246,24 @@ legend {
   clear: both;
   padding: 0 1em 1ex 1ex;
 }
+
+/**/
+#searchResults td:nth-child(odd) {
+  background-color: #eef0ff;
+}
+
+#searchResults td:hover {
+  background-color: #FFFFB4;
+}
+
+#searchResults td img {
+  vertical-align: middle;
+  float: left;
+  clear: both;
+  padding: 0 1em 1ex 1ex;
+}
+
+/**/
 
 #searchResults h4, #searchResults h4 * {
   font-size: 11pt !important;
@@ -231,6 +298,13 @@ legend {
 #searchResults li button {
   margin-top: 1ex;
 }
+
+/***/
+#searchResults td button {
+  margin-top: 1ex;
+}
+
+/**/
 
 #searchMap {
   width: 580px;
@@ -454,11 +528,6 @@ button.tool_enqueuer.tool-dequeue:hover {
   background-color: #FFF88E !important;
 }
 
-/* this rule is specific to highlighting the DataTable active sorting column */
-.datatable tbody tr:hover td.sorting_1 {
-  background-color: #FFF940 !important;
-}
-
 .datatable tbody tr {
   cursor: pointer;
 }
@@ -471,16 +540,8 @@ button.tool_enqueuer.tool-dequeue:hover {
   background-color: #e2e2e2;
 }
 
-.datatable tr.even td.sorting_1 {
-  background-color: #e8e8e8;
-}
-
 .datatable tbody td.left-adjusted {
   text-align: left;
-}
-
-.datatable tr.odd td.sorting_1 {
-  background-color: #d8d8d8;
 }
 
 .datatable tr.selected.even {
@@ -491,19 +552,13 @@ button.tool_enqueuer.tool-dequeue:hover {
   background-color: #288db1;
 }
 
-.datatable tr.selected.even td.sorting_1 {
-  background-color: #399ec2;
-}
-
-.datatable tr.selected.odd td.sorting_1 {
-  background-color: #288db1;
-}
 
 .datatable {
   width: 100%;
   color: black !important;
   height: auto;
 }
+
 
 .toggler { 
   margin: 1em 0;
@@ -565,4 +620,17 @@ input.login_fields {
 
 #feedbackForm div {
   margin: 1em;
+}
+
+
+.dataTables_scrollHead {
+  display:none;
+}
+
+#searchResults_filter label {
+  font-weight: bold;
+  margin: 0 0 1em 0;
+  padding: 1ex;
+  font-size: 12pt !important;
+
 }

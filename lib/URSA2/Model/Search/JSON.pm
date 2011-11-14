@@ -23,7 +23,7 @@ sub getSelect {
 
 sub getResultsByGranuleList {
   my ($self, $r) = @_;
-  my $fragment = $self->buildListQuery( 'granuleName', $r->granule_list) .
+  my $fragment = $self->buildBigListQuery( 'granuleName', $r->granule_list) .
   $self->buildListQuery('processingType', $r->processing);
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelect . $fragment;
@@ -32,7 +32,7 @@ sub getResultsByGranuleList {
 
 sub getResultsByProductList {
   my ($self, $products) = @_;
-  my $fragment = $self->buildListQuery( 'filename', $products );
+  my $fragment = $self->buildBigListQuery( 'filename', $products );
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelect . $fragment;
   return $self->doQuery($sql)
