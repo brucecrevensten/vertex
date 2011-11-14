@@ -269,7 +269,7 @@ sub buildDateQuery {
     $sday = sprintf("%02d", $start->day);
     $emon = sprintf("%02d", $end->month);
     $eday = sprintf("%02d", $end->day);
-    my $sql = " and to_date('2000-' || to_char(".$fieldRef.",'MM-DD'), 'YYYY-MM-DD') between"
+    my $sql = " AND to_date('2000-' || to_char(".$fieldRef.",'MM-DD'), 'YYYY-MM-DD') between"
       . " to_date(".$self->dbQuote('2000-'.$smon.'-'.$sday).", 'YYYY-MM-DD') and"
       . " to_date(".$self->dbQuote('2000-'.$emon.'-'.$eday).", 'YYYY-MM-DD')"
       . " and ".$fieldRef." between "

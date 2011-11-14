@@ -140,10 +140,8 @@ sub decode {
 
   $self->{start} = $self->{requests}->param('start');
   $self->{end} = $self->{requests}->param('end');
-  if($self->{requests}->param('repeat_yearly')) {
-    $self->{repeat_start} = $self->{requests}->param('repeat_start');
-    $self->{repeat_end} = $self->{requests}->param('repeat_end');
-  }
+  $self->{repeat_start} = $self->{requests}->param('repeat_start');
+  $self->{repeat_end} = $self->{requests}->param('repeat_end');
   $self->{limit} = $self->{requests}->param('limit');
   $self->{bbox} = $self->{requests}->param('bbox');
   $self->{polygon} = $self->{requests}->param('polygon');
