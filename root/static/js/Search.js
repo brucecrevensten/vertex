@@ -200,7 +200,6 @@ var GeographicFilter = BaseFilter.extend(
       } else {
         // This coordiante should be in the range -90 to 90
         if(bbox[ii] < -180 || bbox[ii] > 180) {
-          alert(bbox[ii]);
           error = 'Bounding box coordiante out of range.';
         }
       }
@@ -234,6 +233,7 @@ var GeographicWidget = BaseWidget.extend(
     this.model.set( { "bbox": $('#filter_bbox').val() }, {
       error: function(model, error) {
         model.trigger('change', model);
+        $('#searchMessageError').empty();
         $('#searchMessageError').append(error);
       }
     });
@@ -733,6 +733,7 @@ var SearchButtonView = Backbone.View.extend({
     );
 			
 		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() != "")) {
+      $('#triggerSearch').button('disable');
       $('#searchMessageError').empty();
 			$('#searchMessageError').append('<p>The Geographic Filter cannot be used in conjunction with the Granule Filter.</p>');
 			$('#searchMessageError').append('<p>Please choose only one of these filters at a time.</p>');
