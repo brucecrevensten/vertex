@@ -292,6 +292,7 @@ var GeographicWidget = BaseWidget.extend(
 
     initMap();
 
+    google.maps.event.clearListeners(searchMap, 'click');
     if(this.clickListener == null) {
       this.clickListener = google.maps.event.addListener(searchMap, 'click', jQuery.proxy(function(event) {
         if(this.model.markers.length >= 2) { return; }
