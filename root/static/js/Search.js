@@ -234,7 +234,7 @@ var GeographicWidget = BaseWidget.extend(
     this.model.set( { "bbox": $('#filter_bbox').val() }, {
       error: function(model, error) {
         model.trigger('change', model);
-        alert(error);
+        $('#searchMessageError').append(error);
       }
     });
     var bbox = this.model.get('bbox');
@@ -276,12 +276,13 @@ var GeographicWidget = BaseWidget.extend(
     this.model.trigger('update');
   },
   render: function() {
+    var pBbox = $('#filter_bbox').val();
     $(this.el).html(
       _.template('\
 <p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South<br />(or use the map)<br />Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
-', this.model.toJSON()));
+', {bbox: pBbox}));
 				
     this.renderMap();
     return this;
@@ -707,36 +708,35 @@ var SearchButtonView = Backbone.View.extend({
   },
 
 	toggleButton: function() {
-		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() == "") ||
-		($('#filter_bbox').val() == "" && $('#filter_granule_list').val() != "")    ) {
-				$("#triggerSearch").empty();
-				$("#triggerSearch").button(
-			      {
-			        icons: {
-			          primary: "ui-icon-search"
-			        },
-			        label: "Search",
-					disabled: false
-			    });
-			} else {
-					$("#triggerSearch").empty();
-					$("#triggerSearch").button(
-				      {
-				        icons: {
-				          primary: "ui-icon-search"
-				        },
-				        label: "Search",
-						disabled: true
-				    }).focus();
-			}
+    var buttonDisabled = true;
+    if(window.SearchApp && !((
+      window.SearchApp.searchParameters.has('bbox') &&
+        $('#filter_granule_list').val())
+      || (!window.SearchApp.searchParameters.has('bbox') &&
+        $('#filter_granule_list').val() == "")))
+    {
+      $('#searchMessageError').empty();
+      buttonDisabled = false;
+    } else {
+      buttonDisabled = true;
+    }
+
+    $("#triggerSearch").empty();
+    $('#triggerSearch').button(
+      {
+        icons: {
+          primary: "ui-icon-search"
+        },
+        labal: "Search",
+        disabled: buttonDisabled
+      }
+    );
 			
 		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() != "")) {
-			$('#searchMessage').empty();
-			$('#searchMessage').append('<font color = "red"><p><b>The Geographic Filter cannot be used in conjunction with the Granule Filter.<b></p></font>');
-			$('#searchMessage').append('<font color = "red"><p><b>Please choose only one of these filters at a time.<b></p></font>');
-		} else {
-				$('#searchMessage').empty();
-		}	
+      $('#searchMessageError').empty();
+			$('#searchMessageError').append('<p>The Geographic Filter cannot be used in conjunction with the Granule Filter.</p>');
+			$('#searchMessageError').append('<p>Please choose only one of these filters at a time.</p>');
+		}
 	},
 
   render: function() {
