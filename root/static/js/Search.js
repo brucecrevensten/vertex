@@ -439,13 +439,7 @@ var DateWidget = BaseWidget.extend(
         minDate: new Date(1990, 1 - 1, 1),
         yearRange: '1990:'+today.getFullYear()
     });
-<<<<<<< HEAD
-    end_date = $(this.el).find('#filter_end').datepicker().val();
-    $(this.el).find('#filter_end').datepicker("setDate", end_date);
     $(this.el).find('#filter_repeat').bind('change', this.toggleRepeat);
-    
-=======
->>>>>>> upstream/master
     return this;
   },
   toggleRepeat: function() {
