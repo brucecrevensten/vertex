@@ -226,15 +226,15 @@ legend {
   background-color: inherit;
 }
 
-/**/
-
 #searchResults div {
   padding-left: 1ex;
 }
 
-#searchResults li:nth-child(odd) {
+
+#searchResults tr:nth-child(odd) {
   background-color: #eef0ff;
 }
+
 
 #searchResults li:hover {
   background-color: #FFFFB4;
@@ -247,14 +247,10 @@ legend {
   padding: 0 1em 1ex 1ex;
 }
 
-/**/
-#searchResults td:nth-child(odd) {
-  background-color: #eef0ff;
-}
-
 #searchResults td:hover {
   background-color: #FFFFB4;
 }
+
 
 #searchResults td img {
   vertical-align: middle;
@@ -262,8 +258,6 @@ legend {
   clear: both;
   padding: 0 1em 1ex 1ex;
 }
-
-/**/
 
 #searchResults h4, #searchResults h4 * {
   font-size: 11pt !important;
