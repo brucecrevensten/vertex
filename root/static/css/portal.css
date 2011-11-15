@@ -625,3 +625,11 @@ input.login_fields {
   font-size: 12pt !important;
 
 }
+
+
+.dataTables_info {
+    font-weight: bold;
+  margin: 0 0 1em 0;
+  padding: 1ex;
+  font-size: 12pt !important;
+}
