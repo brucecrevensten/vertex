@@ -586,22 +586,7 @@ var SearchResultsView = Backbone.View.extend(
     
     console.log("Iterating over datatable");
     _.each(SearchApp.dataTable.fnGetData(), jQuery.proxy(function(h) {
-          //console.log(h);
-         // var c = h.find("div").attr("product_id");
-        // console.log(this);
           var dp = this.collection.get( $(h[0]).find("div").attr("product_id") );
-
-
-          //var filtered = $(h[0]).find("div").attr("filtered");
-          
-         // console.log($(h[0]).find("div"));
-         // console.log("CHECKING: ");
-         // console.log(filtered);
-         // console.log($(h[0]).find("div"));
-   // });
-
-   // var c = h.find("div").attr("product_id");
-    //this.collection.each( function( dp, i, l ) {
         if (!dp.get("filtered")) {
           e = dp.toJSON();
           

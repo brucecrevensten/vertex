@@ -332,8 +332,6 @@ var AlosFacetDialog = PlatformFacetView.extend( {
                  { 
                     SearchApp.dataTable.fnDraw();
                     SearchApp.searchResultsView.refreshMap();
-                  //  SearchApp.searchResultsView.clearOverlays();
-                   // SearchApp.searchResultsView.renderOnMap(); /* $(this).dialog('close'); */ 
                   },this),
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);

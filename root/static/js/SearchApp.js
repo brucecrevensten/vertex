@@ -231,17 +231,8 @@ window.SearchAppView = Backbone.View.extend({
       }
 
       if (returnVal) {
-       // $('.productRowTools').find('[product_id="'+c+'"]').attr({filtered:false});
-       // console.log($('.productRowTools').find('[product_id="'+c+'"]'));
-       // $(h.find("div")).attr({filtered:false});
-       // console.log(h);
        this.searchResults.get(c).set({filtered:false});
       } else {
-        
-        //$('.productRowTools').find('[product_id="'+c+'"]').attr({filtered:true});
-        //console.log( $('.productRowTools').find('[product_id="'+c+'"]'));
-       // $(h.find("div")).attr({filtered:true});
-      //  console.log(h);
        this.searchResults.get(c).set({filtered:true});
       }
 
