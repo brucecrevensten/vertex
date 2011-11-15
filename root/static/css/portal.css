@@ -348,8 +348,6 @@ label.hover {
 #product_profile img {
   display: block;
   margin: 1em auto;
-  min-width: 512px;
-  min-height: 512px;
   float: left;
 }
 

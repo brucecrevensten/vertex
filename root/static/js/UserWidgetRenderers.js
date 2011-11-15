@@ -27,6 +27,21 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
         }
       ).error( { 'context':this }, function(e) { $(this).remove(); });
       var s = m.files.select( function(row) { return ( 'BROWSE' == row.get('processingType') ) } );
+      t.load(function() {
+        // Scale the image to be no bigger then 512px and preserve the aspect
+        // ratio. This must be done here, we can only get the image dimensions
+        // after the image is displayed.
+        var img = $("#product_profile img");
+        var imgH = img.height();
+        var imgW = img.width();
+        if(imgH >= imgW && imgH > 512) {
+          img.height('512');
+          img.width(imgW/imgH * 512);
+        } else if(imgW > imgH && imgW > 512) {
+          img.width('512');
+          img.height(imgH/imgW * 512);
+        }
+      });
       if ( s[0] ) {
         t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank', 'title':m.get('GRANULENAME') } ).html( t );
         t.click(function() {

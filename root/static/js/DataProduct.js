@@ -241,14 +241,6 @@ window.showProductProfile = function(product) {
       position: "center"
     }
   );
-  // Scale the image to be no wider then 512px and preserve the aspect ratio
-  // This must be done here, we can only get the image dimensions after the
-  // image is displayed.
-  var img = $("#product_profile img");
-  var imgH = img.height();
-  var imgW = img.width();
-  img.width('512');
-  img.height(imgH / imgW * 512);
   return false;
 
 };
