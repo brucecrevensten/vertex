@@ -259,7 +259,59 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       p.pathLabel = 'Path';
 
       el.append( p.render().el );
+
       this.hasRendered = true;
+
+      this.setFilters();
+
+  },
+  setFilters: function() {
+     // Beam Modes
+        $(this.el).find('.beamSelector').each( function(i, element) { 
+          $(element).find('input').click(function(e) {
+            var el = $(e.currentTarget);
+             if (el.attr('checked') == "checked") {
+                if (!SearchApp.filterDictionaryA3.has( el.val() )) {
+                  SearchApp.filterDictionaryA3.add( el.val(), el.val() );
+                }
+              } else {
+                if ( SearchApp.filterDictionaryA3.has( el.val() ) ) {
+                  SearchApp.filterDictionaryA3.remove( el.val() );
+                }
+              }  
+          });     
+        });
+
+       // Flight Directions
+       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
+          var curEl = $(e.currentTarget);
+          $(this.el).find('input[type="radio"]').each( function(i,element) {
+                SearchApp.filterDictionaryA3.remove( $(element).val() + " ALOS" );
+          });
+          if (curEl.val() != "any") {
+             SearchApp.filterDictionaryA3.add($(curEl).val() + " ALOS");
+          }
+        },this));     
+
+      // ALOS Path
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionaryA3.remove('PATHALOS');
+            } else {
+               SearchApp.filterDictionaryA3.add('PATHALOS',el.val());
+            }
+          }, this));
+
+          // ALOS FRAME
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionaryA3.remove('FRAMEALOS');
+            } else {
+               SearchApp.filterDictionaryA3.add('FRAMEALOS',el.val());
+            }
+          }, this));
 
   },
   render: function() {
@@ -283,52 +335,12 @@ var AlosFacetDialog = PlatformFacetView.extend( {
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
+          SearchApp.filterDictionaryA3.clear();
+          SearchApp.dataTable.fnDraw();
         }, this)
       }
-    }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
-        
-
-    
-        // Beam Modes
-        $(this.el).find('.beamSelector').each( function(i, element) { 
-
-          $(element).find('input').click(function(e) {
-            var el = $(e.currentTarget);
-            SearchApp.applyFilter(el);
-          });     
-        });
-
-       // Flight Directions
-       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
-          var curEl = $(e.currentTarget);
-          $(this.el).find('input[type="radio"]').each( function(i,element) {
-                SearchApp.filterDictionary.remove( $(element).val() + " ALOS" );
-          });
-          if (curEl.val() != "any") {
-             SearchApp.filterDictionary.add($(curEl).val() + " ALOS");
-          }
-        },this));     
-
-      // ALOS Path
-     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionary.remove('PATHALOS');
-            } else {
-               SearchApp.filterDictionary.add('PATHALOS',el.val());
-            }
-          }, this));
-
-          // ALOS FRAME
-     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionary.remove('FRAMEALOS');
-            } else {
-               SearchApp.filterDictionary.add('FRAMEALOS',el.val());
-            }
-          }, this));
-
+    }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } ); 
+     
   }
   
 });
@@ -507,6 +519,46 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
 
     el.append( p.render().el );
     this.hasRendered = true;
+
+    this.setFilters();
+  },
+  setFilters: function() {
+    
+     $(this.el).find('.beamSelector').each( function(i, element) { 
+
+          $(element).find('input').click(function(e) {
+            var el = $(e.currentTarget);
+                if (el.attr('checked') == "checked") {
+            if (!SearchApp.filterDictionaryR1.has( el.val() )) {
+              SearchApp.filterDictionaryR1.add( el.val(), el.val() );
+            }
+          } else {
+            if ( SearchApp.filterDictionaryR1.has( el.val() ) ) {
+              SearchApp.filterDictionaryR1.remove( el.val() );
+            }
+          }  
+          });     
+        });
+
+             //  Path
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionaryR1.remove('ORBITRADARSAT');
+            } else {
+               SearchApp.filterDictionaryR1.add('ORBITRADARSAT',el.val());
+            }
+          }, this));
+
+          //  FRAME
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              SearchApp.filterDictionaryR1.remove('FRAMERADARSAT');
+            } else {
+               SearchApp.filterDictionaryR1.add('FRAMERADARSAT',el.val());
+            }
+          }, this));
   },
   render: function() {
     
@@ -526,38 +578,13 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
+          SearchApp.filterDictionaryR1.clear();
+          SearchApp.dataTable.fnDraw();
         }, this)
       }
     }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
 
 
-     $(this.el).find('.beamSelector').each( function(i, element) { 
-
-          $(element).find('input').click(function(e) {
-            var el = $(e.currentTarget);
-            SearchApp.applyFilter(el);
-          });     
-        });
-
-             //  Path
-     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionary.remove('ORBITRADARSAT');
-            } else {
-               SearchApp.filterDictionary.add('ORBITRADARSAT',el.val());
-            }
-          }, this));
-
-          //  FRAME
-     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionary.remove('FRAMERADARSAT');
-            } else {
-               SearchApp.filterDictionary.add('FRAMERADARSAT',el.val());
-            }
-          }, this));
   }
 });
 
@@ -622,9 +649,67 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
 
     el.append( p.render().el );
     this.hasRendered = true;
+
+    this.setFilters();
+  },
+
+  setFilters: function() {
+
+      if (this.model.platform == "JERS-1") {
+        this.filterDictionaryObject=SearchApp.filterDictionaryJ1;
+      }
+      if (this.model.platform == "ERS-1") {
+        this.filterDictionaryObject=SearchApp.filterDictionaryE1;
+      }
+      if (this.model.platform == "ERS-2") {
+        this.filterDictionaryObject=SearchApp.filterDictionaryE2;
+      }
+     var filterDictionaryObject = this.filterDictionaryObject;
+         // Flight Directions
+       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
+          var curEl = $(e.currentTarget);
+          $(this.el).find('input[type="radio"]').each( jQuery.proxy(function(i,element) {
+                filterDictionaryObject.remove( $(element).val() + this.model.platform );
+          },this));
+          if (curEl.val() != "any") {
+             filterDictionaryObject.add($(curEl).val() + this.model.platform, $(curEl).val());
+          }
+        },this)); 
+
+                //  Path
+     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+               
+              filterDictionaryObject.remove("ORBIT"+this.model.platform);
+            } else {
+              filterDictionaryObject.add("ORBIT"+this.model.platform,el.val());
+            }
+          }, this));
+
+          //  FRAME
+     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
+            var el = $(e.currentTarget);
+            if (el.val() == "") {
+              filterDictionaryObject.remove("FRAME"+this.model.platform);
+            } else {
+               filterDictionaryObject.add("FRAME"+this.model.platform,el.val());
+            }
+          }, this));
   },
   render: function() {
-
+     
+      if (this.model.platform == "JERS-1") {
+        this.filterDictionaryObject=SearchApp.filterDictionaryJ1;
+      }
+      if (this.model.platform == "ERS-1") {
+        this.filterDictionaryObject=SearchApp.filterDictionaryE1;
+      }
+      if (this.model.platform == "ERS-2") {
+        this.filterDictionaryObject=SearchApp.filterDictionaryE2;
+      }
+     var filterDictionaryObject = this.filterDictionaryObject;
+    
     if( true !== this.hasRendered ) {
       this.renderHtml();
     }
@@ -641,41 +726,25 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
+          
+           if (this.model.platform == "JERS-1") {
+            SearchApp.filterDictionaryJ1.clear();
+           }
+           if (this.model.platform == "ERS-1") {
+              SearchApp.filterDictionaryE1.clear();
+            }
+            if (this.model.platform == "ERS-2") {
+                  
+                SearchApp.filterDictionaryE2.clear();
+            }
+          SearchApp.dataTable.fnDraw();
+          
         }, this)
       }
     });
 
-         // Flight Directions
-       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
-          var curEl = $(e.currentTarget);
-          $(this.el).find('input[type="radio"]').each( jQuery.proxy(function(i,element) {
-                SearchApp.filterDictionary.remove( $(element).val() + this.model.platform );
-          },this));
-          if (curEl.val() != "any") {
-             SearchApp.filterDictionary.add($(curEl).val() + this.model.platform, $(curEl).val());
-          }
-        },this)); 
-
-                //  Path
-     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-               
-              SearchApp.filterDictionary.remove("ORBIT"+this.model.platform);
-            } else {
-              SearchApp.filterDictionary.add("ORBIT"+this.model.platform,el.val());
-            }
-          }, this));
-
-          //  FRAME
-     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionary.remove("FRAME"+this.model.platform);
-            } else {
-               SearchApp.filterDictionary.add("FRAME"+this.model.platform,el.val());
-            }
-          }, this));
+      
+    
 
 
 
