@@ -342,6 +342,7 @@ var SearchResultsView = Backbone.View.extend(
 
     // Observe changes to the post-filters
     this.options.postFilters.bind('change', this.render);
+    this.options.postFilters.bind('refreshMap', this.refreshMap);
 
     this.showBeforeSearchMessage();
   },
@@ -549,7 +550,7 @@ var SearchResultsView = Backbone.View.extend(
 
     this.showResults();
     this.clearOverlays();
-  this.renderOnMap();
+    this.renderOnMap();
     this.resetHeight();
 
    
@@ -582,37 +583,54 @@ var SearchResultsView = Backbone.View.extend(
 
     e = this.collection.at(0).toJSON();
     this.bounds = new google.maps.LatLngBounds();
-
-    this.collection.each( function( dp, i, l ) {
-
-        e = dp.toJSON();
-        
-        this.bounds.extend(new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON));
-        this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
-        this.bounds.extend(new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON));
-        this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
-
-        this.mo[ e.id ] = new google.maps.Polygon({
-            paths: new Array(
-              new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON),
-              new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON),
-              new google.maps.LatLng(e.FARENDLAT, e.FARENDLON),
-              new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
-            ),
-            fillColor: '#777777',
-            fillOpacity: $('#globalSlider').slider("value")/100,
-            strokeColor: '#333333',
-            strokeOpacity: 1,
-            strokeWeight: 2,
-            zIndex: 1000,
-            clickable: true
-          });
-        this.mo[ e.id ].setMap(searchMap);
+    
+    console.log("Iterating over datatable");
+    _.each(SearchApp.dataTable.fnGetData(), jQuery.proxy(function(h) {
+          //console.log(h);
+         // var c = h.find("div").attr("product_id");
+        // console.log(this);
+          var dp = this.collection.get( $(h[0]).find("div").attr("product_id") );
 
 
-    }, this);
+          //var filtered = $(h[0]).find("div").attr("filtered");
+          
+         // console.log($(h[0]).find("div"));
+         // console.log("CHECKING: ");
+         // console.log(filtered);
+         // console.log($(h[0]).find("div"));
+   // });
 
-    searchMap.fitBounds( this.bounds );
+   // var c = h.find("div").attr("product_id");
+    //this.collection.each( function( dp, i, l ) {
+        if (!dp.get("filtered")) {
+          e = dp.toJSON();
+          
+          this.bounds.extend(new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON));
+          this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
+          this.bounds.extend(new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON));
+          this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
+
+          this.mo[ e.id ] = new google.maps.Polygon({
+              paths: new Array(
+                new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON),
+                new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON),
+                new google.maps.LatLng(e.FARENDLAT, e.FARENDLON),
+                new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
+              ),
+              fillColor: '#777777',
+              fillOpacity: $('#globalSlider').slider("value")/100,
+              strokeColor: '#333333',
+              strokeOpacity: 1,
+              strokeWeight: 2,
+              zIndex: 1000,
+              clickable: true
+            });
+          this.mo[ e.id ].setMap(searchMap);
+      }
+
+      }, this));
+
+      searchMap.fitBounds( this.bounds );
   },
   clearOverlays: function() {
 
@@ -632,6 +650,10 @@ var SearchResultsView = Backbone.View.extend(
     this.mo = {}; 
     this.activePoly = null;
 
+  },
+  refreshMap: function() {
+    this.clearOverlays();
+    this.renderOnMap();
   },
   removeHighlight: function(e) {
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not

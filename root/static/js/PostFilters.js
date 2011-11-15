@@ -328,15 +328,19 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       title: "ALOS PALSAR Options",
       position: [30,100],
       buttons: {
-        "Apply": function() 
+        "Apply": jQuery.proxy(function() 
                  { 
-                    SearchApp.dataTable.fnDraw(); /* $(this).dialog('close'); */ 
-                  },
+                    SearchApp.dataTable.fnDraw();
+                    SearchApp.searchResultsView.refreshMap();
+                  //  SearchApp.searchResultsView.clearOverlays();
+                   // SearchApp.searchResultsView.renderOnMap(); /* $(this).dialog('close'); */ 
+                  },this),
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
           SearchApp.filterDictionaryA3.clear();
           SearchApp.dataTable.fnDraw();
+          SearchApp.searchResultsView.refreshMap();
         }, this)
       }
     }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } ); 
@@ -574,12 +578,15 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       title: "RADARSAT-1 Platform Options",
       position: [40,110],
       buttons: {
-        "Apply": function() { SearchApp.dataTable.fnDraw();/*$(this).dialog('close');*/ },
+        "Apply": function() { 
+            SearchApp.dataTable.fnDraw();
+            SearchApp.searchResultsView.refreshMap();/*$(this).dialog('close');*/ },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
           SearchApp.filterDictionaryR1.clear();
           SearchApp.dataTable.fnDraw();
+          SearchApp.searchResultsView.refreshMap();
         }, this)
       }
     }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
@@ -722,7 +729,10 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
       title: this.model.platform + " Platform Options",
       position: [50 + this.model.offset, 120 + this.model.offset ],
       buttons: {
-        "Apply": function() {  SearchApp.dataTable.fnDraw();/* $(this).dialog('close'); */ },
+        "Apply": function() {  
+            SearchApp.dataTable.fnDraw();
+          SearchApp.searchResultsView.refreshMap();
+          },
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
           this.renderHtml();
@@ -738,7 +748,7 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
                 SearchApp.filterDictionaryE2.clear();
             }
           SearchApp.dataTable.fnDraw();
-          
+          SearchApp.searchResultsView.refreshMap();
         }, this)
       }
     });
