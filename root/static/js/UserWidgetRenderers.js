@@ -18,14 +18,20 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
   _ppBrowse: function( m ) {
 		// Try to use the BROWSE512
     // probably want to hide image until it's loaded then show it then resize the profile.
+    var t;
+    var loading;
 		if ( 'none' != m.get('BROWSE')) {
-      var t = jQuery(
+      loading = $('<div id="ppImageLoading"><img width="512" height="512" src="static/images/ajax-loader.gif"/></div>');
+      t = jQuery(
         '<img/>',
         {
           src: m.get('BROWSE'),
           title: m.get('GRANULENAME')
         }
-      ).error( { 'context':this }, function(e) { $(this).remove(); });
+      ).error( { 'context':this }, function(e) {
+        $(this).remove();
+        $('#ppImageLoading').hide();
+      });
       var s = m.files.select( function(row) { return ( 'BROWSE' == row.get('processingType') ) } );
       t.load(function() {
         // Scale the image to be no bigger then 512px and preserve the aspect
@@ -41,7 +47,10 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
           img.width('512');
           img.height(imgH/imgW * 512);
         }
+        $('#ppImageLoading').hide();
+        $(this).show();
       });
+      t.hide();
       if ( s[0] ) {
         t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank', 'title':m.get('GRANULENAME') } ).html( t );
         t.click(function() {
@@ -53,7 +62,7 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
 		} else {
       this.ppWidth = 500; // missing image = make narrow  
     }
-    return t;
+    return t.append(loading);
 	},
 	ppBrowse: function( m ) {
 		if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM') ) {
