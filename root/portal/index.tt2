@@ -96,7 +96,7 @@
     
 		<div>
 			<br />
-			<div id="searchMessage"></div> 
+			<div id="searchMessageError" class="error"></div> 
 		</div>
       </div>
     </div>
