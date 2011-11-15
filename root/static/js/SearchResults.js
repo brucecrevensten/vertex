@@ -584,7 +584,6 @@ var SearchResultsView = Backbone.View.extend(
     e = this.collection.at(0).toJSON();
     this.bounds = new google.maps.LatLngBounds();
     
-    console.log("Iterating over datatable");
     _.each(SearchApp.dataTable.fnGetData(), jQuery.proxy(function(h) {
           var dp = this.collection.get( $(h[0]).find("div").attr("product_id") );
         if (!dp.get("filtered")) {
