@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="https://testvertex.daac.asf.alaska.edu/" />
-<title>spec_8_1_to_8_2</title>
+<title>spec_13_0</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">spec_8_1_to_8_2</td></tr>
+<tr><td rowspan="1" colspan="3">spec_13_0</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -18,52 +18,32 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=login_button</td>
+	<td>//div[@id='feedbackButton']/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>id=login_username</td>
-	<td>jtheis</td>
+	<td>id=fc_name</td>
+	<td>Jason</td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>id=login_password</td>
-	<td>9074746166</td>
+	<td>id=fc_email</td>
+	<td>jmtheis@alaska.edu</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=fc_comments</td>
+	<td>just testing out the feedback</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/button[3]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=triggerSearch</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=srProcLevelTool</td>
-	<td></td>
-</tr>
-<tr>
-	<td>typeKeys</td>
-	<td>id=toggleProcMenu</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>//ul[@id=addProductsByType</td>
+	<td>//div[3]/div/button[2]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='srProcLevelTool']/div/label/span[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=toggleProcMenu</td>
+	<td>//button[@type='button']</td>
 	<td></td>
 </tr>
 
