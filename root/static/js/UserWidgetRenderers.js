@@ -21,7 +21,7 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
     var t;
     var loading;
 		if ( 'none' != m.get('BROWSE')) {
-      loading = $('<div id="ppImageLoading"><img width="512" height="512" src="static/images/ajax-loader.gif"/></div>');
+      loading = $('<div style="width:512px;height:512px" id="ppImageLoading"><img src="static/images/loading.gif"/></div>');
       t = jQuery(
         '<img/>',
         {
@@ -62,7 +62,9 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
 		} else {
       this.ppWidth = 500; // missing image = make narrow  
     }
-    return t.append(loading);
+    if(t) {
+      return t.append(loading);
+    }
 	},
 	ppBrowse: function( m ) {
 		if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM') ) {
