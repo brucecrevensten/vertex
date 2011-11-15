@@ -1,5 +1,5 @@
 body {
-   background: url(../images/satellitebackground.png); 
+   background: url(../images/satellitebackground.png);
 }
 
 body * {
@@ -342,9 +342,6 @@ label.hover {
 #product_profile img {
   display: block;
   margin: 1em auto;
-  min-width: 512px;
-  min-height: 512px;
-  float: left;
 }
 
 #product_profile span.beamModeHelp {
