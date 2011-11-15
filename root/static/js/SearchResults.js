@@ -583,10 +583,12 @@ var SearchResultsView = Backbone.View.extend(
 
     e = this.collection.at(0).toJSON();
     this.bounds = new google.maps.LatLngBounds();
-    
+    var changeBounds=false; 
+
     _.each(SearchApp.dataTable.fnGetData(), jQuery.proxy(function(h) {
           var dp = this.collection.get( $(h[0]).find("div").attr("product_id") );
         if (!dp.get("filtered")) {
+          changeBounds=true; 
           e = dp.toJSON();
           
           this.bounds.extend(new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON));
@@ -614,7 +616,9 @@ var SearchResultsView = Backbone.View.extend(
 
       }, this));
 
-      searchMap.fitBounds( this.bounds );
+      if (changeBounds) {
+        searchMap.fitBounds( this.bounds );
+      }
   },
   clearOverlays: function() {
 
