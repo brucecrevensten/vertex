@@ -625,3 +625,10 @@ input.login_fields {
   font-size: 12pt !important;
 
 }
+
+div.error {
+  color: red;
+  font-weight: bold;
+}
+}
+  
