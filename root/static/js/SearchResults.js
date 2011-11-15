@@ -532,7 +532,7 @@ var SearchResultsView = Backbone.View.extend(
                                       fillColor: '#777777',
                                       fillOpacity: ui.value / 100,
                                       strokeColor: '#333333',
-                                      strokeOpacity: 1,
+                                      strokeOpacity: 0.5,
                                       zIndex: 1000
                                     }); 
                                   
