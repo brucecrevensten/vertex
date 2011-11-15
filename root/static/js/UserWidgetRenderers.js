@@ -22,7 +22,6 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
       var t = jQuery(
         '<img/>',
         {
-          style: "height: 512px",
           src: m.get('BROWSE'),
           title: m.get('GRANULENAME')
         }
