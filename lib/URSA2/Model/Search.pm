@@ -35,10 +35,22 @@ be used to wrap anything before the WHERE clause.
 =cut
 
 sub getSelectXml {
-  return qq(
+  my ($self) = @_;
+  
+  return q~
+  select XMLELEMENT("ROW", XMLForest(
+  ~ . $self->getSelectFields() . q~
+  )).getStringVal() FROM
+    data_product dp
+  WHERE
+    processingtype not in ('THUMBNAIL', 'BROWSE512') and
+  ~;
+}
 
- select XMLELEMENT("ROW",
-  XMLForest(
+sub getSelectFields {
+  my ($self) = @_;
+  
+  return q~
     granuleName,
     productName,
     platform,
@@ -85,11 +97,7 @@ sub getSelectXml {
     granuleType,
     fileName,
     granuleName || '_' || processingType AS id
-  )).getStringVal() FROM
-    data_product dp
-  WHERE
-    processingtype not in ('THUMBNAIL', 'BROWSE512') and
-  );
+  ~;
 }
 
 =item getResultsByGranuleList
@@ -249,24 +257,24 @@ Params:
 =cut
 sub buildDateQuery {
   my ($self, $start, $end, $repeat_start, $repeat_end) = @_;
-
+  
   # no dates = no restriction query
   if( !$start && !$end ) { return ''; }
   
   my $fieldRef = "startTime";
   
-  if( $start && $end && $repeat_start && $repeat_end ) {
-    my ($smon, $sday, $emon, $eday);
+  if( $start && $end && $repeat_start && $repeat_end) {
+    my ($syear, $smon, $sday, $eyear, $emon, $eday);
     $smon = sprintf("%02d", $start->month);
     $sday = sprintf("%02d", $start->day);
     $emon = sprintf("%02d", $end->month);
     $eday = sprintf("%02d", $end->day);
-    return " AND to_date('2000-' || to_char(".$fieldRef.",'MM-DD'), 'YYYY-MM-DD') between'
-      . ' to_date(".$self->dbQuote('2000-'.$smon.'-'.$sday).", 'YYYY-MM-DD') and'
-      . ' to_date(".$self->dbQuote('2000-'.$emon.'-'.$eday).", 'YYYY-MM-DD')"
-      . " AND ".$fieldRef." between "
-      . ' to_date('.$self->dbQuote($repeat_start.'-01-01').", 'YYYY-MM-DD') and"
-      . ' to_date('.$self->dbQuote($repeat_end.  '-12-31').", 'YYYY-MM-DD')";
+    my $sql = " AND to_date('2000-' || to_char(".$fieldRef.",'MM-DD'), 'YYYY-MM-DD') between"
+      . " to_date(".$self->dbQuote('2000-'.$smon.'-'.$sday).", 'YYYY-MM-DD') and"
+      . " to_date(".$self->dbQuote('2000-'.$emon.'-'.$eday).", 'YYYY-MM-DD')"
+      . " and ".$fieldRef." between "
+      . " to_date(".$self->dbQuote($repeat_start.'-01-01').", 'YYYY-MM-DD') and"
+      . " to_date(".$self->dbQuote($repeat_end.  '-12-31').", 'YYYY-MM-DD')";
   } else {
     # before end date 
     if( !$start && $end ) {
