@@ -61,6 +61,9 @@ var SearchParameters = Backbone.Model.extend(
           this.unset('bbox');
 				}
 			}
+      if ((i=="repeat_start" || i=="repeat_end") && $('#filter_repeat').attr('checked') != 'checked') {
+        delete json[i];
+      }
 		}
 		
 		if (set) {
