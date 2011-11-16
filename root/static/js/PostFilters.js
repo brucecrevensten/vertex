@@ -17,6 +17,7 @@ var PostFilters = Backbone.Model.extend(
     reset: function() {
       for( var i in this.postFilters ) {
         this.postFilters[i].set(this.postFilters[i].defaults);
+        this.postFilters[i].trigger('reset');
       }
     },
     
@@ -70,6 +71,16 @@ var PostFiltersView = Backbone.View.extend(
       
       var r = jQuery('<button/>').click( jQuery.proxy( function(e) {
         this.model.reset();
+        
+        SearchApp.filterDictionaryA3.clear();
+        SearchApp.filterDictionaryE1.clear();
+        SearchApp.filterDictionaryE2.clear();
+        SearchApp.filterDictionaryR1.clear();
+        SearchApp.filterDictionaryJ1.clear();
+           
+        SearchApp.dataTable.fnDraw();
+        SearchApp.searchResultsView.refreshMap();
+      
       }, this ) ).button( { icons: { primary: 'ui-icon-refresh'}, label: 'Reset all filters'});
 
       d.append(u);
@@ -193,12 +204,12 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
   initialize: function() {
     _.bindAll(this);
-    this.model.bind('change', this.renderHtml, this);    
+    this.model.bind('change', this.renderHtml, this);  
+    this.model.bind('reset', this.renderHtml, this);  
   },
 
   changed: function(e) {
   },
-
   beamModes: [
     {
       title: "FBS (Fine Beam Single Polarization)",
