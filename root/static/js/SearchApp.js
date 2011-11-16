@@ -537,9 +537,6 @@ var ActiveSearchFiltersView = Backbone.View.extend(
     return this;
   }
 
-  
-
-
 });
 
 JSON.stringify = JSON.stringify || function (obj) {
