@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://testvertex.daac.asf.alaska.edu/" />
+<title>spec_16_1_1to16_1_8</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">spec_16_1_1to16_1_8</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Platforms</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li/div/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[2]/div/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[3]/div/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[4]/div/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[5]/div/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[6]/div/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Date</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Geographic Region</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=stopSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Filter By Platform</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=resetSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#result_row_ALPSRP231241260 &gt; p</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=a[title=&quot;ALPSRP231241260&quot;] &gt; img[title=&quot;ALPSRP231241260&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[4]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//td[@id='result_row_ALPSRP231241260']/p[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=a[title=&quot;ALPSRP231241260&quot;] &gt; img[title=&quot;ALPSRP231241260&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[4]/div/a/span</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

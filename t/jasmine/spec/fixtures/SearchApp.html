@@ -1,50 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<title>Vertex: ASF's Data Portal</title>
-
-<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/reset.css') %]" />
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/demo_table_jui.css') %]" />
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/ui-darkness/jquery-ui-1.8.16.custom.css') %]" />
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/portal.css') %]" />
-
-<!-- enable html5 element formatting with older IE versions -->
-<!--[if lt IE 9]>
-<script src="[% c.uri_for('/static/js/html5.min.js') %]"></script>
-<![endif]-->
-
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/AsfConfig.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/AsfPlatformConfig.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.6.4.min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.store.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-ui-1.8.16.custom.min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.dataTables.min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/AsfUtility.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/SearchMap.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/DataProduct.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/ProcessingTypes.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/Search.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/PostFilterComponents.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/PostFilters.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/SearchResults.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/DownloadQueue.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/UserWidgetRenderers.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/UserAuth.js') %]"></script> 
-<script type="text/javascript" src="[% c.uri_for('/static/js/SearchApp.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/Feedback.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/Dictionary.js') %]"></script>
-
-</head>
-<body>
-
-
 <div id="wrapper">
   <header>
 	
@@ -96,7 +49,7 @@
     
 		<div>
 			<br />
-			<div id="searchMessageError" class="error"></div> 
+			<div id="searchMessage"></div> 
 		</div>
       </div>
     </div>
@@ -104,7 +57,6 @@
 
     <div id="centerColumn">
       <div id="searchMap"></div>
-      <div id="globalSlider"></div>
     </div> <!-- end center column -->
 
     <div id="rightColumn">
@@ -181,41 +133,3 @@
     <div style="clear:both;">&nbsp;</div>
   </footer>
 </div>
-
-[% IF c.config.include_google_analytics == 'true' %]
-<!-- Begin Google Analytics Code -->
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-991100-4']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-<!-- End Google Analytics Code -->
-[% END %]
-
-[% IF c.config.include_ems_tracker == 'true' %]
-<!-- BEGIN: EMS Page Tag -->
-<script language="JavaScript">
-// var NTPT_PGEXTRA = '';
-// var NTPT_PGREFTOP = true;
-// var NTPT_NOINITIALTAG = false;
-</script>
-<script language="JavaScript" src="[% c.uri_for('/static/js/ntpagetag.js') %]"></script>
-<!-- END: EMS Page Tag -->
-<!-- BEGIN: EMS Page Tag No Script -->
-<noscript>
-<img src="http://ws1.ems.eosdis.nasa.gov/images/ntpagetag.gif?js=0" height="1" width="1" border="0" hspace="0"
-vspace="0" alt="">
-</noscript>
-<!-- END: EMS Page Tag No Script -->
-[% END %]
-
-</body>
-</html>
