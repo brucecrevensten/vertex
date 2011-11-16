@@ -580,8 +580,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   renderOnMap: function() {
-
-    e = this.collection.at(0).toJSON();
     this.bounds = new google.maps.LatLngBounds();
     var changeBounds=false; 
 
