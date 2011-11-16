@@ -60,6 +60,9 @@ var SearchParameters = Backbone.Model.extend(
 					set=false;
 				}
 			}
+      if ((i=="repeat_start" || i=="repeat_end") && $('#filter_repeat').attr('checked') != 'checked') {
+        delete json[i];
+      }
 		}
 		
 		if (set) {
