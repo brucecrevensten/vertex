@@ -412,7 +412,8 @@ window.SearchAppView = Backbone.View.extend({
   }
 });
 
-window.SearchApp = new SearchAppView;  
+window.SearchApp = new SearchAppView;
+setupPlaceholders();
 
 // Instead of using serialzeArray() we can use serializeJSON to return JSON formatted form data. 
 $.fn.serializeJSON=function() {
