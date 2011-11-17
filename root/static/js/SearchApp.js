@@ -128,6 +128,18 @@ window.SearchAppView = Backbone.View.extend({
                 }   
           }
 
+           if (SearchApp.filterDictionaryR1.has('ASCENDING')) {
+                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+                  returnVal= true;
+                }   
+              }
+
+              if (SearchApp.filterDictionaryR1.has('DESCENDING')) {       
+                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                  returnVal= true;
+                }   
+              }
+
            if (SearchApp.filterDictionaryR1.has('ORBITRADARSAT')) {
                 if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionaryR1.val('ORBITRADARSAT')) {
                   returnVal= true;
