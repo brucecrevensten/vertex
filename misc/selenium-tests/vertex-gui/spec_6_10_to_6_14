@@ -247,6 +247,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>click</td>
+	<td>//div[4]/div/a/span</td>
+	<td></td>
+</tr>
+<tr>
 	<td>verifyTextPresent</td>
 	<td>Frame 287, Orbit 60341</td>
 	<td></td>

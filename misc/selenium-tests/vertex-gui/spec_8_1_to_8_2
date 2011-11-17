@@ -37,23 +37,33 @@
 	<td></td>
 </tr>
 <tr>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-148.70,64.35,-146.48,65.22</td>
+</tr>
+<tr>
 	<td>click</td>
 	<td>id=triggerSearch</td>
 	<td></td>
 </tr>
 <tr>
+	<td>verifyText</td>
+	<td>id=async-spinner</td>
+	<td>Loading search results…</td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Filter By Platform</td>
+	<td></td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>id=srProcLevelTool</td>
+	<td>id=triggerSearch</td>
 	<td></td>
 </tr>
 <tr>
-	<td>typeKeys</td>
-	<td>id=toggleProcMenu</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>//ul[@id=addProductsByType</td>
+	<td>waitForElementPresent</td>
+	<td>link=Filter By Platform</td>
 	<td></td>
 </tr>
 <tr>
@@ -63,10 +73,29 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=toggleProcMenu</td>
+	<td>//ul[@id='addProductsByType']/li[3]/button</td>
 	<td></td>
 </tr>
-
+<tr>
+	<td>click</td>
+	<td>//div[@id='srProcLevelTool']/div/label/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#queue_summary &gt; span.ui-button-text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#clear_queue_all &gt; span.ui-button-text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

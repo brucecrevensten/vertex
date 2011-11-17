@@ -109,22 +109,22 @@
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul[2]/li[2]/a/span[2]</td>
-	<td>Ground Projected Complex (4.01 GB)</td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>//div[@id='hanger']/ul[2]/li[3]/a/span[2]</td>
 	<td>Compressed Stokes Matrix (930.30 MB)</td>
 </tr>
 <tr>
 	<td>verifyText</td>
+	<td>//div[@id='hanger']/ul[2]/li[3]/a/span[2]</td>
+	<td>Multi-look Complex (3.25 GB)</td>
+</tr>
+<tr>
+	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul[2]/li[4]/a/span[2]</td>
-	<td>GoogleEarth KMZ (467.57 MB)</td>
+	<td>Ground Projected Complex (4.01 GB)</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//div[@id='hanger']/ul[2]/li[5]/a/span[2]</td>
-	<td>Multi-look Complex (3.25 GB)</td>
+	<td>GoogleEarth KMZ (467.57 MB)</td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
@@ -154,12 +154,22 @@
 <tr>
 	<td>verifyText</td>
 	<td>//table[@id='download_queue_table']/tbody/tr/td[2]</td>
-	<td>GoogleEarth KMZ</td>
+	<td>Compressed Stokes Matrix</td>
 </tr>
 <tr>
 	<td>verifyText</td>
 	<td>//table[@id='download_queue_table']/tbody/tr[2]/td[2]</td>
 	<td>Ground Projected Complex</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#clear_queue_all &gt; span.ui-button-text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[4]/div/a/span</td>
+	<td></td>
 </tr>
 </tbody></table>
 </body>

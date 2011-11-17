@@ -83,28 +83,13 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Date</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
 	<td>link=Geographic Region</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
-	<td></td>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-148.70,64.35,-146.48,65.22</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -117,13 +102,13 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>id=triggerSearch</td>
-	<td></td>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-147.38,61.60,-144.04,62.97</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Filter By Platform</td>
+	<td>id=triggerSearch</td>
 	<td></td>
 </tr>
 <tr>
@@ -132,14 +117,9 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='searchMap']/div/div/div/div[4]/div/div/div</td>
-	<td></td>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-151.50,60.60,-149.20,61.54</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -147,34 +127,29 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>css=#result_row_ALPSRP231241260 &gt; p</td>
+	<td>waitForElementPresent</td>
+	<td>link=Filter By Platform</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>css=a[title=&quot;ALPSRP231241260&quot;] &gt; img[title=&quot;ALPSRP231241260&quot;]</td>
+	<td>//td[@id='result_row_ALPSRP235911210']/p[2]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[4]/div/a/span</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//td[@id='result_row_ALPSRP231241260']/p[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>css=a[title=&quot;ALPSRP231241260&quot;] &gt; img[title=&quot;ALPSRP231241260&quot;]</td>
+	<td>verifyText</td>
+	<td>css=a[title=&quot;ALPSRP235911210&quot;] &gt; img[title=&quot;ALPSRP235911210&quot;]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
 	<td>//div[4]/div/a/span</td>
 	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=srCount</td>
+	<td>96 results found</td>
 </tr>
 </tbody></table>
 </body>

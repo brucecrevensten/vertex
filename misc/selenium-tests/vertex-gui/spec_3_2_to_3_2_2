@@ -28,7 +28,7 @@
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=tr.even &gt; td..sorting_1 &gt; span</td>
+	<td>css=td..sorting_1 &gt; span</td>
 	<td>ALPSRP247141290-L1.5.zip</td>
 </tr>
 <tr>
