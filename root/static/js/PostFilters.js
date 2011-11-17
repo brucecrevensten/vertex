@@ -563,6 +563,22 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
           }  
           });     
         });
+          
+
+       // Flight Directions
+       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
+
+        $('.ui-dialog-buttonpane').find('button:contains("Apply")').button().focus();
+
+          var curEl = $(e.currentTarget);
+          $(this.el).find('input[type="radio"]').each( function(i,element) {
+                SearchApp.filterDictionaryR1.remove( $(element).val() );
+          });
+          if (curEl.val() != "any") {
+             SearchApp.filterDictionaryR1.add($(curEl).val()); 
+          }
+        },this));     
+
 
              //  Path
      $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 

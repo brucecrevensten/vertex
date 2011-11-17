@@ -128,6 +128,18 @@ window.SearchAppView = Backbone.View.extend({
                 }   
           }
 
+           if (SearchApp.filterDictionaryR1.has('ASCENDING')) {
+                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+                  returnVal= true;
+                }   
+              }
+
+              if (SearchApp.filterDictionaryR1.has('DESCENDING')) {       
+                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                  returnVal= true;
+                }   
+              }
+
            if (SearchApp.filterDictionaryR1.has('ORBITRADARSAT')) {
                 if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionaryR1.val('ORBITRADARSAT')) {
                   returnVal= true;
@@ -412,7 +424,8 @@ window.SearchAppView = Backbone.View.extend({
   }
 });
 
-window.SearchApp = new SearchAppView;  
+window.SearchApp = new SearchAppView;
+setupPlaceholders();
 
 // Instead of using serialzeArray() we can use serializeJSON to return JSON formatted form data. 
 $.fn.serializeJSON=function() {
