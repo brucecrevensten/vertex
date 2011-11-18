@@ -28,9 +28,26 @@ text-decoration: underline;
   border: 2px solid #eee;
   padding: 1.5em;
   margin: 1em auto;
-  width: 1300px;
+  width: 90%;
+  min-width: 1300px;
   position: relative;
-  height: 735px;
+}
+
+#tableleftcol {
+  vertical-align: top;
+  min-width: 250px;
+}
+
+#tablecentercol {
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  vertical-align: top;
+}
+
+#tablerightcol {
+  vertical-align: top;
+  min-width: 385px;
 }
 
 header h1 a {
@@ -58,18 +75,14 @@ header {
 }
 
 #leftColumn {
-  position: absolute;
+  display: inline;
   width: 250px;
-  top: 0;
-  left: 0;
   margin: 1ex;
 }
 
 #centerColumn { 
-  position: absolute;
-  width: 600px;
-  left: 270px;
-  top: 0;
+  display: inline;
+  width: 100%;
   margin: 1ex;
 }
 
@@ -78,16 +91,12 @@ header {
 }
 
 #rightColumn {
-  position: absolute;
-  left: 870px;
+  display: inline;
   width: 385px;
-  top: 0;
   margin-top: 1ex;
 }
 
 footer {
-  position: relative;
-  top: 600px;
   font-color: #878787 !important;
   font-size: smaller;
   clear: both;
@@ -307,7 +316,7 @@ legend {
 /**/
 
 #searchMap {
-  width: 580px;
+  width: 100%;
   height: 580px;
   margin: 0 0 1em 0;
 }
