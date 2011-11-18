@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="https://testvertex.daac.asf.alaska.edu/" />
-<title>spec_8_1_to_8_2</title>
+<title>spec_14_0_to_14_8</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">spec_8_1_to_8_2</td></tr>
+<tr><td rowspan="1" colspan="3">spec_14_0_to_14_8</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -18,82 +18,82 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=login_button</td>
+	<td>link=Platforms</td>
 	<td></td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=login_username</td>
-	<td>jtheis</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>id=login_password</td>
-	<td>9074746166</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[3]/div/button[3]</td>
+	<td>//div[@id='filter_platform']/li/div/label/span</td>
 	<td></td>
 </tr>
 <tr>
-	<td>type</td>
-	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
-	<td>-148.70,64.35,-146.48,65.22</td>
+	<td>click</td>
+	<td>id=pf_UA</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[2]/div/label/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_A3</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[3]/div/label/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_R1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[4]/div/label/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_E1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[5]/div/label/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_E2</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='filter_platform']/li[6]/div/label/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_J1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Granule List</td>
+	<td></td>
+</tr>
+<tr>
+	<td>typeKeys</td>
+	<td>id=filter_granule_list</td>
+	<td>ALPSRP247275670,&nbsp;&nbsp;ALPSRP256465710&nbsp;&nbsp;aLpSRP263175710,&nbsp;&nbsp;&nbsp;ALPSRP270905*</td>
 </tr>
 <tr>
 	<td>click</td>
 	<td>id=triggerSearch</td>
-	<td></td>
-</tr>
-<tr>
-	<td>verifyText</td>
-	<td>id=async-spinner</td>
-	<td>Loading search results…</td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Filter By Platform</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=triggerSearch</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Filter By Platform</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='srProcLevelTool']/div/label/span[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//ul[@id='addProductsByType']/li[3]/button</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='srProcLevelTool']/div/label/span[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>css=#queue_summary &gt; span.ui-button-text</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>css=#clear_queue_all &gt; span.ui-button-text</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>css=span.ui-icon.ui-icon-closethick</td>
 	<td></td>
 </tr>
 </tbody></table>

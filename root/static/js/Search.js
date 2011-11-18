@@ -58,11 +58,9 @@ var SearchParameters = Backbone.Model.extend(
 			if (i=="bbox") {
 				if (json[i] == null || json[i] == "") {
 					set=false;
+          this.unset('bbox');
 				}
 			}
-      if ((i=="repeat_start" || i=="repeat_end") && $('#filter_repeat').attr('checked') != 'checked') {
-        delete json[i];
-      }
 		}
 		
 		if (set) {
@@ -152,6 +150,7 @@ var GeographicFilter = BaseFilter.extend(
 {
   initialize: function() {
   },
+
   name: "GeographicFilter",
 
   markers: new Array(),
@@ -177,7 +176,37 @@ var GeographicFilter = BaseFilter.extend(
   },
 
   validate: function(attrs) {
-		this.trigger('update');
+    var error = '';
+    if(attrs.bbox == '') {
+      return;
+    }
+    var bbox = attrs.bbox.split(/\s*,\s*/);
+    // Make sure we have the correct number of points
+    if(bbox.length != 4) {
+       error = 'Invalid number of points.';
+    }
+    for(var ii = 0; ii < bbox.length; ii++) {
+      // Make sure the coordinate provided is a number.
+      if(isNaN(parseFloat(bbox[ii])) || !isFinite(bbox[ii])) {
+        error = 'Bounding box contains a non-numeric value.';
+      }
+      // Make sure the coordinate provided is within the bounds of our
+      // coordiante system.
+      if(ii % 2) {
+        // This coordiante  should be in the range -90 to 90
+        if(bbox[ii] < -90 || bbox[ii] > 90) {
+          error = 'Bounding box coordiante out of range.';
+        }
+      } else {
+        // This coordiante should be in the range -90 to 90
+        if(bbox[ii] < -180 || bbox[ii] > 180) {
+          error = 'Bounding box coordiante out of range.';
+        }
+      }
+    }
+    if(error != '') {
+      return(error);
+    }
   }
 
 }
@@ -201,10 +230,22 @@ var GeographicWidget = BaseWidget.extend(
   
   changed: function(evt) {
     this.model.reset();
-    this.model.set( { "bbox": $(this.el).find('input').val() });
-    var bbox = $(this.el).find('input').val().split(/\s*,\s*/);
+    this.model.set( { "bbox": $('#filter_bbox').val() }, {
+      error: function(model, error) {
+        model.trigger('change', model);
+        $('#searchMessageError').empty();
+        $('#searchMessageError').append(error);
+      }
+    });
+    var bbox = this.model.get('bbox');
+    bbox = bbox.split(/\s*,\s*/);
+    // Do not continue if the bbox is empty (failed to validate.)
+    if(bbox.length < 4) {
+      this.render();
+      this.model.trigger('update');
+      return;
+    }
     bbox.reverse();
-    var selfref = this;
     
     while(bbox.length) {
       var lng = bbox.pop();
@@ -217,38 +258,33 @@ var GeographicWidget = BaseWidget.extend(
         map: searchMap,
         draggable: true
       });
-      google.maps.event.addListener(marker, 'drag', function() {
-        selfref.updateSearchAreaOverlay();
-      });
-      google.maps.event.addListener(marker, 'dragend', function() {
-        selfref.updateWidgetFromOverlay();
-      });
-      selfref.model.markers.push(marker);
+      google.maps.event.addListener(marker, 'drag', jQuery.proxy(function() {
+        this.updateSearchAreaOverlay();
+      }, this));
+      google.maps.event.addListener(marker, 'dragend', jQuery.proxy(function() {
+        this.updateWidgetFromOverlay();
+      }, this));
+      this.model.markers.push(marker);
     }
-    if(selfref.model.markers.length == 2) {
-      selfref.updateSearchAreaOverlay();
-      selfref.updateWidgetFromOverlay();
+    if(this.model.markers.length == 2) {
+      this.updateSearchAreaOverlay();
+      this.updateWidgetFromOverlay();
       searchMap.fitBounds(this.searchAreaOverlay.getBounds());
     }
 
     this.render();
-  
+    this.model.trigger('update');
   },
   render: function() {
+    var pBbox = $('#filter_bbox').val();
     $(this.el).html(
       _.template('\
 <p>Enter the bounding box as a comma-separated list of points in the order West,North,East,South<br />(or use the map)<br />Example: -135,66,-133,64</p>\
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
-', this.model.toJSON()));/*.find('input').bind('input',jQuery.proxy(function() {	
-				this.model.trigger('update');	
-				},this));*/
+', {bbox: pBbox}));
 				
-	$(this.el).find('input').bind('input',jQuery.proxy(function() {	
-			this.model.trigger('update');	
-		},this));
     this.renderMap();
-
     return this;
   },
 
@@ -257,27 +293,26 @@ var GeographicWidget = BaseWidget.extend(
     initMap();
 
     google.maps.event.clearListeners(searchMap, 'click');
-    var selfref = this; //needed for the events below, as 'this' does not obtain closure
     if(this.clickListener == null) {
-      this.clickListener = google.maps.event.addListener(searchMap, 'click', function(event) {
-        if(selfref.model.markers.length >= 2) { return; }
+      this.clickListener = google.maps.event.addListener(searchMap, 'click', jQuery.proxy(function(event) {
+        if(this.model.markers.length >= 2) { return; }
         var marker = new google.maps.Marker({
           position: event.latLng,
           map: searchMap,
           draggable: true
         });
-        google.maps.event.addListener(marker, 'drag', function() {
-          selfref.updateSearchAreaOverlay();
-        });
-        google.maps.event.addListener(marker, 'dragend', function() {
-          selfref.updateWidgetFromOverlay();
-        });
-        selfref.model.markers.push(marker);
-        if(selfref.model.markers.length == 2) {
-          selfref.updateSearchAreaOverlay();
-          selfref.updateWidgetFromOverlay();
+        google.maps.event.addListener(marker, 'drag', jQuery.proxy(function() {
+          this.updateSearchAreaOverlay();
+        }, this));
+        google.maps.event.addListener(marker, 'dragend', jQuery.proxy(function() {
+          this.updateWidgetFromOverlay();
+        }, this));
+        this.model.markers.push(marker);
+        if(this.model.markers.length == 2) {
+          this.updateSearchAreaOverlay();
+          this.updateWidgetFromOverlay();
         }
-      });
+      }, this));
     }
 
     this.searchAreaOverlay.setMap(searchMap);
@@ -342,6 +377,7 @@ var GeographicWidget = BaseWidget.extend(
       var data = {};
       data[target.attr('name')] = target.attr('value');
       this.model.set(data);
+      this.model.trigger('update');
     }
   },
 
@@ -385,8 +421,6 @@ var DateFilter = BaseFilter.extend(
     var today = new Date();
     this.set({"start":this.format_date(this.get_date_N_years_ago(2))});
     this.set({"end":this.format_date(today)});
-    this.set({"repeat_start":'1990'});
-    this.set({"repeat_end":'2015'});
   },
 	
 	initialize: function() {
@@ -407,7 +441,6 @@ var DateWidget = BaseWidget.extend(
   id: "date_widget",
   initialize: function() {
     _.bindAll(this, "render");
-
   },
   events : {
     "change input" : "changed"
@@ -415,8 +448,14 @@ var DateWidget = BaseWidget.extend(
   changed: function(evt) {
       var target = $(evt.currentTarget),
       data = {};
-      data[target.attr('name')] = target.attr('value');
-      this.model.set(data);
+
+      if(target.attr('name') == 'repeat_yearly' && !target.attr('checked')) {
+        this.model.set({'repeat_start': ''});
+        this.model.set({'repeat_end': ''});
+      } else {
+        data[target.attr('name')] = target.attr('value');
+        this.model.set(data);
+      }
   },
   render: function() {
     today = new Date();
@@ -424,8 +463,8 @@ var DateWidget = BaseWidget.extend(
       _.template('<label for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
       <label for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
       <input type="checkbox" id="filter_repeat" name="repeat_yearly">&nbsp;Repeat yearly<br />\
-      <label for="repeat_start">Start year (YYYY)</label><input type="text" id="filter_repeat_start" name="repeat_start" value="<%= repeat_start %>" disabled>\
-      <label for="repeat_end">End year (YYYY)</label><input type="text" id="filter_repeat_end" name="repeat_end" value="<%= repeat_end %>" disabled>\
+      <label for="repeat_start">Start year (YYYY)</label><input type="text" id="filter_repeat_start" name="repeat_start" placeholder="1990" disabled>\
+      <label for="repeat_end">End year (YYYY)</label><input type="text" id="filter_repeat_end" name="repeat_end" placeholder="2015" disabled>\
       ', this.model.toJSON())
     );
     $(this.el).find('#filter_start').datepicker({
@@ -449,6 +488,8 @@ var DateWidget = BaseWidget.extend(
     if($('#filter_repeat').attr('checked')) {
       $('#filter_repeat_start').removeAttr('disabled');
       $('#filter_repeat_end').removeAttr('disabled');
+      $('#filter_repeat_start').trigger('change');
+      $('#filter_repeat_end').trigger('change');
     } else {
       $('#filter_repeat_start').attr('disabled', true);
       $('#filter_repeat_end').attr('disabled', true);
@@ -688,36 +729,36 @@ var SearchButtonView = Backbone.View.extend({
   },
 
 	toggleButton: function() {
-		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() == "") ||
-		($('#filter_bbox').val() == "" && $('#filter_granule_list').val() != "")    ) {
-				$("#triggerSearch").empty();
-				$("#triggerSearch").button(
-			      {
-			        icons: {
-			          primary: "ui-icon-search"
-			        },
-			        label: "Search",
-					disabled: false
-			    });
-			} else {
-					$("#triggerSearch").empty();
-					$("#triggerSearch").button(
-				      {
-				        icons: {
-				          primary: "ui-icon-search"
-				        },
-				        label: "Search",
-						disabled: true
-				    }).focus();
-			}
+    var buttonDisabled = true;
+    if(window.SearchApp && !((
+      window.SearchApp.searchParameters.has('bbox') &&
+        $('#filter_granule_list').val())
+      || (!window.SearchApp.searchParameters.has('bbox') &&
+        $('#filter_granule_list').val() == "")))
+    {
+      $('#searchMessageError').empty();
+      buttonDisabled = false;
+    } else {
+      buttonDisabled = true;
+    }
+
+    $("#triggerSearch").empty();
+    $('#triggerSearch').button(
+      {
+        icons: {
+          primary: "ui-icon-search"
+        },
+        labal: "Search",
+        disabled: buttonDisabled
+      }
+    );
 			
 		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() != "")) {
-			$('#searchMessage').empty();
-			$('#searchMessage').append('<font color = "red"><p><b>The Geographic Filter cannot be used in conjunction with the Granule Filter.<b></p></font>');
-			$('#searchMessage').append('<font color = "red"><p><b>Please choose only one of these filters at a time.<b></p></font>');
-		} else {
-				$('#searchMessage').empty();
-		}	
+      $('#triggerSearch').button('disable');
+      $('#searchMessageError').empty();
+			$('#searchMessageError').append('<p>The Geographic Filter cannot be used in conjunction with the Granule Filter.</p>');
+			$('#searchMessageError').append('<p>Please choose only one of these filters at a time.</p>');
+		}
 	},
 
   render: function() {

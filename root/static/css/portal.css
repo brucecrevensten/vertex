@@ -1,5 +1,5 @@
 body {
-   background: url(../images/satellitebackground.png); 
+   background: url(../images/satellitebackground.png);
 }
 
 body * {
@@ -235,15 +235,15 @@ legend {
   background-color: inherit;
 }
 
-/**/
-
 #searchResults div {
   padding-left: 1ex;
 }
 
-#searchResults li:nth-child(odd) {
+
+#searchResults tr:nth-child(odd) {
   background-color: #eef0ff;
 }
+
 
 #searchResults li:hover {
   background-color: #FFFFB4;
@@ -256,14 +256,10 @@ legend {
   padding: 0 1em 1ex 1ex;
 }
 
-/**/
-#searchResults td:nth-child(odd) {
-  background-color: #eef0ff;
-}
-
 #searchResults td:hover {
   background-color: #FFFFB4;
 }
+
 
 #searchResults td img {
   vertical-align: middle;
@@ -271,8 +267,6 @@ legend {
   clear: both;
   padding: 0 1em 1ex 1ex;
 }
-
-/**/
 
 #searchResults h4, #searchResults h4 * {
   font-size: 11pt !important;
@@ -357,9 +351,6 @@ label.hover {
 #product_profile img {
   display: block;
   margin: 1em auto;
-  min-width: 512px;
-  min-height: 512px;
-  float: left;
 }
 
 #product_profile span.beamModeHelp {
@@ -642,4 +633,16 @@ input.login_fields {
   padding: 1ex;
   font-size: 12pt !important;
 
+}
+
+.dataTables_info {
+  font-weight: bold;
+  margin: 0 0 1em 0;
+  padding: 1ex;
+  font-size: 12pt !important;
+}
+
+div.error {
+  color: red;
+  font-weight: bold;
 }
