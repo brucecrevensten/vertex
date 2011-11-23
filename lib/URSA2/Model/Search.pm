@@ -262,33 +262,18 @@ sub buildDateQuery {
   if( !$start && !$end ) { return ''; }
   
   my $fieldRef = "startTime";
-  
-  if( $start && $end && $repeat_start && $repeat_end) {
-    my ($syear, $smon, $sday, $eyear, $emon, $eday);
-    $smon = sprintf("%02d", $start->month);
-    $sday = sprintf("%02d", $start->day);
-    $emon = sprintf("%02d", $end->month);
-    $eday = sprintf("%02d", $end->day);
-    my $sql = " AND to_date('2000-' || to_char(".$fieldRef.",'MM-DD'), 'YYYY-MM-DD') between"
-      . " to_date(".$self->dbQuote('2000-'.$smon.'-'.$sday).", 'YYYY-MM-DD') and"
-      . " to_date(".$self->dbQuote('2000-'.$emon.'-'.$eday).", 'YYYY-MM-DD')"
-      . " and ".$fieldRef." between "
-      . " to_date(".$self->dbQuote($repeat_start.'-01-01').", 'YYYY-MM-DD') and"
-      . " to_date(".$self->dbQuote($repeat_end.  '-12-31').", 'YYYY-MM-DD')";
-  } else {
-    # before end date 
-    if( !$start && $end ) {
-      return ' AND '.$fieldRef." <= TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
-    }
-
-    # after start date
-    if( !$end ) {
-      return ' AND '.$fieldRef." >= TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD')";
-    }
-
-    # between two dates
-    return ' AND '.$fieldRef." BETWEEN TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD') AND TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
+  # before end date 
+  if( !$start && $end ) {
+    return ' AND '.$fieldRef." <= TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
   }
+
+  # after start date
+  if( !$end ) {
+    return ' AND '.$fieldRef." >= TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD')";
+  }
+
+  # between two dates
+  return ' AND '.$fieldRef." BETWEEN TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD') AND TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
 }
 
 sub buildSeasonalQuery {
