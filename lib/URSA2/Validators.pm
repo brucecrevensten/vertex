@@ -146,7 +146,7 @@ sub validateYear {
 
 sub validateMonth {
   my ($self, $month, $field) = @_;
-  if($month && ($month !~/^\d{2}$/ || $month < 1 || $month > 12)) {
+  if($month && ($month !~/^\d{1,2}$/ || $month < 1 || $month > 12)) {
     InvalidParameter->throw(
       parameter => $field,
       value => $month
