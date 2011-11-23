@@ -63,7 +63,7 @@ SKIP: {
         unless(
           $date->year >= $p->{repeat_start} and $date->year <= $p->{repeat_end} and   # within range of years
           $date->month >= $p->{season_start} and $date->month <= $p->{season_end} ) {           # within range of months
-          is('invalid results', 'valid results', 'Repeating date range: ' . $p->{desc} . "\n$p->{start} to $p->{end}, years $p->{repeat_start} to $p->{repeat_end}, got $date");
+          is('invalid results', 'valid results', 'Repeating date range: ' . $p->{desc} . "\n$p->{season_start} to $p->{season_send}, years $p->{repeat_start} to $p->{repeat_end}, got $date");
           $all_good = 0;
           last;
         }
