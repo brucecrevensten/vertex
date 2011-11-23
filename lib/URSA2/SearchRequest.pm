@@ -214,6 +214,22 @@ sub validateRequiredFields {
   if ( $self->{granule_list} ) {
     # if granule_list is present, nothing else is required.
     return;
+  } elsif ( $self->{season_start} || $self->{season_end} || $self->{repeat_start} || $self->{repeat_end} ) {
+    if($self->{start} || $self->{end}) {
+      # can't do a regular time span and a seasonal span in the same query
+      InvalidParameter->throw(
+        parameter=>'start, end, season_start, season_end, repeat_start, repeat_end',
+        message => 'Seasonal time spans and continuous time spans can not be used in the same query.'
+      );
+    } elsif (!$self->{season_start} || !$self->{season_end} || !$self->{repeat_start} || !$self->{repeat_end}) {
+      # must have all four params to do a seasonal search
+      MissingParameter->throw(
+        parameter=>'season_start, season_end, repeat_start, repeat_end',
+        message => 'Missing seasonal parameter.'
+      );
+    } else {
+      return;
+    }
   } elsif ( $self->{start} ) {
     # if start date is present, nothing else is required.
     # TC1001
