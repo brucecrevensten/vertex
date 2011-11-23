@@ -55,6 +55,16 @@ sub repeat_end {
   return $self->{repeat_end};
 }
 
+sub season_start {
+  my $self = shift;
+  return $self->{season_start};
+}
+
+sub season_end {
+  my $self = shift;
+  return $self->{season_end};
+}
+
 sub bbox {
   my $self = shift;
   return $self->{bbox};
@@ -142,6 +152,8 @@ sub decode {
   $self->{end} = $self->{requests}->param('end');
   $self->{repeat_start} = $self->{requests}->param('repeat_start');
   $self->{repeat_end} = $self->{requests}->param('repeat_end');
+  $self->{season_start} = $self->{requests}->param('season_start');
+  $self->{season_end} = $self->{requests}->param('season_end');
   $self->{limit} = $self->{requests}->param('limit');
   $self->{bbox} = $self->{requests}->param('bbox');
   $self->{polygon} = $self->{requests}->param('polygon');
@@ -179,6 +191,8 @@ sub validate {
   $self->{end} = URSA2::Validators->end( $self->{end} );
   $self->{repeat_start} = URSA2::Validators->repeat_start( $self->{repeat_start} );
   $self->{repeat_end} = URSA2::Validators->repeat_end( $self->{repeat_end} );
+  $self->{season_start} = URSA2::Validators->season_start( $self->{season_start} );
+  $self->{season_end} = URSA2::Validators->season_end( $self->{season_end} );
   $self->{processing} = URSA2::Validators->processing( $self->{processing} );
   $self->{format} = URSA2::Validators->format( $self->{format} );
   $self->{platform} = URSA2::Validators->platform( $self->{platform} );
