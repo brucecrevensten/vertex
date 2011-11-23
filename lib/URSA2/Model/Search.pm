@@ -282,8 +282,8 @@ sub buildSeasonalQuery {
   
   return '' unless ($smon and $emon and $syear and $eyear);
   
-  my $sql = " AND to_number(to_char(starTime, 'MM')) between to_number(".$self->dbQuote($smon).") and to_number(".$self->dbQuote($emon).")"
-           ." AND to_number(to_char(startTime, 'YYYY')) between to_number(".$self->dbQuote($syear).") and to_number(".$self->dbQuote($eyear).")";
+  return " AND to_number(to_char(starTime, 'MM')) between to_number(".$self->dbQuote($smon).") and to_number(".$self->dbQuote($emon).")"
+        ." AND to_number(to_char(startTime, 'YYYY')) between to_number(".$self->dbQuote($syear).") and to_number(".$self->dbQuote($eyear).")";
 }
 
 sub buildSpatialQuery {
