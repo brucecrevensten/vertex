@@ -461,41 +461,18 @@ var DateWidget = BaseWidget.extend(
     today = new Date();
     $(this.el).html(
       _.template('\
-      <label for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
-      <label for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
       <input type="checkbox" id="filter_repeat" name="repeat_yearly">&nbsp;Seasonal Search<br />\
-      Start<br/>\
-      <select><option>1990\
-      <option>1991<option>1992<option>1993<option>1994<option>1995\
-      <option>1996<option>1997<option>1998<option>1999<option>2000\
-      <option>2001<option>2002<option>2003<option>2004<option>2005\
-      <option>2006<option>2007<option>2008<option>2009<option>2010\
-      <option>2011<option>2012</select>\
-      <select><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select><br />\
-      End<br/>\
-      <select><option>1990\
-      <option>1991<option>1992<option>1993<option>1994<option>1995\
-      <option>1996<option>1997<option>1998<option>1999<option>2000\
-      <option>2001<option>2002<option>2003<option>2004<option>2005\
-      <option>2006<option>2007<option>2008<option>2009<option>2010\
-      <option>2011<option>2012</select>\
-      <select><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select>\
-      <br/><br/>Alternate:<br/>\
-      <table style="width: 100%"><tr><td>\
-      <select style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td><td style="width: 20%"><center>to</center></td><td>\
-      <select style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td></tr><tr><td>\
-      <select style="width: 100%"><option>1990\
-      <option>1991<option>1992<option>1993<option>1994<option>1995\
-      <option>1996<option>1997<option>1998<option>1999<option>2000\
-      <option>2001<option>2002<option>2003<option>2004<option>2005\
-      <option>2006<option>2007<option>2008<option selected>2009<option>2010\
-      <option>2011<option>2012</select></td><td style="width: 20%"><center>to</center></td><td>\
-      <select style="width: 100%"><option>1990\
-      <option>1991<option>1992<option>1993<option>1994<option>1995\
-      <option>1996<option>1997<option>1998<option>1999<option>2000\
-      <option>2001<option>2002<option>2003<option>2004<option>2005\
-      <option>2006<option>2007<option>2008<option>2009<option>2010\
-      <option selected>2011<option>2012</select></td></tr></table>\
+      <div id="non-seasonal_search">\
+      <label id="label_filter_start" for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
+      <label id="label_filter_end" for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
+      </div>\
+      <table id="seasonal_search" style="width: 100%"><tr><td>\
+      <select id="season_start" style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td><td style="width: 20%"><center>to</center></td><td>\
+      <select id="season_end" style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td></tr><tr><td>\
+      <select id="repeat_start" style="width: 100%">\
+      </select></td><td style="width: 20%"><center>to</center></td><td>\
+      <select id="repeat_end" style="width: 100%">\
+      </select></td></tr></table>\
       ', this.model.toJSON())
     );
     $(this.el).find('#filter_start').datepicker({
@@ -513,17 +490,30 @@ var DateWidget = BaseWidget.extend(
         yearRange: '1990:'+today.getFullYear()
     });
     $(this.el).find('#filter_repeat').bind('change', this.toggleRepeat);
+    $(this.el).find('#seasonal_search').hide();
+    for(var year = 1990; year <= today.getFullYear(); year++) {
+      $(this.el).find('#repeat_start').append($("<option></option>").
+        attr("value","year").
+        text(year)
+      );
+      $(this.el).find('#repeat_end').append($("<option></option>").
+        attr("value","year").
+        text(year)
+      );
+    }
+
+    $(this.el).find('#repeat_start option:first').attr('selected', true);
+    $(this.el).find('#repeat_end option:last').attr('selected', true);
+    
     return this;
   },
   toggleRepeat: function() {
     if($('#filter_repeat').attr('checked')) {
-      $('#filter_repeat_start').removeAttr('disabled');
-      $('#filter_repeat_end').removeAttr('disabled');
-      $('#filter_repeat_start').trigger('change');
-      $('#filter_repeat_end').trigger('change');
+      $('#non-seasonal_search').hide();
+      $('#seasonal_search').show();
     } else {
-      $('#filter_repeat_start').attr('disabled', true);
-      $('#filter_repeat_end').attr('disabled', true);
+      $('#non-seasonal_search').show();
+      $('#seasonal_search').hide();
     }	
   }
 });
