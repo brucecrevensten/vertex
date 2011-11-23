@@ -132,7 +132,8 @@ sub getResultsByProductList {
 sub getApiQuery {
   my ($self, $r) = @_;
   my $fragment = $self->buildListQuery('platformType', $r->platform).
-  $self->buildDateQuery($r->start, $r->end, $r->repeat_start, $r->repeat_end).
+  $self->buildDateQuery($r->start, $r->end).
+  $self->buildSeasonalQuery($r->season_start, $r->season_end, $r->repeat_start, $r->repeat_end).
   $self->buildListQuery('processingType', $r->processing).
   $self->buildListQuery('beammodetype', $r->beam).
   $self->buildDirectionQuery($r->direction).
