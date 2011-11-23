@@ -225,7 +225,7 @@ sub validateRequiredFields {
       # must have all four params to do a seasonal search
       MissingParameter->throw(
         parameter=>'season_start, season_end, repeat_start, repeat_end',
-        message => 'Missing seasonal parameter.'
+        message => 'Missing seasonal parameter: must provide all of season_start, season_end, repeat_start, repeat_end'
       );
     } else {
       return;
