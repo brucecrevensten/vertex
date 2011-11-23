@@ -460,11 +460,19 @@ var DateWidget = BaseWidget.extend(
   render: function() {
     today = new Date();
     $(this.el).html(
-      _.template('<label for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
-      <label for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
-      <input type="checkbox" id="filter_repeat" name="repeat_yearly">&nbsp;Repeat yearly<br />\
-      <label for="repeat_start">Start year (YYYY)</label><input type="text" id="filter_repeat_start" name="repeat_start" placeholder="1990" disabled>\
-      <label for="repeat_end">End year (YYYY)</label><input type="text" id="filter_repeat_end" name="repeat_end" placeholder="2015" disabled>\
+      _.template('\
+      <input type="checkbox" id="filter_repeat" name="repeat_yearly">&nbsp;Seasonal Search<br />\
+      <div id="non-seasonal_search">\
+      <label id="label_filter_start" for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
+      <label id="label_filter_end" for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
+      </div>\
+      <table id="seasonal_search" style="width: 100%"><tr><td>\
+      <select id="season_start" style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td><td style="width: 20%"><center>to</center></td><td>\
+      <select id="season_end" style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td></tr><tr><td>\
+      <select id="repeat_start" style="width: 100%">\
+      </select></td><td style="width: 20%"><center>to</center></td><td>\
+      <select id="repeat_end" style="width: 100%">\
+      </select></td></tr></table>\
       ', this.model.toJSON())
     );
     $(this.el).find('#filter_start').datepicker({
@@ -482,17 +490,30 @@ var DateWidget = BaseWidget.extend(
         yearRange: '1990:'+today.getFullYear()
     });
     $(this.el).find('#filter_repeat').bind('change', this.toggleRepeat);
+    $(this.el).find('#seasonal_search').hide();
+    for(var year = 1990; year <= today.getFullYear(); year++) {
+      $(this.el).find('#repeat_start').append($("<option></option>").
+        attr("value","year").
+        text(year)
+      );
+      $(this.el).find('#repeat_end').append($("<option></option>").
+        attr("value","year").
+        text(year)
+      );
+    }
+
+    $(this.el).find('#repeat_start option:first').attr('selected', true);
+    $(this.el).find('#repeat_end option:last').attr('selected', true);
+    
     return this;
   },
   toggleRepeat: function() {
     if($('#filter_repeat').attr('checked')) {
-      $('#filter_repeat_start').removeAttr('disabled');
-      $('#filter_repeat_end').removeAttr('disabled');
-      $('#filter_repeat_start').trigger('change');
-      $('#filter_repeat_end').trigger('change');
+      $('#non-seasonal_search').hide();
+      $('#seasonal_search').show();
     } else {
-      $('#filter_repeat_start').attr('disabled', true);
-      $('#filter_repeat_end').attr('disabled', true);
+      $('#non-seasonal_search').show();
+      $('#seasonal_search').hide();
     }	
   }
 });
