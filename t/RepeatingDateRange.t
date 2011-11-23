@@ -13,44 +13,30 @@ my $surn = 'services/search/param'; # urn of the service were testing
 
 my $bbox = '-140,60,-135,65';
 my @test_ranges = (
-    {   desc            => 'mid-year, one month',
-        start           => '2010-05-01',
-        end             => '2010-05-31',
-        repeat_start    => 1995,
-        repeat_end      => 2005
-    },
-    {   desc            => 'mid-year, one week',
-        start           => '2010-07-01',
-        end             => '2010-07-07',
-        repeat_start    => 1995,
-        repeat_end      => 2005
-    },
-    {   desc            => 'start of year, first ten days',
-        start           => '2010-01-01',
-        end             => '2010-01-10',
-        repeat_start    => 1993,
-        repeat_end      => 2003
-    },
-    {   desc            => 'end of year, last ten days',
-        start           => '2010-12-21',
-        end             => '2010-12-31',
-        repeat_start    => 1998,
-        repeat_end      => 2011
-    },
-# not properly supported yet
-#    {   desc            => 'end of one year through start of next',
-#        start           => '2010-12-25',
-#        end             => '2011-01-05',
-#        repeat_start    => 2003,
-#        repeat_end      => 2006
-#    },
-# not properly supported yet
-#    {   desc            => 'repeating period spans more than a full year',
-#        start           => '2010-07-01',
-#        end             => '2011-10-01',
-#        repeat_start    => 1995,
-#        repeat_end      => 2005
-#    },
+  { desc            => 'mid-year, one month, ten years',
+    season_start    => 05,
+    season_end      => 05,
+    repeat_start    => 1996,
+    repeat_end      => 2005
+  },
+  { desc            => 'start of year, one month, five years',
+    season_start    => 01,
+    season_end      => 01,
+    repeat_start    => 2001,
+    repeat_end      => 2005
+  },
+  { desc            => 'mid-year, two months, 2 years',
+    season_start    => 05,
+    season_end      => 06,
+    repeat_start    => 2009,
+    repeat_end      => 2010
+  },
+  { desc            => 'end of year, one month, 5 years',
+    season_start    => 12,
+    season_end      => 12,
+    repeat_start    => 2006,
+    repeat_end      => 2010
+  }
 );
 
 BEGIN { use_ok 'URSA2::Controller::services' }
@@ -64,7 +50,7 @@ SKIP: {
   
   
   foreach my $p (@test_ranges) {
-    $mech->post_ok($surn, { bbox => $bbox, start => $p->{start}, end => $p->{end}, repeat_start => $p->{repeat_start}, repeat_end => $p->{repeat_end}, format => 'csv' });
+    $mech->post_ok($surn, { bbox => $bbox, season_start => $p->{season_start}, season_end => $p->{season_end}, repeat_start => $p->{repeat_start}, repeat_end => $p->{repeat_end}, format => 'csv' });
     my @rows = split/\n/, $mech->content();
     my $all_good = 1;
     foreach my $row (@rows) {
@@ -74,14 +60,9 @@ SKIP: {
       
       unless($row[11] =~ /start time/i) {
         my $date = DateTime::Format::DateParse->parse_datetime($row[11], 'UTC');
-        my $start = DateTime::Format::DateParse->parse_datetime($p->{start}, 'UTC');
-        my $end = DateTime::Format::DateParse->parse_datetime($p->{end}, 'UTC');
         unless(
           $date->year >= $p->{repeat_start} and $date->year <= $p->{repeat_end} and   # within range of years
-          $date->month >= $start->month and $date->month <= $end->month and           # month is acceptable
-          ( $date->month == $start->month ? $date->day >= $start->day : 1 ) and       # if it's in the start or end month, check the day
-          ( $date->month == $end->month ? $date->day <= $end->day : 1 )
-        ) {
+          $date->month >= $p->{season_start} and $date->month <= $p->{season_end} ) {           # within range of months
           is('invalid results', 'valid results', 'Repeating date range: ' . $p->{desc} . "\n$p->{start} to $p->{end}, years $p->{repeat_start} to $p->{repeat_end}, got $date");
           $all_good = 0;
           last;
