@@ -460,11 +460,42 @@ var DateWidget = BaseWidget.extend(
   render: function() {
     today = new Date();
     $(this.el).html(
-      _.template('<label for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
+      _.template('\
+      <label for="filter_start">Start date (YYYY-MM-DD)</label><input type="text" id="filter_start" name="start" value="<%= start %>">\
       <label for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
-      <input type="checkbox" id="filter_repeat" name="repeat_yearly">&nbsp;Repeat yearly<br />\
-      <label for="repeat_start">Start year (YYYY)</label><input type="text" id="filter_repeat_start" name="repeat_start" placeholder="1990" disabled>\
-      <label for="repeat_end">End year (YYYY)</label><input type="text" id="filter_repeat_end" name="repeat_end" placeholder="2015" disabled>\
+      <input type="checkbox" id="filter_repeat" name="repeat_yearly">&nbsp;Seasonal Search<br />\
+      Start<br/>\
+      <select><option>1990\
+      <option>1991<option>1992<option>1993<option>1994<option>1995\
+      <option>1996<option>1997<option>1998<option>1999<option>2000\
+      <option>2001<option>2002<option>2003<option>2004<option>2005\
+      <option>2006<option>2007<option>2008<option>2009<option>2010\
+      <option>2011<option>2012</select>\
+      <select><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select><br />\
+      End<br/>\
+      <select><option>1990\
+      <option>1991<option>1992<option>1993<option>1994<option>1995\
+      <option>1996<option>1997<option>1998<option>1999<option>2000\
+      <option>2001<option>2002<option>2003<option>2004<option>2005\
+      <option>2006<option>2007<option>2008<option>2009<option>2010\
+      <option>2011<option>2012</select>\
+      <select><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select>\
+      <br/><br/>Alternate:<br/>\
+      <table style="width: 100%"><tr><td>\
+      <select style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td><td style="width: 20%"><center>to</center></td><td>\
+      <select style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td></tr><tr><td>\
+      <select style="width: 100%"><option>1990\
+      <option>1991<option>1992<option>1993<option>1994<option>1995\
+      <option>1996<option>1997<option>1998<option>1999<option>2000\
+      <option>2001<option>2002<option>2003<option>2004<option>2005\
+      <option>2006<option>2007<option>2008<option selected>2009<option>2010\
+      <option>2011<option>2012</select></td><td style="width: 20%"><center>to</center></td><td>\
+      <select style="width: 100%"><option>1990\
+      <option>1991<option>1992<option>1993<option>1994<option>1995\
+      <option>1996<option>1997<option>1998<option>1999<option>2000\
+      <option>2001<option>2002<option>2003<option>2004<option>2005\
+      <option>2006<option>2007<option>2008<option>2009<option>2010\
+      <option selected>2011<option>2012</select></td></tr></table>\
       ', this.model.toJSON())
     );
     $(this.el).find('#filter_start').datepicker({
