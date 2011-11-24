@@ -334,6 +334,8 @@ var SearchResultsView = Backbone.View.extend(
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
+
+    this.default_tile_opacity=0.2;
    
  	this.model.bind('authSuccess', jQuery.proxy(function() {
 		this.render('authSuccess');
@@ -355,8 +357,6 @@ var SearchResultsView = Backbone.View.extend(
     $("#results-banner").hide();
     $('#before-search-msg').show();
     $('#active-filters').hide();
-    $('#globalSlider').hide();
-   
   },
 
   showResults: function() {
@@ -368,9 +368,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#results-banner").hide();
     $('#active-filters').show();
     $('#srCount').show();
-    $('#srProcLevelTool').show();
-    $('#globalSlider').show();
-    
+    $('#srProcLevelTool').show(); 
   },
 
   showSearching: function() {
@@ -384,8 +382,6 @@ var SearchResultsView = Backbone.View.extend(
     this.clearOverlays();
     $('#active-filters').show();
     $('#srProcLevelTool').hide();
-    $('#globalSlider').hide();
-     
   },
 
   showError: function(jqXHR) {
@@ -395,8 +391,6 @@ var SearchResultsView = Backbone.View.extend(
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").hide();
-    $('#globalSlider').hide();
-  
     $("#error-message").show();
 
     var errorText;
@@ -421,7 +415,6 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#platform_facet").hide();
     $('#platform_facets').hide();
-    $('#globalSlider').hide();
     
     this.clearOverlays();
   },
@@ -521,29 +514,6 @@ var SearchResultsView = Backbone.View.extend(
 
     SearchApp.dataTable = this.dataTable;
 
-    $('#globalSlider').slider({
-                            min: 0, 
-                            max:100,
-                            animate: true,
-                            value: 75 
-                          }).bind("slide", 
-                          function(event, ui) {
-                               for (i in SearchApp.searchResultsView.mo) {
-                                    SearchApp.searchResultsView.mo[i].setOptions({
-                                      fillColor: '#777777',
-                                      fillOpacity: ui.value / 100,
-                                      strokeColor: '#333333',
-                                      strokeOpacity: 0.5,
-                                      zIndex: 1000
-                                    }); 
-                                  
-                                } 
-    });
-
-  
-
-
-
     $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
     $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
 
@@ -602,7 +572,7 @@ var SearchResultsView = Backbone.View.extend(
                 new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
               ),
               fillColor: '#777777',
-              fillOpacity: $('#globalSlider').slider("value")/100,
+              fillOpacity: this.default_tile_opacity,
               strokeColor: '#333333',
               strokeOpacity: 1,
               strokeWeight: 2,
@@ -623,7 +593,7 @@ var SearchResultsView = Backbone.View.extend(
     if( this.activePoly ) {
       this.mo[this.activePoly].setOptions({
         fillColor: '#777777',
-        fillOpacity: $('#globalSlider').slider("value")/100,
+        fillOpacity: this.default_tile_opacity,
         strokeColor: '#333333',
         strokeOpacity: 1,
         zIndex: 1000
@@ -655,7 +625,7 @@ var SearchResultsView = Backbone.View.extend(
     } else {
       e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
         fillColor: '#777777',
-        fillOpacity: $('#globalSlider').slider("value")/100,
+        fillOpacity: this.default_tile_opacity,
         strokeColor: '#333333',
         strokeOpacity: 1,
         zIndex: 1000
@@ -680,7 +650,7 @@ var SearchResultsView = Backbone.View.extend(
       } else {
         e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
           fillColor: '#777777',
-          fillOpacity: $('#globalSlider').slider("value")/100,
+          fillOpacity: this.default_tile_opacity,
           strokeColor: '#333333',
           strokeOpacity: 1,
           zIndex: 1000
