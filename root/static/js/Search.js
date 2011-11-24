@@ -443,7 +443,8 @@ var DateWidget = BaseWidget.extend(
     _.bindAll(this, "render");
   },
   events : {
-    "change input" : "changed"
+    "change input" : "changed",
+    "change select" : "changed"
   },
   changed: function(evt) {
       var target = $(evt.currentTarget),
@@ -452,8 +453,24 @@ var DateWidget = BaseWidget.extend(
       if(target.attr('name') == 'repeat_yearly' && !target.attr('checked')) {
         this.model.set({'repeat_start': ''});
         this.model.set({'repeat_end': ''});
-      } else {
+        this.model.set({'season_start': ''});
+        this.model.set({'season_end': ''});
+        $('#filter_start').trigger('change');
+        $('#filter_end').trigger('change');
+      } else if(target.attr('name')=='repeat_yearly' && target.attr('checked')){
+        this.model.set({'start': ''});
+        this.model.set({'end': ''});
+        $('#repeat_start').trigger('change');
+        $('#repeat_end').trigger('change');
+        $('#season_start').trigger('change');
+        $('#season_end').trigger('change');
+      }
+
+      if(target.attr('name') != null) {
         data[target.attr('name')] = target.attr('value');
+        this.model.set(data);
+      } else if(target.attr('id') != null) {
+        data[target.attr('id')] = target.attr('value');
         this.model.set(data);
       }
   },
@@ -467,8 +484,8 @@ var DateWidget = BaseWidget.extend(
       <label id="label_filter_end" for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
       </div>\
       <table id="seasonal_search" style="width: 100%"><tr><td>\
-      <select id="season_start" style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td><td style="width: 20%"><center>to</center></td><td>\
-      <select id="season_end" style="width: 100%"><option>Jan<option>Feb<option>Mar<option>Apr<option>May<option>Jun<option>Jul<option>Aug<option>Sep<option>Oct<option>Nov<option>Dec</select></td></tr><tr><td>\
+      <select id="season_start" style="width: 100%"><option value="01">Jan<option value="02">Feb<option value="03">Mar<option value="04">Apr<option value="05">May<option value="06">Jun<option value="07">Jul<option value="08">Aug<option value="09">Sep<option value="10">Oct<option value="11">Nov<option value="12">Dec</select></td><td style="width: 20%"><center>to</center></td><td>\
+      <select id="season_end" style="width: 100%"><option value="01">Jan<option value="02">Feb<option value="03">Mar<option value="04">Apr<option value="05">May<option value="06">Jun<option value="07">Jul<option value="08">Aug<option value="09">Sep<option value="10">Oct<option value="11">Nov<option value="12">Dec</select></td></tr><tr><td>\
       <select id="repeat_start" style="width: 100%">\
       </select></td><td style="width: 20%"><center>to</center></td><td>\
       <select id="repeat_end" style="width: 100%">\
@@ -493,11 +510,11 @@ var DateWidget = BaseWidget.extend(
     $(this.el).find('#seasonal_search').hide();
     for(var year = 1990; year <= today.getFullYear(); year++) {
       $(this.el).find('#repeat_start').append($("<option></option>").
-        attr("value","year").
+        attr("value",year).
         text(year)
       );
       $(this.el).find('#repeat_end').append($("<option></option>").
-        attr("value","year").
+        attr("value",year).
         text(year)
       );
     }
