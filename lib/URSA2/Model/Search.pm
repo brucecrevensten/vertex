@@ -281,9 +281,14 @@ sub buildSeasonalQuery {
   my ($self, $smon, $emon, $syear, $eyear) = @_;
   
   return '' unless ($smon and $emon and $syear and $eyear);
-  
-  return " AND to_number(to_char(startTime, 'MM')) between to_number(".$self->dbQuote($smon).") and to_number(".$self->dbQuote($emon).")"
-        ." AND to_number(to_char(startTime, 'YYYY')) between to_number(".$self->dbQuote($syear).") and to_number(".$self->dbQuote($eyear).")";
+  my $sql = '';
+  if($smon > $emon) { # span the new year
+    $sql .= " AND to_number(to_char(startTime, 'MM')) >= to_number(".$self->dbQuote($smon).") and to_number(to_char(startTime, 'MM')) <= to_number(".$self->dbQuote($emon).")";
+  } else { # not spanning the new year
+    $sql .= " AND to_number(to_char(startTime, 'MM')) between to_number(".$self->dbQuote($smon).") and to_number(".$self->dbQuote($emon).")";
+  }
+  $sql .= " AND to_number(to_char(startTime, 'YYYY')) between to_number(".$self->dbQuote($syear).") and to_number(".$self->dbQuote($eyear).")";
+  return $sql;
 }
 
 sub buildSpatialQuery {
