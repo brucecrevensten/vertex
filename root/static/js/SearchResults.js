@@ -509,7 +509,24 @@ var SearchResultsView = Backbone.View.extend(
           "bDestroy": true,     // destroy old table
           "sScrollY": "500px",
           "iDisplayLength": 1000, // default number of rows per page
-          "bLengthChange": false // do not allow users to change the default page length
+          "bLengthChange": false ,// do not allow users to change the default page length
+          "fnPreDrawCallback": jQuery.proxy(function() { // before each draw clear polygons
+            this.collection.each( jQuery.proxy(function(d)
+                                 { 
+                                  if (this.mo[d.id]) {
+                                    this.mo[d.id].setMap(null); 
+                                  }
+                                 },this) 
+                               );
+            },this),
+            "fnRowCallback": 
+              jQuery.proxy(function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                var v = this.mo[$(aData[0]).find("div").attr("product_id")]; // render the polygon for this row
+                if (v) {
+                 v.setMap(searchMap);
+              }
+                return nRow;
+            },this)
     });
 
     SearchApp.dataTable = this.dataTable;
