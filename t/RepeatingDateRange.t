@@ -36,7 +36,13 @@ my @test_ranges = (
     season_end      => 12,
     repeat_start    => 2006,
     repeat_end      => 2010
-  }
+  },
+  { desc            => 'new year, two months, 5 years',
+    season_start    => 12,
+    season_end      => 01,
+    repeat_start    => 1996,
+    repeat_end      => 2000
+  },
 );
 
 BEGIN { use_ok 'URSA2::Controller::services' }
