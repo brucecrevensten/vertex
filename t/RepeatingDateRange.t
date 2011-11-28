@@ -36,7 +36,13 @@ my @test_ranges = (
     season_end      => 12,
     repeat_start    => 2006,
     repeat_end      => 2010
-  }
+  },
+  { desc            => 'new year, two months, 5 years',
+    season_start    => 12,
+    season_end      => 01,
+    repeat_start    => 1996,
+    repeat_end      => 2000
+  },
 );
 
 BEGIN { use_ok 'URSA2::Controller::services' }
@@ -62,7 +68,9 @@ SKIP: {
         my $date = DateTime::Format::DateParse->parse_datetime($row[11], 'UTC');
         unless(
           $date->year >= $p->{repeat_start} and $date->year <= $p->{repeat_end} and   # within range of years
-          $date->month >= $p->{season_start} and $date->month <= $p->{season_end} ) {           # within range of months
+          (($p->{season_start} <= $p->{season_end})?
+            ($date->month >= $p->{season_start} and $date->month <= $p->{season_end}):
+            ($date->month >= $p->{season_start} or $date->month <= $p->{season_end})) ) {           # within range of months
           is('invalid results', 'valid results', 'Repeating date range: ' . $p->{desc} . "\n$p->{season_start} to $p->{season_send}, years $p->{repeat_start} to $p->{repeat_end}, got $date");
           $all_good = 0;
           last;
