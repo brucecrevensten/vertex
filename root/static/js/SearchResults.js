@@ -343,38 +343,19 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
+        this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
+           if (this.dataTable != null)  {
+             _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {          
+                
+                if (h[1] == 1) {
+                  this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
+                } else {
+                  this.mo[$(h[0]).find("div").attr("product_id")].setMap(null);
+                }
+                h[1]=0;
 
-
-
-    this.bind('ClearMap', jQuery.proxy(function() {
-      //console.log("CLEAR POLY");
-      _.each(this.mo, function(e) {
-        e.setMap(null);
-      });
-
-    this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
-        console.log("DrawPolygonsOnMap");
-        
-          _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {
-            this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
-
-          },this));
-
-    }));
-    
-
-        /*this.collection.clearAllPoly(this.mo);
-
-        this.collection.each( jQuery.proxy(function(d)
-                                 { 
-                                  if (this.mo[d.id]) {
-                                    this.mo[d.id].setMap(null); 
-                                  }
-                                 },this) 
-                               ); */
-
-
-
+              },this));
+          }
     },this));
 
     // Observe changes to this collection
@@ -557,29 +538,14 @@ var SearchResultsView = Backbone.View.extend(
           "sScrollY": "500px",
           "iDisplayLength": 1000, // default number of rows per page
           "bLengthChange": false ,// do not allow users to change the default page length
-          "fnPreDrawCallback": jQuery.proxy(function() { // before each draw clear polygons
-            /* this.collection.each( jQuery.proxy(function(d)
-                                 { 
-                                  if (this.mo[d.id]) {
-                                    this.mo[d.id].setMap(null); 
-                                  }
-                                 },this) 
-                               ); */
-                this.trigger("ClearMap");
-                
-                
+          "fnDrawCallback": jQuery.proxy(function() {
+              this.trigger("DrawPolygonsOnMap");
             },this),
-            "fnDrawCallBack": jQuery.proxy(function() {
-              this.trigger("DrawPolygonsOnMap")
-            })
-           /* "fnRowCallback": 
-              jQuery.proxy(function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-             //   var v = this.mo[$(aData[0]).find("div").attr("product_id")]; // render the polygon for this row
-               // if (v) {
-               //  v.setMap(searchMap);
-              }
-                return nRow;
-            },this)*/
+           "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
+              aData[1]=1;
+              return nRow;
+
+           }
     });
 
     SearchApp.dataTable = this.dataTable;
