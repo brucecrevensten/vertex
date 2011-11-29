@@ -11,6 +11,20 @@ var SearchResults = Backbone.Collection.extend(
 
     },
 
+/*    clearAllPoly: function(map) {
+        for (var i=0; i< this.models.length; i++) {
+          if (map[this.models[i].id]) {
+            this.
+          }
+        
+        } 
+                                  if (this.mo[d.id]) {
+                                    this.mo[d.id].setMap(null); 
+                                  }
+                                 },this) 
+                               ); 
+    },*/
+
     // build the nested model structure of DataProducts and DataProductFiles
     build: function(data) {
       this.trigger('build');
@@ -329,6 +343,20 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
+        this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
+           if (this.dataTable != null)  {
+             _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {          
+                
+                if (h[1] == 1) {
+                  this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
+                } else {
+                  this.mo[$(h[0]).find("div").attr("product_id")].setMap(null);
+                }
+                h[1]=0;
+
+              },this));
+          }
+    },this));
 
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
@@ -509,7 +537,15 @@ var SearchResultsView = Backbone.View.extend(
           "bDestroy": true,     // destroy old table
           "sScrollY": "500px",
           "iDisplayLength": 1000, // default number of rows per page
-          "bLengthChange": false // do not allow users to change the default page length
+          "bLengthChange": false ,// do not allow users to change the default page length
+          "fnDrawCallback": jQuery.proxy(function() {
+              this.trigger("DrawPolygonsOnMap");
+            },this),
+           "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
+              aData[1]=1;
+              return nRow;
+
+           }
     });
 
     SearchApp.dataTable = this.dataTable;
