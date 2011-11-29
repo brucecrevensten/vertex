@@ -98,7 +98,7 @@ header {
 
 footer {
   font-color: #878787 !important;
-  font-size: smaller;
+  font-size: x-small;
   clear: both;
   margin: 1ex 0;
   border: 1px solid #ccc;
@@ -116,6 +116,11 @@ footer div#centerer {
   width: 1000px;
   margin: 0 auto;
   background: #efefef url(../images/asflogo-footer.png) no-repeat top right;
+}
+
+footer div#footer_contact{
+  text-align: left; 
+  width: 15em;
 }
 
 nav {
