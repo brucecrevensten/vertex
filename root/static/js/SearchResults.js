@@ -11,6 +11,20 @@ var SearchResults = Backbone.Collection.extend(
 
     },
 
+/*    clearAllPoly: function(map) {
+        for (var i=0; i< this.models.length; i++) {
+          if (map[this.models[i].id]) {
+            this.
+          }
+        
+        } 
+                                  if (this.mo[d.id]) {
+                                    this.mo[d.id].setMap(null); 
+                                  }
+                                 },this) 
+                               ); 
+    },*/
+
     // build the nested model structure of DataProducts and DataProductFiles
     build: function(data) {
       this.trigger('build');
@@ -330,6 +344,39 @@ var SearchResultsView = Backbone.View.extend(
   initialize: function() {
     _.bindAll(this, "render");
 
+
+
+    this.bind('ClearMap', jQuery.proxy(function() {
+      //console.log("CLEAR POLY");
+      _.each(this.mo, function(e) {
+        e.setMap(null);
+      });
+
+    this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
+        console.log("DrawPolygonsOnMap");
+        
+          _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {
+            this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
+
+          },this));
+
+    }));
+    
+
+        /*this.collection.clearAllPoly(this.mo);
+
+        this.collection.each( jQuery.proxy(function(d)
+                                 { 
+                                  if (this.mo[d.id]) {
+                                    this.mo[d.id].setMap(null); 
+                                  }
+                                 },this) 
+                               ); */
+
+
+
+    },this));
+
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
@@ -511,22 +558,28 @@ var SearchResultsView = Backbone.View.extend(
           "iDisplayLength": 1000, // default number of rows per page
           "bLengthChange": false ,// do not allow users to change the default page length
           "fnPreDrawCallback": jQuery.proxy(function() { // before each draw clear polygons
-            this.collection.each( jQuery.proxy(function(d)
+            /* this.collection.each( jQuery.proxy(function(d)
                                  { 
                                   if (this.mo[d.id]) {
                                     this.mo[d.id].setMap(null); 
                                   }
                                  },this) 
-                               );
+                               ); */
+                this.trigger("ClearMap");
+                
+                
             },this),
-            "fnRowCallback": 
+            "fnDrawCallBack": jQuery.proxy(function() {
+              this.trigger("DrawPolygonsOnMap")
+            })
+           /* "fnRowCallback": 
               jQuery.proxy(function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                var v = this.mo[$(aData[0]).find("div").attr("product_id")]; // render the polygon for this row
-                if (v) {
-                 v.setMap(searchMap);
+             //   var v = this.mo[$(aData[0]).find("div").attr("product_id")]; // render the polygon for this row
+               // if (v) {
+               //  v.setMap(searchMap);
               }
                 return nRow;
-            },this)
+            },this)*/
     });
 
     SearchApp.dataTable = this.dataTable;

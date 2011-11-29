@@ -17,6 +17,7 @@ $(function() {
 
 window.SearchAppView = Backbone.View.extend({	
   initialize: function() {
+    console.log("vunderbar_filter branch");
     this.filterDictionaryA3 = new Dictionary();
     this.filterDictionaryR1 = new Dictionary();
     this.filterDictionaryE1 = new Dictionary();
