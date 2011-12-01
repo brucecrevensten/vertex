@@ -20,7 +20,8 @@ var RequestGenerator = Backbone.Collection.extend(
   			var json={};
   			this.each(jQuery.proxy(function(f) {
          if (f.view != undefined && f.view != null) {
-  				  if (f.view.enabled) {
+  				  if (f.view.enabled && f.get("selected") != "" && f.get("selected") != null
+            && f.get("selected") != undefined) {
   					 json=this.merge(json,f.getURLParameters());
   				  }
           } else {
@@ -64,7 +65,7 @@ var RequestGenerator = Backbone.Collection.extend(
         var paramJSON = this.requestGenerator.getJSONRequestParameters();
         
         var requestURL = this.get("requestURL");
-
+        
         var xhr = $.ajax(
         {
           type: "POST",
@@ -88,12 +89,7 @@ var RequestGenerator = Backbone.Collection.extend(
       },
       disable: function(formName) {
         this.formList.dictionary[formName].view.enabled = false;
-      }
-      
+      }  
   });
-
-
-
-
 
 

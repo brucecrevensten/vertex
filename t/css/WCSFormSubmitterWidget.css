@@ -1,0 +1,134 @@
+label.WCSfields {
+    display: block;
+   /* width: 70px;*/
+    float: left;
+    margin: 2px 4px 6px 4px;
+}
+
+input.WCSfields {
+  display: block;
+  position: relative;
+
+}
+body {
+	margin:0;
+	background-color:#e8eef5;
+	font-family:Geneva, sans-serif;
+	font-size:14px;
+}
+.head {
+	width:100%;
+	background-image:url(images/header_bg.png);
+	background-repeat:repeat-x;
+	height:118px;
+}
+.head .main {
+	width:980px;
+	margin:0 auto;
+	position:relative;
+}
+#browse {
+	position:absolute;
+	right:77px;
+	top:29px;
+	cursor:pointer;
+}
+.container {
+	width:100%;
+	background-image:url(images/main_bg.png);
+	background-repeat:repeat-x;
+	height:700px;
+}
+.content {
+	width:980px;
+	margin:0 auto;
+}
+ul {
+	padding:0;
+}
+li {
+	display:inline;
+	width:127px;
+	float:left;
+	border-bottom:1px dotted #dedede;
+	margin:0px 5px;
+}
+
+li:hover {
+	background-color:#000;
+	color:#fff;
+}
+.categories {
+	display:none;
+	padding:10px;
+	float:left;
+	width:960px;
+	background-color:#fff;
+	margin-top:20px;
+	-moz-border-radius: 8px; 
+	-webkit-border-radius: 8px;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.top_container{
+	width:980px;
+	float:left;
+	background-color:#fff;
+	margin-top:20px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+
+.bottom_container{
+	width:980px;
+	float:left;
+	background-color:#fff;
+	margin-top:20px;
+	margin-bottom:30px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.clear {
+	clear:both;
+}
+
+img{border:0px;}
+
+.subscribe{
+	margin:10px;}
+
+
+
+#right_column{
+	float:right;
+	width:300px;
+	margin:15px;
+	}
+	
+#left_column{
+	float:left;
+	width:600px;
+	margin:15px;
+	}	
+	
+.thumb{float:left;
+margin-right:10px;
+width:140px;
+height:140px;
+}	
+	
+h2 li{color:#333;
+text-decoration:none;}	
+
+h2 li:hover{text-decoration:underline;}	
+
+p{font-size:14px; color:#999;}
+p li{color:#F60;}
+
+h2{margin-top:25px;}
