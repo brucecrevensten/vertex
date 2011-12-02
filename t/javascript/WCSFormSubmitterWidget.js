@@ -1,16 +1,51 @@
-$(function() {
+$(function() {	
 
-	var form = new FormSubmitter({});
+	var server;
 
+	server = sinon.fakeServer.create();
+
+	server.respondWith("POST", "/fakeURL",
+	           [200, { "Content-Type": "application/json" },
+	            JSON.stringify(
+		        {
+			        "DataSet": {
+				        "Austrailia": {
+					        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
+					        "url": "/AustrailiaURL",
+					        "ImageFormat": ["JPEG", "BMP", "TIFF"]
+					    },
+					    "Alaska": {
+					        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
+					        "url": "/AlaskaURL",
+					        "ImageFormat": ["BMP", "GEOTIFF"]
+					    },
+					    "Africa": {
+					        "layers": ["AfricaLayer1"],
+					        "url": "/AlaskaURL",
+					        "ImageFormat": ["GEOTIFF"]
+					    }
+				    },
+
+	            })]);
+
+	window.server = server;
+
+	var form = new FormSubmitter();
 
 	var fl = [];
 
-	fl[0] = new DataSetModel();
-	fl[1] = new OutputProjectionModel();
-	fl[2] = new ImageFormatModel();
-	fl[3] = new ImageHeightModel();
-	fl[4] = new ImageWidthModel();
-	fl[5] = new InterpolationMethodModel();
+	var infl = new StateInflator();
+	
+	infl.inflate('/fakeURL'); 
+
+	server.respond(); 
+/*
+	fl[0] = new DataSetFormM();
+	fl[1] = new OutputProjectionFormM();
+	fl[2] = new ImageFormatFormM();
+	fl[3] = new ImageHeightFormM();
+	fl[4] = new ImageWidthFormM();
+	fl[5] = new InterpolationMethodFormM();
 
 	fl[0].view = new DataSetView({el: $('#dataset'), model: fl[0]});
 	fl[1].view = new OutputProjectionView({el: $('#outProj'), model: fl[1]});
@@ -26,16 +61,17 @@ $(function() {
 	$('#downloadButton').button({ label: "Download"}).bind("click", jQuery.proxy(function() {
 		form.set({"requestURL": "/fakeURL"});
 		form.submitRequest();    
+		window.server.respond(); 
 	},this));
 
 	$('#dataSetField').live("click", jQuery.proxy(function() {
 		$('.categories').toggle(); 
 	},this));
 
-	$('.categories ul li').live("click", function() {
-		console.log("ALSKDJALSDJLASJDLAKDJS");
+	$('.categories ul li').live("click", function(e) {
+		console.log(e);
 	});
 
-	window.wcsForm = form;
+	window.wcsForm = form; */
 
 });

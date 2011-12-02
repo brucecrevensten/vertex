@@ -1,7 +1,60 @@
-var WCSFormModel = Backbone.Model.extend({
+/**** Form Element Models *****************************/
+// The purpose of these models are to store metadata
+////
+var DataSetM = new Backbone.Model.extend({
+	defaults: {
+		url: "",		
+		name: "",	// Name of the Dataset that will be displayed in a dropdownish menu
+		selectedLayer: "",	// Name of the layer that is selected
+		layers: null		// list of layers that will populate a dropdownish menu
+	}, 
+	intialize: function() {
+		
+	}
+});
+
+var DataSetLayerM = new Backbone.Model.extend({
+	defaults: {
+		name: ""
+
+	},
+	initialize: function() {
+		
+	}
+});
+
+var OutputProjectionM = Backbone.Model.extend({
+	defaults: {
+		name: ""
+	},
+	initialize: function() {
+	}
+});
+
+var InterpolationMethodM = Backbone.Model.extend({
+	defaults: {
+		name: ""	
+	},
+	initialize: function() {
+	}
+});
+
+var ImageFormatM = Backbone.Model.extend({
+	defaults: {
+		name: ""
+	},
+	initialize: function() {
+	}
+});
+
+/*** Form Models ********************************/
+// The purpose of a form model is to persist data associated with user input
+// It also associates the user input data with internal meta data (Form element models)
+/**** */
+var WCSFormM = Backbone.Model.extend({
 	defaults: {
 		paramName: "",
-		selected: ""
+		selected: "", 
 	},
 
 	getURLParameters: function() {
@@ -11,116 +64,138 @@ var WCSFormModel = Backbone.Model.extend({
 	}
 });
 
-var DataSetModel = WCSFormModel.extend({
+var DataSetFormLayerM = WCSFormM.extend({
+	defaults: {
+//		dataSetLayerM: new DataSetLayerM()	
+	},
+	initialize: function() {
+		this.set({"paramName": "COVERAGE" });
+		//this.dataSetLayerM = new DataSetLayerM();
+
+	},
+	validate: function(attrs) {
+		if (attrs.selected != "") {
+			
+		}
+	}
+});
+
+var DataSetFormM = WCSFormM.extend({
+	defaults: {
+	//	dataSetM: null
+	},
+
 	initialize: function() {
 		this.set({"paramName": "Dataset"});
+		this.dataSetMCollection = new Backbone.Collection();
 	}
 });
 
-var OutputProjectionModel = WCSFormModel.extend({
+var OutputProjectionaFormM = WCSFormM.extend({
+	defaults: {
+		//outputProjectionM: null
+	},
 	initialize: function() {
 		this.set({"paramName": "OutputProjection"});
+
 	}
 });
 
-var ImageFormatModel = WCSFormModel.extend({
-	initialize: function() {
-		this.set({"paramName": "ImageFormat"});
-	}
-});
-
-var ImageHeightModel = WCSFormModel.extend({
-	initialize: function() {
-		this.set({"paramName": "ImageHeight"});
-	}
-});
-
-var ImageWidthModel = WCSFormModel.extend({
-	initialize: function() {
-		this.set({"paramName": "ImageWidth"});
-	}
-});
-
-var InterpolationMethodModel = WCSFormModel.extend({
+var InterpolationMethodFormM = WCSFormM.extend({
+	defaults: {
+		interpolationMethodM: null	
+	},
 	initialize: function() {
 		this.set({"paramName": "InterpolationMethod"});
 	}
 });
 
-var WCSFormView = Backbone.View.extend({
+var ImageFormatFormM = WCSFormM.extend({
+	initialize: function() {
+		this.set({"paramName": "ImageFormat"});
+	}
+});
+
+var ImageHeightFormM = WCSFormM.extend({
+	initialize: function() {
+		this.set({"paramName": "ImageHeight"});
+	}
+});
+
+var ImageWidthFormM = WCSFormM.extend({
+	initialize: function() {
+		this.set({"paramName": "ImageWidth"});
+	}
+});
+
+
+/**** Form Views ******************************/
+// The purpose of the form views is to update the form models 
+// with user input and render html elements representing the form models
+var WCSFormV = Backbone.View.extend({
 	intialize: function() {
 		this.enabled = true;	
 	}
 });
 
-var DataSetView = WCSFormView.extend({	
+var DataSetFormV = WCSFormV.extend({	
 	initialize: function() {
+		this.dataSetOptions = new Backbone.Collection();
+		
 		this.enabled = true;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
-
-            console.log(this.model);
 		},this));
 	}
 });
 
-var OutputProjectionView = WCSFormView.extend({
+var OutputProjectionFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = true;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
-
-            console.log(this.model);
 		},this));
 	}
 });
 
-var ImageFormatView = WCSFormView.extend({
+var ImageFormatFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = true;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
-
-            console.log(this.model);
 		},this));
 	}
 });
 
-var ImageHeightView = WCSFormView.extend({
+var ImageHeightFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = true;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
-
-            console.log(this.model);
 		},this));
 	}
 });
 
-var ImageWidthView = WCSFormView.extend({
+var ImageWidthFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = true;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
-
-            console.log(this.model);
 		},this));
 	}
 });
 
-var InterpolationMethodView = WCSFormView.extend({
+var InterpolationMethodFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = true;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
-
-            console.log(this.model);
 		},this));
 	}
 });

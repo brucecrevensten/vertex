@@ -93,3 +93,126 @@ var RequestGenerator = Backbone.Collection.extend(
   });
 
 
+var StateInflator = Backbone.Model.extend({
+    
+    inflate: function(requestURL) {
+        var xhr = $.ajax(
+        {
+          type: "POST",
+          url: requestURL,
+          context: this,
+          success: jQuery.proxy(function(data, textStatus, jqXHR) {
+            this.trigger('request_success');
+            
+             this.process(data);
+             
+          },this),
+          error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
+            this.trigger('request_error');
+      
+          }, this)
+      } );
+    }, 
+
+/*
+"DataSet": {
+                "Austrailia": {
+                  "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
+                  "url": "/AustrailiaURL"
+              },
+              "Alaska": {
+                  "layers": ["AlaskaLayer1", "AlaskaLayer2"],
+                  "url": "/AlaskaURL"
+              },
+              "Africa": {
+                  "layers": ["AfricaLayer1"],
+                  "url": "/AlaskaURL"
+              },
+            },
+            "ImageFormat": ["JPEG", "BMP", "TIFF"],
+            
+*/
+    process: function(responseData) {
+    //  var dsForm = new DataSetFormM();
+    //  var dsView = new DataSetFormV();
+    //  dsForm.view = dsView;
+
+// Generate the Metadata Persistent State
+    this.generateMetadataPersistenceState(responseData);
+    this.generateUserInputPersistenceState(responseData);
+
+    },
+
+    generateMetadataPersistenceState: function(responseData) {
+      var dataSetDict = new Dictionary();
+
+      for (dataSetName in responseData["DataSet"]) {
+        ds = data["DataSet"][key];
+
+        var dataSetM = new DataSetM();
+        
+        // Construct the layers
+        var layerCollection = new Backbone.Collection();
+        for (layerName in ds["layers"]) {
+          var layer = new DataSetLayerM({name: layerName});
+          layerCollection.add(layer);
+        }
+
+        // Construct the Image formats
+        var imageFormatCollection = new Backbone.Collection();
+        for (imageFormatName in ds["ImageFormat"]) {
+          var imageFormat = new ImageFormatM({name: imageFormatName});
+          imageFormatCollection.add(imageFormat);
+        }
+        
+        // Initialize the Dataset
+        dataSetM.set({
+            name:dataSetName,
+            layers:layerCollection,
+            url:ds["url"],
+            imageFormat:imageFormatCollection
+        });
+      }
+      dataSetDict.add(dataSetName, d);
+
+      // Attach the Dictionary of Datasets to the window
+      this.dataSetDict = dataSetDict;
+      window.dataSetDict = dataSetDict;
+    },
+
+    // MK HERE: Checkout exception handling this function depends on the one above working and 
+    // attaching a dataSetDict to the correct location. 
+    generateUserDataPersistenceState: function(responseData) {
+      
+      for (dataSetName in responseData["DataSet"]) {
+        
+      }
+    } 
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
