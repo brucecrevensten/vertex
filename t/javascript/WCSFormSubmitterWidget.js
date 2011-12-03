@@ -11,17 +11,20 @@ $(function() {
 			        "DataSet": {
 				        "Austrailia": {
 					        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
-					        "url": "/AustrailiaURL",
+					        "wcsUrl": "/AustrailiaURL",
+					        "wmsUrl": "/AustrailiaURL2",
 					        "ImageFormat": ["JPEG", "BMP", "TIFF"]
 					    },
 					    "Alaska": {
 					        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
-					        "url": "/AlaskaURL",
+					        "wcsUrl": "/AlaskaURL",
+					        "wmsUrl": "/AlaskaURL2",
 					        "ImageFormat": ["BMP", "GEOTIFF"]
 					    },
 					    "Africa": {
 					        "layers": ["AfricaLayer1"],
-					        "url": "/AlaskaURL",
+					        "wcsUrl": "/AfricaURL",
+					        "wmsUrl": "/AfricaURL2",
 					        "ImageFormat": ["GEOTIFF"]
 					    }
 				    },

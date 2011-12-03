@@ -1,7 +1,7 @@
 /**** Form Element Models *****************************/
 // The purpose of these models are to store metadata
 ////
-var DataSetM = new Backbone.Model.extend({
+var DataSetM = Backbone.Model.extend({
 	defaults: {
 		url: "",		
 		name: "",	// Name of the Dataset that will be displayed in a dropdownish menu
@@ -13,7 +13,7 @@ var DataSetM = new Backbone.Model.extend({
 	}
 });
 
-var DataSetLayerM = new Backbone.Model.extend({
+var LayerM = Backbone.Model.extend({
 	defaults: {
 		name: ""
 
@@ -64,14 +64,12 @@ var WCSFormM = Backbone.Model.extend({
 	}
 });
 
-var DataSetFormLayerM = WCSFormM.extend({
+var LayerFormM = WCSFormM.extend({
 	defaults: {
-//		dataSetLayerM: new DataSetLayerM()	
 	},
 	initialize: function() {
 		this.set({"paramName": "COVERAGE" });
-		//this.dataSetLayerM = new DataSetLayerM();
-
+		this.selectable = new Backbone.Collection();
 	},
 	validate: function(attrs) {
 		if (attrs.selected != "") {
@@ -81,20 +79,13 @@ var DataSetFormLayerM = WCSFormM.extend({
 });
 
 var DataSetFormM = WCSFormM.extend({
-	defaults: {
-	//	dataSetM: null
-	},
-
 	initialize: function() {
 		this.set({"paramName": "Dataset"});
-		this.dataSetMCollection = new Backbone.Collection();
+		this.selectable = new Backbone.Collection();
 	}
 });
 
 var OutputProjectionaFormM = WCSFormM.extend({
-	defaults: {
-		//outputProjectionM: null
-	},
 	initialize: function() {
 		this.set({"paramName": "OutputProjection"});
 
@@ -102,9 +93,6 @@ var OutputProjectionaFormM = WCSFormM.extend({
 });
 
 var InterpolationMethodFormM = WCSFormM.extend({
-	defaults: {
-		interpolationMethodM: null	
-	},
 	initialize: function() {
 		this.set({"paramName": "InterpolationMethod"});
 	}
@@ -128,9 +116,8 @@ var ImageWidthFormM = WCSFormM.extend({
 	}
 });
 
-
 /**** Form Views ******************************/
-// The purpose of the form views is to update the form models 
+// The purpose of the form views are to update the form models 
 // with user input and render html elements representing the form models
 var WCSFormV = Backbone.View.extend({
 	intialize: function() {
@@ -140,8 +127,6 @@ var WCSFormV = Backbone.View.extend({
 
 var DataSetFormV = WCSFormV.extend({	
 	initialize: function() {
-		this.dataSetOptions = new Backbone.Collection();
-		
 		this.enabled = true;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
@@ -149,6 +134,17 @@ var DataSetFormV = WCSFormV.extend({
 		},this));
 	}
 });
+
+var LayerFormV = WCSFormV.extend({	
+	initialize: function() {
+		this.enabled = true;	
+		$(this.el).bind("input", jQuery.proxy(function(e) {
+			var el = $(e.currentTarget);
+            this.model.set({"selected":el.val()});
+		},this));
+	}
+});
+
 
 var OutputProjectionFormV = WCSFormV.extend({
 	initialize: function() {

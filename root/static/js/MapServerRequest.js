@@ -103,9 +103,7 @@ var StateInflator = Backbone.Model.extend({
           context: this,
           success: jQuery.proxy(function(data, textStatus, jqXHR) {
             this.trigger('request_success');
-            
-             this.process(data);
-             
+             this.process(data);         
           },this),
           error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
             this.trigger('request_error');
@@ -114,54 +112,32 @@ var StateInflator = Backbone.Model.extend({
       } );
     }, 
 
-/*
-"DataSet": {
-                "Austrailia": {
-                  "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
-                  "url": "/AustrailiaURL"
-              },
-              "Alaska": {
-                  "layers": ["AlaskaLayer1", "AlaskaLayer2"],
-                  "url": "/AlaskaURL"
-              },
-              "Africa": {
-                  "layers": ["AfricaLayer1"],
-                  "url": "/AlaskaURL"
-              },
-            },
-            "ImageFormat": ["JPEG", "BMP", "TIFF"],
-            
-*/
     process: function(responseData) {
-    //  var dsForm = new DataSetFormM();
-    //  var dsView = new DataSetFormV();
-    //  dsForm.view = dsView;
-
-// Generate the Metadata Persistent State
-    this.generateMetadataPersistenceState(responseData);
-    this.generateUserInputPersistenceState(responseData);
-
+      this.generateMetadataPersistenceState(responseData);
+      this.generateUserInputPersistenceState();
+      this.genereateUserInputViews();
     },
 
     generateMetadataPersistenceState: function(responseData) {
-      var dataSetDict = new Dictionary();
+      console.log("generateMetadataPersistenceState");
+      var dataSetDict = {};
 
       for (dataSetName in responseData["DataSet"]) {
-        ds = data["DataSet"][key];
+        ds = responseData["DataSet"][dataSetName];
 
         var dataSetM = new DataSetM();
         
         // Construct the layers
         var layerCollection = new Backbone.Collection();
-        for (layerName in ds["layers"]) {
-          var layer = new DataSetLayerM({name: layerName});
+        for (layerIndex in ds["layers"]) {
+          var layer = new LayerM({name: ds["layers"][layerIndex]});
           layerCollection.add(layer);
         }
 
         // Construct the Image formats
         var imageFormatCollection = new Backbone.Collection();
-        for (imageFormatName in ds["ImageFormat"]) {
-          var imageFormat = new ImageFormatM({name: imageFormatName});
+        for (imageFormatIndex in ds["ImageFormat"]) {
+          var imageFormat = new ImageFormatM({name: ds["ImageFormat"][imageFormatIndex]});
           imageFormatCollection.add(imageFormat);
         }
         
@@ -169,27 +145,92 @@ var StateInflator = Backbone.Model.extend({
         dataSetM.set({
             name:dataSetName,
             layers:layerCollection,
-            url:ds["url"],
-            imageFormat:imageFormatCollection
+            WCSURL:ds["wcsUrl"],
+            WMSURL:ds["wmsUrl"],
+            imageFormats:imageFormatCollection
         });
+        dataSetDict[dataSetName] = dataSetM;
       }
-      dataSetDict.add(dataSetName, d);
+      
 
       // Attach the Dictionary of Datasets to the window
       this.dataSetDict = dataSetDict;
       window.dataSetDict = dataSetDict;
     },
 
-    // MK HERE: Checkout exception handling this function depends on the one above working and 
-    // attaching a dataSetDict to the correct location. 
-    generateUserDataPersistenceState: function(responseData) {
-      
-      for (dataSetName in responseData["DataSet"]) {
-        
+    // Implement exception handling because this function depends on the one above working 
+    generateUserInputPersistenceState: function() {
+      console.log("generateUserInputPersistenceState");
+      // Add each of the DataSet models to the DataSetForm 
+      var dataSetFormM = new DataSetFormM();
+      for (dataSetName in this.dataSetDict) {
+        dataSetFormM.selectable.add( this.dataSetDict[dataSetName] );
       }
-    } 
+
+      // For each of the DataSets create a LayerForm 
+      var layerFormMDict = {};
+      for (dataSetName in this.dataSetDict) {
+        var layerFormM = new LayerFormM({'dataSet':this.dataSetDict[dataSetName]});
+        layerFormM.selectable = this.dataSetDict[dataSetName].layers;
+        layerFormMDict[dataSetName] = layerFormM;   
+      }
+
+      // For each of the DataSets create an ImageFormatForm 
+      var imageFormatFormMDict = {};
+      for (dataSetName in this.dataSetDict) {
+        var imageFormatFormM = new ImageFormatFormM({'dataSet':this.dataSetDict[dataSetName]});
+        imageFormatFormM.selectable=this.dataSetDict[dataSetName].imageFormats;
+        imageFormatFormMDict[dataSetName] = imageFormatFormM;   
+      }
+
+      this.dataSetFormM = dataSetFormM;
+      this.layerFormMDict =layerFormMDict;
+      this.imageFormatFormMDict = imageFormatFormMDict;
+     
+      window.dataSetFormM = dataSetFormM;
+      window.layerFormMDict = layerFormMDict;
+      window.imageFormatFormMDict = imageFormatFormMDict; 
+    },
+
+    genereateUserInputViews: function() {
+      console.log("genereateUserInputViews");
+      // Generate a View for each dataset
+      var dataSetFormV = new DataSetFormV({model: this.dataSetFormM });
+      this.dataSetFormM = dataSetFormV;
 
 
+      // Generate a View for each Layer Set
+      var layerFormVDict = {};
+      for (dataSetName in this.dataSetDict) {
+        var layerFormV = new LayerFormV({model: this.layerFormMDict[dataSetDict]});
+        this.layerFormMDict[dataSetName].view = layerFormV;
+          
+        layerFormVDict[dataSetName] = layerFormV;   
+      }
+
+    
+      // For each of the DataSets create an ImageFormatForm 
+      var imageFormatVFormDict = {};
+
+
+      // I AM HERE.
+      for (dataSetName in this.dataSetDict) {
+        console.log(dataSetName);
+        var imageFormatFormV = new ImageFormatFormM({model: this.dataImageFormatFormMDict[dataSetDict]});
+        this.imageFormMDict[dataSetName].view = imageFormatFormV;
+ 
+        imageFormatFormVDict[dataSetName] = imageFormatFormV;   
+      }
+
+      this.dataSetFormV = dataSetFormV;
+      this.layerFormVDict = layerFormVDict;
+      this.imageFormatFormVDict = imageFormatFormVDict;
+     
+      window.dataSetFormV = dataSetFormV;
+      window.layerFormVDict = layerFormVDict;
+      window.imageFormatFormVDict = imageFormatFormVDict; 
+      console.log("DONE!");
+    }
 
 });
 
