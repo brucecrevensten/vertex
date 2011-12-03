@@ -94,7 +94,9 @@ var RequestGenerator = Backbone.Collection.extend(
 
 
 var StateInflator = Backbone.Model.extend({
-    
+    initialize: function() {
+      _.bindAll(this);
+    },
     inflate: function(requestURL) {
         var xhr = $.ajax(
         {
@@ -115,7 +117,7 @@ var StateInflator = Backbone.Model.extend({
     process: function(responseData) {
       this.generateMetadataPersistenceState(responseData);
       this.generateUserInputPersistenceState();
-      this.genereateUserInputViews();
+      this.generateUserInputViews();
     },
 
     generateMetadataPersistenceState: function(responseData) {
@@ -171,7 +173,7 @@ var StateInflator = Backbone.Model.extend({
       var layerFormMDict = {};
       for (dataSetName in this.dataSetDict) {
         var layerFormM = new LayerFormM({'dataSet':this.dataSetDict[dataSetName]});
-        layerFormM.selectable = this.dataSetDict[dataSetName].layers;
+        layerFormM.selectable = this.dataSetDict[dataSetName].get("layers");
         layerFormMDict[dataSetName] = layerFormM;   
       }
 
@@ -179,46 +181,41 @@ var StateInflator = Backbone.Model.extend({
       var imageFormatFormMDict = {};
       for (dataSetName in this.dataSetDict) {
         var imageFormatFormM = new ImageFormatFormM({'dataSet':this.dataSetDict[dataSetName]});
-        imageFormatFormM.selectable=this.dataSetDict[dataSetName].imageFormats;
+     
+        imageFormatFormM.selectable= this.dataSetDict[dataSetName].get("imageFormats");
         imageFormatFormMDict[dataSetName] = imageFormatFormM;   
       }
 
       this.dataSetFormM = dataSetFormM;
-      this.layerFormMDict =layerFormMDict;
+      this.layerFormMDict = layerFormMDict;
       this.imageFormatFormMDict = imageFormatFormMDict;
-     
+
       window.dataSetFormM = dataSetFormM;
       window.layerFormMDict = layerFormMDict;
       window.imageFormatFormMDict = imageFormatFormMDict; 
     },
 
-    genereateUserInputViews: function() {
-      console.log("genereateUserInputViews");
+    generateUserInputViews: function() {
+      console.log("generateUserInputViews");
       // Generate a View for each dataset
       var dataSetFormV = new DataSetFormV({model: this.dataSetFormM });
       this.dataSetFormM = dataSetFormV;
 
-
       // Generate a View for each Layer Set
       var layerFormVDict = {};
       for (dataSetName in this.dataSetDict) {
-        var layerFormV = new LayerFormV({model: this.layerFormMDict[dataSetDict]});
+        var layerFormV = new LayerFormV({model: this.layerFormMDict[dataSetName]});
         this.layerFormMDict[dataSetName].view = layerFormV;
           
         layerFormVDict[dataSetName] = layerFormV;   
       }
-
-    
+  
       // For each of the DataSets create an ImageFormatForm 
-      var imageFormatVFormDict = {};
+      var imageFormatFormVDict = {};
 
-
-      // I AM HERE.
       for (dataSetName in this.dataSetDict) {
-        console.log(dataSetName);
-        var imageFormatFormV = new ImageFormatFormM({model: this.dataImageFormatFormMDict[dataSetDict]});
-        this.imageFormMDict[dataSetName].view = imageFormatFormV;
- 
+        var imageFormatFormV = new ImageFormatFormV({model: this.imageFormatFormMDict[dataSetName]});
+        this.imageFormatFormMDict[dataSetName].view = imageFormatFormV;
         imageFormatFormVDict[dataSetName] = imageFormatFormV;   
       }
 
@@ -229,7 +226,6 @@ var StateInflator = Backbone.Model.extend({
       window.dataSetFormV = dataSetFormV;
       window.layerFormVDict = layerFormVDict;
       window.imageFormatFormVDict = imageFormatFormVDict; 
-      console.log("DONE!");
     }
 
 });
