@@ -61,6 +61,25 @@ var WCSFormM = Backbone.Model.extend({
 		var v = {};
 		v[this.get("paramName")] = this.get("selected");
 		return v;
+	},
+
+	validate: function(attrs) {
+		if (attrs.selected != undefined) {
+			if (this.selectable != undefined && this.selectable != null) {
+					var hasAttr = false;
+					
+					this.selectable.each(function(m) {
+						if (m.get("name") == attrs.selected) {
+							hasAttr = true;
+						}
+					});
+					if (hasAttr == false) {
+						return "Unavailable option";
+					}
+					
+			}
+		}
+		
 	}
 });
 
@@ -70,12 +89,8 @@ var LayerFormM = WCSFormM.extend({
 	initialize: function() {
 		this.set({"paramName": "COVERAGE" });
 		this.selectable = new Backbone.Collection();
-	},
-	validate: function(attrs) {
-		if (attrs.selected != "") {
-			
-		}
 	}
+	
 });
 
 var DataSetFormM = WCSFormM.extend({
@@ -85,7 +100,7 @@ var DataSetFormM = WCSFormM.extend({
 	}
 });
 
-var OutputProjectionaFormM = WCSFormM.extend({
+var OutputProjectionFormM = WCSFormM.extend({
 	initialize: function() {
 		this.set({"paramName": "OutputProjection"});
 
@@ -121,13 +136,13 @@ var ImageWidthFormM = WCSFormM.extend({
 // with user input and render html elements representing the form models
 var WCSFormV = Backbone.View.extend({
 	intialize: function() {
-		this.enabled = true;	
+		this.enabled = false;	
 	}
 });
 
 var DataSetFormV = WCSFormV.extend({	
 	initialize: function() {
-		this.enabled = true;	
+		this.enabled = false;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
@@ -137,7 +152,7 @@ var DataSetFormV = WCSFormV.extend({
 
 var LayerFormV = WCSFormV.extend({	
 	initialize: function() {
-		this.enabled = true;	
+		this.enabled = false;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
@@ -148,7 +163,7 @@ var LayerFormV = WCSFormV.extend({
 
 var OutputProjectionFormV = WCSFormV.extend({
 	initialize: function() {
-		this.enabled = true;	
+		this.enabled = false;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
@@ -158,7 +173,7 @@ var OutputProjectionFormV = WCSFormV.extend({
 
 var ImageFormatFormV = WCSFormV.extend({
 	initialize: function() {
-		this.enabled = true;	
+		this.enabled = false;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
@@ -168,7 +183,7 @@ var ImageFormatFormV = WCSFormV.extend({
 
 var ImageHeightFormV = WCSFormV.extend({
 	initialize: function() {
-		this.enabled = true;	
+		this.enabled = false;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
@@ -178,7 +193,7 @@ var ImageHeightFormV = WCSFormV.extend({
 
 var ImageWidthFormV = WCSFormV.extend({
 	initialize: function() {
-		this.enabled = true;	
+		this.enabled = false;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
@@ -188,7 +203,7 @@ var ImageWidthFormV = WCSFormV.extend({
 
 var InterpolationMethodFormV = WCSFormV.extend({
 	initialize: function() {
-		this.enabled = true;	
+		this.enabled = false;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});

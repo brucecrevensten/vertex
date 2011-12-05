@@ -120,7 +120,6 @@ var StateInflator = Backbone.Model.extend({
     },
 
     generateMetadataPersistenceState: function(responseData) {
-      console.log("generateMetadataPersistenceState");
       var dataSetDict = {};
 
       for (dataSetName in responseData["DataSet"]) {
@@ -161,7 +160,6 @@ var StateInflator = Backbone.Model.extend({
 
     // Implement exception handling because this function depends on the one above working 
     generateUserInputPersistenceState: function() {
-      console.log("generateUserInputPersistenceState");
       // Add each of the DataSet models to the DataSetForm 
       var dataSetFormM = new DataSetFormM();
       for (dataSetName in this.dataSetDict) {
@@ -195,10 +193,9 @@ var StateInflator = Backbone.Model.extend({
     },
 
     generateUserInputViews: function() {
-      console.log("generateUserInputViews");
       // Generate a View for each dataset
       var dataSetFormV = new DataSetFormV({model: this.dataSetFormM });
-      this.dataSetFormM = dataSetFormV;
+      this.dataSetFormM.view = dataSetFormV;
 
       // Generate a View for each Layer Set
       var layerFormVDict = {};
