@@ -1,9 +1,8 @@
 // Purpose: Handle generation of request. Does not actually submit the request
-//          it only packages up the request and acts as broker between the form 
+//          it only packages up the request and acts as a broker between the form 
 //          and the ajax request
 var RequestGenerator = Backbone.Collection.extend(
   {
-
       merge: function(json1, json2) {
         for (var key in json2) {
           json1[key] = json2[key]

@@ -2,11 +2,11 @@
 // The purpose of these models are to store metadata
 ////
 var DataSetM = Backbone.Model.extend({
-	defaults: {
-		url: "",		
+	defaults: {		
 		name: "",	// Name of the Dataset that will be displayed in a dropdownish menu
 		selectedLayer: "",	// Name of the layer that is selected
-		layers: null		// list of layers that will populate a dropdownish menu
+		layers: null,		// list of layers that will populate a dropdownish menu,
+		imageFormats: null
 	}, 
 	intialize: function() {
 		
