@@ -46,6 +46,11 @@ describe("Test object construction", function() {
 		expect(c).toNotBe(null);
 	});
 
+	it("Should construct the form generator", function() {
+		var c = new FormGenerator();
+		expect(c).toNotBe(null);
+	});
+
 });
 
 describe("Test StateInflator", function() {
@@ -293,6 +298,80 @@ describe("Test FormSubmitter", function() {
 		server2.restore(); 
 		//jQuery.ajax.restore(); // Unwraps the spy
 	});
-
 });
 
+describe("Test the FormGenerator", function() {
+	it("Should inflate state dynamically, generate a formList dynmically using a \
+	    FormGenerator, select fields, and send an ajax request", function() {
+		
+		// Create a sinon server 
+		var server;
+
+		server = sinon.fakeServer.create();
+
+		server.respondWith("POST", "/fakeURL",
+	       [200, { "Content-Type": "application/json" },
+	        JSON.stringify(
+	        {
+		        "DataSet": {
+			        "Austrailia": {
+				        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
+				        "wcsUrl": "/AustrailiaURL",
+				        "wmsUrl": "/AustrailiaURL2",
+				        "ImageFormat": ["JPEG", "BMP", "TIFF"]
+				    },
+				    "Alaska": {
+				        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
+				        "wcsUrl": "/AlaskaURL",
+				        "wmsUrl": "/AlaskaURL2",
+				        "ImageFormat": ["BMP", "GEOTIFF"]
+				    },
+				    "Africa": {
+				        "layers": ["AfricaLayer1"],
+				        "wcsUrl": "/AfricaURL",
+				        "wmsUrl": "/AfricaURL2",
+				        "ImageFormat": ["GEOTIFF"]
+				    }
+			    },
+
+	        })]);
+
+		var infl = new StateInflator();
+		infl.inflate('/fakeURL'); 
+		server.respond(); 
+
+		var formGenerator = new FormGenerator({"Inflator": infl});
+		formGenerator.enable({"DataSet": "Alaska", "Layer": "Alaska", "ImageFormat": "Alaska", "ImageWidth": "NA"});
+		formGenerator.select({
+				"DataSet": "Alaska",
+				"Layer": "AlaskaLayer",
+				"ImageFormat": "GEOTIFF", 
+				"ImageWidth": 100				
+		});
+		var formList = formGenerator.create();
+
+		var formSubmitter = new FormSubmitter();
+		_.each(formList, function(f) {
+			formSubmitter.add(f);
+		});
+
+		server.restore(); 
+		
+		form.set({"requestURL": formSubmitter.get("WCSURL") });   
+
+		var server2 = sinon.fakeServer.create();
+
+		server2.respondWith("POST", formSubmitter.get("WCSURL"),
+		           [200, { "Content-Type": "application/json" }, JSON.stringify({"Success":"Yes"})]);
+
+		formSubmitter.submitRequest();
+
+		server2.respond(); 
+
+		expect(server2.requests[0].requestBody).toEqual("SOMETHING");
+	
+		server2.restore(); 
+
+					
+	});
+});
