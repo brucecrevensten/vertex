@@ -91,7 +91,6 @@ var RequestGenerator = Backbone.Collection.extend(
       }  
   });
 
-
 var StateInflator = Backbone.Model.extend({
     initialize: function() {
       _.bindAll(this);
