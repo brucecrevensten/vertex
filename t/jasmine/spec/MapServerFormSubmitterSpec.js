@@ -24,6 +24,7 @@ describe("Test object construction", function() {
 	 	fl[18] = new ImageHeightFormV();
 	 	fl[19] = new ImageWidthFormV();
 	 	fl[20] = new InterpolationMethodFormV();
+	 	fl[21] = new ViewGroup();
 
 	 	for (var i=0; i<=20; i++) {
 	 		expect(fl[i]).toNotBe(null);
@@ -290,7 +291,6 @@ describe("Test FormSubmitter", function() {
 		expect(server2.requests[0].requestBody).toEqual("Dataset=Alaska&COVERAGE=AlaskaLayer1&ImageFormat=BMP");
 	
 		server2.restore(); 
-		//jQuery.ajax.restore(); // Unwraps the spy
 	});
 });
 

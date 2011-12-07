@@ -116,6 +116,7 @@ var StateInflator = Backbone.Model.extend({
       this.generateMetadataPersistenceState(responseData);
       this.generateUserInputPersistenceState();
       this.generateUserInputViews();
+      this.generateViewGroups();
     },
 
     generateMetadataPersistenceState: function(responseData) {
@@ -169,6 +170,7 @@ var StateInflator = Backbone.Model.extend({
       var layerFormMDict = {};
       for (dataSetName in this.dataSetDict) {
         var layerFormM = new LayerFormM({'dataSet':this.dataSetDict[dataSetName]});
+
         layerFormM.selectable = this.dataSetDict[dataSetName].get("layers");
         layerFormMDict[dataSetName] = layerFormM;   
       }
@@ -177,7 +179,7 @@ var StateInflator = Backbone.Model.extend({
       var imageFormatFormMDict = {};
       for (dataSetName in this.dataSetDict) {
         var imageFormatFormM = new ImageFormatFormM({'dataSet':this.dataSetDict[dataSetName]});
-     
+  
         imageFormatFormM.selectable= this.dataSetDict[dataSetName].get("imageFormats");
         imageFormatFormMDict[dataSetName] = imageFormatFormM;   
       }
@@ -221,6 +223,22 @@ var StateInflator = Backbone.Model.extend({
       window.dataSetFormV = dataSetFormV;
       window.layerFormVDict = layerFormVDict;
       window.imageFormatFormVDict = imageFormatFormVDict; 
+    },
+
+    generateViewGroups: function () {
+      // Create a View Group for the Layers
+      var layerViewGroup =  new ViewGroupC();
+      for (dataSetName in this.layerFormVDict) {
+        layerViewGroup.add( this.layerFormVDict[dataSetName] );
+        this.layerFormVDict[dataSetName].viewGroup = layerViewGroup;
+      }
+
+      // Create a View Group for the ImageFormats
+      var imageFormatViewGroup =  new ViewGroupC();
+      for (dataSetName in this.imageFormatFormVDict) {
+        imageFormatViewGroup.add( this.imageFormatFormVDict[dataSetName] );
+        this.imageFormatFormVDict[dataSetName].viewGroup = imageFormatViewGroup;
+      }
     }
 
 });

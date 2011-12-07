@@ -57,6 +57,9 @@ var WCSFormM = Backbone.Model.extend({
 		selected: "", 
 	},
 
+	initialize: function() {
+	},
+
 	getURLParameters: function() {
 		var v = {};
 		v[this.get("paramName")] = this.get("selected");
@@ -89,6 +92,18 @@ var LayerFormM = WCSFormM.extend({
 	initialize: function() {
 		this.set({"paramName": "COVERAGE" });
 		this.selectable = new Backbone.Collection();
+
+		this.get("dataSet").bind("paintChildren", jQuery.proxy(function() {
+			this.get("dataSet").trigger('paint');
+		},this));
+
+		this.bind('change', jQuery.proxy(function() {	
+			this.selectable.each(jQuery.proxy(function(m) {
+				if (m.get("name") == this.get("selected")) {
+					m.trigger('paint');
+				}
+			},this));
+		},this));
 	}
 	
 });
@@ -97,6 +112,15 @@ var DataSetFormM = WCSFormM.extend({
 	initialize: function() {
 		this.set({"paramName": "Dataset"});
 		this.selectable = new Backbone.Collection();
+
+		this.bind('change', function() {
+			this.selectable.each(jQuery.proxy(function(m) {
+				if (m.get("name") == this.get("selected")) {
+					m.trigger('paint');
+					m.trigger('paintChildren');
+				}
+			},this));
+		});
 	}
 });
 
@@ -116,6 +140,19 @@ var InterpolationMethodFormM = WCSFormM.extend({
 var ImageFormatFormM = WCSFormM.extend({
 	initialize: function() {
 		this.set({"paramName": "ImageFormat"});
+
+		this.get("dataSet").bind("paintChildren", jQuery.proxy(function() {
+			this.get("dataSet").trigger('paint');
+		},this));
+
+		this.bind('change', jQuery.proxy(function() {
+			this.selectable.each(jQuery.proxy(function(m) {
+				if (m.get("name") == this.get("selected")) {
+					m.trigger('paint');
+				}
+			},this));
+			//this.selectable.get(this.get("selected")).trigger('paint');
+		},this));
 	}
 });
 
@@ -137,76 +174,197 @@ var ImageWidthFormM = WCSFormM.extend({
 var WCSFormV = Backbone.View.extend({
 	intialize: function() {
 		this.enabled = false;	
+	},
+
+	// Change this to be an actual set function that uses a hash parameter
+	set: function(el) {
+			this.el = el;	
+			$(this.el).bind('change', jQuery.proxy(function(e) {
+				if (this.enabled) {
+					var value = $(this.el).find('select').val();
+					this.model.set({selected: value});
+				}
+			},this));
+		},
+
+	disable: function() {
+		this.enabled = false;
 	}
 });
 
 var DataSetFormV = WCSFormV.extend({	
 	initialize: function() {
 		this.enabled = false;	
-		$(this.el).bind("input", jQuery.proxy(function(e) {
-			var el = $(e.currentTarget);
-            this.model.set({"selected":el.val()});
-		},this));
+		
+	},
+
+	render: function() {
+		if (this.enabled) {
+			$(this.el).empty();
+
+			var html ="<select>";
+
+			this.model.selectable.each(jQuery.proxy(function(m) {
+				if (this.model.get("selected") == m.get("name")) {
+					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
+				} else {
+					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
+				}
+			},this));
+			html += "</select>";
+			$(this.el).html(html);
+		}
 	}
 });
 
 var LayerFormV = WCSFormV.extend({	
 	initialize: function() {
 		this.enabled = false;	
-		$(this.el).bind("input", jQuery.proxy(function(e) {
-			var el = $(e.currentTarget);
-            this.model.set({"selected":el.val()});
+
+		this.model.get("dataSet").bind('paint', jQuery.proxy(function() {
+			console.log(this.viewGroup);
+			this.viewGroup.disable();
+			this.enabled = true;
+			this.viewGroup.clear();
+			this.render();
 		},this));
+
+		
+	},
+
+	render: function() {
+		if (this.enabled) {
+			$(this.el).empty();
+
+			var html ="<select>";
+
+			this.model.selectable.each(jQuery.proxy(function(m) {
+				
+				if (this.model.get("selected") == m.get("name")) {
+					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
+				} else {
+					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
+				}
+			},this));
+			html += "</select>";
+			$(this.el).html(html);
+		}
 	}
 });
-
 
 var OutputProjectionFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = false;	
 		$(this.el).bind("input", jQuery.proxy(function(e) {
+		if (this.enabled) {
 			var el = $(e.currentTarget);
             this.model.set({"selected":el.val()});
+        }
 		},this));
 	}
 });
 
 var ImageFormatFormV = WCSFormV.extend({
-	initialize: function() {
-		this.enabled = false;	
-		$(this.el).bind("input", jQuery.proxy(function(e) {
-			var el = $(e.currentTarget);
-            this.model.set({"selected":el.val()});
+	initialize: function(attrs) {
+		_.bindAll(this);
+		if (attrs.el) {
+			this.set(el);
+		}
+
+		this.model.get("dataSet").bind('paint', jQuery.proxy(function() {
+			console.log(this.viewGroup);
+			this.viewGroup.disable();
+			this.enabled = true;
+			this.viewGroup.clear();
+			this.render();
 		},this));
-	}
+
+		this.enabled = false;	
+		
+	},
+
+	render: function() {
+		if (this.enabled) {
+			$(this.el).empty();
+
+			var html ="<select>";
+
+			this.model.selectable.each(jQuery.proxy(function(m) {
+								
+				if (this.model.get("selected") == m.get("name")) {
+					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
+				} else {
+					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
+				}
+			},this));
+			html += "</select>";
+			$(this.el).html(html);
+		}
+	}, 
+
+	
+	
+
+	
 });
 
 var ImageHeightFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = false;	
-		$(this.el).bind("input", jQuery.proxy(function(e) {
-			var el = $(e.currentTarget);
-            this.model.set({"selected":el.val()});
-		},this));
+		
+			$(this.el).bind("input", jQuery.proxy(function(e) {
+				if (this.enabled) {
+				var el = $(e.currentTarget);
+            	this.model.set({"selected":el.val()});
+            }
+			},this));
+			
+
 	}
 });
 
 var ImageWidthFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = false;	
-		$(this.el).bind("input", jQuery.proxy(function(e) {
-			var el = $(e.currentTarget);
-            this.model.set({"selected":el.val()});
-		},this));
+		
+			$(this.el).bind("input", jQuery.proxy(function(e) {
+				if (this.enabled) {
+				var el = $(e.currentTarget);
+       	     this.model.set({"selected":el.val()});
+       	 }
+			},this));
+		
 	}
 });
 
 var InterpolationMethodFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = false;	
-		$(this.el).bind("input", jQuery.proxy(function(e) {
-			var el = $(e.currentTarget);
-            this.model.set({"selected":el.val()});
-		},this));
+		
+			$(this.el).bind("input", jQuery.proxy(function(e) {
+				if (this.enabled) {
+				var el = $(e.currentTarget);
+           	 	this.model.set({"selected":el.val()});
+           	 }
+			},this));
+		
+	}
+});
+
+var ViewGroupC = Backbone.Collection.extend({
+	disable: function(v1) {
+		console.log("ASLDKJASDLKJASD");
+		this.each(function(v) {
+			if (v != v1) {
+				console.log(v);
+				v.attributes.disable(); 
+			}
+		});
+	},
+
+	clear: function() {
+		this.each(function(v) {
+			$(v.attributes.el).empty();
+		});
 	}
 });

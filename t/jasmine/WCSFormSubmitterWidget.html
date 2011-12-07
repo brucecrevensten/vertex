@@ -17,6 +17,7 @@
   <script type="text/javascript" src="../../root/static/js/Dictionary.js"></script>
 	<script type="text/javascript" src="../../root/static/js/MapServerRequest.js"></script>
   <script type="text/javascript" src="../../root/static/js/WCSForm.js"></script>
+
   <script type="text/javascript" src="../javascript/WCSFormSubmitterWidget.js"></script>
 </head>
 <body>
@@ -25,17 +26,21 @@
  
   <form name="form1" id="form1">
         <label for="dataset" class="WCSfields" id="dataSetField">Data Set</label>
-        <input type="select" name="dataset" id="dataset" class="WCSfields"  /><br />
-        <label for="imgW" class="WCSfields">Image Width</label>
-        <input type="text" name="imgW" id="imgW" class="WCSfields"  /><br />
+        <div name="dataset" id="dataset" class="WCSfields"  /></div><br />
+
+        <label for="dataset" class="WCSfields" id="layerSetField">Layer</label>
+        <div name="layer" id="layer" class="WCSfields"  /></div><br />
+    <!--    <label for="imgW" class="WCSfields">Image Width</label>
+        <input type="text" name="imgW" id="imgW" class="WCSfields"  /><br /> 
         <label for="imgH" class="WCSfields">Image Height</label>
-        <input type="text" name="imgH" id="imgH" class="WCSfields"  /><br />
+        <input type="text" name="imgH" id="imgH" class="WCSfields"  /><br /> -->
         <label for="imgF" class="WCSfields">Image Format</label>
-        <input type="text" name="imgF" id="imgF" class="WCSfields"  /><br />
-        <label for="interp" class="WCSfields">Interpolation Method</label>
+        <div name="imgF" id="imageFormat" class="WCSfields"  /></div><br />
+       
+       <!-- <label for="interp" class="WCSfields">Interpolation Method</label>
         <input type="text" name="interp" id="interp" class="WCSfields"  /><br />
         <label for="outProj" class="WCSfields">Output Projection</label>
-        <input type="text" name="outProj" id="outProj" class="WCSfields"  /><br />
+        <input type="text" name="outProj" id="outProj" class="WCSfields"  /><br /> -->
     </form>
 
 </div><br />
