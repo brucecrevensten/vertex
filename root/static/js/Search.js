@@ -465,6 +465,20 @@ var DateWidget = BaseWidget.extend(
         $('#season_start').trigger('change');
         $('#season_end').trigger('change');
       }
+      
+      if(target.attr('id') == 'season_start') {
+        var emon = $('#season_end option:selected').val();
+        var months = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+        $('#season_end').empty();
+        var smon = parseInt($('#season_start option:selected').val()) - 1;
+        for(var ii = 0; ii < 12; ++ii) {
+          $('#season_end').append($("<option></option>").
+            attr("value", (smon + ii) % 12 + 1).
+            text(months[((smon + ii) % 12)])
+          );
+        }
+        $('#season_end option[value="'+emon+'"]').attr('selected', true);
+      }
 
       if(target.attr('name') != null) {
         data[target.attr('name')] = target.attr('value');
@@ -484,8 +498,8 @@ var DateWidget = BaseWidget.extend(
       <label id="label_filter_end" for="filter_end">End date (YYYY-MM-DD)</label><input type="text" id="filter_end" name="end" value="<%= end %>"><br /><br />\
       </div>\
       <table id="seasonal_search" style="width: 100%"><tr><td>\
-      <select id="season_start" style="width: 100%"><option value="01">Jan<option value="02">Feb<option value="03">Mar<option value="04">Apr<option value="05">May<option value="06">Jun<option value="07">Jul<option value="08">Aug<option value="09">Sep<option value="10">Oct<option value="11">Nov<option value="12">Dec</select></td><td style="width: 20%"><center>to</center></td><td>\
-      <select id="season_end" style="width: 100%"><option value="01">Jan<option value="02">Feb<option value="03">Mar<option value="04">Apr<option value="05">May<option value="06">Jun<option value="07">Jul<option value="08">Aug<option value="09">Sep<option value="10">Oct<option value="11">Nov<option value="12">Dec</select></td></tr><tr><td>\
+      <select id="season_start" style="width: 100%"><option value="1">Jan<option value="2">Feb<option value="3">Mar<option value="4">Apr<option value="5">May<option value="6">Jun<option value="7">Jul<option value="8">Aug<option value="9">Sep<option value="10">Oct<option value="11">Nov<option value="12">Dec</select></td><td style="width: 20%"><center>to</center></td><td>\
+      <select id="season_end" style="width: 100%"></select></td></tr><tr><td>\
       <select id="repeat_start" style="width: 100%">\
       </select></td><td style="width: 20%"><center>to</center></td><td>\
       <select id="repeat_end" style="width: 100%">\
@@ -521,6 +535,16 @@ var DateWidget = BaseWidget.extend(
 
     $(this.el).find('#repeat_start option:first').attr('selected', true);
     $(this.el).find('#repeat_end option:last').attr('selected', true);
+    
+    var months = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+    $(this.el).find('#season_end').empty();
+    var smon = parseInt($('#season_start option:selected').val()) - 1;
+    for(var ii = 0; ii < 12; ++ii) {
+      $('#season_end').append($("<option></option>").
+        attr("value", (smon + ii) % 12 + 1).
+        text(months[((smon + ii) % 12)])
+      );
+    }
     
     return this;
   },
