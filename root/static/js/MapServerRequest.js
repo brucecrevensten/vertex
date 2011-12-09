@@ -94,6 +94,11 @@ var RequestGenerator = Backbone.Collection.extend(
 var StateInflator = Backbone.Model.extend({
     initialize: function() {
       _.bindAll(this);
+      this.menuToggleList = {};
+      window.menuToggleList = {};
+      this.menu = {};
+      window.menu = {};
+
     },
     inflate: function(requestURL) {
         var xhr = $.ajax(
@@ -147,8 +152,6 @@ var StateInflator = Backbone.Model.extend({
           var interpolation = new InterpolationMethodM({name: ds["InterpolationMethod"][interpolationMethodIndex]});
           interpolationMethodCollection.add(interpolation);
         }
-
-        console.log(interpolationMethodCollection);
         
         // Initialize the Dataset
         dataSetM.set({
@@ -199,53 +202,20 @@ var StateInflator = Backbone.Model.extend({
         return menu
     },
 
-   generateCombinantMenu: function() {
-        //this.menuToggleList = {};
-  /*
-        for (dataSetName in this.dataSetDict) {
-          var layerFormM = new LayerFormM({menuModel: this.dataSetDict[dataSetName]});
-          var layerFormV = new LayerFormV({model: layerFormM, menuModel: this.dataSetDict[dataSetName]});
+    generateCombinantMenu: function() {
+        this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"});
+        this.menuFactory('IMAGEFORMATS', this.dataSetDict, "imageFormats", {"paramName":"ImageFormat"});
+        this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"ImageFormat"});
+    },
 
+    menuFactory: function(menuName, dictionary, selectableKey, defaults) {
+      var menu = this.createMenu(dictionary, selectableKey, defaults);
+      this.menu[menuName] = menu;
+      this.menuToggleList[menuName] = menu.get("menuToggleList");
+      window.menuToggleList[menuName] = this.menuToggleList[menuName];
+      window.menu = this.menu; 
+    },
 
-          var menuToggleLayer = new MenuToggle({
-            name: dataSetName,
-            selectable: this.dataSetDict[dataSetName].get("layers"),
-            menuModel:  this.dataSetDict[dataSetName],
-            menuForm:   layerFormM,
-            menuView:   layerFormV,
-          });
-
-          this.menuToggleList[dataSetName] = menuToggleLayer;
-        }
-
-        var menu = new CombinantMenuToggle({
-            "menuToggleList": this.menuToggleList
-        });
-
-        console.log("Constructed Combinant menu");
-*/
-      console.log("ALSKDJLAKSJD");
-        var menuLayer = this.createMenu(this.dataSetDict, "layers", {"paramName":"COVERAGE"});
-        this.menuLayer = menuLayer;
-        this.menuToggleListLayer = menuLayer.get("menuToggleList");
-        window.menuToggleListLayer = this.menuToggleListLayer;
-        window.menuLayer = this.menuLayer; 
-
-        var menuImageFormat = this.createMenu(this.dataSetDict, "imageFormats", {"paramName":"ImageFormat"});
-        this.menuImageFormat = menuImageFormat;
-        this.menuToggleListImageFormat = menuImageFormat.get("menuToggleList");
-        window.menuToggleListImageFormat = this.menuToggleListImageFormat;
-        window.menuImageFormat = this.menuImageFormat; 
-
-        var menuInterpolationMethod = this.createMenu(this.dataSetDict, "interpolationMethod", {"paramName":"ImageFormat"});
-        this.menuInterpolationMethod = menuInterpolationMethod;
-        this.menuToggleListInterpolationMethod = menuInterpolationMethod.get("menuToggleList");
-        window.menuToggleListInterpolationMethod = this.menuToggleListInterpolationMethod;
-        window.menuInterpolationMethod = this.menuInterpolationMethod; 
-
-      },
-
-    // Implement exception handling because this function depends on the one above working 
     generateUserInputPersistenceState: function() {
       // Add each of the DataSet models to the DataSetForm 
       var dataSetFormM = new DataSetFormM();

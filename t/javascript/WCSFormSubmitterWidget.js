@@ -51,29 +51,30 @@ $(function() {
 
 	infl.dataSetFormM.view.set($("#dataset"));
 
+	console.log(window);
 	// Layer
 	for (dataSetName in dataSetDict) {
-		menuToggleListLayer[dataSetName].menuView.set($("#layer"));
+		menuToggleList["LAYERS"][dataSetName].menuView.set($("#layer"));
 	}
-	menuToggleListLayer["Alaska"].menuView.enabled = true;
-	menuToggleListLayer["Alaska"].menuForm.set({"selected":"Alaska"});
-	menuToggleListLayer["Alaska"].menuView.render();
+	menuToggleList["LAYERS"]["Alaska"].menuView.enabled = true;
+	menuToggleList["LAYERS"]["Alaska"].menuForm.set({"selected":"Alaska"});
+	menuToggleList["LAYERS"]["Alaska"].menuView.render();
 
 	// Image Format
 	for (dataSetName in dataSetDict) {
-		menuToggleListImageFormat[dataSetName].menuView.set($("#imageFormat"));
+		menuToggleList["IMAGEFORMATS"][dataSetName].menuView.set($("#imageFormat"));
 	}
-	menuToggleListImageFormat["Alaska"].menuView.enabled = true;
-	menuToggleListImageFormat["Alaska"].menuForm.set({"selected":"Alaska"});
-	menuToggleListImageFormat["Alaska"].menuView.render();
+	menuToggleList["IMAGEFORMATS"]["Alaska"].menuView.enabled = true;
+	menuToggleList["IMAGEFORMATS"]["Alaska"].menuForm.set({"selected":"Alaska"});
+	menuToggleList["IMAGEFORMATS"]["Alaska"].menuView.render();
 
 	// Interpolation Method
 	for (dataSetName in dataSetDict) {
-		menuToggleListInterpolationMethod[dataSetName].menuView.set($("#interpolation"));
+		menuToggleList["INTERPOLATION"][dataSetName].menuView.set($("#interpolation"));
 	}
-	menuToggleListInterpolationMethod["Alaska"].menuView.enabled = true;
-	menuToggleListInterpolationMethod["Alaska"].menuForm.set({"selected":"Alaska"});
-	menuToggleListInterpolationMethod["Alaska"].menuView.render();
+	menuToggleList["INTERPOLATION"]["Alaska"].menuView.enabled = true;
+	menuToggleList["INTERPOLATION"]["Alaska"].menuForm.set({"selected":"Alaska"});
+	menuToggleList["INTERPOLATION"]["Alaska"].menuView.render();
 
 	dataSetFormM.view.enabled = true;
 	dataSetFormM.set({"selected":"Alaska"});
@@ -82,7 +83,22 @@ $(function() {
 
 
 	window.infl = infl;
-	
+
+
+/*
+	var server2;
+
+	server2 = sinon.fakeServer.create();
+
+	server2.respondWith("POST", "/fakeURL2",
+	           [200, { "Content-Type": "application/json" },
+	            JSON.stringify(
+		        {"SUCCESS":"SUCESS"})]);
+
+
+	fl[0] = 
+
+	*/
 /*
 	fl[0] = new DataSetFormM();
 	fl[1] = new OutputProjectionFormM();
