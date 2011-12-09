@@ -45,55 +45,25 @@ $(function() {
 
 	server.respond(); 
 	
-	//console.log(infl.dataSetFormM);
 
 	infl.dataSetFormM.view.set($("#dataset"));
 
-
-	//_.each(infl.layerFormMDict, function(layerFormM, layerName) {
-		//layerFormM.view.set($("#layer"));
-
-	//});
-
 	for (dataSetName in dataSetDict) {
-		//console.log(dataSetName);
 		menuToggleList[dataSetName].menuView.set($("#layer"));
-		//console.log("ASLKDJALSD");
 	}
 
-	/*_.each(infl.imageFormatFormMDict, function(imageFormatFormM, imageFormatName) {
-		imageFormatFormM.view.set($("#imageFormat"));
-	});
-*/
-
-	//console.log(menuToggleList["Alaska"].menuView.render);
 	menuToggleList["Alaska"].menuView.enabled = true;
-	//menuToggleList["Alaska"].menuView.set($("#layer"));
 	menuToggleList["Alaska"].menuForm.set({"selected":"Alaska"});
 	menuToggleList["Alaska"].menuView.render();
 
-
-	//var alaskaMenuToggle = new MenuToggle({
-		
-	//});
-
 	dataSetFormM.view.enabled = true;
 	dataSetFormM.set({"selected":"Alaska"});
-	//layerFormMDict["Alaska"].view.enabled = true;
-	//layerFormMDict["Alaska"].set({"selected":"Alaska"});
-	////imageFormatFormMDict["Alaska"].view.enabled = true;
-	/////imageFormatFormMDict["Alaska"].set({"selected":"Alaska"});
 
 	dataSetFormM.view.render();
-	//layerFormMDict["Alaska"].view.render();
-	////imageFormatFormMDict["Alaska"].view.render();
-
-
-
-
 
 
 	window.infl = infl;
+	
 /*
 	fl[0] = new DataSetFormM();
 	fl[1] = new OutputProjectionFormM();

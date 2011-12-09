@@ -115,13 +115,8 @@ var StateInflator = Backbone.Model.extend({
     process: function(responseData) {
       this.generateMetadataPersistenceState(responseData);
       this.generateUserInputPersistenceState();
-
       this.generateUserInputViews();
-
-
-      this.generateViewGroups();
-
-            this.generateCombinantMenu();
+      this.generateCombinantMenu();
     },
 
     generateMetadataPersistenceState: function(responseData) {
@@ -180,7 +175,6 @@ var StateInflator = Backbone.Model.extend({
           });
 
           this.menuToggleList[dataSetName] = menuToggleLayer;
-
         }
 
         var menu = new CombinantMenuToggle({
@@ -193,28 +187,6 @@ var StateInflator = Backbone.Model.extend({
        
         window.menuToggleList = this.menuToggleList;
         window.menu = this.menu; 
-
-
-
-    /*    var menuToggleLayer = new MenuToggle({
-            menuForm:   layerFormM,
-            menuModel:  this.dataSetDict[dataSetName],
-            menuView:   new LayerFormV({model: this.layerFormMDict[dataSetName]}),
-         });
-
-         menuToggleList.push(menuToggleLayer);
-         menuToggleList.push(menuToggleImageFormat);
-
-         dataSetNames = new Backbone.Collection();
-         for (dataSetName in this.dataSetDict) {
-           dataSetNames.push(menuToggleLayer);
-         }
-
-
-         var menu = new CombinantMenuToggle({
-           menuForm: new DataSetFormM(),
-         })*/
-
       },
 
     // Implement exception handling because this function depends on the one above working 
@@ -225,86 +197,16 @@ var StateInflator = Backbone.Model.extend({
         dataSetFormM.selectable.add( this.dataSetDict[dataSetName] );
       }
 
-/*      // For each of the DataSets create a LayerForm 
-      var layerFormMDict = {};
-      for (dataSetName in this.dataSetDict) {
-        var layerFormM = new LayerFormM({'menuModel':this.dataSetDict[dataSetName]});
-
-        layerFormM.selectable = this.dataSetDict[dataSetName].get("layers");
-        layerFormMDict[dataSetName] = layerFormM;   
-      }
-*/
-      // For each of the DataSets create an ImageFormatForm 
-   /*   var imageFormatFormMDict = {};
-      for (dataSetName in this.dataSetDict) {
-        var imageFormatFormM = new ImageFormatFormM({'menuModel':this.dataSetDict[dataSetName]});
-  
-        imageFormatFormM.selectable= this.dataSetDict[dataSetName].get("imageFormats");
-        imageFormatFormMDict[dataSetName] = imageFormatFormM;   
-      }*/
-
       this.dataSetFormM = dataSetFormM;
-   //   this.layerFormMDict = layerFormMDict;
-   //   this.imageFormatFormMDict = imageFormatFormMDict;
-
       window.dataSetFormM = dataSetFormM;
-    //  window.layerFormMDict = layerFormMDict;
-    //  window.imageFormatFormMDict = imageFormatFormMDict; 
     },
 
     generateUserInputViews: function() {
       // Generate a View for each dataset
       var dataSetFormV = new DataSetFormV({model: this.dataSetFormM });
-
-
       this.dataSetFormM.view = dataSetFormV;
-
-
-
-      // Generate a View for each Layer Set
- /*     var layerFormVDict = {};
-      for (dataSetName in this.dataSetDict) {
-        var layerFormV = new LayerFormV({model: this.layerFormMDict[dataSetName]});
-        this.layerFormMDict[dataSetName].view = layerFormV;
-          
-        layerFormVDict[dataSetName] = layerFormV;   
-      }
-  */
-      // For each of the DataSets create an ImageFormatForm 
-    ////  var imageFormatFormVDict = {};
-
-   //   for (dataSetName in this.dataSetDict) {
-     
-   //     var imageFormatFormV = new ImageFormatFormV({model: this.imageFormatFormMDict[dataSetName]});
-   //     this.imageFormatFormMDict[dataSetName].view = imageFormatFormV;
-   //     imageFormatFormVDict[dataSetName] = imageFormatFormV;   
-   //   }
-  
-
       this.dataSetFormV = dataSetFormV;
-  //    this.layerFormVDict = layerFormVDict;
-   //   this.imageFormatFormVDict = imageFormatFormVDict;
-     
       window.dataSetFormV = dataSetFormV;
-  //    window.layerFormVDict = layerFormVDict;
-   //   window.imageFormatFormVDict = imageFormatFormVDict; 
-    },
-
-    generateViewGroups: function () {
-      // Create a View Group for the Layers
-  /*    var layerViewGroup =  new ViewGroupC();
-      for (dataSetName in this.layerFormVDict) {
-        layerViewGroup.add( this.layerFormVDict[dataSetName] );
-        this.layerFormVDict[dataSetName].viewGroup = layerViewGroup;
-      }
-*/
-      // Create a View Group for the ImageFormats
-    /*  var imageFormatViewGroup =  new ViewGroupC();
-      for (dataSetName in this.imageFormatFormVDict) {
-        imageFormatViewGroup.add( this.imageFormatFormVDict[dataSetName] );
-        this.imageFormatFormVDict[dataSetName].viewGroup = imageFormatViewGroup;
-      }
-      */
     }
 
 });

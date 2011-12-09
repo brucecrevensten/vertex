@@ -206,20 +206,6 @@ var MenuToggleSelectViewV = MenuToggleViewV.extend({
 	}
 });
 
-/*
-var MenuToggleViewGroupV = MenuToggleViewV.extend({
-	initialize: function() {
-		MenuToggleViewV.prototype.initialize.call(this);
-*/
-	/*	this.model.get("menuModel").bind('paint', jQuery.proxy(function() {
-			this.viewGroup.disable();
-			this.enabled = true;
-			this.viewGroup.clear();
-			this.render();
-		},this));*/
-	/*}
-});*/
-
 var DataSetFormV = MenuToggleSelectViewV.extend({	
 });
 
@@ -263,7 +249,6 @@ var ViewGroupC = Backbone.Collection.extend({
 
 	clear: function() {
 		this.each(function(v) {
-			//console.log(v.attributes.el);
 			$(v.attributes.el).empty();
 		});
 	}
@@ -283,7 +268,6 @@ var MenuToggle = Backbone.Model.extend({
 
 var CombinantMenuToggle = Backbone.Model.extend({
 	initialize: function(attrs) {
-
 		this.setupGroup(attrs);
 	},
 
@@ -292,10 +276,7 @@ var CombinantMenuToggle = Backbone.Model.extend({
 	},
 
 	setupGroup: function(attrs) {
-		console.log("Setup Group");
-		//console.log(attrs);
 		if (attrs.menuToggleList) {
-			//console.log(attrs.menuToggleList);
 			this.menuToggleList = attrs.menuToggleList;
 		
 			var group = new ViewGroupC();
@@ -304,27 +285,6 @@ var CombinantMenuToggle = Backbone.Model.extend({
 				group.add(this.menuToggleList[name].menuView);
 				this.menuToggleList[name].menuView.viewGroup = group;
 			}
-
-		/*	console.log("GONNA BIND");
-			for (name in this.menuToggleList) {
-
-				console.log(this.menuToggleList[name].menuView.model.get("menuModel") );
-
-				var thisMenuView = this.menuToggleList[name].menuView;
-
-				this.menuToggleList[name].menuView.model.get("menuModel").bind('paint', function() {
-					console.log("painting view");
-					//console.log(this.menuToggleList[name].menuView.viewGroup.disable());
-					
-					//this.menuToggleList[name].menuView.viewGroup.disable(this.menuToggleList[name].menuView);
-
-				//	console.log("GOING TO ENABLE " + name);
-	//				this.menuToggleList[name].menuView.enabled = true;
-				//	this.menuToggleList[name].menuView.viewGroup.clear();
-	//				this.menuToggleList[name].menuView.render();
-				});
-			}*/
-			
 		}
 	}
 });
