@@ -1,63 +1,57 @@
 /**** Form Element Models *****************************/
 // The purpose of these models are to store metadata
 ////
+
 var DataSetM = Backbone.Model.extend({
-	defaults: {		
-		name: "",	// Name of the Dataset that will be displayed in a dropdownish menu
-		selectedLayer: "",	// Name of the layer that is selected
-		layers: null,		// list of layers that will populate a dropdownish menu,
-		imageFormats: null
-	}, 
-	intialize: function() {
-		
-	}
+	defaults: { name: "" }, 
 });
 
-var LayerM = Backbone.Model.extend({
-	defaults: {
-		name: ""
-
-	},
-	initialize: function() {
-		
-	}
+var LayerM = Backbone.Model.extend({ 
+	defaults: { name: "" },
 });
 
 var OutputProjectionM = Backbone.Model.extend({
-	defaults: {
-		name: ""
-	},
-	initialize: function() {
-	}
+	defaults: { name: "" },
 });
 
 var InterpolationMethodM = Backbone.Model.extend({
-	defaults: {
-		name: ""	
-	},
-	initialize: function() {
-	}
+	defaults: { name: "" },
 });
 
 var ImageFormatM = Backbone.Model.extend({
-	defaults: {
-		name: ""
-	},
-	initialize: function() {
-	}
+	defaults: { name: "" },
 });
 
 /*** Form Models ********************************/
 // The purpose of a form model is to persist data associated with user input
 // It also associates the user input data with internal meta data (Form element models)
 /**** */
-var WCSFormM = Backbone.Model.extend({
+
+// Expects a menuModel
+var MenuToggleFormM = Backbone.Model.extend({
 	defaults: {
 		paramName: "",
 		selected: "", 
+		selectable: new Backbone.Collection(),
+		menuModel: null
 	},
 
-	initialize: function() {
+	initialize: function(attrs) {
+		//this.selectable = new Backbone.Collection();
+
+		this.bindMenuModel(attrs);
+
+		this.bind('change', jQuery.proxy(function() {	
+			this.selectable.each(jQuery.proxy(function(m) {
+				if (m.get("name") == this.get("selected")) {
+					
+					this.menuModel.trigger('paint');
+
+					
+				//	m.trigger('paint');
+				}
+			},this));
+		},this));
 	},
 
 	getURLParameters: function() {
@@ -67,6 +61,7 @@ var WCSFormM = Backbone.Model.extend({
 	},
 
 	validate: function(attrs) {
+		this.bindMenuModel(attrs);
 		if (attrs.selected != undefined) {
 			if (this.selectable != undefined && this.selectable != null) {
 					var hasAttr = false;
@@ -79,43 +74,32 @@ var WCSFormM = Backbone.Model.extend({
 					if (hasAttr == false) {
 						return "Unavailable option";
 					}
-					
 			}
 		}
 		
-	}
-});
-
-var LayerFormM = WCSFormM.extend({
-	defaults: {
 	},
-	initialize: function() {
-		this.set({"paramName": "COVERAGE" });
-		this.selectable = new Backbone.Collection();
 
-		this.get("dataSet").bind("paintChildren", jQuery.proxy(function() {
-			this.get("dataSet").trigger('paint');
-		},this));
-
-		this.bind('change', jQuery.proxy(function() {	
-			this.selectable.each(jQuery.proxy(function(m) {
-				if (m.get("name") == this.get("selected")) {
-					m.trigger('paint');
-				}
+	bindMenuModel: function(attrs) {
+		if (attrs.menuModel) {
+			this.menuModel = attrs.menuModel;
+			this.menuModel.bind("paintChildren", jQuery.proxy(function() {
+				console.log("Menu Form Trigger paint");
+				this.get("menuModel").trigger('paint');
 			},this));
-		},this));
+		}
 	}
-	
 });
 
-var DataSetFormM = WCSFormM.extend({
+
+var MenuToggleSwitchM = Backbone.Model.extend({
 	initialize: function() {
-		this.set({"paramName": "Dataset"});
+		//this.set({"paramName": "Dataset"});
 		this.selectable = new Backbone.Collection();
 
 		this.bind('change', function() {
 			this.selectable.each(jQuery.proxy(function(m) {
 				if (m.get("name") == this.get("selected")) {
+					console.log("Triggering paint on " + m.get("name"));
 					m.trigger('paint');
 					m.trigger('paintChildren');
 				}
@@ -124,56 +108,48 @@ var DataSetFormM = WCSFormM.extend({
 	}
 });
 
-var OutputProjectionFormM = WCSFormM.extend({
-	initialize: function() {
-		this.set({"paramName": "OutputProjection"});
-
-	}
+var DataSetFormM = MenuToggleSwitchM.extend({
+	defaults: {"paramName": "Dataset"}
+	
 });
 
-var InterpolationMethodFormM = WCSFormM.extend({
-	initialize: function() {
-		this.set({"paramName": "InterpolationMethod"});
-	}
+var LayerFormM = MenuToggleFormM.extend({
+	defaults: { "paramName": "COVERAGE" }
+	
 });
 
-var ImageFormatFormM = WCSFormM.extend({
-	initialize: function() {
-		this.set({"paramName": "ImageFormat"});
-
-		this.get("dataSet").bind("paintChildren", jQuery.proxy(function() {
-			this.get("dataSet").trigger('paint');
-		},this));
-
-		this.bind('change', jQuery.proxy(function() {
-			this.selectable.each(jQuery.proxy(function(m) {
-				if (m.get("name") == this.get("selected")) {
-					m.trigger('paint');
-				}
-			},this));
-			//this.selectable.get(this.get("selected")).trigger('paint');
-		},this));
-	}
+var OutputProjectionFormM = MenuToggleFormM.extend({
+	defaults: {"paramName": "OutputProjection"}
 });
 
-var ImageHeightFormM = WCSFormM.extend({
-	initialize: function() {
-		this.set({"paramName": "ImageHeight"});
-	}
+var InterpolationMethodFormM = MenuToggleFormM.extend({
+	defaults: {"paramName": "InterpolationMethod"},
+	
 });
 
-var ImageWidthFormM = WCSFormM.extend({
-	initialize: function() {
-		this.set({"paramName": "ImageWidth"});
-	}
+var ImageFormatFormM = MenuToggleFormM.extend({
+	defaults: {"paramName": "ImageFormat"}
+});
+
+var ImageHeightFormM = MenuToggleFormM.extend({
+	defaults: {"paramName": "ImageHeight"}
+});
+
+var ImageWidthFormM = MenuToggleFormM.extend({
+	defaults: {"paramName": "ImageWidth"}
 });
 
 /**** Form Views ******************************/
 // The purpose of the form views are to update the form models 
 // with user input and render html elements representing the form models
-var WCSFormV = Backbone.View.extend({
-	intialize: function() {
+
+
+//// Menu Toggle Views ////////////
+var MenuToggleViewV = Backbone.View.extend({
+	initialize: function(attrs) {
 		this.enabled = false;	
+		//console.log("INIT VIEW");
+		this.bindMenuModel(attrs);
 	},
 
 	// Change this to be an actual set function that uses a hash parameter
@@ -189,15 +165,28 @@ var WCSFormV = Backbone.View.extend({
 
 	disable: function() {
 		this.enabled = false;
+	},
+
+	validate: function(attrs) {
+		this.bindMenuMode(attrs);
+	},
+
+	bindMenuModel: function(attrs) {
+		if (attrs.menuModel) {
+			this.menuModel = attrs.menuModel;
+			
+			this.menuModel.bind('paint', jQuery.proxy(function() {
+				console.log("paint view");
+				this.viewGroup.disable();
+				this.enabled = true;
+				this.viewGroup.clear();
+				this.render();
+			},this));
+		}
 	}
 });
 
-var DataSetFormV = WCSFormV.extend({	
-	initialize: function() {
-		this.enabled = false;	
-		
-	},
-
+var MenuToggleSelectViewV = MenuToggleViewV.extend({
 	render: function() {
 		if (this.enabled) {
 			$(this.el).empty();
@@ -217,97 +206,131 @@ var DataSetFormV = WCSFormV.extend({
 	}
 });
 
-var LayerFormV = WCSFormV.extend({	
+/*
+var MenuToggleViewGroupV = MenuToggleViewV.extend({
 	initialize: function() {
-		this.enabled = false;	
-
-		this.model.get("dataSet").bind('paint', jQuery.proxy(function() {
-			console.log(this.viewGroup);
+		MenuToggleViewV.prototype.initialize.call(this);
+*/
+	/*	this.model.get("menuModel").bind('paint', jQuery.proxy(function() {
 			this.viewGroup.disable();
 			this.enabled = true;
 			this.viewGroup.clear();
 			this.render();
-		},this));
+		},this));*/
+	/*}
+});*/
 
-		
+var DataSetFormV = MenuToggleSelectViewV.extend({	
+});
+
+
+var LayerFormV = MenuToggleSelectViewV.extend({
+	/*initialize: function() {
+		MenuToggleViewV.prototype.initialize.call(this);
+		this.render = MenuToggleSelectViewV.prototype.render;	
+	}*/
+});
+
+var OutputProjectionFormV = MenuToggleSelectViewV.extend({
+	/*initialize: function() {
+		MenuToggleViewV.prototype.initialize.call(this);
+		//this.render = MenuToggleSelectViewV.prototype.render;	
+	}*/
+});
+
+var ImageFormatFormV = MenuToggleSelectViewV.extend({
+	/*initialize: function() {
+		MenuToggleViewV.prototype.initialize.call(this);
+		this.render = MenuToggleSelectViewV.prototype.render;	
+	}*/
+});
+
+var InterpolationMethodFormV = MenuToggleSelectViewV.extend({
+	/*initialize: function() {
+		MenuToggleViewV.prototype.initialize.call(this);
+		this.render = MenuToggleSelectViewV.prototype.render;	
+	}*/
+});
+
+var ViewGroupC = Backbone.Collection.extend({
+	disable: function(v1) {
+		this.each(function(v) {
+			if (v != v1) {
+				v.attributes.disable(); 
+			}
+		});
 	},
 
-	render: function() {
-		if (this.enabled) {
-			$(this.el).empty();
-
-			var html ="<select>";
-
-			this.model.selectable.each(jQuery.proxy(function(m) {
-				
-				if (this.model.get("selected") == m.get("name")) {
-					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
-				} else {
-					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
-				}
-			},this));
-			html += "</select>";
-			$(this.el).html(html);
-		}
+	clear: function() {
+		this.each(function(v) {
+			//console.log(v.attributes.el);
+			$(v.attributes.el).empty();
+		});
 	}
 });
 
-var OutputProjectionFormV = WCSFormV.extend({
-	initialize: function() {
-		this.enabled = false;	
-		$(this.el).bind("input", jQuery.proxy(function(e) {
-		if (this.enabled) {
-			var el = $(e.currentTarget);
-            this.model.set({"selected":el.val()});
-        }
-		},this));
-	}
-});
-
-var ImageFormatFormV = WCSFormV.extend({
+// Requires that menuForm, menuModel, and menuView are supplied
+var MenuToggle = Backbone.Model.extend({
 	initialize: function(attrs) {
-		_.bindAll(this);
-		if (attrs.el) {
-			this.set(el);
-		}
-
-		this.model.get("dataSet").bind('paint', jQuery.proxy(function() {
-			console.log(this.viewGroup);
-			this.viewGroup.disable();
-			this.enabled = true;
-			this.viewGroup.clear();
-			this.render();
-		},this));
-
-		this.enabled = false;	
-		
+		this.menuForm = attrs.menuForm;
+		this.menuModel = attrs.menuModel;
+		this.menuView = attrs.menuView;
+		this.selectable = attrs.selectable;
+		this.menuForm.selectable = this.selectable;
 	},
 
-	render: function() {
-		if (this.enabled) {
-			$(this.el).empty();
-
-			var html ="<select>";
-
-			this.model.selectable.each(jQuery.proxy(function(m) {
-								
-				if (this.model.get("selected") == m.get("name")) {
-					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
-				} else {
-					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
-				}
-			},this));
-			html += "</select>";
-			$(this.el).html(html);
-		}
-	}, 
-
-	
-	
-
-	
 });
 
+var CombinantMenuToggle = Backbone.Model.extend({
+	initialize: function(attrs) {
+
+		this.setupGroup(attrs);
+	},
+
+	validate: function(attrs) {
+		this.setupGroup(attrs);
+	},
+
+	setupGroup: function(attrs) {
+		console.log("Setup Group");
+		//console.log(attrs);
+		if (attrs.menuToggleList) {
+			//console.log(attrs.menuToggleList);
+			this.menuToggleList = attrs.menuToggleList;
+		
+			var group = new ViewGroupC();
+	
+			for (name in this.menuToggleList) {
+				group.add(this.menuToggleList[name].menuView);
+				this.menuToggleList[name].menuView.viewGroup = group;
+			}
+
+		/*	console.log("GONNA BIND");
+			for (name in this.menuToggleList) {
+
+				console.log(this.menuToggleList[name].menuView.model.get("menuModel") );
+
+				var thisMenuView = this.menuToggleList[name].menuView;
+
+				this.menuToggleList[name].menuView.model.get("menuModel").bind('paint', function() {
+					console.log("painting view");
+					//console.log(this.menuToggleList[name].menuView.viewGroup.disable());
+					
+					//this.menuToggleList[name].menuView.viewGroup.disable(this.menuToggleList[name].menuView);
+
+				//	console.log("GOING TO ENABLE " + name);
+	//				this.menuToggleList[name].menuView.enabled = true;
+				//	this.menuToggleList[name].menuView.viewGroup.clear();
+	//				this.menuToggleList[name].menuView.render();
+				});
+			}*/
+			
+		}
+	}
+});
+
+/** Not sure about these ones yet ***/
+/*
 var ImageHeightFormV = WCSFormV.extend({
 	initialize: function() {
 		this.enabled = false;	
@@ -336,35 +359,6 @@ var ImageWidthFormV = WCSFormV.extend({
 		
 	}
 });
+*/
+/*****************************/
 
-var InterpolationMethodFormV = WCSFormV.extend({
-	initialize: function() {
-		this.enabled = false;	
-		
-			$(this.el).bind("input", jQuery.proxy(function(e) {
-				if (this.enabled) {
-				var el = $(e.currentTarget);
-           	 	this.model.set({"selected":el.val()});
-           	 }
-			},this));
-		
-	}
-});
-
-var ViewGroupC = Backbone.Collection.extend({
-	disable: function(v1) {
-		console.log("ASLDKJASDLKJASD");
-		this.each(function(v) {
-			if (v != v1) {
-				console.log(v);
-				v.attributes.disable(); 
-			}
-		});
-	},
-
-	clear: function() {
-		this.each(function(v) {
-			$(v.attributes.el).empty();
-		});
-	}
-});
