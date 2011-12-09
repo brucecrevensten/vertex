@@ -13,19 +13,22 @@ $(function() {
 					        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
 					        "wcsUrl": "/AustrailiaURL",
 					        "wmsUrl": "/AustrailiaURL2",
-					        "ImageFormat": ["JPEG", "BMP", "TIFF"]
+					        "ImageFormat": ["JPEG", "BMP", "TIFF"],
+					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"]
 					    },
 					    "Alaska": {
 					        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
 					        "wcsUrl": "/AlaskaURL",
 					        "wmsUrl": "/AlaskaURL2",
-					        "ImageFormat": ["BMP", "GEOTIFF"]
+					        "ImageFormat": ["BMP", "GEOTIFF"],
+					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ]
 					    },
 					    "Africa": {
 					        "layers": ["AfricaLayer1"],
 					        "wcsUrl": "/AfricaURL",
 					        "wmsUrl": "/AfricaURL2",
-					        "ImageFormat": ["GEOTIFF"]
+					        "ImageFormat": ["GEOTIFF"],
+					         "InterpolationMethod": ["BILINEAR", "TIME FIRST"]
 					    }
 				    },
 
@@ -48,13 +51,29 @@ $(function() {
 
 	infl.dataSetFormM.view.set($("#dataset"));
 
+	// Layer
 	for (dataSetName in dataSetDict) {
-		menuToggleList[dataSetName].menuView.set($("#layer"));
+		menuToggleListLayer[dataSetName].menuView.set($("#layer"));
 	}
+	menuToggleListLayer["Alaska"].menuView.enabled = true;
+	menuToggleListLayer["Alaska"].menuForm.set({"selected":"Alaska"});
+	menuToggleListLayer["Alaska"].menuView.render();
 
-	menuToggleList["Alaska"].menuView.enabled = true;
-	menuToggleList["Alaska"].menuForm.set({"selected":"Alaska"});
-	menuToggleList["Alaska"].menuView.render();
+	// Image Format
+	for (dataSetName in dataSetDict) {
+		menuToggleListImageFormat[dataSetName].menuView.set($("#imageFormat"));
+	}
+	menuToggleListImageFormat["Alaska"].menuView.enabled = true;
+	menuToggleListImageFormat["Alaska"].menuForm.set({"selected":"Alaska"});
+	menuToggleListImageFormat["Alaska"].menuView.render();
+
+	// Interpolation Method
+	for (dataSetName in dataSetDict) {
+		menuToggleListInterpolationMethod[dataSetName].menuView.set($("#interpolation"));
+	}
+	menuToggleListInterpolationMethod["Alaska"].menuView.enabled = true;
+	menuToggleListInterpolationMethod["Alaska"].menuForm.set({"selected":"Alaska"});
+	menuToggleListInterpolationMethod["Alaska"].menuView.render();
 
 	dataSetFormM.view.enabled = true;
 	dataSetFormM.set({"selected":"Alaska"});
