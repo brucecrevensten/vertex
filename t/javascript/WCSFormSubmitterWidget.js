@@ -14,21 +14,24 @@ $(function() {
 					        "wcsUrl": "/AustrailiaURL",
 					        "wmsUrl": "/AustrailiaURL2",
 					        "ImageFormat": ["JPEG", "BMP", "TIFF"],
-					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"]
+					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"],
+					        "Band": ["XBAND", "YBAND"]
 					    },
 					    "Alaska": {
 					        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
 					        "wcsUrl": "/AlaskaURL",
 					        "wmsUrl": "/AlaskaURL2",
 					        "ImageFormat": ["BMP", "GEOTIFF"],
-					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ]
+					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
+					        "Band": ["XBAND"]
 					    },
 					    "Africa": {
 					        "layers": ["AfricaLayer1"],
 					        "wcsUrl": "/AfricaURL",
 					        "wmsUrl": "/AfricaURL2",
 					        "ImageFormat": ["GEOTIFF"],
-					         "InterpolationMethod": ["BILINEAR", "TIME FIRST"]
+					         "InterpolationMethod": ["BILINEAR", "TIME FIRST"],
+					     	"Band": ["BAASDLASD", "TIME BAND", "OTHER BAND"]
 					    }
 				    },
 
@@ -75,6 +78,15 @@ $(function() {
 	menuToggleList["INTERPOLATION"]["Alaska"].menuView.enabled = true;
 	menuToggleList["INTERPOLATION"]["Alaska"].menuForm.set({"selected":"Alaska"});
 	menuToggleList["INTERPOLATION"]["Alaska"].menuView.render();
+
+
+		// Interpolation Method
+	for (dataSetName in dataSetDict) {
+		menuToggleList["BAND"][dataSetName].menuView.set( $("#band") );
+	}
+	menuToggleList["BAND"]["Alaska"].menuView.enabled = true;
+	menuToggleList["BAND"]["Alaska"].menuForm.set({"selected":"Alaska"});
+	menuToggleList["BAND"]["Alaska"].menuView.render();
 
 	dataSetFormM.view.enabled = true;
 	dataSetFormM.set({"selected":"Alaska"});

@@ -152,6 +152,13 @@ var StateInflator = Backbone.Model.extend({
           var interpolation = new InterpolationMethodM({name: ds["InterpolationMethod"][interpolationMethodIndex]});
           interpolationMethodCollection.add(interpolation);
         }
+
+        // Construct the Interpolation Methods
+        var bandCollection = new Backbone.Collection();
+        for (bandIndex in ds["Band"]) {
+          var interpolation = new InterpolationMethodM({name: ds["Band"][bandIndex]});
+          bandCollection.add(interpolation);
+        }
         
         // Initialize the Dataset
         dataSetM.set({
@@ -160,7 +167,8 @@ var StateInflator = Backbone.Model.extend({
             WCSURL:ds["wcsUrl"],
             WMSURL:ds["wmsUrl"],
             imageFormats:imageFormatCollection,
-            interpolationMethod:interpolationMethodCollection
+            interpolationMethod:interpolationMethodCollection,
+            bands: bandCollection
         });
         dataSetDict[dataSetName] = dataSetM;
       }
@@ -206,6 +214,7 @@ var StateInflator = Backbone.Model.extend({
         this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"});
         this.menuFactory('IMAGEFORMATS', this.dataSetDict, "imageFormats", {"paramName":"ImageFormat"});
         this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"ImageFormat"});
+        this.menuFactory('BAND', this.dataSetDict, "bands", {"paramName":"Band"} );
     },
 
     menuFactory: function(menuName, dictionary, selectableKey, defaults) {
@@ -222,7 +231,6 @@ var StateInflator = Backbone.Model.extend({
       for (dataSetName in this.dataSetDict) {
         dataSetFormM.selectable.add( this.dataSetDict[dataSetName] );
       }
-
       this.dataSetFormM = dataSetFormM;
       window.dataSetFormM = dataSetFormM;
     },
