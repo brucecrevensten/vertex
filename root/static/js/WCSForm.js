@@ -37,20 +37,9 @@ var MenuToggleFormM = Backbone.Model.extend({
 	},
 
 	initialize: function(attrs) {
-		//this.selectable = new Backbone.Collection();
-
 		this.bindMenuModel(attrs);
-
 		this.bind('change', jQuery.proxy(function() {	
-			this.selectable.each(jQuery.proxy(function(m) {
-				if (m.get("name") == this.get("selected")) {
-					
 					this.menuModel.trigger('paint');
-
-					
-				//	m.trigger('paint');
-				}
-			},this));
 		},this));
 	},
 
@@ -72,6 +61,7 @@ var MenuToggleFormM = Backbone.Model.extend({
 						}
 					});
 					if (hasAttr == false) {
+						
 						return "Unavailable option";
 					}
 			}
@@ -82,8 +72,8 @@ var MenuToggleFormM = Backbone.Model.extend({
 	bindMenuModel: function(attrs) {
 		if (attrs.menuModel) {
 			this.menuModel = attrs.menuModel;
+			this.urlList = attrs.menuModel.get("urlList");
 			this.menuModel.bind("paintChildren", jQuery.proxy(function() {
-				console.log("Menu Form Trigger paint");
 				this.get("menuModel").trigger('paint');
 			},this));
 		}
@@ -93,15 +83,12 @@ var MenuToggleFormM = Backbone.Model.extend({
 
 var MenuToggleSwitchM = Backbone.Model.extend({
 	initialize: function() {
-		//this.set({"paramName": "Dataset"});
 		this.selectable = new Backbone.Collection();
 
 		this.bind('change', function() {
 			this.selectable.each(jQuery.proxy(function(m) {
 				if (m.get("name") == this.get("selected")) {
-					console.log("Triggering paint on " + m.get("name"));
 					m.trigger('paint');
-					m.trigger('paintChildren');
 				}
 			},this));
 		});
@@ -109,34 +96,34 @@ var MenuToggleSwitchM = Backbone.Model.extend({
 });
 
 var DataSetFormM = MenuToggleSwitchM.extend({
-	defaults: {"paramName": "Dataset"}
+	//defaults: {"paramName": "Dataset"}
 	
 });
 
 var LayerFormM = MenuToggleFormM.extend({
-	defaults: { "paramName": "COVERAGE" }
+	//defaults: { "paramName": "COVERAGE" }
 	
 });
 
 var OutputProjectionFormM = MenuToggleFormM.extend({
-	defaults: {"paramName": "OutputProjection"}
+	//defaults: {"paramName": "OutputProjection"}
 });
 
 var InterpolationMethodFormM = MenuToggleFormM.extend({
-	defaults: {"paramName": "InterpolationMethod"},
+	//defaults: {"paramName": "InterpolationMethod"},
 	
 });
 
 var ImageFormatFormM = MenuToggleFormM.extend({
-	defaults: {"paramName": "ImageFormat"}
+	//defaults: {"paramName": "ImageFormat"}
 });
 
 var ImageHeightFormM = MenuToggleFormM.extend({
-	defaults: {"paramName": "ImageHeight"}
+	//defaults: {"paramName": "ImageHeight"}
 });
 
 var ImageWidthFormM = MenuToggleFormM.extend({
-	defaults: {"paramName": "ImageWidth"}
+	//defaults: {"paramName": "ImageWidth"}
 });
 
 /**** Form Views ******************************/
@@ -148,7 +135,6 @@ var ImageWidthFormM = MenuToggleFormM.extend({
 var MenuToggleViewV = Backbone.View.extend({
 	initialize: function(attrs) {
 		this.enabled = false;	
-		//console.log("INIT VIEW");
 		this.bindMenuModel(attrs);
 	},
 
@@ -157,6 +143,7 @@ var MenuToggleViewV = Backbone.View.extend({
 			this.el = el;	
 			$(this.el).bind('change', jQuery.proxy(function(e) {
 				if (this.enabled) {
+					console.log("Setting ");
 					var value = $(this.el).find('select').val();
 					this.model.set({selected: value});
 				}
@@ -164,6 +151,7 @@ var MenuToggleViewV = Backbone.View.extend({
 		},
 
 	disable: function() {
+		console.log( "Disabling " + this.model.menuModel.get("name") );
 		this.enabled = false;
 	},
 
@@ -176,11 +164,11 @@ var MenuToggleViewV = Backbone.View.extend({
 			this.menuModel = attrs.menuModel;
 			
 			this.menuModel.bind('paint', jQuery.proxy(function() {
-				console.log("paint view");
 				this.viewGroup.disable();
 				this.enabled = true;
 				this.viewGroup.clear();
 				this.render();
+
 			},this));
 		}
 	}
@@ -238,19 +226,26 @@ var InterpolationMethodFormV = MenuToggleSelectViewV.extend({
 	}*/
 });
 
-var ViewGroupC = Backbone.Collection.extend({
-	disable: function(v1) {
-		this.each(function(v) {
-			if (v != v1) {
-				v.attributes.disable(); 
-			}
-		});
+var ViewGroupM = Backbone.Model.extend({
+	initialize: function() {
+		this.group = [];
+	},
+
+	disable: function() {	
+		for (i in this.group) {
+				this.group[i].disable();
+		}
 	},
 
 	clear: function() {
-		this.each(function(v) {
-			$(v.attributes.el).empty();
-		});
+		for ( i in this.group) {
+			console.log(this.group[i]);
+			$(this.group[i].el).empty();
+		}
+	},
+
+	add: function(o) {
+		this.group.push(o);
 	}
 });
 
@@ -262,6 +257,7 @@ var MenuToggle = Backbone.Model.extend({
 		this.menuView = attrs.menuView;
 		this.selectable = attrs.selectable;
 		this.menuForm.selectable = this.selectable;
+		this.menuForm.view = this.menuView;
 	},
 
 });
@@ -279,46 +275,17 @@ var CombinantMenuToggle = Backbone.Model.extend({
 		if (attrs.menuToggleList) {
 			this.menuToggleList = attrs.menuToggleList;
 		
-			var group = new ViewGroupC();
+			var group = new ViewGroupM();
 	
 			for (name in this.menuToggleList) {
 				group.add(this.menuToggleList[name].menuView);
 				this.menuToggleList[name].menuView.viewGroup = group;
 			}
 		}
+	},
+	printEnabled: function() {
+		for (name in this.menuToggleList) {
+			console.log(this.menuToggleList[name].menuModel.get("name") +  " " +  this.menuToggleList[name].menuView.enabled);		
+		}
 	}
 });
-
-/** Not sure about these ones yet ***/
-/*
-var ImageHeightFormV = WCSFormV.extend({
-	initialize: function() {
-		this.enabled = false;	
-		
-			$(this.el).bind("input", jQuery.proxy(function(e) {
-				if (this.enabled) {
-				var el = $(e.currentTarget);
-            	this.model.set({"selected":el.val()});
-            }
-			},this));
-			
-
-	}
-});
-
-var ImageWidthFormV = WCSFormV.extend({
-	initialize: function() {
-		this.enabled = false;	
-		
-			$(this.el).bind("input", jQuery.proxy(function(e) {
-				if (this.enabled) {
-				var el = $(e.currentTarget);
-       	     this.model.set({"selected":el.val()});
-       	 }
-			},this));
-		
-	}
-});
-*/
-/*****************************/
-

@@ -18,13 +18,17 @@ var RequestGenerator = Backbone.Collection.extend(
 
   			var json={};
   			this.each(jQuery.proxy(function(f) {
+          
          if (f.view != undefined && f.view != null) {
+
   				  if (f.view.enabled && f.get("selected") != "" && f.get("selected") != null
-            && f.get("selected") != undefined) {
-  					 json=this.merge(json,f.getURLParameters());
+            && f.get("selected") != undefined) { 
+  					   // json=this.merge(json,f.getURLParameters());
+              _.extend(json, f.getURLParameters());
   				  }
           } else {
-            json=this.merge(json,f.getURLParameters());
+              //json=this.merge(json,f.getURLParameters());
+              _.extend(json, f.getURLParameters());
           }
   			},this));
 
@@ -39,8 +43,9 @@ var RequestGenerator = Backbone.Collection.extend(
   var FormSubmitter = Backbone.Model.extend(
   {
       defaults: {
-        requestURL: ""
+        requestURL: "",
       },
+
       // We make the collection of all forms into a Dictionary 
       // so that we do not have to refer to certain search parameter objects
       // through array index notation but can refer directly by name while still
@@ -50,10 +55,22 @@ var RequestGenerator = Backbone.Collection.extend(
         this.formList = new Dictionary();
       },
 
+
       submitRequest: function() {
         if (this.get("requestURL") == "") {
-          return null;
+          // Find the first enabled form's url to submit to
+          if (this.get("urlParam")) {
+            
+            this.formList.values().each(jQuery.proxy(function(form) {
+              if (form.view.enabled) {
+                this.set({"requestURL": form.urlList[this.get("urlParam")]  } );
+                return false; // break out of anon
+              }
+            },this));
+          }
+           
         }
+
 
         this.requestGenerator.reset();
 
@@ -153,22 +170,13 @@ var StateInflator = Backbone.Model.extend({
           interpolationMethodCollection.add(interpolation);
         }
 
-        // Construct the Interpolation Methods
-        var bandCollection = new Backbone.Collection();
-        for (bandIndex in ds["Band"]) {
-          var interpolation = new InterpolationMethodM({name: ds["Band"][bandIndex]});
-          bandCollection.add(interpolation);
-        }
-        
         // Initialize the Dataset
         dataSetM.set({
             name:dataSetName,
             layers:layerCollection,
-            WCSURL:ds["wcsUrl"],
-            WMSURL:ds["wmsUrl"],
+            urlList: { WCSURL:ds["wcsUrl"], WMSURL:ds["wmsUrl"] },
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
-            bands: bandCollection
         });
         dataSetDict[dataSetName] = dataSetM;
       }
@@ -181,16 +189,14 @@ var StateInflator = Backbone.Model.extend({
 
     createMenu: function(dictionary, selectableKey,  defaults) {
         var menuToggleList = {};
-       
-    
+      
         for (key in dictionary) {
-
-          var formM = new MenuToggleFormM({menuModel: dictionary[key]});
-           
-          formM.defaults = defaults;
-        
-          var formV = new MenuToggleSelectViewV({model: formM, menuModel: dictionary[key] });
   
+
+          var formM = new MenuToggleFormM(_.extend({menuModel: dictionary[key]}, defaults));
+         
+          var formV = new MenuToggleSelectViewV({model: formM, menuModel: dictionary[key] });
+          
           var menuToggle = new MenuToggle({
             name: key,
             selectable: dictionary[key].get(selectableKey),
@@ -203,7 +209,8 @@ var StateInflator = Backbone.Model.extend({
         }
           
         var menu = new CombinantMenuToggle({
-            "menuToggleList": menuToggleList
+            "menuToggleList": menuToggleList,
+            menuModel: dictionary[key]
         });
 
 
@@ -213,8 +220,7 @@ var StateInflator = Backbone.Model.extend({
     generateCombinantMenu: function() {
         this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"});
         this.menuFactory('IMAGEFORMATS', this.dataSetDict, "imageFormats", {"paramName":"ImageFormat"});
-        this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"ImageFormat"});
-        this.menuFactory('BAND', this.dataSetDict, "bands", {"paramName":"Band"} );
+        this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"InterpolationMethod"});
     },
 
     menuFactory: function(menuName, dictionary, selectableKey, defaults) {
@@ -244,11 +250,6 @@ var StateInflator = Backbone.Model.extend({
     }
 
 });
-
-
-
-
-
 
 
 
