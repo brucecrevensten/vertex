@@ -57,7 +57,7 @@ var RequestGenerator = Backbone.Collection.extend(
 
 
       submitRequest: function() {
-        if (this.get("requestURL") == "") {
+       // if (this.get("requestURL") == "") {
           // Find the first enabled form's url to submit to
           if (this.get("urlParam")) {
             
@@ -69,9 +69,10 @@ var RequestGenerator = Backbone.Collection.extend(
             },this));
           }
            
-        }
+       // }
 
 
+        console.log("Submitting to " + this.get("requestURL"));
         this.requestGenerator.reset();
 
         var formCollection = this.formList.values();

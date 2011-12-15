@@ -143,7 +143,6 @@ var MenuToggleViewV = Backbone.View.extend({
 			this.el = el;	
 			$(this.el).bind('change', jQuery.proxy(function(e) {
 				if (this.enabled) {
-					console.log("Setting ");
 					var value = $(this.el).find('select').val();
 					this.model.set({selected: value});
 				}
@@ -151,7 +150,6 @@ var MenuToggleViewV = Backbone.View.extend({
 		},
 
 	disable: function() {
-		console.log( "Disabling " + this.model.menuModel.get("name") );
 		this.enabled = false;
 	},
 
@@ -239,7 +237,6 @@ var ViewGroupM = Backbone.Model.extend({
 
 	clear: function() {
 		for ( i in this.group) {
-			console.log(this.group[i]);
 			$(this.group[i].el).empty();
 		}
 	},
