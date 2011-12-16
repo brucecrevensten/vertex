@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>BBox drawing test</title>
+        <script src="OpenLayers.js"></script>
+        <script type="text/javascript">
+            var map;
+            var box;
+            var boxlayer;
+            function init(){
+                map = new OpenLayers.Map('map', {
+                  projection: new OpenLayers.Projection("EPSG:3031"),
+                  units: "m",
+                  maxExtent: new OpenLayers.Bounds(-3174450,-2815950,2867150,2406450),
+                  maxResolution: 15000
+
+                });
+
+                var ol_wms = new OpenLayers.Layer.WMS( "Antarctica",
+                  "http://testmapserver.daac.asf.alaska.edu/wms/amm1",
+                  {layers: 'Antarctic 100m Backscatter Coefficient Mosaic (16-bit)', CRS: "EPSG:3031"}
+                );
+
+                map.addLayers([ol_wms]);
+                map.addControl(new OpenLayers.Control.LayerSwitcher());
+                map.zoomToMaxExtent();
+                var control = new OpenLayers.Control();
+                OpenLayers.Util.extend(control, {
+                  draw: function () {
+                    // this Handler.Box will intercept the shift-mousedown
+                    // before Control.MouseDefault gets to see it
+                    this.box = new OpenLayers.Handler.Box( control,
+                      {"done": this.retain},
+                      {keyMask: OpenLayers.Handler.MOD_SHIFT});
+                    this.box.activate();
+                  },
+                  retain: function (bounds) {
+                    var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+                    var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+                    var bbox = new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
+                    var feature = new OpenLayers.Feature.Vector(bbox.toGeometry(), null, {
+                      strokeColor: "#4040FF",
+                      strokeOpacity: 1.0,
+                      strokeWidth: 2,
+                      fillOpacity: 0.5,
+                      fillColor: "#8080FF"
+                    });
+                    boxlayer.removeAllFeatures();
+                    boxlayer.addFeatures(feature);
+                  }
+                });
+              map.addControl(control);
+              
+              boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
+              map.addLayer(boxlayer);
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <div id="map" style="width:600px; height:500px;"></div>
+    </body>
+</html>

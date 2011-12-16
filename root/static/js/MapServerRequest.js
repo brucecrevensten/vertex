@@ -136,7 +136,12 @@ var StateInflator = Backbone.Model.extend({
     }, 
 
     process: function(responseData) {
+      try {
       this.generateMetadataPersistenceState(responseData);
+      } catch(e) {
+        console.log("Exception");
+        console.log(e);
+      }
       this.generateUserInputPersistenceState();
       this.generateUserInputViews();
       this.generateCombinantMenu();
@@ -171,6 +176,52 @@ var StateInflator = Backbone.Model.extend({
           interpolationMethodCollection.add(interpolation);
         }
 
+        var boxlayer;
+        var map = new OpenLayers.Map({ // FIXME: This call is causing the state inflator to choke somehow
+          projection: "EPSG:3031",                                                              // FIXME: pull from json return?
+          units: "m",                                                                           // FIXME: pull from json return?
+          maxExtent: new OpenLayers.Bounds(-3174450,-2815950,2867150,2406450),                  // FIXME: pull from json return?
+          maxResolution: 15000                                                                  // FIXME: pull from json return?
+        });
+
+        var datasetLayer = new OpenLayers.Layer.WMS(dataSetName,
+          ds["wmsUrl"],
+          {layers: 'Antarctic 100m Backscatter Coefficient Mosaic (16-bit)', CRS: "EPSG:3031"}  // FIXME: pull from json return?
+        );
+
+        map.addLayers([datasetLayer]);
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        map.zoomToMaxExtent();
+        var control = new OpenLayers.Control();
+        OpenLayers.Util.extend(control, {
+          draw: function () {
+            // this Handler.Box will intercept the shift-mousedown
+            // before Control.MouseDefault gets to see it
+            this.box = new OpenLayers.Handler.Box( control,
+              {"done": this.retain},
+              {keyMask: OpenLayers.Handler.MOD_SHIFT});
+            this.box.activate();
+          },
+          retain: function (bounds) {
+            var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+            var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+            var bbox = new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
+            var feature = new OpenLayers.Feature.Vector(bbox.toGeometry(), null, {
+              strokeColor: "#4040FF",
+              strokeOpacity: 1.0,
+              strokeWidth: 2,
+              fillOpacity: 0.5,
+              fillColor: "#8080FF"
+            });
+            boxlayer.removeAllFeatures();
+            boxlayer.addFeatures(feature);
+          }
+        });
+        map.addControl(control);
+      
+        boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
+        map.addLayer(boxlayer);
+        
         // Initialize the Dataset
         dataSetM.set({
             name:dataSetName,
@@ -178,6 +229,7 @@ var StateInflator = Backbone.Model.extend({
             urlList: { WCSURL:ds["wcsUrl"], WMSURL:ds["wmsUrl"] },
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
+            map: map
         });
         dataSetDict[dataSetName] = dataSetM;
       }
