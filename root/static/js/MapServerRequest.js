@@ -20,9 +20,12 @@ var RequestGenerator = Backbone.Collection.extend(
   			this.each(jQuery.proxy(function(f) {
           
          if (f.view != undefined && f.view != null) {
-
+            if (f.view.enabled) {
+              console.log(f);
+            }
   				  if (f.view.enabled && f.get("selected") != "" && f.get("selected") != null
             && f.get("selected") != undefined) { 
+                
   					   // json=this.merge(json,f.getURLParameters());
               _.extend(json, f.getURLParameters());
   				  }
@@ -37,8 +40,19 @@ var RequestGenerator = Backbone.Collection.extend(
   			}
 
   			return json;
-  		}
+  		},
+
+      getStrRequestFromJSON: function(json) {
+        var paramArray = [];
+        for (paramName in json) {
+          paramArray.push(paramName + '='+ json[paramName]);
+        } 
+        var strReq = paramArray.join('&');
+        return strReq;
+      } 
   });
+
+
 
   var FormSubmitter = Backbone.Model.extend(
   {
@@ -53,10 +67,15 @@ var RequestGenerator = Backbone.Collection.extend(
       initialize: function() {
         this.requestGenerator = new RequestGenerator();
         this.formList = new Dictionary();
+        $('#hifrm').contents().find('body').empty();
+        $('#hifrm').contents().find('body').append('<form id="formSub" action="" method="post" target="_blank"></form>')
+
+        $('#hifrm').contents().find('body').find('form').submit(jQuery.proxy(function() {
+            this.trigger('submitForm');
+         },this));
       },
 
-
-      submitRequest: function() {
+      submitRequestAJAX: function() {
        // if (this.get("requestURL") == "") {
           // Find the first enabled form's url to submit to
           if (this.get("urlParam")) {
@@ -79,26 +98,88 @@ var RequestGenerator = Backbone.Collection.extend(
         formCollection.each(jQuery.proxy(function(form) {
             this.requestGenerator.add(form);
         },this));
+
         var paramJSON = this.requestGenerator.getJSONRequestParameters();
-        
+
+        var paramStr = this.requestGenerator.getStrRequestFromJSON(paramJSON);
+
         var requestURL = this.get("requestURL");
+
+
+        console.log(requestURL);
+        console.log(paramStr);
+       // $('#formSub').attr('action', requestURL);
         
-        var xhr = $.ajax(
-        {
-          type: "POST",
-          url: requestURL,
-          data: paramJSON,
-          dataType: "json",
-          context: this,
-          success: jQuery.proxy(function(data, textStatus, jqXHR) {
+       /* var formHTML = '<form id="formSub" action=' + '"'+ requestURL +'"' + ' method="post"> \
+                        <input type="submit" value="Submit Comment" /> \
+                        </form>';
+
+        $('#formContainer2').empty();
+        $('#formContainer2').append(formHTML);*/
+
+        //console.log($('#formSub'));
+
+       
+      // $('#formSub').trigger('submit');
+        
+         $('#hifrm').contents().find('body').find('form').attr('action', requestURL);
+        $('#hifrm').contents().find('body').find('form').trigger('submit');
+
+        //$()
+          
+        
+
+   //     var xhr = $.ajax(
+   //     {
+    //      type: "GET",
+      //    url: requestURL,
+        //  data: paramJSON,
+     //     dataType: "jsonp",
+        //  context: this,
+          /*success: jQuery.proxy(function(data, textStatus, jqXHR) {
             this.trigger('request_success');
+            console.log("AJAX SUCCESS");
           },this),
           error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
             this.trigger('request_error');
-          }, this)
-      } );
+            console.log("AJAX FAILURE");
+          }, this)*/
+   //   } );
 
-      return xhr;
+    //  return xhr;
+      },
+
+
+      submitRequestForm: function() {
+          // Find the first enabled form's url to submit to
+          if (this.get("urlParam")) {
+            
+            this.formList.values().each(jQuery.proxy(function(form) {
+              if (form.view.enabled) {
+                this.set({"requestURL": form.urlList[this.get("urlParam")]  } );
+                return false; // break out of anon
+              }
+            },this));
+          }
+           
+        this.requestGenerator.reset();
+
+        var formCollection = this.formList.values();
+        formCollection.each(jQuery.proxy(function(form) {
+            this.requestGenerator.add(form);
+        },this));
+        var paramJSON = this.requestGenerator.getJSONRequestParameters();
+        var paramStr = this.requestGenerator.getStrRequestFromJSON(paramJSON);
+
+        var requestURL = this.get("requestURL");
+
+          console.log(requestURL);
+        console.log(paramStr);
+        console.log("ASdlkfjds");
+        
+        $('#hifrm').contents().find('body').find('form').attr('action', requestURL);
+        $('#hifrm').contents().find('body').find('form').trigger('submit');
+
       },
 
       enable: function(formName) {

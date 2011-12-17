@@ -38,8 +38,10 @@ var MenuToggleFormM = Backbone.Model.extend({
 
 	initialize: function(attrs) {
 		this.bindMenuModel(attrs);
+		console.log("Menu toggle init");
+		//this.set({'selected': this.selectable.get(0)}); // initialize selected to be first element from selected list
 		this.bind('change', jQuery.proxy(function() {	
-					this.menuModel.trigger('paint');
+		this.menuModel.trigger('paint');
 		},this));
 	},
 
@@ -255,6 +257,14 @@ var MenuToggle = Backbone.Model.extend({
 		this.selectable = attrs.selectable;
 		this.menuForm.selectable = this.selectable;
 		this.menuForm.view = this.menuView;
+
+		// Might move this somewhere else
+		try { 
+			this.menuForm.set({"selected": this.selectable.toArray()[0].get("name")});
+			} catch(e) {
+				console.log("Exception: " + e.toString());
+			}
+	//	this.menuForm.set({"selected": this.selectable.get(0)});
 	},
 
 });

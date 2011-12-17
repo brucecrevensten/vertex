@@ -12,7 +12,7 @@ $(function() {
 			        "DataSet": {
 				        "Austrailia": {
 					        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
-					        "wcsUrl": "/AustrailiaURL",
+					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=northern_australia&bbox=125,-18,126,-17&CRS=epsg:4326&width=500&height=500&format=jpeg",
 					        "wmsUrl": "/AustrailiaURL2",
 					        "ImageFormat": ["JPEG", "BMP", "TIFF"],
 					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"],
@@ -39,6 +39,13 @@ $(function() {
 					        "wmsUrl": "/GermanURL2",
 					        "ImageFormat": ["JPG","GEOTIFF", "PNG", "AVI"],
 					         "InterpolationMethod": ["BILINEAR", "TIME FIRST", "SINGLE STEP"]
+					    },
+					     "Greenland": {
+					        "layers": ["Greenland","Greenland2"],
+					        "wcsUrl": "/GreenlandURL",
+					        "wmsUrl": "/GreenlandURL2",
+					        "ImageFormat": ["GEOTIFF", "PNG", "AVI"],
+					         "InterpolationMethod": ["INTERPMETHOD", "TIME FIRST", "SINGLE STEP"]
 					    }
 				    },
 
@@ -54,6 +61,8 @@ $(function() {
 	infl.inflate('/fakeURL'); 
 
 	server.respond(); 
+
+	server.restore();
 	
 
 	infl.dataSetFormM.view.set($("#dataset"));
@@ -142,13 +151,14 @@ $(function() {
 		dataset. We get the currently selected 
 			
 	*/
+	window.server2.restore();
 	$('#downloadButton').button({ label: "Download"}).bind("click", jQuery.proxy(function() {
 		//form.setSubmisisonObject(infl.)
 		//form.set({"requestURL": "/fakeURL"});
 		window.formSub.set({"urlParam": "WCSURL"});
-		window.formSub.submitRequest();    
-		window.server2.respond(); 
-		
+		window.formSub.submitRequestForm();    
+		//window.server2.respond(); 
+		//window.server2.restore();
 
 	},this));
 
