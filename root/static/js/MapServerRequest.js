@@ -21,7 +21,7 @@ var RequestGenerator = Backbone.Collection.extend(
           
          if (f.view != undefined && f.view != null) {
             if (f.view.enabled) {
-              console.log(f);
+             // console.log(f);
             }
   				  if (f.view.enabled && f.get("selected") != "" && f.get("selected") != null
             && f.get("selected") != undefined) { 
@@ -67,7 +67,9 @@ var RequestGenerator = Backbone.Collection.extend(
       initialize: function() {
         this.requestGenerator = new RequestGenerator();
         this.formList = new Dictionary();
+        $('#hifrm').contents().find('body').find('form').unbind();
         $('#hifrm').contents().find('body').empty();
+
         $('#hifrm').contents().find('body').append('<form id="formSub" action="" method="post" target="_blank"></form>')
 
         $('#hifrm').contents().find('body').find('form').submit(jQuery.proxy(function() {
@@ -91,7 +93,7 @@ var RequestGenerator = Backbone.Collection.extend(
        // }
 
 
-        console.log("Submitting to " + this.get("requestURL"));
+  //      console.log("Submitting to " + this.get("requestURL"));
         this.requestGenerator.reset();
 
         var formCollection = this.formList.values();
@@ -175,9 +177,10 @@ var RequestGenerator = Backbone.Collection.extend(
 
           console.log(requestURL);
         console.log(paramStr);
-        console.log("ASdlkfjds");
+
+      //  console.log("ASdlkfjds");
         
-        $('#hifrm').contents().find('body').find('form').attr('action', requestURL);
+        $('#hifrm').contents().find('body').find('form').attr('action', requestURL + paramStr);
         $('#hifrm').contents().find('body').find('form').trigger('submit');
 
       },
@@ -252,6 +255,13 @@ var StateInflator = Backbone.Model.extend({
           interpolationMethodCollection.add(interpolation);
         }
 
+        // Construct the Interpolation Methods
+        var projectionCollection = new Backbone.Collection();
+        for (projectionIndex in ds["Projection"]) {
+          var projection = new ProjectionM({name: ds["Projection"][projectionIndex]});
+          projectionCollection.add(projection);
+        }
+
         // Initialize the Dataset
         dataSetM.set({
             name:dataSetName,
@@ -259,17 +269,18 @@ var StateInflator = Backbone.Model.extend({
             urlList: { WCSURL:ds["wcsUrl"], WMSURL:ds["wmsUrl"] },
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
+            projection: projectionCollection,
         });
         dataSetDict[dataSetName] = dataSetM;
       }
-      
+
       // Attach the Dictionary of Datasets to the window
       this.dataSetDict = dataSetDict;
       window.dataSetDict = dataSetDict;
 
     },
 
-    createMenu: function(dictionary, selectableKey,  defaults) {
+    createMenuSelectable: function(dictionary, selectableKey,  defaults, renderHandle, binding) {
         var menuToggleList = {};
       
         for (key in dictionary) {
@@ -279,9 +290,68 @@ var StateInflator = Backbone.Model.extend({
          
           var formV = new MenuToggleSelectViewV({model: formM, menuModel: dictionary[key] });
           
+          if (renderHandle != null && typeof(renderHandle == "function")) {
+            formV.render = renderHandle;
+          }
+
+          if (binding != null && binding[name] != null && binding[callback] && typeof(binding[callback]) == "function") {
+            formV.bind(binding[name], binding[callback]);
+          }
+
           var menuToggle = new MenuToggle({
             name: key,
             selectable: dictionary[key].get(selectableKey),
+            menuModel:  dictionary[key],
+            menuForm:   formM,
+            menuView:   formV,
+          });
+
+            menuToggleList[key] = menuToggle;
+        }
+          
+        var menu = new CombinantMenuToggle({
+            "menuToggleList": menuToggleList,
+            menuModel: dictionary[key]
+        });
+
+        return menu
+    },
+
+    createMenu: function(dictionary, defaults, renderHandle, binding) {
+        var menuToggleList = {};
+      
+        for (key in dictionary) {
+          var formM = new MenuToggleFormM(_.extend({menuModel: dictionary[key]}, defaults));
+         
+          var formV = new MenuToggleViewV({model: formM, menuModel: dictionary[key] });
+          
+         // console.log("IN there");
+          //console.log
+          if (renderHandle != null && typeof(renderHandle == "function")) {
+            formV.render = renderHandle;
+          }
+
+        //  console.log(binding);
+       //   console.log(binding["name"]);
+
+          if (binding != null && binding["name"] != null && 
+              binding["callback"] != null && 
+              typeof(binding["callback"]) == "function") {
+           
+           
+              formV.bindFunc = binding["callback"];
+              formV.eventName = binding["name"];
+             /* console.log("About to call " );
+              console.log(formV.bindFunc); 
+              console.log("With the event:" + binding["name"] + ":");
+              formV.bindFunc(binding["name"]);*/
+            
+          }
+
+
+          var menuToggle = new MenuToggle({
+            name: key,
+            selectable: null,
             menuModel:  dictionary[key],
             menuForm:   formM,
             menuView:   formV,
@@ -300,13 +370,50 @@ var StateInflator = Backbone.Model.extend({
     },
 
     generateCombinantMenu: function() {
-        this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"});
-        this.menuFactory('IMAGEFORMATS', this.dataSetDict, "imageFormats", {"paramName":"ImageFormat"});
-        this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"InterpolationMethod"});
+
+        var bindInput = function(event) {
+
+          $(this.el).bind(event, jQuery.proxy(function(e) {
+              if (this.enabled) {
+                var value = $(this.el).find('input').val();
+                this.model.set({selected: value});
+              }
+            },this));
+        }
+
+        /*
+            The menuFactory is still being worked on. 
+        */
+        this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable");
+        this.menuFactory('IMAGEFORMATS', this.dataSetDict, "imageFormats", {"paramName":"format"},"selectable");
+        this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"InterpolationMethod"},"selectable");
+        this.menuFactory('PROJECTION', this.dataSetDict, "projection", {"paramName":"CRS"}, "selectable");
+        
+        this.menuFactory('IMAGEWIDTH', this.dataSetDict, null, {"paramName": "width"}, "default", 
+        MenuToggleInputViewV.prototype.render, 
+        {
+            name: "change",
+            callback: bindInput
+        });
+        this.menuFactory('IMAGEHEIGHT', this.dataSetDict, null, {"paramName": "height"}, "default", 
+        MenuToggleInputViewV.prototype.render, 
+        {
+            name: "change",
+            callback: bindInput
+        });
+        //this.menuFactory('IMAGEWIDTH', this.dataSetDict, null, {"paramName: width"});
+
     },
 
-    menuFactory: function(menuName, dictionary, selectableKey, defaults) {
-      var menu = this.createMenu(dictionary, selectableKey, defaults);
+    // The type parameter is used to decide which View to render
+    menuFactory: function(menuName, dictionary, selectableKey, defaults, type, renderHandle, binding) {
+      var menu;
+      if (type == "selectable") {
+          menu = this.createMenuSelectable(dictionary, selectableKey, defaults, renderHandle, binding);
+      }
+      if (type == "default") {
+          menu = this.createMenu(dictionary, defaults, renderHandle,binding);
+      }
       this.menu[menuName] = menu;
       this.menuToggleList[menuName] = menu.get("menuToggleList");
       window.menuToggleList[menuName] = this.menuToggleList[menuName];

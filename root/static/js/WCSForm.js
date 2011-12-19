@@ -22,6 +22,18 @@ var ImageFormatM = Backbone.Model.extend({
 	defaults: { name: "" },
 });
 
+var ProjectionM = Backbone.Model.extend({
+	defaults: { name: "" },
+});
+
+var ImageWidthM = Backbone.Model.extend({
+	defaults: { name: "" },
+});
+
+var ImageHeightM = Backbone.Model.extend({
+	defaults: { name: "" },
+});
+
 /*** Form Models ********************************/
 // The purpose of a form model is to persist data associated with user input
 // It also associates the user input data with internal meta data (Form element models)
@@ -38,7 +50,7 @@ var MenuToggleFormM = Backbone.Model.extend({
 
 	initialize: function(attrs) {
 		this.bindMenuModel(attrs);
-		console.log("Menu toggle init");
+		//console.log("Menu toggle init");
 		//this.set({'selected': this.selectable.get(0)}); // initialize selected to be first element from selected list
 		this.bind('change', jQuery.proxy(function() {	
 		this.menuModel.trigger('paint');
@@ -54,6 +66,7 @@ var MenuToggleFormM = Backbone.Model.extend({
 	validate: function(attrs) {
 		this.bindMenuModel(attrs);
 		if (attrs.selected != undefined) {
+			//console.log(attrs);
 			if (this.selectable != undefined && this.selectable != null) {
 					var hasAttr = false;
 					
@@ -144,12 +157,34 @@ var MenuToggleViewV = Backbone.View.extend({
 	set: function(el) {
 			this.el = el;	
 			$(this.el).bind('change', jQuery.proxy(function(e) {
+
 				if (this.enabled) {
+				//	console.log("CHANGE CHANGE CHANGE");
+					// IM HERE
+					//console.log($(this.el));
 					var value = $(this.el).find('select').val();
+					console.log("The value is: " + value);
 					this.model.set({selected: value});
 				}
 			},this));
 		},
+		set2: function(el) {
+			this.el = el;
+			this.bindFunc(this.eventName);
+			//this.bindFunc()	
+			/*$(this.el).bind('change', jQuery.proxy(function(e) {
+
+				if (this.enabled) {
+				//	console.log("CHANGE CHANGE CHANGE");
+					// IM HERE
+					//console.log($(this.el));
+					var value = $(this.el).find('select').val();
+					console.log("The value is: " + value);
+					this.model.set({selected: value});
+				}
+			},this));*/
+		},
+
 
 	disable: function() {
 		this.enabled = false;
@@ -190,6 +225,21 @@ var MenuToggleSelectViewV = MenuToggleViewV.extend({
 			},this));
 			html += "</select>";
 			$(this.el).html(html);
+		}
+	}
+});
+
+var MenuToggleInputViewV = MenuToggleViewV.extend({
+	render: function() {
+		if (this.enabled) {
+			var html="";
+          if (this.model.get("selected") != null) {
+            html = "<input value="+'"'+this.model.get("selected") +'"'+"></input>";
+          } else {
+            console.log("EMPTY INPUT");
+            html="<input></input>"
+          }
+           $(this.el).html(html);
 		}
 	}
 });
@@ -262,7 +312,7 @@ var MenuToggle = Backbone.Model.extend({
 		try { 
 			this.menuForm.set({"selected": this.selectable.toArray()[0].get("name")});
 			} catch(e) {
-				console.log("Exception: " + e.toString());
+				//console.log("Exception: " + e.toString());
 			}
 	//	this.menuForm.set({"selected": this.selectable.get(0)});
 	},

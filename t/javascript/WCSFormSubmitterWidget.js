@@ -11,11 +11,13 @@ $(function() {
 		        {
 			        "DataSet": {
 				        "Austrailia": {
-					        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
-					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=northern_australia&bbox=125,-18,126,-17&CRS=epsg:4326&width=500&height=500&format=jpeg",
+					        "layers": ["AusLayer1", "northern_australia","AusLayer3" ],
+					        //"wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=northern_australia&bbox=125,-18,126,-17&CRS=epsg:4326&width=500&height=500&format=jpeg",
+					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&bbox=125,-18,126,-17&",
 					        "wmsUrl": "/AustrailiaURL2",
-					        "ImageFormat": ["JPEG", "BMP", "TIFF"],
+					        "ImageFormat": ["jpeg", "BMP", "TIFF"],
 					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"],
+					        "Projection": ["epsg:4326"]
 					    
 					    },
 					    "Alaska": {
@@ -24,8 +26,8 @@ $(function() {
 					        "wmsUrl": "/AlaskaURL2",
 					        "ImageFormat": ["BMP", "GEOTIFF"],
 					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
-					
-					    },
+							"Projection": ["p1", "p2", "p3"]
+					    }/*,
 					    "Africa": {
 					        "layers": ["AfricaLayer1"],
 					        "wcsUrl": "/AfricaURL",
@@ -46,7 +48,7 @@ $(function() {
 					        "wmsUrl": "/GreenlandURL2",
 					        "ImageFormat": ["GEOTIFF", "PNG", "AVI"],
 					         "InterpolationMethod": ["INTERPMETHOD", "TIME FIRST", "SINGLE STEP"]
-					    }
+					    }*/
 				    },
 
 	            })]);
@@ -72,7 +74,7 @@ $(function() {
 		menuToggleList["LAYERS"][dataSetName].menuView.set($("#layer"));
 	}
 	menuToggleList["LAYERS"]["Alaska"].menuView.enabled = true;
-	menuToggleList["LAYERS"]["Alaska"].menuForm.set({"selected":"AlaskaLayer1"});
+	//menuToggleList["LAYERS"]["Alaska"].menuForm.set({"selected":"AlaskaLayer1"});
 	menuToggleList["LAYERS"]["Alaska"].menuView.render();
 
 	// Image Format
@@ -80,7 +82,6 @@ $(function() {
 		menuToggleList["IMAGEFORMATS"][dataSetName].menuView.set($("#imageFormat"));
 	}
 	menuToggleList["IMAGEFORMATS"]["Alaska"].menuView.enabled = true;
-	menuToggleList["IMAGEFORMATS"]["Alaska"].menuForm.set({"selected":"BMP"});
 	menuToggleList["IMAGEFORMATS"]["Alaska"].menuView.render();
 
 	// Interpolation Method
@@ -88,8 +89,30 @@ $(function() {
 		menuToggleList["INTERPOLATION"][dataSetName].menuView.set($("#interpolation"));
 	}
 	menuToggleList["INTERPOLATION"]["Alaska"].menuView.enabled = true;
-	menuToggleList["INTERPOLATION"]["Alaska"].menuForm.set({"selected":"CUBIC SPLINE"});
 	menuToggleList["INTERPOLATION"]["Alaska"].menuView.render();
+
+	// Projection 
+	for (dataSetName in dataSetDict) {
+		menuToggleList["PROJECTION"][dataSetName].menuView.set($("#projection"));
+	}
+	menuToggleList["PROJECTION"]["Alaska"].menuView.enabled = true;
+	menuToggleList["PROJECTION"]["Alaska"].menuView.render();
+
+
+	// Image Width 
+	for (dataSetName in dataSetDict) {
+		menuToggleList["IMAGEWIDTH"][dataSetName].menuView.set2($("#imageWidth"));
+	}	
+	menuToggleList["IMAGEWIDTH"]["Alaska"].menuView.enabled = true;
+
+	// Image Height 
+	for (dataSetName in dataSetDict) {
+		menuToggleList["IMAGEHEIGHT"][dataSetName].menuView.set2($("#imageHeight"));
+	}
+	menuToggleList["IMAGEHEIGHT"]["Alaska"].menuView.enabled = true;	
+
+	//console.log("About to render the image width");
+	//menuToggleList["IMAGEWIDTH"]["Alaska"].menuView.render();
 
 		// Interpolation Method
 /*	for (dataSetName in dataSetDict) {
@@ -128,7 +151,9 @@ $(function() {
 	//var index =0;
 	for (formName in menuToggleList) {
 		for (dataSetName in menuToggleList[formName]) {
-			fl.push(menuToggleList[formName][dataSetName].menuForm);
+			if (formName != "INTERPOLATION") {
+				fl.push(menuToggleList[formName][dataSetName].menuForm);
+			}
 		}
 	}
 
@@ -138,10 +163,6 @@ $(function() {
 	for (i in fl) {
 		formSub.formList.add(i, fl[i]);
 	}
-
-	_.each(fl, function(f) {
-		//formSub.formList.log(f);
-	});
 
 	window.formSub = formSub;
 	/* 
