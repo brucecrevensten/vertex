@@ -470,6 +470,7 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function(args) {
     this.trigger('render');
+    this.dataTable = null;
    
 
 	// Do not show no results message if we're logging in. 
