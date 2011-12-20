@@ -127,7 +127,7 @@ is($mech->status(), Apache2::Const::HTTP_BAD_REQUEST, 'DE521: invalid bbox param
 
 ###### needs DB connections
 SKIP: {
-  skip 'not testing features requiring a database connection', 34, unless $ENV{TEST_DATABASE};
+  skip 'not testing features requiring a database connection', 36, unless $ENV{TEST_DATABASE};
 
   $mech->post_ok($surn, { granule_list => 'R1_63549_ST1_F165,R1_65186_ST3_F291', processing => 'any', format=>'list' });
   @list = split/,/, $mech->content();
@@ -262,6 +262,12 @@ SKIP: {
   }
   is($flag, 0, 'x.x.x: offnadir param only returns results with the specified off nadir angle');
 
+  # Can search for more then 1000 things in a list.
+  my @things = 1 .. 2000;
+  $mech->post($surn, { granule_list => join(',', (@things, 'E1_00404_STD_F161')) });
+  is($mech->status(), Apache2::Const::HTTP_OK, 'Search returned okay for more then 1000 granules.');
+  $mech->post($surn, { products => join(',', (@things, 'E2_59888_STD_F285.jpg')) });
+  is($mech->status(), Apache2::Const::HTTP_OK, 'Search returned okay for more then 1000 products.');
 }
 
 BEGIN {

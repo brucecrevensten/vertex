@@ -21,14 +21,14 @@ var User = Backbone.Model.extend(
 				data: { userid: this.get('userid'), password: this.get('password') },
 				dataType: "json",
 				context: this,
-				success: function(data, textStatus, jqXHR) {
+				success: jQuery.proxy(function(data, textStatus, jqXHR) {
 					this.set( {'authenticated': true, 'authType': data.authType, 'user_first_name':data.user_first_name} );
 					this.widgetRenderer = this.getWidgetRenderer();
 					this.trigger('authSuccess');
-				},
-				error: function(error) {
+				}, this),
+				error: jQuery.proxy(function(error) {
 					this.trigger('authError');
-				}, 
+				}, this),
 				beforeSend: function() {
 				}
 			}); 
@@ -41,17 +41,17 @@ var User = Backbone.Model.extend(
 				data: { userid: this.get('userid'), password: this.get('password') },
 				dataType: "json",
 				context: this,
-				success: function(data, textStatus, jqXHR) {
+				success: jQuery.proxy(function(data, textStatus, jqXHR) {
 					this.set( {'authenticated': false, 'authType': 'UNRESTRICTED'} );
 					this.widgetRenderer = this.getWidgetRenderer();
 					this.trigger('authSuccess');
 					
-				},
-				error: function(error) {
+				}, this),
+				error: jQuery.proxy(function(error) {
 						this.set( {'authenticated': false, 'authType': 'UNRESTRICTED'} );
 						this.widgetRenderer = this.getWidgetRenderer();
 						this.trigger('authError');
-				}
+				}, this)
 			}); 
 		},
 
@@ -111,6 +111,9 @@ var UserLoginView = Backbone.View.extend(
 	    },
 	
 		login: function() {
+      if(typeof ntptEventTag == 'function') {
+        ntptEventTag('ev=login');
+      }
 			this.model.set($(this.el).find('form').serializeJSON());
 			this.model.authenticate();
 		},
@@ -124,6 +127,9 @@ var UserLoginView = Backbone.View.extend(
 				modal: true,
 				buttons: {
 					"Register": function(){
+            if(typeof ntptEventTag == 'function') {
+              ntptEventTag('ev=register');
+            }
 						window.open('http://www.asf.alaska.edu/program/sdc/proposals');
   						return false;
 					},
@@ -228,6 +234,9 @@ var UserLoginButton = Backbone.View.extend( {
 	},
 	
 	login_button_action: function() {
+    if(typeof ntptEventTag == 'function') {
+      ntptEventTag('ev=loginModal');
+    }
 		SearchApp.userLoginView.render();
 		return this;
 	},

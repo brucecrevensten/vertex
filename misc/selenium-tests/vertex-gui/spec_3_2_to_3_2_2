@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://testvertex.daac.asf.alaska.edu/" />
+<title>spec_3_2_to_3_2_2</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">spec_3_2_to_3_2_2</td></tr>
+</thead><tbody>
+<tr>
+	<td>verifyNotTable</td>
+	<td>id=download_queue_table.1.0</td>
+	<td>R1_61127_ST6_F287.jpg</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=td..sorting_1 &gt; span</td>
+	<td>ALPSRP208631300-L1.5.zip</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//table[@id='download_queue_table']/tbody/tr/td[6]/a/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=td..sorting_1 &gt; span</td>
+	<td>ALPSRP247141290-L1.5.zip</td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>css=td..sorting_1</td>
+	<td>ALPSRP208631300-L1.5.zip</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>css=#queue_summary &gt; span.ui-button-text</td>
+	<td>Download queue (1 item, 89.83 MB)</td>
+</tr>
+</tbody></table>
+</body>
+</html>

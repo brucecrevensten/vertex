@@ -35,10 +35,22 @@ be used to wrap anything before the WHERE clause.
 =cut
 
 sub getSelectXml {
-  return qq(
+  my ($self) = @_;
+  
+  return q~
+  select XMLELEMENT("ROW", XMLForest(
+  ~ . $self->getSelectFields() . q~
+  )).getStringVal() FROM
+    data_product dp
+  WHERE
+    processingtype not in ('THUMBNAIL', 'BROWSE512') and
+  ~;
+}
 
- select XMLELEMENT("ROW",
-  XMLForest(
+sub getSelectFields {
+  my ($self) = @_;
+  
+  return q~
     granuleName,
     productName,
     platform,
@@ -85,11 +97,7 @@ sub getSelectXml {
     granuleType,
     fileName,
     granuleName || '_' || processingType AS id
-  )).getStringVal() FROM
-    data_product dp
-  WHERE
-    processingtype not in ('THUMBNAIL', 'BROWSE512') and
-  );
+  ~;
 }
 
 =item getResultsByGranuleList
@@ -103,7 +111,7 @@ Precondition: $granuleList is a comma-separated list of granule names, validated
 sub getResultsByGranuleList {
 
   my ($self, $r) = @_;
-  my $fragment = $self->buildListQuery( 'granuleName', $r->granule_list) . 
+  my $fragment = $self->buildBigListQuery( 'granuleName', $r->granule_list) . 
   $self->buildListQuery('processingType', $r->processing);
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelectXml . $fragment;
@@ -114,7 +122,7 @@ sub getResultsByGranuleList {
 sub getResultsByProductList {
 
   my ($self, $products) = @_;
-  my $fragment = $self->buildListQuery( 'filename', $products );
+  my $fragment = $self->buildBigListQuery( 'filename', $products );
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelectXml . $fragment;
   return $self->doQuery($sql);
@@ -125,6 +133,7 @@ sub getApiQuery {
   my ($self, $r) = @_;
   my $fragment = $self->buildListQuery('platformType', $r->platform).
   $self->buildDateQuery($r->start, $r->end).
+  $self->buildSeasonalQuery($r->season_start, $r->season_end, $r->repeat_start, $r->repeat_end).
   $self->buildListQuery('processingType', $r->processing).
   $self->buildListQuery('beammodetype', $r->beam).
   $self->buildDirectionQuery($r->direction).
@@ -248,13 +257,12 @@ Params:
 
 =cut
 sub buildDateQuery {
-  my ($self, $start, $end) = @_;
-
+  my ($self, $start, $end, $repeat_start, $repeat_end) = @_;
+  
   # no dates = no restriction query
   if( !$start && !$end ) { return ''; }
-
+  
   my $fieldRef = "startTime";
-
   # before end date 
   if( !$start && $end ) {
     return ' AND '.$fieldRef." <= TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
@@ -267,6 +275,20 @@ sub buildDateQuery {
 
   # between two dates
   return ' AND '.$fieldRef." BETWEEN TO_DATE(".$self->dbQuote($start->ymd).",'YYYY-MM-DD') AND TO_DATE(".$self->dbQuote($end->ymd).",'YYYY-MM-DD')";
+}
+
+sub buildSeasonalQuery {
+  my ($self, $smon, $emon, $syear, $eyear) = @_;
+  
+  return '' unless ($smon and $emon and $syear and $eyear);
+  my $sql = '';
+  if($smon > $emon) { # span the new year
+    $sql .= " AND to_number(to_char(startTime, 'MM')) >= to_number(".$self->dbQuote($smon).") and to_number(to_char(startTime, 'MM')) <= to_number(".$self->dbQuote($emon).")";
+  } else { # not spanning the new year
+    $sql .= " AND to_number(to_char(startTime, 'MM')) between to_number(".$self->dbQuote($smon).") and to_number(".$self->dbQuote($emon).")";
+  }
+  $sql .= " AND to_number(to_char(startTime, 'YYYY')) between to_number(".$self->dbQuote($syear).") and to_number(".$self->dbQuote($eyear).")";
+  return $sql;
 }
 
 sub buildSpatialQuery {
@@ -315,6 +337,30 @@ sub buildListQuery {
     }
   }
   return '';
+}
+
+sub buildBigListQuery {
+  my ($self, $field, $list) = @_;
+  
+  my $insertSql = q(
+    insert into session_temp_table (
+      id
+    ) values (
+      UPPER(?)
+    )
+  );
+
+  $self->dbh->do(q(delete from session_temp_table));
+
+  my $sth = $self->dbh->prepare($insertSql);
+
+  foreach my $row (@{$list}) {
+    $sth->execute($row);
+  }
+
+  return(qq(
+    AND UPPER($field) in (select id from session_temp_table)
+  ));
 }
 
 sub buildBeamQuery {

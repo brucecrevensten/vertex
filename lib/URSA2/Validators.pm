@@ -131,6 +131,32 @@ sub validateDate {
   return undef;
 }
 
+sub validateYear {
+  my ($self, $year, $field) = @_;
+  if($year && $year !~ /^\d{4}$/) {
+    InvalidParameter->throw(
+      parameter => $field,
+      value => $year
+    );
+  } else {
+    return $year;
+  }
+  return undef;
+}
+
+sub validateMonth {
+  my ($self, $month, $field) = @_;
+  if($month && ($month !~/^\d{1,2}$/ || $month < 1 || $month > 12)) {
+    InvalidParameter->throw(
+      parameter => $field,
+      value => $month
+    );
+  } else {
+    return $month;
+  }
+  return undef;
+}
+
 sub start {
   my ($self, $start) = @_;
   return $self->validateDate($start,'start');
@@ -139,6 +165,26 @@ sub start {
 sub end {
   my ($self, $end) = @_;
   return $self->validateDate($end,'end');
+}
+
+sub repeat_start {
+  my ($self, $year) = @_;
+  return $self->validateYear($year, 'repeat_start');
+}
+
+sub repeat_end {
+  my ($self, $year) = @_;
+  return $self->validateYear($year, 'repeat_end');
+}
+
+sub season_start {
+  my ($self, $month) = @_;
+  return $self->validateMonth($month, 'season_start');
+}
+
+sub season_end {
+  my ($self, $month) = @_;
+  return $self->validateMonth($month, 'season_end');
 }
 
 =item bbox

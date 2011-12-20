@@ -36,8 +36,6 @@ var DownloadQueueSearchResultsView = Backbone.View.extend({
     _.bindAll(this, "render");
     this.collection.bind("add", this.render);
     this.collection.bind("remove", this.render);
-	this.collection.bind("add", this.alter_cookie);
-	this.collection.bind("remove", this.alter_cookie);
 
     //TODO: bind this to the 'render' event on the search results
   },
@@ -46,7 +44,7 @@ var DownloadQueueSearchResultsView = Backbone.View.extend({
     this.srv.bind("render", this.render);
   },
   render: function() {
-    $(SearchApp.searchResultsView.el).find('li.productRow').removeClass('inQueue');
+    $(SearchApp.searchResultsView.el).find('.productRow').removeClass('inQueue');
     this.collection.each( function(m) {
       $(SearchApp.searchResultsView.el).find('[product_id="'+m.get('productId')+'"]').addClass('inQueue');
     });
@@ -147,7 +145,9 @@ var DownloadQueueView = Backbone.View.extend(
 
 
 	convert_cookie_to_queue: function() {
+   
 	var cookie = $.storage.get(this.q_obj);
+
 	
 		if (cookie != null) {
 			var dp_list = cookie.split('++');
@@ -169,11 +169,13 @@ var DownloadQueueView = Backbone.View.extend(
 			dp_json_list.push( JSON.stringify(thing.toJSON()) );// = JSON.stringify(thing.toJSON());
 		});
 		
+ 
 		cookie = dp_json_list.join("++");
 		$.storage.set(this.q_obj, JSON.stringify(this.collection.toJSON()));
   },
 
 	clear_queue_all: function() {		
+    $(SearchApp.searchResultsView.el).find('.productRow').removeClass('inQueue');
 		this.collection.each( function(thing ) { 
 					$("#b_"+thing.id).toggleClass('tool-dequeue');
 					$("#b_"+thing.id).prop('selected','false');
@@ -228,7 +230,7 @@ var DownloadQueueView = Backbone.View.extend(
 
       $(this.el).html(
         _.template('\
-<form id="download_queue_form" action="<%= url %>">\
+<form id="download_queue_form" action="<%= url %>" method="POST">\
 <%= restricted %>\
 <table class="datatable" id="download_queue_table">\
 <thead>\
@@ -323,14 +325,23 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
       });
 
       $(this.el).find("#download_type_metalink").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Bulk Download (.metalink)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadMetalink');
+        }
         $('#format_specifier').val( 'metalink');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_csv").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Download Metadata (.csv)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadCSV');
+        }
         $('#format_specifier').val( 'csv');
         $('#download_queue_form').submit();
       });
       $(this.el).find("#download_type_kml").button( { icons: { primary: "ui-icon-circle-arrow-s" }, label:'Google Earth (.kml)'} ).click( function() {
+        if(typeof ntptEventTag == 'function') {
+          ntptEventTag('ev=downloadKML');
+        }
         $('#format_specifier').val( 'kml');
         $('#download_queue_form').submit();
       });

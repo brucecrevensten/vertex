@@ -11,6 +11,20 @@ var SearchResults = Backbone.Collection.extend(
 
     },
 
+/*    clearAllPoly: function(map) {
+        for (var i=0; i< this.models.length; i++) {
+          if (map[this.models[i].id]) {
+            this.
+          }
+        
+        } 
+                                  if (this.mo[d.id]) {
+                                    this.mo[d.id].setMap(null); 
+                                  }
+                                 },this) 
+                               ); 
+    },*/
+
     // build the nested model structure of DataProducts and DataProductFiles
     build: function(data) {
       this.trigger('build');
@@ -31,7 +45,7 @@ var SearchResults = Backbone.Collection.extend(
         }
 
         // Create the DataProductFile, add to the collection in the DataProduct
-        dp.files.add( {
+        dp.files.add( { 
           thumbnail: data[i].THUMBNAIL,
           productId: data[i].GRANULENAME,
           id: data[i].ID,
@@ -51,29 +65,26 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     filter: function() {
-      this.trigger('filter');
-
-      var d = this.postFilters.applyFilters( this.data );
-      this.build( d );
-      this.filteredProductCount = _.uniq( this.pluck('GRANULENAME') ).length;
     },
 
-    fetchSearchResults: function(searchURL, searchData) {
-
+    fetchSearchResults: function(searchURL, searchData, callback) {
+      
       this.data = {}; // flush previous result set
 
-     // var results = 
-	var xhr = $.ajax(
+	   var xhr = $.ajax(
         {
           type: "POST",
           url: searchURL,
           data: searchData,
           processData: true,
-          dataType: "jsonp",
+          dataType: "json",
           context: this,
           success: function(data, textStatus, jqXHR) {
+          if (callback != null) {
+              callback(); // this is for using sinon spys in unit tests
+           }
             this.data = data;
-
+			     
             this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
 
@@ -82,10 +93,11 @@ var SearchResults = Backbone.Collection.extend(
             this.procTypes = _.uniq( _.pluck( this.data, 'PROCESSINGTYPE') );
       
             this.build(this.data);
-            this.trigger('refresh');
 
+            this.trigger('refresh');
+			    
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
             // todo: move this gui code into the view objects
             case 204:
@@ -96,9 +108,9 @@ var SearchResults = Backbone.Collection.extend(
               SearchApp.searchResultsView.showError(jqXHR);
 			        this.trigger('clear_results');
           }
-        }
+        }, this)
       });
-		
+		  
 		return xhr;
 
     },
@@ -294,6 +306,12 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
       ).click( function(e) {
        
         var pl = $(this).attr('processing');
+
+        if(typeof ntptEventTag == 'function') {
+          ntptAddPair('processingType', pl);
+          ntptEventTag('ev=selectAll');
+        }
+
         var filesToAdd = [];
         SearchApp.searchResults.each(
           function(aProduct)
@@ -308,7 +326,7 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
             }
           );
         SearchApp.downloadQueue.add( _.union(filesToAdd), {'silent':true} ); // suspend extra flashes of queue button
-        SearchApp.downloadQueue.trigger('add'); // manually trigger to get one flash effect
+        SearchApp.downloadQueue.trigger('add');
       }
       );
       m.append( li.append( ab ) );
@@ -325,13 +343,27 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this, "render");
+        this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
+           if (this.dataTable != null)  {
+             _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {          
+                
+                if (h[1] == 1) {
+                  this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
+                } else {
+                  this.mo[$(h[0]).find("div").attr("product_id")].setMap(null);
+                }
+                h[1]=0;
+
+              },this));
+          }
+    },this));
 
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
 
-    this.options.downloadQueue.bind('queue:remove', this.render);
+    this.default_tile_opacity=0.2;
    
  	this.model.bind('authSuccess', jQuery.proxy(function() {
 		this.render('authSuccess');
@@ -340,6 +372,7 @@ var SearchResultsView = Backbone.View.extend(
 
     // Observe changes to the post-filters
     this.options.postFilters.bind('change', this.render);
+    this.options.postFilters.bind('refreshMap', this.refreshMap);
 
     this.showBeforeSearchMessage();
   },
@@ -363,7 +396,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#results-banner").hide();
     $('#active-filters').show();
     $('#srCount').show();
-    $('#srProcLevelTool').show();
+    $('#srProcLevelTool').show(); 
   },
 
   showSearching: function() {
@@ -387,6 +420,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#async-spinner").hide();
     $("#results-banner").hide();
     $("#error-message").show();
+
     var errorText;
     switch( jqXHR.status ) {
       case '400': errorText = 'Some search fields were missing or invalid, and your search could not be completed.';
@@ -409,6 +443,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#platform_facet").hide();
     $('#platform_facets').hide();
+    
     this.clearOverlays();
   },
 
@@ -435,7 +470,9 @@ var SearchResultsView = Backbone.View.extend(
   },
   render: function(args) {
     this.trigger('render');
+   
 
+	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
       this.clearOverlays();
 	  if (args != "authSuccess") {
@@ -444,48 +481,85 @@ var SearchResultsView = Backbone.View.extend(
 	  return this;
     }
 
-    var el = $(this.el);
-    var parent = el.parent();
-    el.detach();
-    el.empty();
-    
-    var li = '';
+    $('#con').empty(); 
+
+    var el = $('<table id="searchResults" width="375" style="margin:20px 0px 20px 0px;"></table>');
+  
     var ur = SearchApp.user.getWidgetRenderer();
+    var li="";
+    var li_2="";
+    this.collection.each( function( model, i, l ) {   
+          var d = model.toJSON();
+        
+         li = '<tr><td class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
+          + ur.srThumbnail( model )
+          + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
+          + '<div class="productRowTools">'
+          + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
+          + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
+          + '<span class="ui-button-text">More information&hellip;</span>'
+          + '</button>'
+          + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
+          + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
+          + '<span class="ui-button-text">Show files&hellip;</span>'
+          + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
+          + '</div>'
+          + '</div><div style="clear:both;"></div></td></tr>';
+  
+      li_2 += li;
+      }, this);
+
+      var tableHtml =
+              '<thead>'+
+                '<tr>'+
+                  '<th></th>'+
+                '</tr>'+
+              '</thead>'+
+              '<tbody>'+
+                li_2 +
+              '</tbody>';
+        el.html(tableHtml);
+
+        $('#con').append(el); // append the table to it's container
     
-    // This loop need to be tight.
-    this.collection.each( function( model, i, l ) {
-      
-      var d = model.toJSON();
-      li += '<li class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
-      + ur.srThumbnail( model )
-      + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
-      + '<div class="productRowTools">'
-      + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
-      + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
-      + '<span class="ui-button-text">More information&hellip;</span>'
-      + '</button>'
-      + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
-      + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
-      + '<span class="ui-button-text">Show files&hellip;</span>'
-      + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
-      + '</div>'
-      + '</div><div style="clear:both;"></div></li>';
 
-    }, this);
+    // Enhance the table using a DataTable object. 
+     this.dataTable = $('#searchResults').dataTable(
+      { 
+           "oLanguage": {
+            "sSearch": "Find"
+           },
+          "bProcessing": true,
+          "bAutoWidth": true,
+          "aoColumns": [
+            {"sWidth": "100%"}
+          ],
+          "bDestroy": true,     // destroy old table
+          "sScrollY": "500px",
+          "iDisplayLength": 1000, // default number of rows per page
+          "bLengthChange": false ,// do not allow users to change the default page length
+          "fnDrawCallback": jQuery.proxy(function() {
+              this.trigger("DrawPolygonsOnMap");
+            },this),
+           "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
+              aData[1]=1;
+              return nRow;
 
-    // TODO remove, after benchmarking?
-    //li.find('img').error( function() { $(this).remove(); });
+           }
+    });
 
-    el.html(li);
-    parent.append(el);
+    SearchApp.dataTable = this.dataTable;
 
-    $('#searchResults li.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
-    $('#searchResults li.productRow').live('mouseleave', { view: this }, this.removeHighlight );
+    $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
+    $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
+
 
     this.showResults();
     this.clearOverlays();
     this.renderOnMap();
     this.resetHeight();
+
+   
 
     if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
       $("#srCount").empty().html(_.template("<%= total %> results found",
@@ -512,49 +586,52 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   renderOnMap: function() {
-
-    e = this.collection.at(0).toJSON();
     this.bounds = new google.maps.LatLngBounds();
+    var changeBounds=false; 
 
-    this.collection.each( function( dp, i, l ) {
+    _.each(SearchApp.dataTable.fnGetData(), jQuery.proxy(function(h) {
+          var dp = this.collection.get( $(h[0]).find("div").attr("product_id") );
+        if (!dp.get("filtered")) {
+          changeBounds=true; 
+          e = dp.toJSON();
+          
+          this.bounds.extend(new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON));
+          this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
+          this.bounds.extend(new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON));
+          this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
 
-        e = dp.toJSON();
-        
-        this.bounds.extend(new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON));
-        this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
-        this.bounds.extend(new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON));
-        this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
+          this.mo[ e.id ] = new google.maps.Polygon({
+              paths: new Array(
+                new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON),
+                new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON),
+                new google.maps.LatLng(e.FARENDLAT, e.FARENDLON),
+                new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
+              ),
+              fillColor: '#777777',
+              fillOpacity: this.default_tile_opacity,
+              strokeColor: '#333333',
+              strokeOpacity: 1,
+              strokeWeight: 2,
+              zIndex: 1000,
+              clickable: true
+            });
+          this.mo[ e.id ].setMap(searchMap);
+      }
 
-        this.mo[ e.id ] = new google.maps.Polygon({
-            paths: new Array(
-              new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON),
-              new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON),
-              new google.maps.LatLng(e.FARENDLAT, e.FARENDLON),
-              new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
-            ),
-            fillColor: '#777777',
-            fillOpacity: 0.25,
-            strokeColor: '#333333',
-            strokeOpacity: 0.5,
-            strokeWeight: 2,
-            zIndex: 1000,
-            clickable: true
-          });
-        this.mo[ e.id ].setMap(searchMap);
+      }, this));
 
-
-    }, this);
-
-    searchMap.fitBounds( this.bounds );
+      if (changeBounds) {
+        searchMap.fitBounds( this.bounds );
+      }
   },
   clearOverlays: function() {
 
     if( this.activePoly ) {
       this.mo[this.activePoly].setOptions({
         fillColor: '#777777',
-        fillOpacity: 0.25,
+        fillOpacity: this.default_tile_opacity,
         strokeColor: '#333333',
-        strokeOpacity: 0.5,
+        strokeOpacity: 1,
         zIndex: 1000
       });
     }
@@ -566,8 +643,11 @@ var SearchResultsView = Backbone.View.extend(
     this.activePoly = null;
 
   },
+  refreshMap: function() {
+    this.clearOverlays();
+    this.renderOnMap();
+  },
   removeHighlight: function(e) {
-   
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
     if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), $(e.currentTarget).attr("product_id") )) {
       // It's in the DQ, turn it blue again  
@@ -581,9 +661,9 @@ var SearchResultsView = Backbone.View.extend(
     } else {
       e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
         fillColor: '#777777',
-        fillOpacity: 0.25,
+        fillOpacity: this.default_tile_opacity,
         strokeColor: '#333333',
-        strokeOpacity: 0.5,
+        strokeOpacity: 1,
         zIndex: 1000
       });
     }
@@ -606,9 +686,9 @@ var SearchResultsView = Backbone.View.extend(
       } else {
         e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
           fillColor: '#777777',
-          fillOpacity: 0.25,
+          fillOpacity: this.default_tile_opacity,
           strokeColor: '#333333',
-          strokeOpacity: 0.5,
+          strokeOpacity: 1,
           zIndex: 1000
         });
       }
@@ -621,8 +701,9 @@ var SearchResultsView = Backbone.View.extend(
       fillOpacity: .75,
       strokeColor: '#FFFF00',
       strokeOpacity: 1,
-      zIndex: 10000
+      zIndex: 1500
     });
+
    },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.

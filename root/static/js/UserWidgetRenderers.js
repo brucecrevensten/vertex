@@ -18,23 +18,53 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
   _ppBrowse: function( m ) {
 		// Try to use the BROWSE512
     // probably want to hide image until it's loaded then show it then resize the profile.
+    var t;
+    var loading;
 		if ( 'none' != m.get('BROWSE')) {
-      var t = jQuery(
+      loading = $('<div style="width:512px;height:512px" id="ppImageLoading"><img src="static/images/loading.gif"/></div>');
+      t = jQuery(
         '<img/>',
         {
-          style: "height: 512px",
           src: m.get('BROWSE'),
           title: m.get('GRANULENAME')
         }
-      ).error( { 'context':this }, function(e) { $(this).remove(); });
+      ).error( { 'context':this }, function(e) {
+        $(this).remove();
+        $('#ppImageLoading').hide();
+      });
       var s = m.files.select( function(row) { return ( 'BROWSE' == row.get('processingType') ) } );
+      t.load(function() {
+        // Scale the image to be no bigger then 512px and preserve the aspect
+        // ratio. This must be done here, we can only get the image dimensions
+        // after the image is displayed.
+        var img = $("#product_profile img");
+        var imgH = img.height();
+        var imgW = img.width();
+        if(imgH >= imgW && imgH > 512) {
+          img.height('512');
+          img.width(imgW/imgH * 512);
+        } else if(imgW > imgH && imgW > 512) {
+          img.width('512');
+          img.height(imgH/imgW * 512);
+        }
+        $('#ppImageLoading').hide();
+        $(this).show();
+      });
+      t.hide();
       if ( s[0] ) {
         t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank', 'title':m.get('GRANULENAME') } ).html( t );
+        t.click(function() {
+          if(typeof ntptLinkTag == 'function') {
+            return ntptLinkTag(this);
+          }
+        });
       }     
 		} else {
       this.ppWidth = 500; // missing image = make narrow  
     }
-    return t;
+    if(t) {
+      return t.append(loading);
+    }
 	},
 	ppBrowse: function( m ) {
 		if ( 'RADARSAT-1' == m.get('PLATFORM') || 'JERS-1' == m.get('PLATFORM') ) {

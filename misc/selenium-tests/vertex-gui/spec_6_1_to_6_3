@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://testvertex.daac.asf.alaska.edu/" />
+<title>spec_6_1_to_6_3</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">spec_6_1_to_6_3</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-148.70,64.35,-146.48,65.22</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Filter By Platform</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='platform_facets']/div/ul/li[1]/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5</td>
+	<td>FBS (Fine Beam Single Polarization)</td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS21_5.beamSelector</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS34_3.beamSelector</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS41_5.beamSelector</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS50_8.beamSelector</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5[2]</td>
+	<td>FBD (Fine Beam Double Polarization)</td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBD.beamSelector input#a3_FBD_FBD34_3.beamSelector</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5[3]</td>
+	<td>PLR (Polarimetric Mode)</td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_PLR.beamSelector input#a3_PLR_PLR21_5.beamSelector</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_PLR.beamSelector input#a3_PLR_PLR23_1.beamSelector</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5[4]</td>
+	<td>WB1 (ScanSAR Burst Mode 1)</td>
+</tr>
+<tr>
+	<td>verifyChecked</td>
+	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_WB1.beamSelector input#a3_WB1_WB1.beamSelector</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -45,6 +45,26 @@ sub end {
   return $self->{end};
 }
 
+sub repeat_start {
+  my $self = shift;
+  return $self->{repeat_start};
+}
+
+sub repeat_end {
+  my $self = shift;
+  return $self->{repeat_end};
+}
+
+sub season_start {
+  my $self = shift;
+  return $self->{season_start};
+}
+
+sub season_end {
+  my $self = shift;
+  return $self->{season_end};
+}
+
 sub bbox {
   my $self = shift;
   return $self->{bbox};
@@ -130,6 +150,10 @@ sub decode {
 
   $self->{start} = $self->{requests}->param('start');
   $self->{end} = $self->{requests}->param('end');
+  $self->{repeat_start} = $self->{requests}->param('repeat_start');
+  $self->{repeat_end} = $self->{requests}->param('repeat_end');
+  $self->{season_start} = $self->{requests}->param('season_start');
+  $self->{season_end} = $self->{requests}->param('season_end');
   $self->{limit} = $self->{requests}->param('limit');
   $self->{bbox} = $self->{requests}->param('bbox');
   $self->{polygon} = $self->{requests}->param('polygon');
@@ -165,6 +189,10 @@ sub validate {
   $self->{beam} = URSA2::Validators->beam( $self->{beam} );
   $self->{start} = URSA2::Validators->start( $self->{start} );
   $self->{end} = URSA2::Validators->end( $self->{end} );
+  $self->{repeat_start} = URSA2::Validators->repeat_start( $self->{repeat_start} );
+  $self->{repeat_end} = URSA2::Validators->repeat_end( $self->{repeat_end} );
+  $self->{season_start} = URSA2::Validators->season_start( $self->{season_start} );
+  $self->{season_end} = URSA2::Validators->season_end( $self->{season_end} );
   $self->{processing} = URSA2::Validators->processing( $self->{processing} );
   $self->{format} = URSA2::Validators->format( $self->{format} );
   $self->{platform} = URSA2::Validators->platform( $self->{platform} );
@@ -186,6 +214,22 @@ sub validateRequiredFields {
   if ( $self->{granule_list} ) {
     # if granule_list is present, nothing else is required.
     return;
+  } elsif ( $self->{season_start} || $self->{season_end} || $self->{repeat_start} || $self->{repeat_end} ) {
+    if($self->{start} || $self->{end}) {
+      # can't do a regular time span and a seasonal span in the same query
+      InvalidParameter->throw(
+        parameter=>'start, end, season_start, season_end, repeat_start, repeat_end',
+        message => 'Seasonal time spans and continuous time spans can not be used in the same query.'
+      );
+    } elsif (!$self->{season_start} || !$self->{season_end} || !$self->{repeat_start} || !$self->{repeat_end}) {
+      # must have all four params to do a seasonal search
+      MissingParameter->throw(
+        parameter=>'season_start, season_end, repeat_start, repeat_end',
+        message => 'Missing seasonal parameter: must provide all of season_start, season_end, repeat_start, repeat_end'
+      );
+    } else {
+      return;
+    }
   } elsif ( $self->{start} ) {
     # if start date is present, nothing else is required.
     # TC1001

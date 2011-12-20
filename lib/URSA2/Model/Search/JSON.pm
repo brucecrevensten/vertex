@@ -9,64 +9,21 @@ use URSA2::Exceptions;
 use base 'URSA2::Model::Search';
 
 sub getSelect {
-  return (qq(
-    select
-      granuleName,
-      productName,
-      platform,
-      sensor,
-      beamModeType,
-      TRIM(beamModeDesc) beamModeDesc,
-      polarization,
-      orbit,
-      pathNumber,
-      frameNumber,
-      missionName,
-      TO_CHAR(acquisitionDate, 'YYYY-MM-DD HH24:MI:SS') AS acquisitionDate,
-      TO_CHAR(processingDate, 'YYYY-MM-DD HH24:MI:SS') AS processingDate,
-      processingType,
-      processingTypeDisplay,
-      processingLevel,
-      processingDescription,
-      TO_CHAR(startTime, 'YYYY-MM-DD HH24:MI:SS') AS startTime,
-      TO_CHAR(endTime, 'YYYY-MM-DD HH24:MI:SS') AS endTime,
-      centerLat,
-      centerLon,
-      nearStartLat,
-      nearStartLon,
-      nearEndLat,
-      nearEndLon,
-      farStartLat,
-      farStartLon,
-      farEndLat,
-      farEndLon,
-      faradayRotation,
-      ascendingDescending,
-      url,
-      nvl((select url from data_product where granulename = dp.granulename
-       and processingtype = 'THUMBNAIL'), 'none') AS thumbnail,
-      coalesce((select url from data_product where granulename = dp.granulename
-       and processingtype = 'BROWSE512'), 
-       (select url from data_product where granulename = dp.granulename
-        and processingtype = 'BROWSE'), 'none') AS browse,
-      bytes,
-      ROUND( bytes/1024/1024, 2 ) AS fileSize,
-      offNadirAngle,
-      md5sum,
-      granuleDesc,
-      granuleType,
-      fileName,
-      granuleName || '_' || processingType AS id
-    FROM
+  my ($self) = @_;
+  
+  return q~
+  select
+  ~ . $self->getSelectFields() . q~
+  FROM
     data_product dp
   WHERE
     processingtype not in ('THUMBNAIL', 'BROWSE512') and
-  ));
+  ~;
 }
 
 sub getResultsByGranuleList {
   my ($self, $r) = @_;
-  my $fragment = $self->buildListQuery( 'granuleName', $r->granule_list) .
+  my $fragment = $self->buildBigListQuery( 'granuleName', $r->granule_list) .
   $self->buildListQuery('processingType', $r->processing);
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelect . $fragment;
@@ -75,7 +32,7 @@ sub getResultsByGranuleList {
 
 sub getResultsByProductList {
   my ($self, $products) = @_;
-  my $fragment = $self->buildListQuery( 'filename', $products );
+  my $fragment = $self->buildBigListQuery( 'filename', $products );
   $fragment =~ s/^\s+AND\s//;
   my $sql = $self->getSelect . $fragment;
   return $self->doQuery($sql)
