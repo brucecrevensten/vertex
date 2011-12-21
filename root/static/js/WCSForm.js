@@ -1,6 +1,7 @@
 /**** Form Element Models *****************************/
 // The purpose of these models are to store metadata
 ////
+var MapEvent = Backbone.Model.extend();
 
 var DataSetM = Backbone.Model.extend({
 	defaults: { name: "" }, 
@@ -110,6 +111,12 @@ var MenuToggleSwitchM = Backbone.Model.extend({
 	}
 });
 
+// The map form 
+var BboxM = MenuToggleFormM.extend({
+	
+});
+//
+
 var DataSetFormM = MenuToggleSwitchM.extend({
 	//defaults: {"paramName": "Dataset"}
 	
@@ -184,6 +191,22 @@ var MenuToggleViewV = Backbone.View.extend({
 				}
 			},this));*/
 		},
+		set3: function(elList) {
+			this.elList = elList;
+			this.bindFunc(this.eventName);
+			//this.bindFunc()	
+			/*$(this.el).bind('change', jQuery.proxy(function(e) {
+
+				if (this.enabled) {
+				//	console.log("CHANGE CHANGE CHANGE");
+					// IM HERE
+					//console.log($(this.el));
+					var value = $(this.el).find('select').val();
+					console.log("The value is: " + value);
+					this.model.set({selected: value});
+				}
+			},this));*/
+		},
 
 
 	disable: function() {
@@ -243,6 +266,8 @@ var MenuToggleInputViewV = MenuToggleViewV.extend({
 		}
 	}
 });
+
+
 
 var DataSetFormV = MenuToggleSelectViewV.extend({	
 });

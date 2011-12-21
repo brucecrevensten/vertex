@@ -210,7 +210,7 @@ var StateInflator = Backbone.Model.extend({
           context: this,
           success: jQuery.proxy(function(data, textStatus, jqXHR) {
             this.trigger('request_success');
-             this.process(data);         
+            this.process(data);         
           },this),
           error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
             this.trigger('request_error');
@@ -234,6 +234,7 @@ var StateInflator = Backbone.Model.extend({
     generateMetadataPersistenceState: function(responseData) {
       var dataSetDict = {};
 
+      this.generateMap();
       for (dataSetName in responseData["DataSet"]) {
         ds = responseData["DataSet"][dataSetName];
 
@@ -267,7 +268,7 @@ var StateInflator = Backbone.Model.extend({
           projectionCollection.add(projection);
         }
 
-        var boxlayer;
+    /*    var boxlayer;
         var map = new OpenLayers.Map('map', { // FIXME: This call is causing the state inflator to choke somehow
           projection: "EPSG:3031",                                                              // FIXME: pull from json return?
           units: "m",                                                                           // FIXME: pull from json return?
@@ -313,7 +314,7 @@ var StateInflator = Backbone.Model.extend({
       
         boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
         map.addLayer(boxlayer);
-        
+        */
         // Initialize the Dataset
         dataSetM.set({
             name:dataSetName,
@@ -322,7 +323,7 @@ var StateInflator = Backbone.Model.extend({
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
             projection: projectionCollection,
-            map: map
+           // map: map
         });
         dataSetDict[dataSetName] = dataSetM;
       }
@@ -330,6 +331,80 @@ var StateInflator = Backbone.Model.extend({
       // Attach the Dictionary of Datasets to the window
       this.dataSetDict = dataSetDict;
       window.dataSetDict = dataSetDict;
+
+    },
+
+    generateMap: function() {
+        this.mapEvent = new MapEvent();
+        window.mapEvent = this.mapEvent;
+
+        var boxlayer;
+
+        var map = new OpenLayers.Map('map', { // FIXME: This call is causing the state inflator to choke somehow
+          projection: "EPSG:4326",                                                              // FIXME: pull from json return?
+                                                                                     // FIXME: pull from json return?
+          maxExtent: new OpenLayers.Bounds(121, -20, 147.5, -10),                  // FIXME: pull from json return?
+          //maxResolution: 15000                                                                  // FIXME: pull from json return?
+        });
+
+        console.log(map);
+
+        var control = new OpenLayers.Control();
+        OpenLayers.Util.extend(control, {
+          draw: function () {
+            // this Handler.Box will intercept the shift-mousedown
+            // before Control.MouseDefault gets to see it
+            this.box = new OpenLayers.Handler.Box( control,
+              {"done": this.retain},
+              {keyMask: OpenLayers.Handler.MOD_SHIFT});
+            this.box.activate();
+          },
+          retain: jQuery.proxy(function (bounds) {
+            var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+            var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+            var bbox = new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
+            var feature = new OpenLayers.Feature.Vector(bbox.toGeometry(), null, {
+              strokeColor: "#4040FF",
+              strokeOpacity: 1.0,
+              strokeWidth: 2,
+              fillOpacity: 0.5,
+              fillColor: "#8080FF"
+            });
+            boxlayer.removeAllFeatures();
+            boxlayer.addFeatures(feature);
+
+            //this.setStroke();
+            console.log("THE BOUNDING BOX IS " );
+            console.log(bbox);
+
+            window.mapEvent.trigger('update_openlayers_bbox');
+
+          },this)
+        });
+        map.addControl(control);
+      
+        boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
+        map.addLayer(boxlayer);
+        //http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia
+
+        var datasetLayer = new OpenLayers.Layer.WMS("Australia (EPSG: 4326)",
+          //ds["wmsUrl"],
+          "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
+          {layers: 'Northern Australia - October - November 1996', CRS: "EPSG:4326"}  // FIXME: pull from json return?
+        );
+
+        var datasetLayer2 = new OpenLayers.Layer.WMS("TEST2",
+          //ds["wmsUrl"],
+          "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
+          {layers: 'Northern Australia - October - November 1996', CRS: "EPSG:4326"}  // FIXME: pull from json return?
+        );
+
+        map.addLayers([datasetLayer, datasetLayer2]);
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        map.zoomToMaxExtent();
+        
+        this.map = map;
+        window.map = map;
 
     },
 
@@ -377,28 +452,17 @@ var StateInflator = Backbone.Model.extend({
           var formM = new MenuToggleFormM(_.extend({menuModel: dictionary[key]}, defaults));
          
           var formV = new MenuToggleViewV({model: formM, menuModel: dictionary[key] });
-          
-         // console.log("IN there");
-          //console.log
+
           if (renderHandle != null && typeof(renderHandle == "function")) {
             formV.render = renderHandle;
           }
 
-        //  console.log(binding);
-       //   console.log(binding["name"]);
-
           if (binding != null && binding["name"] != null && 
               binding["callback"] != null && 
               typeof(binding["callback"]) == "function") {
-           
-           
+              //console.log("SETTING UP THE BINDING CALLBACK");
               formV.bindFunc = binding["callback"];
-              formV.eventName = binding["name"];
-             /* console.log("About to call " );
-              console.log(formV.bindFunc); 
-              console.log("With the event:" + binding["name"] + ":");
-              formV.bindFunc(binding["name"]);*/
-            
+              formV.eventName = binding["name"];        
           }
 
 
@@ -443,17 +507,169 @@ var StateInflator = Backbone.Model.extend({
         this.menuFactory('PROJECTION', this.dataSetDict, "projection", {"paramName":"CRS"}, "selectable");
         
         this.menuFactory('IMAGEWIDTH', this.dataSetDict, null, {"paramName": "width"}, "default", 
-        MenuToggleInputViewV.prototype.render, 
+        //MenuToggleInputViewV.prototype.render, 
+        function() {
+            if (this.enabled) {
+              var html="";
+                  if (this.model.get("selected") != null) {
+                    html = "<input value="+'"'+this.model.get("selected") +'"'+"></input>";
+                  } else {
+                    console.log("EMPTY INPUT");
+                    html="<input></input>"
+                  }
+                   $(this.el).html(html);
+            }
+        },
+
         {
             name: "change",
             callback: bindInput
         });
         this.menuFactory('IMAGEHEIGHT', this.dataSetDict, null, {"paramName": "height"}, "default", 
-        MenuToggleInputViewV.prototype.render, 
+        //MenuToggleInputViewV.prototype.render, 
+        function() {
+            if (this.enabled) {
+              var html="";
+                  if (this.model.get("selected") != null) {
+                    html = "<input value="+'"'+this.model.get("selected") +'"'+"></input>";
+                  } else {
+                    console.log("EMPTY INPUT");
+                    html="<input></input>"
+                  }
+                   $(this.el).html(html);
+            }
+        },
         {
             name: "change",
             callback: bindInput
         });
+
+       this.menuFactory('BBOX', this.dataSetDict, null, {"paramName":"bbox"}, "default", 
+        function() {
+           console.log("RENDER RENDER RENDER RENDER RENDER");
+           console.log(this);
+            if (this.enabled) {
+              try {
+                    //console.log("HELLO TWORLD");
+                    var html="";
+                      // We're going to draw each of the input boxes for a given bbox
+                        if (this.model.get("selected") != null && this.model.get("selected") != undefined
+                            && this.model.get("selected") != "") {
+                          $(this.elList[index]).empty();
+                          var html="";
+                            
+                            //console.log("1");
+                          // By convention the indices of the valueArray map 1-to-1 to the indices of the elList.
+                          var valueArray = this.model.get("selected").split(',');
+                          console.log(valueArray);
+
+                          // Each box has an associated set of element id's that's set by the client (interface sense, not web)
+                          // so we need to grab each id and use it to render the html
+                          for (var index=0; index<this.elList.length; index++) {
+                            var id = $(this.elList[index]).attr('id');
+                            id += "_input";
+                            html = "<input value="+'"'+ valueArray[index] +'"'+' id="'+ id +'"' +"></input>";
+                            $(this.elList[index]).html(html);
+                          }
+                        } else {
+                          for (var index=0; index<this.elList.length; index++) {
+                            var id = $(this.elList[index]).attr('id');
+                            id += "_input";
+                            html="<input id="+'"'+id+'"'+"></input>";
+                            $(this.elList[index]).html(html);
+                          }
+                        }
+                        
+
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            },
+            {
+              name: "change",
+              callback: function(event) {
+
+                    window.mapEvent.bind('update_openlayers_bbox', jQuery.proxy(function(e) {
+                      if (this.enabled) {
+                        console.log("DETECTED MAP CHANGE");
+                        // String representation of bounding box
+                        var value = window.map.layers[0].features[0].geometry.bounds.toString()
+                        console.log(window.map.layers[0].features[0].geometry.bounds.toString());
+                        this.model.set({selected: value});
+                      }
+                    },this));
+                    // iterate across each element and bind it's event to a function call
+// This code below can go away
+                    for (var index=0; index<this.elList.length; index++) {
+                      this.index=index;
+                      //console.log()
+                      //console.log(this.elList);
+                      //console.log($(this.elList[index]));
+
+                      $(this.elList[index].bind(event, jQuery.proxy(function(e) {
+
+                        // console.log(this.enabled);
+                        if (this.enabled) {
+                          console.log("CHANGED!!!!");
+                            console.log(window.map);
+                             // console.log(this.elList[0]);
+                            // console.log(index);
+                            console.log("ALSDKALKDJS");
+                              console.log( $(e.currentTarget).find('input').val() );
+                              
+                                var v = $(e.currentTarget).find('input').val();
+                                if (v == null || v == undefined || v == "") {
+                                  v = 0;
+                                }
+
+                              if (this.model.selectList == undefined || 
+                                  this.model.selectList == null) {
+                                    this.model.selectList = [];
+                              }
+
+                              this.model.selectList.push(v);
+                              this.trigger('updateSelected');
+
+                           /*   if (this.elList.length == this.model.selectList.length) {
+                                var anElementsIsFalse=false;
+                                for (var idx=0; idx<this.model.selectList.length; idx++) {
+                                  if (! this.model.selectList[idx]) {
+                                    console.log(this.model.selectList[idx]);
+                                    anElementsIsFalse = true;
+                                  }
+                                }
+                                console.log("Checking ALL ELEMENTS");
+                                console.log(anElementsIsFalse);
+                                if (anElementsIsFalse == false) {
+                                  this.trigger('updateSelected');
+                                }
+                              }*/
+                        }
+                      },this)))
+                    }
+
+                  this.bind('updateSelected', jQuery.proxy(function() {
+                      console.log("UPDATING SELECTED");
+
+                      if (this.enabled) {
+                        var valueArray=[];
+
+                        for (var index=0; index<this.elList.length; index++) {
+                          var v = $(this.elList[index]).find('input').val();
+                          valueArray.push(v);
+                          console.log("push " + v);
+                        }
+                        
+                        var value = valueArray.join(',');
+
+                        this.model.set({selected: value});
+                        console.log(this.model.get("selected"));
+                      }
+                    },this));
+              } 
+            }
+        );
         //this.menuFactory('IMAGEWIDTH', this.dataSetDict, null, {"paramName: width"});
 
     },
@@ -465,6 +681,9 @@ var StateInflator = Backbone.Model.extend({
           menu = this.createMenuSelectable(dictionary, selectableKey, defaults, renderHandle, binding);
       }
       if (type == "default") {
+          if (menuName == "BBOX") {
+            console.log("Creating BBOX");
+          }
           menu = this.createMenu(dictionary, defaults, renderHandle,binding);
       }
       this.menu[menuName] = menu;

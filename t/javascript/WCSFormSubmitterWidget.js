@@ -4,6 +4,8 @@ $(function() {
 
 	server = sinon.fakeServer.create();
 
+//bbox=125,-18,126,-17
+
 	// Projection, UNits, Max projection, 
 	server.respondWith("POST", "/fakeURL",
 	           [200, { "Content-Type": "application/json" },
@@ -13,12 +15,11 @@ $(function() {
 				        "Austrailia": {
 					        "layers": ["AusLayer1", "northern_australia","AusLayer3" ],
 					        //"wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=northern_australia&bbox=125,-18,126,-17&CRS=epsg:4326&width=500&height=500&format=jpeg",
-					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&bbox=125,-18,126,-17&",
+					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "/AustrailiaURL2",
 					        "ImageFormat": ["jpeg", "BMP", "TIFF"],
 					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"],
 					        "Projection": ["epsg:4326"]
-					    
 					    },
 					    "Alaska": {
 					        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
@@ -110,6 +111,22 @@ $(function() {
 		menuToggleList["IMAGEHEIGHT"][dataSetName].menuView.set2($("#imageHeight"));
 	}
 	menuToggleList["IMAGEHEIGHT"]["Alaska"].menuView.enabled = true;	
+
+
+	// BBOX 
+	for (dataSetName in dataSetDict) {
+		var elList = [];
+
+		elList[0] = $("#b0");
+		elList[1] = $("#b1");
+		elList[2] = $("#b2");
+		elList[3] = $("#b3");
+
+		menuToggleList["BBOX"][dataSetName].menuView.set3(elList);
+	}
+
+	menuToggleList["BBOX"]["Alaska"].menuView.enabled = true;
+	menuToggleList["BBOX"]["Alaska"].menuView.render();
 
 	//console.log("About to render the image width");
 	//menuToggleList["IMAGEWIDTH"]["Alaska"].menuView.render();
