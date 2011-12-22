@@ -12,22 +12,22 @@ $(function() {
 	            JSON.stringify(
 		        {
 			        "DataSet": {
-				        "Austrailia": {
-					        "layers": ["AusLayer1", "northern_australia","AusLayer3" ],
+				        "Australia": {
+					        "layers": ["northern_australia"],
 					        //"wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=northern_australia&bbox=125,-18,126,-17&CRS=epsg:4326&width=500&height=500&format=jpeg",
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "/AustrailiaURL2",
-					        "ImageFormat": ["jpeg", "BMP", "TIFF"],
+					        "ImageFormat": ["jpeg", "GTiff"],
 					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"],
 					        "Projection": ["epsg:4326"]
 					    },
-					    "Alaska": {
-					        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
-					        "wcsUrl": "/AlaskaURL",
+					    "South East Asia": {
+					        "layers": ["sea-2b"],
+					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/se-asia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "/AlaskaURL2",
-					        "ImageFormat": ["BMP", "GEOTIFF"],
+					        "ImageFormat": ["jpeg", "GTiff"],
 					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
-							"Projection": ["p1", "p2", "p3"]
+							"Projection": ["epsg:4326"]
 					    }/*,
 					    "Africa": {
 					        "layers": ["AfricaLayer1"],
@@ -74,44 +74,42 @@ $(function() {
 	for (dataSetName in dataSetDict) {
 		menuToggleList["LAYERS"][dataSetName].menuView.set($("#layer"));
 	}
-	menuToggleList["LAYERS"]["Alaska"].menuView.enabled = true;
+	menuToggleList["LAYERS"]["Australia"].menuView.enabled = true;
 	//menuToggleList["LAYERS"]["Alaska"].menuForm.set({"selected":"AlaskaLayer1"});
-	menuToggleList["LAYERS"]["Alaska"].menuView.render();
+	menuToggleList["LAYERS"]["Australia"].menuView.render();
 
 	// Image Format
 	for (dataSetName in dataSetDict) {
 		menuToggleList["IMAGEFORMATS"][dataSetName].menuView.set($("#imageFormat"));
 	}
-	menuToggleList["IMAGEFORMATS"]["Alaska"].menuView.enabled = true;
-	menuToggleList["IMAGEFORMATS"]["Alaska"].menuView.render();
+	menuToggleList["IMAGEFORMATS"]["Australia"].menuView.enabled = true;
+	menuToggleList["IMAGEFORMATS"]["Australia"].menuView.render();
 
 	// Interpolation Method
 	for (dataSetName in dataSetDict) {
 		menuToggleList["INTERPOLATION"][dataSetName].menuView.set($("#interpolation"));
 	}
-	menuToggleList["INTERPOLATION"]["Alaska"].menuView.enabled = true;
-	menuToggleList["INTERPOLATION"]["Alaska"].menuView.render();
+	menuToggleList["INTERPOLATION"]["Australia"].menuView.enabled = true;
+	menuToggleList["INTERPOLATION"]["Australia"].menuView.render();
 
 	// Projection 
 	for (dataSetName in dataSetDict) {
 		menuToggleList["PROJECTION"][dataSetName].menuView.set($("#projection"));
 	}
-	menuToggleList["PROJECTION"]["Alaska"].menuView.enabled = true;
-	menuToggleList["PROJECTION"]["Alaska"].menuView.render();
-
+	menuToggleList["PROJECTION"]["Australia"].menuView.enabled = true;
+	menuToggleList["PROJECTION"]["Australia"].menuView.render();
 
 	// Image Width 
 	for (dataSetName in dataSetDict) {
 		menuToggleList["IMAGEWIDTH"][dataSetName].menuView.set2($("#imageWidth"));
 	}	
-	menuToggleList["IMAGEWIDTH"]["Alaska"].menuView.enabled = true;
+	menuToggleList["IMAGEWIDTH"]["Australia"].menuView.enabled = true;
 
 	// Image Height 
 	for (dataSetName in dataSetDict) {
 		menuToggleList["IMAGEHEIGHT"][dataSetName].menuView.set2($("#imageHeight"));
 	}
-	menuToggleList["IMAGEHEIGHT"]["Alaska"].menuView.enabled = true;	
-
+	menuToggleList["IMAGEHEIGHT"]["Australia"].menuView.enabled = true;	
 
 	// BBOX 
 	for (dataSetName in dataSetDict) {
@@ -125,8 +123,8 @@ $(function() {
 		menuToggleList["BBOX"][dataSetName].menuView.set3(elList);
 	}
 
-	menuToggleList["BBOX"]["Alaska"].menuView.enabled = true;
-	menuToggleList["BBOX"]["Alaska"].menuView.render();
+	menuToggleList["BBOX"]["Australia"].menuView.enabled = true;
+	menuToggleList["BBOX"]["Australia"].menuView.render();
 
 	//console.log("About to render the image width");
 	//menuToggleList["IMAGEWIDTH"]["Alaska"].menuView.render();
@@ -140,7 +138,7 @@ $(function() {
 	menuToggleList["BAND"]["Alaska"].menuView.render();
 */
 	dataSetFormM.view.enabled = true;
-	dataSetFormM.set({"selected":"Alaska"});
+	dataSetFormM.set({"selected":"Australia"});
 
 	dataSetFormM.view.render();
 

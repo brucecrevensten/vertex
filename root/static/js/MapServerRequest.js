@@ -234,7 +234,9 @@ var StateInflator = Backbone.Model.extend({
     generateMetadataPersistenceState: function(responseData) {
       var dataSetDict = {};
 
-      this.generateMap();
+      //this.generateMap();
+      this.generateMap2();
+
       for (dataSetName in responseData["DataSet"]) {
         ds = responseData["DataSet"][dataSetName];
 
@@ -359,6 +361,7 @@ var StateInflator = Backbone.Model.extend({
               {keyMask: OpenLayers.Handler.MOD_SHIFT});
             this.box.activate();
           },
+
           retain: jQuery.proxy(function (bounds) {
             var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
             var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
@@ -394,6 +397,83 @@ var StateInflator = Backbone.Model.extend({
         );
 
         var datasetLayer2 = new OpenLayers.Layer.WMS("TEST2",
+          //ds["wmsUrl"],
+          "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
+          {layers: 'Northern Australia - October - November 1996', CRS: "EPSG:4326"}  // FIXME: pull from json return?
+        );
+
+        map.addLayers([datasetLayer, datasetLayer2]);
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        map.zoomToMaxExtent();
+        
+        this.map = map;
+        window.map = map;
+
+    },
+
+       generateMap2: function() {
+        this.mapEvent = new MapEvent();
+        window.mapEvent = this.mapEvent;
+
+        var boxlayer;
+
+        var map = new OpenLayers.Map('map', { // FIXME: This call is causing the state inflator to choke somehow
+          projection: "EPSG:4326",                                                              // FIXME: pull from json return?
+                                                                                     // FIXME: pull from json return?
+         // maxExtent: new OpenLayers.Bounds(121, -20, 147.5, -10),                  // FIXME: pull from json return?
+          //maxResolution: 200                                                                  // FIXME: pull from json return?
+        });
+
+        console.log(map);
+
+        var control = new OpenLayers.Control();
+        OpenLayers.Util.extend(control, {
+          draw: function () {
+            // this Handler.Box will intercept the shift-mousedown
+            // before Control.MouseDefault gets to see it
+            this.box = new OpenLayers.Handler.Box( control,
+              {"done": this.retain},
+              {keyMask: OpenLayers.Handler.MOD_SHIFT});
+            this.box.activate();
+          },
+          retain: jQuery.proxy(function (bounds) {
+            var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
+            var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
+            var bbox = new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
+            var feature = new OpenLayers.Feature.Vector(bbox.toGeometry(), null, {
+              strokeColor: "#4040FF",
+              strokeOpacity: 1.0,
+              strokeWidth: 2,
+              fillOpacity: 0.5,
+              fillColor: "#8080FF"
+            });
+            boxlayer.removeAllFeatures();
+            boxlayer.addFeatures(feature);
+
+            //this.setStroke();
+            console.log("THE BOUNDING BOX IS " );
+            console.log(bbox);
+
+            window.mapEvent.trigger('update_openlayers_bbox');
+
+          },this)
+        });
+        map.addControl(control);
+      
+        boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
+        map.addLayer(boxlayer);
+        //http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia
+
+        var datasetLayer = new OpenLayers.Layer.WMS("South East Asia (EPSG:4326)",
+          //ds["wmsUrl"],
+          "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
+          {layers: 'South East Asia - sea-2b', CRS: "EPSG:4326"}  // FIXME: pull from json return?
+        );
+
+        // sea-2c
+        // sea-2d
+
+        var datasetLayer2 = new OpenLayers.Layer.WMS("Australia Test Map",
           //ds["wmsUrl"],
           "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
           {layers: 'Northern Australia - October - November 1996', CRS: "EPSG:4326"}  // FIXME: pull from json return?
