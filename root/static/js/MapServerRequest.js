@@ -502,8 +502,12 @@ var StateInflator = Backbone.Model.extend({
             formV.render = renderHandle;
           }
 
-          if (binding != null && binding[name] != null && binding[callback] && typeof(binding[callback]) == "function") {
-            formV.bind(binding[name], binding[callback]);
+          if (binding != null && binding["name"] != null && 
+              binding["callback"] != null && 
+              typeof(binding["callback"]) == "function") {
+      
+              formV.bindFunc = binding["callback"];
+              formV.eventName = binding["name"];        
           }
 
           var menuToggle = new MenuToggle({
@@ -567,7 +571,7 @@ var StateInflator = Backbone.Model.extend({
     },
 
     generateCombinantMenu: function() {
-
+      // this is a test
         var bindInput = function(event) {
 
           $(this.el).bind(event, jQuery.proxy(function(e) {
@@ -584,15 +588,36 @@ var StateInflator = Backbone.Model.extend({
         this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", null, 
         {
           name: "change",
-          callback: function() {
-            console.log("LAYER CHANGED");
+          callback: function(event) {
+            //console.log("LAYER CHANGED");
+              $(this.el).bind(event, jQuery.proxy(function(e) {
+              if (this.enabled) {
+                console.log("LAYER CHANGE DETECTED");
+                var value = $(this.el).find('select').val();
+                this.model.set({selected: value});
+              }
+            },this));
+
           }
         }
       );
 
-        this.menuFactory('IMAGEFORMATS', this.dataSetDict, "imageFormats", {"paramName":"format"},"selectable");
-        this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"InterpolationMethod"},"selectable");
-        this.menuFactory('PROJECTION', this.dataSetDict, "projection", {"paramName":"CRS"}, "selectable");
+        this.menuFactory('IMAGEFORMATS', this.dataSetDict, "imageFormats", {"paramName":"format"},"selectable",null,
+        {
+          name: "change",
+          callback: MenuToggleViewV.prototype.bindSelect
+        }
+        );
+        this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"InterpolationMethod"},"selectable",null,
+        {
+          name: "change",
+          callback: MenuToggleViewV.prototype.bindSelect
+        });
+        this.menuFactory('PROJECTION', this.dataSetDict, "projection", {"paramName":"CRS"}, "selectable",null,
+        {
+          name: "change",
+          callback: MenuToggleViewV.prototype.bindSelect
+        });
         
         this.menuFactory('IMAGEWIDTH', this.dataSetDict, null, {"paramName": "width"}, "default", 
         //MenuToggleInputViewV.prototype.render, 
@@ -688,9 +713,6 @@ var StateInflator = Backbone.Model.extend({
                     for (var index=0; index<this.elList.length; index++) {
                       this.index=index;
                       //console.log()
-                      //console.log(this.elList);
-                      //console.log($(this.elList[index]));
-
                       $(this.elList[index].bind(event, jQuery.proxy(function(e) {
 
                         // console.log(this.enabled);

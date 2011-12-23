@@ -164,13 +164,8 @@ var MenuToggleViewV = Backbone.View.extend({
 	set: function(el) {
 			this.el = el;	
 			$(this.el).bind('change', jQuery.proxy(function(e) {
-
 				if (this.enabled) {
-				//	console.log("CHANGE CHANGE CHANGE");
-					// IM HERE
-					//console.log($(this.el));
 					var value = $(this.el).find('select').val();
-					//console.log("The value is: " + value);
 					this.model.set({selected: value});
 				}
 			},this));
@@ -229,6 +224,17 @@ var MenuToggleViewV = Backbone.View.extend({
 
 			},this));
 		}
+	},
+
+	bindSelect: function(ev) {
+		console.log("INVOKING BINDSELECT");
+		$(this.el).bind(ev, jQuery.proxy(function(e) {
+			console.log("bindSelect()");
+				if (this.enabled) {
+					var value = $(this.el).find('select').val();
+					this.model.set({selected: value});
+				}
+			},this));
 	}
 });
 

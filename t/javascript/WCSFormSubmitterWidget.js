@@ -72,7 +72,7 @@ $(function() {
 
 	// Layer
 	for (dataSetName in dataSetDict) {
-		menuToggleList["LAYERS"][dataSetName].menuView.set($("#layer"));
+		menuToggleList["LAYERS"][dataSetName].menuView.set2($("#layer"));
 	}
 	menuToggleList["LAYERS"]["Australia"].menuView.enabled = true;
 	//menuToggleList["LAYERS"]["Alaska"].menuForm.set({"selected":"AlaskaLayer1"});
@@ -80,21 +80,21 @@ $(function() {
 
 	// Image Format
 	for (dataSetName in dataSetDict) {
-		menuToggleList["IMAGEFORMATS"][dataSetName].menuView.set($("#imageFormat"));
+		menuToggleList["IMAGEFORMATS"][dataSetName].menuView.set2($("#imageFormat"));
 	}
 	menuToggleList["IMAGEFORMATS"]["Australia"].menuView.enabled = true;
 	menuToggleList["IMAGEFORMATS"]["Australia"].menuView.render();
 
 	// Interpolation Method
 	for (dataSetName in dataSetDict) {
-		menuToggleList["INTERPOLATION"][dataSetName].menuView.set($("#interpolation"));
+		menuToggleList["INTERPOLATION"][dataSetName].menuView.set2($("#interpolation"));
 	}
 	menuToggleList["INTERPOLATION"]["Australia"].menuView.enabled = true;
 	menuToggleList["INTERPOLATION"]["Australia"].menuView.render();
 
 	// Projection 
 	for (dataSetName in dataSetDict) {
-		menuToggleList["PROJECTION"][dataSetName].menuView.set($("#projection"));
+		menuToggleList["PROJECTION"][dataSetName].menuView.set2($("#projection"));
 	}
 	menuToggleList["PROJECTION"]["Australia"].menuView.enabled = true;
 	menuToggleList["PROJECTION"]["Australia"].menuView.render();
