@@ -170,7 +170,7 @@ var MenuToggleViewV = Backbone.View.extend({
 					// IM HERE
 					//console.log($(this.el));
 					var value = $(this.el).find('select').val();
-					console.log("The value is: " + value);
+					//console.log("The value is: " + value);
 					this.model.set({selected: value});
 				}
 			},this));

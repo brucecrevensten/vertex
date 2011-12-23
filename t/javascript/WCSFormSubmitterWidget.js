@@ -16,15 +16,15 @@ $(function() {
 					        "layers": ["northern_australia"],
 					        //"wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=northern_australia&bbox=125,-18,126,-17&CRS=epsg:4326&width=500&height=500&format=jpeg",
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "/AustrailiaURL2",
+					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
 					        "ImageFormat": ["jpeg", "GTiff"],
 					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"],
 					        "Projection": ["epsg:4326"]
 					    },
 					    "South East Asia": {
-					        "layers": ["sea-2b"],
+					        "layers": ["South East Asia - sea-2b", "SDFLKJSDLKFJSLKDFJL"],
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/se-asia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "/AlaskaURL2",
+					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
 					        "ImageFormat": ["jpeg", "GTiff"],
 					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
 							"Projection": ["epsg:4326"]

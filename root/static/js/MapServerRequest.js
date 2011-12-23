@@ -480,7 +480,7 @@ var StateInflator = Backbone.Model.extend({
         );
 
         map.addLayers([datasetLayer, datasetLayer2]);
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        //map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.zoomToMaxExtent();
         
         this.map = map;
@@ -581,7 +581,15 @@ var StateInflator = Backbone.Model.extend({
         /*
             The menuFactory is still being worked on. 
         */
-        this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable");
+        this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", null, 
+        {
+          name: "change",
+          callback: function() {
+            console.log("LAYER CHANGED");
+          }
+        }
+      );
+
         this.menuFactory('IMAGEFORMATS', this.dataSetDict, "imageFormats", {"paramName":"format"},"selectable");
         this.menuFactory('INTERPOLATION', this.dataSetDict, "interpolationMethod", {"paramName":"InterpolationMethod"},"selectable");
         this.menuFactory('PROJECTION', this.dataSetDict, "projection", {"paramName":"CRS"}, "selectable");
@@ -626,11 +634,8 @@ var StateInflator = Backbone.Model.extend({
 
        this.menuFactory('BBOX', this.dataSetDict, null, {"paramName":"bbox"}, "default", 
         function() {
-           console.log("RENDER RENDER RENDER RENDER RENDER");
-           console.log(this);
             if (this.enabled) {
               try {
-                    //console.log("HELLO TWORLD");
                     var html="";
                       // We're going to draw each of the input boxes for a given bbox
                         if (this.model.get("selected") != null && this.model.get("selected") != undefined
@@ -638,7 +643,6 @@ var StateInflator = Backbone.Model.extend({
                           $(this.elList[index]).empty();
                           var html="";
                             
-                            //console.log("1");
                           // By convention the indices of the valueArray map 1-to-1 to the indices of the elList.
                           var valueArray = this.model.get("selected").split(',');
                           console.log(valueArray);
@@ -728,7 +732,7 @@ var StateInflator = Backbone.Model.extend({
                         }
                       },this)))
                     }
-
+// This code below stays
                   this.bind('updateSelected', jQuery.proxy(function() {
                       console.log("UPDATING SELECTED");
 
@@ -750,6 +754,7 @@ var StateInflator = Backbone.Model.extend({
               } 
             }
         );
+
         //this.menuFactory('IMAGEWIDTH', this.dataSetDict, null, {"paramName: width"});
 
     },
