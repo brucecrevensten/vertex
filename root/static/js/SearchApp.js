@@ -27,211 +27,201 @@ window.SearchAppView = Backbone.View.extend({
       jQuery.proxy( function( oSettings, aData, iDataIndex ) {
         var h = $(aData[0]);
         var c = h.find("div").attr("product_id"); // might make this faster by providing lookup using iDataIndex
-        
         var returnVal=false;
 
-        if (this.searchResults.get(c).get("PLATFORM") == "ALOS") {
+        if (SearchApp.searchResults.get(c).get("PLATFORM") == "ALOS") {
               if (SearchApp.filterDictionaryA3.has('FBS 21.5')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "21.5" ) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+                    SearchApp.searchResults.get(c).get("OFFNADIRANGLE") == "21.5" ) {
+                  returnVal = true;
                 } 
               }
 
-              
               if (SearchApp.filterDictionaryA3.has('FBS 34.3')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+                    SearchApp.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
+                  returnVal = true;
                 }   
               } 
               
              if (SearchApp.filterDictionaryA3.has('FBS 41.5')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "41.5") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+                    SearchApp.searchResults.get(c).get("OFFNADIRANGLE") == "41.5") {
+                  returnVal = true;
                 }   
               } 
 
-                      
              if (SearchApp.filterDictionaryA3.has('FBS 50.8')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "50.8") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "FBS" && 
+                    SearchApp.searchResults.get(c).get("OFFNADIRANGLE") == "50.8") {
+                  returnVal = true;
                 }   
               } 
                 
              if (SearchApp.filterDictionaryA3.has('FBD 34.3')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "FBD" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "FBD" && 
+                    SearchApp.searchResults.get(c).get("OFFNADIRANGLE") == "34.3") {
+                  returnVal = true;
                 }   
               }   
 
               if (SearchApp.filterDictionaryA3.has('PLR 21.5')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "21.5") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
+                    SearchApp.searchResults.get(c).get("OFFNADIRANGLE") == "21.5") {
+                  returnVal = true;
                 }   
               }   
              
               if (SearchApp.filterDictionaryA3.has('PLR 23.1')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
-                    this.searchResults.get(c).get("OFFNADIRANGLE") == "23.1") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "PLR" && 
+                    SearchApp.searchResults.get(c).get("OFFNADIRANGLE") == "23.1") {
+                  returnVal = true;
                 }   
               }
               
-              
               if (SearchApp.filterDictionaryA3.has('WB1')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB1") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "WB1") {
+                  returnVal = true;
                 }   
               }    
 
               if (SearchApp.filterDictionaryA3.has('WB2')) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == "WB2") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == "WB2") {
+                  returnVal = true;
                 }   
               }
 
               if (SearchApp.filterDictionaryA3.has('ASCENDING ALOS')) {
-                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+                  returnVal = true;
                 }   
               }
 
               if (SearchApp.filterDictionaryA3.has('DESCENDING ALOS')) {
-                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
-                    
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                  returnVal = true;
                 }   
               }
 
              if (SearchApp.filterDictionaryA3.has('PATHALOS')) {
-                if (this.searchResults.get(c).get("PATHNUMBER") == SearchApp.filterDictionaryA3.val('PATHALOS')) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("PATHNUMBER") == SearchApp.filterDictionary.val('PATHALOS')) {
+                  returnVal = true;
                 }   
              }
             
              if (SearchApp.filterDictionaryA3.has('FRAMEALOS')) {
-                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionaryA3.val('FRAMEALOS')) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEALOS')) {
+                  returnVal = true;
                 }   
              }
       }
 
-      if (this.searchResults.get(c).get("PLATFORM") == "RADARSAT-1") {
-          if (SearchApp.filterDictionaryR1.has(this.searchResults.get(c).get("BEAMMODETYPE"))) {
-                if (this.searchResults.get(c).get("BEAMMODETYPE") == SearchApp.filterDictionaryR1.val(this.searchResults.get(c).get("BEAMMODETYPE")) ) {
-                  returnVal= true;
+      if (SearchApp.searchResults.get(c).get("PLATFORM") == "RADARSAT-1") {
+          if (SearchApp.filterDictionaryR1.has(SearchApp.searchResults.get(c).get("BEAMMODETYPE"))) {
+                if (SearchApp.searchResults.get(c).get("BEAMMODETYPE") == SearchApp.filterDictionary.val(SearchApp.searchResults.get(c).get("BEAMMODETYPE")) ) {
+                  returnVal = true;
                 }   
           }
 
-           if (SearchApp.filterDictionaryR1.has('ASCENDING')) {
-                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
-                  returnVal= true;
-                }   
-              }
-
-              if (SearchApp.filterDictionaryR1.has('DESCENDING')) {       
-                if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
-                  returnVal= true;
-                }   
-              }
-
            if (SearchApp.filterDictionaryR1.has('ORBITRADARSAT')) {
-                if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionaryR1.val('ORBITRADARSAT')) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionary.val('ORBITRADARSAT')) {
+                  returnVal = true;
                 }   
              }
             
              if (SearchApp.filterDictionaryR1.has('FRAMERADARSAT')) {
-                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionaryR1.val('FRAMERADARSAT')) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMERADARSAT')) {
+                  returnVal = true;
                 }   
              }
+        if(SearchApp.filterDictionaryR1.has('ASCENDING')) {
+            if(SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+            returnVal = true;
+          }
+        }
+        if(SearchApp.filterDictionaryR1.has('DESCENDING')) {
+            if(SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+            returnVal = true;
+          }
+        }
       }
 
 
-      if (this.searchResults.get(c).get("PLATFORM") == "ERS-1") {
+      if (SearchApp.searchResults.get(c).get("PLATFORM") == "ERS-1") {
           
           if (SearchApp.filterDictionaryE1.has('ASCENDINGERS-1')) {
-            if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
-                returnVal= true;
+            if (SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+                returnVal = true;
               }   
             }
 
             if (SearchApp.filterDictionaryE1.has('DESCENDINGERS-1')) {
-              if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
-                  
-                returnVal= true;
+              if (SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                returnVal = true;
               }   
             }
 
            if (SearchApp.filterDictionaryE1.has('ORBITERS-1')) {
-                if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionaryE1.val('ORBITERS-1')) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionary.val('ORBITERS-1')) {
+                  returnVal = true;
                 }   
              }
             
              if (SearchApp.filterDictionaryE1.has('FRAMEERS-1')) {
-                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionaryE1.val('FRAMEERS-1')) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEERS-1')) {
+                  returnVal = true;
                 }   
              }
       }
 
-      if (this.searchResults.get(c).get("PLATFORM") == "ERS-2") {
+      if (SearchApp.searchResults.get(c).get("PLATFORM") == "ERS-2") {
        if (SearchApp.filterDictionaryE2.has('ASCENDINGERS-2')) {
-            if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
-                returnVal= true;
+            if (SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+                returnVal = true;
               }   
             }
 
             if (SearchApp.filterDictionaryE2.has('DESCENDINGERS-2')) {
-              if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
-                  
-                returnVal= true;
+              if (SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+                returnVal = true;
               }   
             }
 
            if (SearchApp.filterDictionaryE2.has('ORBITERS-2')) {
-                if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionaryE2.val('ORBITERS-2')) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionary.val('ORBITERS-2')) {
+                  returnVal = true;
                 }   
              }
             
              if (SearchApp.filterDictionaryE2.has('FRAMEERS-2')) {
-                if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionaryE2.val('FRAMEERS-2')) {
-                  returnVal= true;
+                if (SearchApp.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEERS-2')) {
+                  returnVal = true;
                 }   
              }
       }
 
-      if (this.searchResults.get(c).get("PLATFORM") == "JERS-1") {
+      if (SearchApp.searchResults.get(c).get("PLATFORM") == "JERS-1") {
        if (SearchApp.filterDictionaryJ1.has('ASCENDINGJERS-1')) {
-          if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
-              returnVal= true;
+          if (SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Ascending") {
+              returnVal = true;
             }   
           }
 
           if (SearchApp.filterDictionaryJ1.has('DESCENDINGJERS-1')) {
-            if (this.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
-                
-              returnVal= true;
+            if (SearchApp.searchResults.get(c).get("ASCENDINGDESCENDING") == "Descending") {
+              returnVal = true;
             }   
           }
 
        if (SearchApp.filterDictionaryJ1.has('ORBITJERS-1')) {
-            if (this.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionaryJ1.val('ORBITJERS-1')) {
-              returnVal= true;
+            if (SearchApp.searchResults.get(c).get("ORBIT") == SearchApp.filterDictionary.val('ORBITJERS-1')) {
+              returnVal = true;
             }   
          }
         
          if (SearchApp.filterDictionaryJ1.has('FRAMEJERS-1')) {
-            if (this.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionaryJ1.val('FRAMEJERS-1')) {
-              returnVal= true;
+            if (SearchApp.searchResults.get(c).get("FRAMENUMBER") == SearchApp.filterDictionary.val('FRAMEJERS-1')) {
+              returnVal = true;
             }   
          }
       }
@@ -243,9 +233,9 @@ window.SearchAppView = Backbone.View.extend({
       }
 
       if (returnVal) {
-       this.searchResults.get(c).set({filtered:false});
+       SearchApp.searchResults.get(c).set({filtered:false});
       } else {
-       this.searchResults.get(c).set({filtered:true});
+       SearchApp.searchResults.get(c).set({filtered:true});
       }
 
       return returnVal;  
