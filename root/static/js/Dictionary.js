@@ -47,5 +47,16 @@ var Dictionary = Backbone.Model.extend(
       clear: function() {
         this.dictionary = {};
         this.length = 0;
+      }, 
+
+      // Returns a backbone collection of the values in the dictionary
+      values: function() {
+        var c = new Backbone.Collection();
+        for (var key in this.dictionary) {
+          c.add(this.dictionary[key]);
+        }
+        return c;
       }
   });
+
+
