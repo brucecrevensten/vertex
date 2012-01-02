@@ -19,6 +19,8 @@ text-decoration: underline;
 /* surrounds all application functionality */
 #contents {
   position: relative;
+  display: block;
+  height: 600px;
 }
 
 #wrapper {
@@ -31,6 +33,7 @@ text-decoration: underline;
   width: 90%;
   min-width: 1300px;
   position: relative;
+  height: 785;
 }
 
 #tableleftcol {

@@ -1,20 +1,64 @@
+#subsetter {
+	position: absolute;
+	top: 15px;
+	display: block;
+}
+#datasetSelection {
+	width: 290px;
+	height: 580px;
+}
+.boxTop {
+	-moz-border-radius: 7px 7px 0px 0px;
+	border-radius: 7px 7px 0px 0px;
+	width: 288px;
+	background-color: #F58400;
+	display: block;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	height: 23px;
+	padding-top: 7px;
+	border-left: 1px solid #FFAF0F;
+	border-right: 1px solid #FFAF0F;
+	border-top: 1px solid #FFAF0F;
+}
+.boxBody {
+	-moz-border-radius: 0px 0px 7px 7px;
+	border-radius: 0px 0px 7px 7px;
+	background-color: black;
+	display: block;
+	width: 275px;
+	height: 440px;
+	padding-top: 15px;
+	padding-left: 15px;
+}
+#map {
+	width: 655px;
+	height: 580px;
+	border: 1px ridge silver;
+	display: block;
+	top: 15px;
+	position: absolute;
+	left: 300px;
+}
+#formContainer {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 1000px;
+}
 label.WCSfields {
     display: block;
    /* width: 70px;*/
     float: left;
     margin: 2px 4px 6px 4px;
+	color: white;
 }
 
 input.WCSfields {
   display: block;
   position: relative;
 
-}
-body {
-	margin:0;
-	background-color:#e8eef5;
-	font-family:Geneva, sans-serif;
-	font-size:14px;
 }
 .head {
 	width:100%;
@@ -32,31 +76,6 @@ body {
 	right:77px;
 	top:29px;
 	cursor:pointer;
-}
-.container {
-	width:100%;
-	background-image:url(images/main_bg.png);
-	background-repeat:repeat-x;
-	height:700px;
-}
-.content {
-	width:980px;
-	margin:0 auto;
-}
-ul {
-	padding:0;
-}
-li {
-	display:inline;
-	width:127px;
-	float:left;
-	border-bottom:1px dotted #dedede;
-	margin:0px 5px;
-}
-
-li:hover {
-	background-color:#000;
-	color:#fff;
 }
 .categories {
 	display:none;

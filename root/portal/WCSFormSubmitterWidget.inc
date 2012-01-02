@@ -1,28 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-  <title>WCS Form Submitter Widget</title>
-
-  <link rel="stylesheet" type="text/css" href="../css/WCSFormSubmitterWidget.css">
-
-<link rel="stylesheet" type="text/css" href="../../root/static/css/ui-darkness/jquery-ui-1.8.16.custom.css" />
-
-  <script type="text/javascript" src="../../root/static/js/jquery-1.6.4.min.js"></script>
-	<script type="text/javascript" src="../../root/static/js/underscore-min.js"></script>
-  <script type="text/javascript" src="../../root/static/js/jquery-ui-1.8.16.custom.min.js"></script>
-
-	<script type="text/javascript" src="../../root/static/js/backbone-min.js"></script>
-	<script type="text/javascript" src="../../root/static/js/sinon-1.2.0.js"></script>
-  <script type="text/javascript" src="../../root/static/js/Dictionary.js"></script>
-	<script type="text/javascript" src="../../root/static/js/MapServerRequest.js"></script>
-  <script type="text/javascript" src="../../root/static/js/WCSForm.js"></script>
-  <script type="text/javascript" src="../../root/static/js/OpenLayers-2.11/OpenLayers.js"></script><!--FIXME-->
-
-  <script type="text/javascript" src="../javascript/WCSFormSubmitterWidget.js"></script>
-</head>
-<body>
-
+<div id="subsetter">
 <iframe id="hifrm" height="0" width="0">
   <html>
     <head>
@@ -32,16 +8,26 @@
     </body>
   </html>
 </iframe>
-<div id="map" style="width: 600px; height: 400px; border: 1px dashed red; margin: 20px;"></div>
+
+<div id="datasetSelection">
+	<div id="bt1" class="boxTop">
+	Available Datasets
+	</div>
+	
+    <div id="bb1" class="boxBody">
+    <label for="dataset" class="WCSfields" id="dataSetField">Data Set</label>
+    <div name="dataset" id="dataset" class="WCSfields"  /></div><br />
+    <label for="dataset" class="WCSfields" id="layerSetField">Layer</label>
+    <div name="layer" id="layer" class="WCSfields"  /></div><br />
+  	</div>
+  
+</div>
+
+<div id="map"></div>
 
 <div id="formContainer">
  
   <form name="form1" id="form1">
-        <label for="dataset" class="WCSfields" id="dataSetField">Data Set</label>
-        <div name="dataset" id="dataset" class="WCSfields"  /></div><br />
-
-        <label for="dataset" class="WCSfields" id="layerSetField">Layer</label>
-        <div name="layer" id="layer" class="WCSfields"  /></div><br />
     <!--    <label for="imgW" class="WCSfields">Image Width</label>
         <input type="text" name="imgW" id="imgW" class="WCSfields"  /><br /> 
         <label for="imgH" class="WCSfields">Image Height</label>
@@ -96,5 +82,4 @@
       </ul>
     </div>
 
-</body>
-</html>
+</div>
