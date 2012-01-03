@@ -37,14 +37,15 @@
         <input type="text" name="imgW" id="imgW" class="WCSfields"  /><br /> 
         <label for="imgH" class="WCSfields">Image Height</label>
         <input type="text" name="imgH" id="imgH" class="WCSfields"  /><br /> -->
+
+        <label for="projection" class="WCSfields">Projection</label>
+        <div name="projection" id="projection" class="WCSfields"  /></div><br />
+
         <label for="imgF" class="WCSfields">Image Format</label>
         <div name="imgF" id="imageFormat" class="WCSfields"  /></div><br />
 
         <label for="interpolation" class="WCSfields">Interpolation Method</label>
         <div name="interpolation" id="interpolation" class="WCSfields"  /></div><br />
-
-        <label for="projection" class="WCSfields">Projection</label>
-        <div name="projection" id="projection" class="WCSfields"  /></div><br />
 
         <label for="imageWidth" class="WCSfields">Width</label>
         <div name="imageWidth" id="imageWidth" class="WCSfields"  /></div><br />

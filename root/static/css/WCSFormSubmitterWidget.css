@@ -56,6 +56,10 @@
 .boxBodyWide {
 	width: 285px;
 }
+.WCSfields {
+	display: block;
+	float: right;
+}
 label.WCSfields {
     display: block;
    /* width: 70px;*/
@@ -63,11 +67,9 @@ label.WCSfields {
     margin: 2px 4px 6px 4px;
 	color: white;
 }
-
 input.WCSfields {
   display: block;
   position: relative;
-
 }
 .head {
 	width:100%;
