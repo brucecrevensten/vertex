@@ -7,6 +7,21 @@
 	width: 290px;
 	height: 580px;
 }
+#map {
+	width: 655px;
+	height: 580px;
+	border: 1px ridge silver;
+	display: block;
+	top: 15px;
+	position: absolute;
+	left: 300px;
+}
+#formContainer {
+	display: block;
+	position: absolute;
+	top: 15px;
+	left: 980px;
+}
 .boxTop {
 	-moz-border-radius: 7px 7px 0px 0px;
 	border-radius: 7px 7px 0px 0px;
@@ -22,30 +37,24 @@
 	border-right: 1px solid #FFAF0F;
 	border-top: 1px solid #FFAF0F;
 }
+.boxTopWide {
+	width: 300px;
+}
 .boxBody {
 	-moz-border-radius: 0px 0px 7px 7px;
 	border-radius: 0px 0px 7px 7px;
 	background-color: black;
 	display: block;
-	width: 275px;
+	width: 273px;
 	height: 440px;
 	padding-top: 15px;
 	padding-left: 15px;
+	border-left: 1px solid #666666;
+	border-right: 1px solid #666666;
+	border-bottom: 1px solid #666666;
 }
-#map {
-	width: 655px;
-	height: 580px;
-	border: 1px ridge silver;
-	display: block;
-	top: 15px;
-	position: absolute;
-	left: 300px;
-}
-#formContainer {
-	display: block;
-	position: absolute;
-	top: 0;
-	left: 1000px;
+.boxBodyWide {
+	width: 285px;
 }
 label.WCSfields {
     display: block;

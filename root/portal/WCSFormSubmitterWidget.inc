@@ -26,8 +26,13 @@
 <div id="map"></div>
 
 <div id="formContainer">
- 
-  <form name="form1" id="form1">
+	
+	<div id="bt2" class="boxTop boxTopWide">
+	Define Your Image Subset
+	</div>
+	
+	<div id="bb2" class="boxBody boxBodyWide">
+  	<form name="form1" id="form1">
     <!--    <label for="imgW" class="WCSfields">Image Width</label>
         <input type="text" name="imgW" id="imgW" class="WCSfields"  /><br /> 
         <label for="imgH" class="WCSfields">Image Height</label>
@@ -65,10 +70,12 @@
         <label for="outProj" class="WCSfields">Output Projection</label>
         <input type="text" name="outProj" id="outProj" class="WCSfields"  /><br /> -->
     </form>
-
-</div><br />
+    </div>
 
 <div id="downloadButton"></div>
+
+</div>
+
 
 
 <div class="content">
