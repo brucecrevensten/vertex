@@ -16,11 +16,22 @@
 	position: absolute;
 	left: 300px;
 }
-#formContainer {
-	display: block;
+#subsetterRightColumn {
 	position: absolute;
 	top: 15px;
+	float: right;
 	left: 980px;
+}
+#formContainer {
+	display: block;
+	position: relative;
+}
+#formButtons {
+	position: relative;
+	top: 1.75em;
+	margin: 0px auto -1px auto;
+	display: block;
+	text-align: center;
 }
 .boxTop {
 	-moz-border-radius: 7px 7px 0px 0px;
@@ -45,31 +56,54 @@
 	border-radius: 0px 0px 7px 7px;
 	background-color: black;
 	display: block;
-	width: 273px;
+	width: 278px;
 	height: 440px;
 	padding-top: 15px;
-	padding-left: 15px;
+	padding-left: 10px;
 	border-left: 1px solid #666666;
 	border-right: 1px solid #666666;
 	border-bottom: 1px solid #666666;
+	position: relative;
+	color: silver;
 }
 .boxBodyWide {
-	width: 285px;
+	width: 290px;
 }
 .WCSfields {
-	display: block;
-	float: right;
+	width: 160px;
+	float: left;
+	margin-top: 5px;
+	line-height: 25px;
+}
+.WCSfieldsShort {
+	width: 30px;
+}
+.WCSfieldsShort input {
+	width: 30px;	
 }
 label.WCSfields {
-    display: block;
-   /* width: 70px;*/
-    float: left;
+	clear: both;
+    width: 115px;
     margin: 2px 4px 6px 4px;
 	color: white;
+	text-align: right;
+	float: left;
+	position: relative;
+	top: 3px;
+}
+.WCSlabelShort {
+	width: 75px !important;
 }
 input.WCSfields {
-  display: block;
-  position: relative;
+  	display: block;
+  	position: relative;
+}
+.postFieldText {
+	position: relative;
+	margin-top: 5px;
+	color: silver;
+	left: 12px;
+	top: 13px;
 }
 .head {
 	width:100%;

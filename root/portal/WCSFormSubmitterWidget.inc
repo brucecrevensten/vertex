@@ -15,9 +15,9 @@
 	</div>
 	
     <div id="bb1" class="boxBody">
-    <label for="dataset" class="WCSfields" id="dataSetField">Data Set</label>
+    <label for="dataset" class="WCSfields WCSlabelShort" id="dataSetField">Data Set:</label>
     <div name="dataset" id="dataset" class="WCSfields"  /></div><br />
-    <label for="dataset" class="WCSfields" id="layerSetField">Layer</label>
+    <label for="dataset" class="WCSfields WCSlabelShort" id="layerSetField">Layer:</label>
     <div name="layer" id="layer" class="WCSfields"  /></div><br />
   	</div>
   
@@ -25,6 +25,7 @@
 
 <div id="map"></div>
 
+<div id="subsetterRightColumn">
 <div id="formContainer">
 	
 	<div id="bt2" class="boxTop boxTopWide">
@@ -38,29 +39,29 @@
         <label for="imgH" class="WCSfields">Image Height</label>
         <input type="text" name="imgH" id="imgH" class="WCSfields"  /><br /> -->
 
-        <label for="projection" class="WCSfields">Projection</label>
+        <label for="projection" class="WCSfields">Projection:</label>
         <div name="projection" id="projection" class="WCSfields"  /></div><br />
 
-        <label for="imgF" class="WCSfields">Image Format</label>
+        <label for="imgF" class="WCSfields">Image Format:</label>
         <div name="imgF" id="imageFormat" class="WCSfields"  /></div><br />
 
-        <label for="interpolation" class="WCSfields">Interpolation Method</label>
+        <label for="interpolation" class="WCSfields">Interpolation Method:</label>
         <div name="interpolation" id="interpolation" class="WCSfields"  /></div><br />
 
-        <label for="imageWidth" class="WCSfields">Width</label>
-        <div name="imageWidth" id="imageWidth" class="WCSfields"  /></div><br />
+        <label for="imageWidth" class="WCSfields">Resolution X:</label>
+        <div name="imageWidth" id="imageWidth" class="WCSfields WCSfieldsShort"  /></div><div class="postFieldText">degrees</div><br />
 
-        <label for="imageHeight" class="WCSfields">Height</label>
-        <div name="imageHeight" id="imageHeight" class="WCSfields"  /></div><br />
+        <label for="imageHeight" class="WCSfields">Y:</label>
+        <div name="imageHeight" id="imageHeight" class="WCSfields WCSfieldsShort"  /></div><div class="postFieldText">degrees</div><br />
 
         <label for="b0" class="WCSfields">Bottom</label>
-        <div id="b0" class="WCSfields"  /></div><br />
+        <div id="b0" class="WCSfields WCSfieldsShort"  /></div><br />
         <label for="b0" class="WCSfields">Left</label>
-        <div id="b1" class="WCSfields"  /></div><br />
+        <div id="b1" class="WCSfields WCSfieldsShort"  /></div><br />
         <label for="b0" class="WCSfields">Top</label>
-        <div id="b2" class="WCSfields"  /></div><br />
+        <div id="b2" class="WCSfields WCSfieldsShort"  /></div><br />
         <label for="b0" class="WCSfields">Right</label>
-        <div id="b3" class="WCSfields"  /></div><br /> 
+        <div id="b3" class="WCSfields WCSfieldsShort"  /></div><br /> 
 
 
      <!--   <label for="band" class="WCSfields">Bands</label>
@@ -72,9 +73,11 @@
         <input type="text" name="outProj" id="outProj" class="WCSfields"  /><br /> -->
     </form>
     </div>
-
-<div id="downloadButton"></div>
-
+</div>
+	<div id="formButtons">
+		<div id="downloadButton"></div>
+		&nbsp;|&nbsp;<a href="#">Reset Settings</a>
+	</div>
 </div>
 
 
