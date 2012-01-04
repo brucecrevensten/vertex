@@ -33,6 +33,9 @@
 	display: block;
 	text-align: center;
 }
+.form1 {
+	height: 100% !important;
+}
 .boxTop {
 	-moz-border-radius: 7px 7px 0px 0px;
 	border-radius: 7px 7px 0px 0px;
@@ -76,10 +79,10 @@
 	line-height: 25px;
 }
 .WCSfieldsShort {
-	width: 30px;
+	width: 30px !important;
 }
 .WCSfieldsShort input {
-	width: 30px;	
+	width: 30px !important;	
 }
 label.WCSfields {
 	clear: both;
@@ -97,6 +100,18 @@ label.WCSfields {
 input.WCSfields {
   	display: block;
   	position: relative;
+}
+.arrow4way {
+	display: block;
+	float: left;
+	margin-left: 8px;
+	margin-right: 3px;
+}
+.filler1 {
+	width: 36px;
+	display: inline-block;
+	float: left;
+	height: 1px;
 }
 .postFieldText {
 	position: relative;

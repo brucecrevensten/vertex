@@ -33,7 +33,7 @@
 	</div>
 	
 	<div id="bb2" class="boxBody boxBodyWide">
-  	<form name="form1" id="form1">
+  	<form name="form1" id="form1" class="form1">
     <!--    <label for="imgW" class="WCSfields">Image Width</label>
         <input type="text" name="imgW" id="imgW" class="WCSfields"  /><br /> 
         <label for="imgH" class="WCSfields">Image Height</label>
@@ -49,19 +49,27 @@
         <div name="interpolation" id="interpolation" class="WCSfields"  /></div><br />
 
         <label for="imageWidth" class="WCSfields">Resolution X:</label>
-        <div name="imageWidth" id="imageWidth" class="WCSfields WCSfieldsShort"  /></div><div class="postFieldText">degrees</div><br />
+        <div name="imageWidth" id="imageWidth" class="WCSfields WCSfieldsShort"  /></div>
+        	<div class="postFieldText">degrees</div><br />
 
         <label for="imageHeight" class="WCSfields">Y:</label>
-        <div name="imageHeight" id="imageHeight" class="WCSfields WCSfieldsShort"  /></div><div class="postFieldText">degrees</div><br />
+        <div name="imageHeight" id="imageHeight" class="WCSfields WCSfieldsShort"  /></div>
+        	<div class="postFieldText">degrees</div><br /><br /><br />
 
-        <label for="b0" class="WCSfields">Bottom</label>
-        <div id="b0" class="WCSfields WCSfieldsShort"  /></div><br />
-        <label for="b0" class="WCSfields">Left</label>
-        <div id="b1" class="WCSfields WCSfieldsShort"  /></div><br />
-        <label for="b0" class="WCSfields">Top</label>
-        <div id="b2" class="WCSfields WCSfieldsShort"  /></div><br />
-        <label for="b0" class="WCSfields">Right</label>
-        <div id="b3" class="WCSfields WCSfieldsShort"  /></div><br /> 
+		<label for="b1" class="WCSfields"><!--Top--></label><div id="fill1" class="filler1" /></div>
+		<div id="b2" class="WCSfields WCSfieldsShort" style="margin-bottom: 3px;" /></div><br />
+        <label for="b1" class="WCSfields"><!--Left-->Spatial Extent:
+<!--        		<br />East and North bounds are adjusted automatically to make width/height to be integer multiples of resolution x/y-->
+        		</label>
+        <div id="b1" class="WCSfields WCSfieldsShort"  /></div>
+		<div class="arrow4way"> 
+			<img src="[% c.uri_for('/static/images/arrow4way.png') %]" alt="" />
+		</div>
+<!--        <label for="b3" class="WCSfields">Right</label>-->
+        <div id="b3" class="WCSfields WCSfieldsShort"  /></div><br />
+		<label for="b0" class="WCSfields"><!--Bottom--></label><div id="fill1" class="filler1" /></div>
+		<div id="b0" class="WCSfields WCSfieldsShort" style="margin-top: -1px;"  /></div><br />
+ 
 
 
      <!--   <label for="band" class="WCSfields">Bands</label>
