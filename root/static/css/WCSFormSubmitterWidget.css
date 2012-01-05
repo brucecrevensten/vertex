@@ -104,15 +104,37 @@ input.WCSfields {
 .arrow4way {
 	display: block;
 	float: left;
-	margin-left: 8px;
-	margin-right: 3px;
+	margin-left: 10px;
+	margin-right: 5px;
 }
 .filler1 {
-	width: 36px;
+	width: 39px;
 	display: inline-block;
 	float: left;
 	height: 1px;
 }
+.subtext {
+	line-height: 11px;
+	position: absolute;
+	width: 130px;
+	color: silver;
+	right: 0;
+	top: 9px;
+	font-size: 10px !important;
+}
+.zoomText {
+	position: relative;
+	width: 400px;
+	display: block;
+	top: 87px;
+	right: 118px;
+	text-decoration: underline;
+	color: #F58400;
+}
+.zoomText a:link {color: #F58400;}
+.zoomText a:visited {color: #F58400;}
+.zoomText a:active {color: #F58400;}
+.zoomText a:hover {color: #FFFFFF;}
 .postFieldText {
 	position: relative;
 	margin-top: 5px;
@@ -211,3 +233,4 @@ p{font-size:14px; color:#999;}
 p li{color:#F60;}
 
 h2{margin-top:25px;}
+

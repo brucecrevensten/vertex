@@ -59,7 +59,7 @@
 		<label for="b1" class="WCSfields"><!--Top--></label><div id="fill1" class="filler1" /></div>
 		<div id="b2" class="WCSfields WCSfieldsShort" style="margin-bottom: 3px;" /></div><br />
         <label for="b1" class="WCSfields"><!--Left-->Spatial Extent:
-<!--        		<br />East and North bounds are adjusted automatically to make width/height to be integer multiples of resolution x/y-->
+        		<span class="subtext"><br />East and North bounds are adjusted automatically to make width/height to be integer multiples of resolution x/y</span>
         		</label>
         <div id="b1" class="WCSfields WCSfieldsShort"  /></div>
 		<div class="arrow4way"> 
@@ -69,6 +69,8 @@
         <div id="b3" class="WCSfields WCSfieldsShort"  /></div><br />
 		<label for="b0" class="WCSfields"><!--Bottom--></label><div id="fill1" class="filler1" /></div>
 		<div id="b0" class="WCSfields WCSfieldsShort" style="margin-top: -1px;"  /></div><br />
+		
+		<span class="zoomText"><a href="#">Zoom to Specified Extent</a></span> 
  
 
 
