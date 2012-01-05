@@ -1,7 +1,7 @@
 #subsetter {
 	position: absolute;
-	top: 15px;
 	display: block;
+	top: 30px;
 }
 #datasetSelection {
 	width: 290px;
@@ -18,7 +18,7 @@
 }
 #subsetterRightColumn {
 	position: absolute;
-	top: 15px;
+	top: 14px;
 	float: right;
 	left: 980px;
 }

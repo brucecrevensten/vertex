@@ -142,7 +142,7 @@ body {
 	    </ul>            
 	    <div class="yui-content">
 	        [% INCLUDE content1.inc %]
-	        <div id="subsetter">[% INCLUDE WCSFormSubmitterWidget.inc %]</div>
+	        [% INCLUDE WCSFormSubmitterWidget.inc %]
 	    </div>
 	</div>
 </div>
