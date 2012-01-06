@@ -54,8 +54,9 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
       if ( s[0] ) {
         t = jQuery('<a/>', { "href" : s[0].get('url'), 'target':'_blank', 'title':m.get('GRANULENAME') } ).html( t );
         t.click(function() {
-          if(typeof ntptLinkTag == 'function') {
-            return ntptLinkTag(this);
+          if(typeof ntptEventTag == 'function') {
+            ntptEventTag('ev=browseImageLink');
+            return(this);
           }
         });
       }     

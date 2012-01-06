@@ -85,7 +85,7 @@ describe('EMS PageTags', function() {
     showProductProfile('E2_81917_STD_F305');
     expect(ntptEventTag).toHaveBeenCalledWith('ev=showProductProfile');
     $('#product_profile a').click();
-    expect(ntptLinkTag).toHaveBeenCalledWith($('#product_profile a').get(0));
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=browseImageLink');
     var button = $('#product_profile button').get(0);
     button.click();
     var product_file_id = $(button).attr('product_file_id');
@@ -96,7 +96,7 @@ describe('EMS PageTags', function() {
     expect(ntptEventTag).toHaveBeenCalledWith('ev=removeProductFromQueue');
     var downloadLink = $('#product_profile ul.downloads a').get(0);
     $(downloadLink).click()
-    expect(ntptLinkTag).toHaveBeenCalledWith($('#product_profile ul.downloads a').get(0));
+    expect(ntptEventTag).toHaveBeenCalledWith('ev=downloadProduct');
     $('#product_profile').dialog('close');
   });
 
