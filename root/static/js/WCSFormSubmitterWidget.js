@@ -42,14 +42,16 @@ $(function() {
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/africa",
 					        "ImageFormat": ["BMP","GEOTIFF"],
-					         "InterpolationMethod": ["BILINEAR", "TIME FIRST"]
+					         "InterpolationMethod": ["BILINEAR", "TIME FIRST"],
+					         "Projection": ["epsg:4326"]
 					    },
 					    "Central America": {
 					        "layers": ["AM-3"],
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/camerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/camerica",
 					        "ImageFormat": ["JPG","GEOTIFF", "PNG", "AVI"],
-					         "InterpolationMethod": ["BILINEAR", "TIME FIRST", "SINGLE STEP"]
+					         "InterpolationMethod": ["BILINEAR", "TIME FIRST", "SINGLE STEP"],
+					         "Projection": ["epsg:4326"]
 					    },
 					     "South America": {
 					        "layers": ["AM-1A","AM-1B","AM-1C","AM-1D"],
