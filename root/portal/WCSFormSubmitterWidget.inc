@@ -6,10 +6,10 @@
 	</div>
 	
     <div id="bb1" class="boxBody">
-    <label for="dataset" class="WCSfields WCSlabelShort" id="dataSetField">Data Set:</label>
-    <div name="dataset" id="dataset" class="WCSfields"  /></div><br />
-    <label for="dataset" class="WCSfields WCSlabelShort" id="layerSetField">Layer:</label>
-    <div name="layer" id="layer" class="WCSfields"  /></div><br />
+	    <label for="dataset" class="WCSfields WCSlabelShort" id="dataSetField">Data Set:</label>
+	    <div name="dataset" id="dataset" class="WCSfields"></div><br />
+	    <label for="dataset" class="WCSfields WCSlabelShort" id="layerSetField">Layer:</label>
+	    <div name="layer" id="layer" class="WCSfields"></div><br />
   	</div>
   
 </div>
