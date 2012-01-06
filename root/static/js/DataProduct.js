@@ -82,8 +82,9 @@ var DataProductFilesView = Backbone.View.extend( {
           },
           label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
         }).click(function() {
-          if(typeof ntptLinkTag == 'function') {
-            return ntptLinkTag(this);
+          if(typeof ntptEventTag == 'function') {
+            ntptEventTag('ev=downloadProduct');
+            return this;
           }
         }));
       }
