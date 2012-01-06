@@ -12,15 +12,55 @@
 <div id="datasetSelection">
 	<div id="bt1" class="boxTop">
 	Available Datasets
-	</div>
+	</div> 
 	
     <div id="bb1" class="boxBody">
     <label for="dataset" class="WCSfields WCSlabelShort" id="dataSetField">Data Set:</label>
     <div name="dataset" id="dataset" class="WCSfields"  /></div><br />
     <label for="dataset" class="WCSfields WCSlabelShort" id="layerSetField">Layer:</label>
     <div name="layer" id="layer" class="WCSfields"  /></div><br />
+
+ <!--   <div id="accordion">
+    <h3><a href="#">Section 1</a></h3>
+    <div>
+        <p>
+        Mauris 
+        </p>
+    </div>
+    <h3><a href="#">Section 2</a></h3>
+    <div>
+        <p>
+        Sed 
+        </p>
+    </div>
+    <h3><a href="#">Section 3</a></h3>
+    <div>
+        <p>
+        Nam 
+        </p>
+        <ul>
+            <li>List item one</li>
+            <li>List item two</li>
+            <li>List item three</li>
+        </ul>
+    </div>
+    <h3><a href="#">Section 4</a></h3>
+    <div>
+        <p>
+        Cras 
+        </p>
+        <p>
+        Suspendisse eu 
+        </p>
+    </div>
+</div>-->
+
+
   	</div>
   
+
+    
+
 </div>
 
 <div id="map"></div>

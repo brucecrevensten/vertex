@@ -105,6 +105,7 @@ var MenuToggleSwitchM = Backbone.Model.extend({
 			this.selectable.each(jQuery.proxy(function(m) {
 				if (m.get("name") == this.get("selected")) {
 					m.trigger('paint');
+					m.trigger('updated');
 				}
 			},this));
 		});
@@ -216,12 +217,15 @@ var MenuToggleViewV = Backbone.View.extend({
 		if (attrs.menuModel) {
 			this.menuModel = attrs.menuModel;
 			
+			this.menuModel.bind('updated', jQuery.proxy(function() {
+				$(this.el).trigger('change');
+			},this));
+
 			this.menuModel.bind('paint', jQuery.proxy(function() {
 				this.viewGroup.disable();
 				this.enabled = true;
 				this.viewGroup.clear();
 				this.render();
-
 			},this));
 		}
 	},
@@ -275,7 +279,28 @@ var MenuToggleInputViewV = MenuToggleViewV.extend({
 
 
 
-var DataSetFormV = MenuToggleSelectViewV.extend({	
+/*var DataSetFormV = MenuToggleSelectViewV.extend({	
+});*/
+
+
+var DataSetFormV = MenuToggleViewV.extend({
+	render: function() {
+		if (this.enabled) {
+			$(this.el).empty();
+
+			var html ="<select>";
+
+			this.model.selectable.each(jQuery.proxy(function(m) {
+				if (this.model.get("selected") == m.get("name")) {
+					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
+				} else {
+					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
+				}
+			},this));
+			html += "</select>";
+			$(this.el).html(html);
+		}
+	}
 });
 
 

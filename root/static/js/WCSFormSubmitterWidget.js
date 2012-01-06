@@ -13,7 +13,7 @@ $(function() {
 		        {
 			        "DataSet": {
 				        "Australia": {
-					        "layers": ["northern_australia"],
+					        "layers": ["au-1"],
 					        //"wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=northern_australia&bbox=125,-18,126,-17&CRS=epsg:4326&width=500&height=500&format=jpeg",
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
@@ -22,34 +22,44 @@ $(function() {
 					        "Projection": ["epsg:4326"]
 					    },
 					    "South East Asia": {
-					        "layers": ["South East Asia - sea-2b", "SDFLKJSDLKFJSLKDFJL"],
+					        "layers": ["sea-2b","sea-2c","sea-2d"],
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/se-asia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
 					        "ImageFormat": ["jpeg", "GTiff"],
 					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
 							"Projection": ["epsg:4326"]
-					    }/*,
+					    },
+					     "South East Asia Mainland": {
+					        "layers": ["sea-1a","sea-1b"],
+					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland",
+					        "ImageFormat": ["jpeg", "GTiff"],
+					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
+							"Projection": ["epsg:4326"]
+					    },
 					    "Africa": {
-					        "layers": ["AfricaLayer1"],
-					        "wcsUrl": "/AfricaURL",
-					        "wmsUrl": "/AfricaURL2",
+					        "layers": ["AFR-1A","AFR-1B","AFR-1C"],
+					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/africa",
 					        "ImageFormat": ["BMP","GEOTIFF"],
 					         "InterpolationMethod": ["BILINEAR", "TIME FIRST"]
 					    },
-					    "Germany": {
-					        "layers": ["GermanLayer1","GermanLayer2","GermanLayer3"],
-					        "wcsUrl": "/GermanURL",
-					        "wmsUrl": "/GermanURL2",
+					    "Central America": {
+					        "layers": ["AM-3"],
+					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/camerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/camerica",
 					        "ImageFormat": ["JPG","GEOTIFF", "PNG", "AVI"],
 					         "InterpolationMethod": ["BILINEAR", "TIME FIRST", "SINGLE STEP"]
 					    },
-					     "Greenland": {
-					        "layers": ["Greenland","Greenland2"],
-					        "wcsUrl": "/GreenlandURL",
-					        "wmsUrl": "/GreenlandURL2",
-					        "ImageFormat": ["GEOTIFF", "PNG", "AVI"],
-					         "InterpolationMethod": ["INTERPMETHOD", "TIME FIRST", "SINGLE STEP"]
-					    }*/
+					     "South America": {
+					        "layers": ["AM-1A","AM-1B","AM-1C","AM-1D"],
+					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/samerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/samerica",
+					        "ImageFormat": ["jpeg", "GTiff"],
+					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
+							"Projection": ["epsg:4326"]
+					    },
+					     
 				    },
 
 	            })]);
@@ -197,6 +207,9 @@ $(function() {
 		//window.server2.restore();
 
 	},this));
+
+
+	//$( "#accordion" ).accordion();
 
 	//form.set({"requestURL": })
 /*

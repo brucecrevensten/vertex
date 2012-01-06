@@ -440,7 +440,7 @@ var StateInflator = Backbone.Model.extend({
             var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
             var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
             var bbox = new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
-            var feature = new OpenLayers.Feature.Vector(bbox.toGeometry(), null, {
+            var feature = new OpenLayers.Feature.Vector(bbox.toGeometry(), null, { 
               strokeColor: "#4040FF",
               strokeOpacity: 1.0,
               strokeWidth: 2,
@@ -464,10 +464,16 @@ var StateInflator = Backbone.Model.extend({
         map.addLayer(boxlayer);
         //http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia
 
-        var datasetLayer = new OpenLayers.Layer.WMS("South East Asia (EPSG:4326)",
+        var datasetLayer = new OpenLayers.Layer.WMS("South East(EPSG:4326)",
           //ds["wmsUrl"],
           "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
-          {layers: 'South East Asia - sea-2b', CRS: "EPSG:4326"}  // FIXME: pull from json return?
+          {layers: 'sea-2b', CRS: "EPSG:4326"}  // FIXME: pull from json return?
+        );
+
+        var datasetLayer3 = new OpenLayers.Layer.WMS("South East Asia 2 (EPSG:4326)",
+          //ds["wmsUrl"],
+          "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
+          {layers: 'sea-2d', CRS: "EPSG:4326"}  // FIXME: pull from json return?
         );
 
         // sea-2c
@@ -476,11 +482,11 @@ var StateInflator = Backbone.Model.extend({
         var datasetLayer2 = new OpenLayers.Layer.WMS("Australia Test Map",
           //ds["wmsUrl"],
           "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
-          {layers: 'Northern Australia - October - November 1996', CRS: "EPSG:4326"}  // FIXME: pull from json return?
+          {layers: 'au-1', CRS: "EPSG:4326"}  // FIXME: pull from json return?
         );
 
-        map.addLayers([datasetLayer, datasetLayer2]);
-        //map.addControl(new OpenLayers.Control.LayerSwitcher());
+        map.addLayers([datasetLayer, datasetLayer2, datasetLayer3]);
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.zoomToMaxExtent();
         
         this.map = map;
@@ -595,6 +601,23 @@ var StateInflator = Backbone.Model.extend({
                 console.log("LAYER CHANGE DETECTED");
                 var value = $(this.el).find('select').val();
                 this.model.set({selected: value});
+                
+                var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
+                var layerVal = this.model.get("selected");
+                console.log(wmsUrl);
+
+                console.log(layerVal);
+
+                var ds = new OpenLayers.Layer.WMS(wmsUrl + ","+layerVal,
+                  //ds["wmsUrl"],
+                  //"http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
+                  wmsUrl,
+                  {layers: layerVal, CRS: "EPSG:4326"}  // FIXME: pull from json return?
+                );
+
+                window.map.addLayer(ds);
+                window.map.setBaseLayer(ds);
+
               }
             },this));
 
