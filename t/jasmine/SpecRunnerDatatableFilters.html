@@ -11,8 +11,9 @@
 <link rel="stylesheet" type="text/css" href="../../root/static/css/portal.css" />
 
 
-  <script type="text/javascript" src="lib/jasmine-1.0.2/jasmine.js"></script>
-  <script type="text/javascript" src="lib/jasmine-1.0.2/jasmine-html.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.1.0/jasmine.js"></script>
+  <script type="text/javascript" src="lib/jasmine-1.1.0/jasmine-html.js"></script>
+  <script type="text/javascript" src="lib/jasmine-reporters/src/jasmine.junit_reporter.js"></script>
 
 	<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script> 
 	<script type="text/javascript" src="../../root/static/js/AsfConfig.js"></script>
@@ -52,6 +53,7 @@
 
 <script type="text/javascript">
   jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
   jasmine.getEnv().execute();
 </script>
 
