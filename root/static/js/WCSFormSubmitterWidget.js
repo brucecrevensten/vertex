@@ -30,7 +30,7 @@ $(function() {
 							"Projection": ["epsg:4326"]
 					    },
 					     "South East Asia Mainland": {
-					        "layers": ["sea-1a","sea-1b"],
+					        "layers": ["sea-1a","sea-1b","sea-2d"],
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland",
 					        "ImageFormat": ["jpeg", "GTiff"],
