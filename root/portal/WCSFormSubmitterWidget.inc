@@ -42,12 +42,13 @@
 		
 		        <label for="imageWidth" class="WCSfields">Resolution X:</label>
 		        <div name="imageWidth" id="imageWidth" class="WCSfields WCSfieldsShort"  /></div>
-		        	<div class="postFieldText">degrees</div><br />
+		        <div class="postFieldText1">degrees</div>
+		        	<br />
 		
 		        <label for="imageHeight" class="WCSfields">Y:</label>
 		        <div name="imageHeight" id="imageHeight" class="WCSfields WCSfieldsShort"  /></div>
-		        	<div class="postFieldText">degrees</div><br /><br /><br />
-		
+		        	<div class="postFieldText2">degrees</div>
+		        	<div style="padding: 60px;"></div>		
 				<label for="b1" class="WCSfields"><!--Top--></label><div id="fill1" class="filler1" /></div>
 				<div id="b2" class="WCSfields WCSfieldsShort" style="margin-bottom: 3px;" /></div><br />
 		        <label for="b1" class="WCSfields"><!--Left-->Spatial Extent:

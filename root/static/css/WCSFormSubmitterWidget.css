@@ -83,7 +83,7 @@
 	width: 290px;
 }
 .WCSfields {
-	width: 160px;
+	max-width: 130px;
 	float: left;
 	margin-top: 5px;
 	line-height: 25px;
@@ -111,6 +111,9 @@ input.WCSfields {
   	display: block;
   	position: relative;
 }
+.WCSfields option {
+	max-width: 120px;
+}
 .arrow4way {
 	display: block;
 	float: left;
@@ -133,11 +136,11 @@ input.WCSfields {
 	font-size: 10px !important;
 }
 .zoomText {
-	position: relative;
+	position: absolute;
 	width: 400px;
 	display: block;
-	top: 87px;
-	right: 118px;
+	top: 327px;
+	left: 125px;
 	text-decoration: underline;
 	color: #F58400;
 }
@@ -145,12 +148,17 @@ input.WCSfields {
 .zoomText a:visited {color: #F58400;}
 .zoomText a:active {color: #F58400;}
 .zoomText a:hover {color: #FFFFFF;}
-.postFieldText {
-	position: relative;
-	margin-top: 5px;
+.postFieldText1 {
+	position: absolute;
 	color: silver;
-	left: 12px;
-	top: 13px;
+	left: 175px;
+	top: 125px;
+}
+.postFieldText2 {
+	position: absolute;
+	color: silver;
+	left: 175px;
+	top: 158px;
 }
 .head {
 	width:100%;
