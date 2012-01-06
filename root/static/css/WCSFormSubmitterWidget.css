@@ -1,26 +1,36 @@
 #subsetter {
 	position: absolute;
+	width: 100%;
 	display: block;
 	top: 45px;
+}
+.dsTable {
+}
+.dsLeftColumn {
+	vertical-align: top;
+	min-width: 290px;
+}
+.dsCenterColumn {
+	vertical-align: top;
+	width: 100%;
+	padding-right: 10px;
+	padding-left: 10px;
+	overflow: hidden;
+}
+.dsRightColumn {
+	vertical-align: top;
+	min-width: 318px;
 }
 #datasetSelection {
 	width: 290px;
 	height: 580px;
 }
 #map {
-	width: 655px;
 	height: 580px;
 	border: 1px ridge silver;
-	display: block;
-	top: 0;
-	position: absolute;
-	left: 300px;
 }
 #subsetterRightColumn {
-	position: absolute;
-	top: 0px;
-	float: right;
-	left: 980px;
+	width: 300px;
 }
 #formContainer {
 	display: block;
