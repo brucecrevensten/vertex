@@ -1,78 +1,75 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-  "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html>
 <head>
-  <title>Jasmine Test Runner</title>
-  <link rel="stylesheet" type="text/css" href="lib/jasmine-1.0.2/jasmine.css">
+<title>Jasmine Test Runner</title>
 
-<link rel="stylesheet" type="text/css" href="../../root/static/css/reset.css" />
-<link rel="stylesheet" type="text/css" href="../../root/static/css/demo_table_jui.css" />
-<link rel="stylesheet" type="text/css" href="../../root/static/css/ui-darkness/jquery-ui-1.8.16.custom.css" /> 
+<!-- Include css files here -->
+<!-- <link rel="stylesheet" type="text/css" href="../../root/static/css/ui-darkness/jquery-ui-1.8.16.custom.css" />
 <link rel="stylesheet" type="text/css" href="../../root/static/css/portal.css" />
+<link rel="stylesheet" type="text/css" href="../../root/static/css/demo_table_jui.css" />
+<link rel="stylesheet" type="text/css" href="../../root/static/css/reset.css" /> -->
+<link rel="stylesheet" type="text/css" href="lib/jasmine-1.1.0/jasmine.css">
 
+<!-- Include library files here -->
+<script type="text/javascript" src="../../root/static/js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="../../root/static/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="../../root/static/js/underscore-min.js"></script>
+<script type="text/javascript" src="../../root/static/js/backbone-min.js"></script>
+<script type="text/javascript" src="../../root/static/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../../root/static/js/jquery.placeholder.js"></script>
+<script type="text/javascript" src="../../root/static/js/jquery.store.js"></script>
+<script type="text/javascript" src="../../root/static/js/sinon-1.2.0.js"></script>
+<script type="text/javascript" src="lib/jasmine-1.1.0/jasmine.js"></script>
+<script type="text/javascript" src="lib/jasmine-1.1.0/jasmine-html.js"></script>
+<script type="text/javascript" src="lib/jasmine-reporters/src/jasmine.junit_reporter.js"></script>
+<script type="text/javascript" src="lib/jasmine-jquery-1.3.1.js"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 
-  <script type="text/javascript" src="lib/jasmine-1.1.0/jasmine.js"></script>
-  <script type="text/javascript" src="lib/jasmine-1.1.0/jasmine-html.js"></script>
-  <script type="text/javascript" src="lib/jasmine-reporters/src/jasmine.junit_reporter.js"></script>
+<!-- include source files here... -->
+<script type="text/javascript" src="../../root/static/js/AsfConfig.js"></script>
+<script type="text/javascript" src="../../root/static/js/AsfPlatformConfig.js"></script>
+<script type="text/javascript" src="../../root/static/js/AsfUtility.js"></script>
+<script type="text/javascript" src="../../root/static/js/SearchMap.js"></script>
+<script type="text/javascript" src="../../root/static/js/DataProduct.js"></script>
+<script type="text/javascript" src="../../root/static/js/ProcessingTypes.js"></script>
+<script type="text/javascript" src="../../root/static/js/Search.js"></script>
+<script type="text/javascript" src="../../root/static/js/PostFilterComponents.js"></script>
+<script type="text/javascript" src="../../root/static/js/PostFilters.js"></script>
+<script type="text/javascript" src="../../root/static/js/SearchResults.js"></script>
+<script type="text/javascript" src="../../root/static/js/DownloadQueue.js"></script>
+<script type="text/javascript" src="../../root/static/js/UserWidgetRenderers.js"></script>
+<script type="text/javascript" src="../../root/static/js/UserAuth.js"></script>
+<!--    <script type="text/javascript" src="../../root/static/js/SearchApp.js"></script> -->
+<script type="text/javascript" src="../../root/static/js/Feedback.js"></script>
+<script type="text/javascript" src="../../root/static/js/Dictionary.js"></script>
 
-	<script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script> 
-	<script type="text/javascript" src="../../root/static/js/AsfConfig.js"></script>
-	<script type="text/javascript" src="../../root/static/js/AsfPlatformConfig.js"></script>
-	<script type="text/javascript" src="../../root/static/js/jquery-1.7.1.min.js"></script>
-	<script type="text/javascript" src="../../root/static/js/jquery.store.js"></script>
-	<script type="text/javascript" src="../../root/static/js/jquery-ui-1.8.16.custom.min.js"></script>
-	<script type="text/javascript" src="../../root/static/js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" src="../../root/static/js/underscore-min.js"></script>
-	<script type="text/javascript" src="../../root/static/js/AsfUtility.js"></script>
-	<script type="text/javascript" src="../../root/static/js/backbone-min.js"></script>
-	<script type="text/javascript" src="../../root/static/js/SearchMap.js"></script>
-	<script type="text/javascript" src="../../root/static/js/DataProduct.js"></script>
-	<script type="text/javascript" src="../../root/static/js/ProcessingTypes.js"></script>
-	<script type="text/javascript" src="../../root/static/js/Search.js"></script>
-	<script type="text/javascript" src="../../root/static/js/PostFilterComponents.js"></script>
-	<script type="text/javascript" src="../../root/static/js/PostFilters.js"></script>
-	<script type="text/javascript" src="../../root/static/js/SearchResults.js"></script>
-	<script type="text/javascript" src="../../root/static/js/DownloadQueue.js"></script>
-	<script type="text/javascript" src="../../root/static/js/UserWidgetRenderers.js"></script>
-	<script type="text/javascript" src="../../root/static/js/UserAuth.js"></script> 
-<!--	<script type="text/javascript" src="../../root/static/js/SearchApp.js"></script> -->
-	<script type="text/javascript" src="../../root/static/js/Feedback.js"></script> 
-	<script type="text/javascript" src="../../root/static/js/jquery.dataTables.min.js"></script> 
-	<script type="text/javascript" src="../../root/static/js/sinon-1.2.0.js"></script>
-	<script type="text/javascript" src="../../root/static/js/Fixtures.js"></script>
-	<script type="text/javascript" src="../../root/static/js/Fixtures2.js"></script>
-	<script type="text/javascript" src="../../root/static/js/Dictionary.js"></script>
-	
-	
-  <!-- include spec files here... -->
-  <script type="text/javascript" src="spec/DataTableFiltersSpec.js"></script>
-  
+<!-- include fixture js files here -->
+<script type="text/javascript" src="../../root/static/js/Fixtures.js"></script>
+<script type="text/javascript" src="../../root/static/js/Fixtures2.js"></script>
+<script type="text/javascript" src="spec/fixtures/searchReturn.js"></script>
+
+<!-- include spec files here... -->
+<script type="text/javascript" src="spec/DataTableFiltersSpec.js"></script>
 
 </head>
 <body>
 
 <script type="text/javascript">
-  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
-  jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
-  jasmine.getEnv().execute();
+jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
+jasmine.getEnv().execute();
 </script>
 
 <div id="filterButtonContainer" align="left"></div>
-
 <div id="tableContainer" align="center">
- 	<div id="con">
-      <table id="searchResults" style="margin:20px 0px 20px 0px;"></table>
- 	</div>
+<div id="con">
+<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>
+</div>
 </div>
 
 <div id="filters"></div>
 
 <div style="margin: 1em 0;" id="platform_facets"></div>
-
-
-
-
-
 
 
 </body>
