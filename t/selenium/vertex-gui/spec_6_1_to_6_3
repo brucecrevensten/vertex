@@ -42,23 +42,23 @@
 	<td>FBS (Fine Beam Single Polarization)</td>
 </tr>
 <tr>
-	<td>verifyChecked</td>
-	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS21_5.beamSelector</td>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_FBS_FBS 21_5&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyChecked</td>
-	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS34_3.beamSelector</td>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_FBS_FBS 34_3&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyChecked</td>
-	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS41_5.beamSelector</td>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_FBS_FBS 41_5&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyChecked</td>
-	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBS.beamSelector input#a3_FBS_FBS50_8.beamSelector</td>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_FBS_FBS 50_8&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -67,8 +67,8 @@
 	<td>FBD (Fine Beam Double Polarization)</td>
 </tr>
 <tr>
-	<td>verifyChecked</td>
-	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_FBD.beamSelector input#a3_FBD_FBD34_3.beamSelector</td>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_FBD_FBD 34_3&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -77,13 +77,13 @@
 	<td>PLR (Polarimetric Mode)</td>
 </tr>
 <tr>
-	<td>verifyChecked</td>
-	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_PLR.beamSelector input#a3_PLR_PLR21_5.beamSelector</td>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_PLR_PLR 21_5&quot;]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>verifyChecked</td>
-	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_PLR.beamSelector input#a3_PLR_PLR23_1.beamSelector</td>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_PLR_PLR 23_1&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -92,8 +92,18 @@
 	<td>WB1 (ScanSAR Burst Mode 1)</td>
 </tr>
 <tr>
-	<td>verifyChecked</td>
-	<td>css=html body div.ui-dialog form.platformFacet fieldset div div#a3_WB1.beamSelector input#a3_WB1_WB1.beamSelector</td>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_WB1_WB1&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//html/body/div[3]/form/fieldset/div/h5[5]</td>
+	<td>WB2 (ScanSAR Burst Mode 2)</td>
+</tr>
+<tr>
+	<td>verifyNotChecked</td>
+	<td>//*[@id=&quot;a3_WB2_WB2&quot;]</td>
 	<td></td>
 </tr>
 </tbody></table>

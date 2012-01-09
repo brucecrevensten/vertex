@@ -193,42 +193,77 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='r1_ehib']/label/span</td>
+	<td>//div[@id='r1_fb']/label/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='r1_ehib']/label[2]/span</td>
+	<td>//div[@id='r1_fb']/label[2]/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='r1_ehib']/label[3]/span</td>
+	<td>//div[@id='r1_fb']/label[3]/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='r1_elib']/label/span</td>
+	<td>//div[@id='r1_fb']/label[4]/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='r1_ssnb']/label/span</td>
+	<td>//div[@id='r1_fb']/label[5]/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='r1_ssnb']/label[2]/span</td>
+	<td>//div[@id='r1_sb']/label/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='r1_sswb']/label/span</td>
+	<td>//div[@id='r1_sb']/label[2]/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='r1_sswb']/label[2]/span</td>
+	<td>//div[@id='r1_sb']/label[3]/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='r1_sb']/label[4]/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='r1_sb']/label[5]/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='r1_sb']/label[6]/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='r1_sb']/label[7]/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='r1_wd']/label/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='r1_wd']/label[2]/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='r1_wd']/label[3]/span</td>
 	<td></td>
 </tr>
 <tr>

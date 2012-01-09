@@ -28,17 +28,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=pf_UA</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
 	<td>//div[@id='filter_platform']/li[2]/div/label/span[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=pf_A3</td>
 	<td></td>
 </tr>
 <tr>
@@ -48,17 +38,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=pf_R1</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
 	<td>//div[@id='filter_platform']/li[4]/div/label/span</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=pf_E1</td>
 	<td></td>
 </tr>
 <tr>
@@ -68,17 +48,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=pf_E2</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
 	<td>//div[@id='filter_platform']/li[6]/div/label/span[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>id=pf_J1</td>
 	<td></td>
 </tr>
 <tr>
@@ -87,13 +57,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>typeKeys</td>
+	<td>type</td>
 	<td>id=filter_granule_list</td>
-	<td>ALPSRP247275670,&nbsp;&nbsp;ALPSRP256465710&nbsp;&nbsp;aLpSRP263175710,&nbsp;&nbsp;&nbsp;ALPSRP270905*</td>
+	<td>ALPSRP247275670,&nbsp;&nbsp;ALPSRP256465710&nbsp;&nbsp;aLpSRP263175710,&nbsp;&nbsp;&nbsp;ALPSRP270905*<br /></td>
 </tr>
 <tr>
 	<td>click</td>
 	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>3 results found</td>
 	<td></td>
 </tr>
 </tbody></table>

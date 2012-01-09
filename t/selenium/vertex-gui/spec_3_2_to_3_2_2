@@ -12,29 +12,34 @@
 <tr><td rowspan="1" colspan="3">spec_3_2_to_3_2_2</td></tr>
 </thead><tbody>
 <tr>
-	<td>verifyNotTable</td>
-	<td>id=download_queue_table.1.0</td>
-	<td>R1_61127_ST6_F287.jpg</td>
+	<td>click</td>
+	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td></td>
 </tr>
 <tr>
-	<td>verifyText</td>
-	<td>css=td..sorting_1 &gt; span</td>
-	<td>ALPSRP208631300-L1.5.zip</td>
+	<td>verifyAttribute</td>
+	<td>//ul[@id='gpl_ALPSRP247141290']/li[3]/button@class</td>
+	<td>ui-button ui-widget ui-state-default ui-corner-all ui-state-focus tool-dequeue ui-button-text-icon-primary</td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//table[@id='download_queue_table']/tbody/tr/td[6]/a/span[2]</td>
+	<td>css=#queue_summary &gt; span.ui-button-text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTable</td>
+	<td>id=download_queue_table.1.0</td>
+	<td>ALPSRP247141290-L1.5.zip</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//table[@id='download_queue_table']/tbody/tr/td[6]/a/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyText</td>
-	<td>css=td..sorting_1 &gt; span</td>
-	<td>ALPSRP247141290-L1.5.zip</td>
-</tr>
-<tr>
-	<td>verifyTextNotPresent</td>
-	<td>css=td..sorting_1</td>
-	<td>ALPSRP208631300-L1.5.zip</td>
+	<td>css=div.ui-state-highlight.ui-corner-all &gt; p</td>
+	<td>Your download queue is currently empty.</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -44,7 +49,12 @@
 <tr>
 	<td>verifyText</td>
 	<td>css=#queue_summary &gt; span.ui-button-text</td>
-	<td>Download queue (1 item, 89.83 MB)</td>
+	<td>Download queue (empty)</td>
+</tr>
+<tr>
+	<td>verifyNotAttribute</td>
+	<td>//ul[@id='gpl_ALPSRP247141290']/li[3]/button@class</td>
+	<td>ui-button ui-widget ui-state-default ui-corner-all ui-state-focus tool-dequeue ui-button-text-icon-primary</td>
 </tr>
 </tbody></table>
 </body>
