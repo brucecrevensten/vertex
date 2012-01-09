@@ -79,6 +79,9 @@ $(function() {
 
 	server.restore();
 	
+	console.log(infl);
+	console.log(infl.dataSetFormM);
+	console.log(infl.dataSetFormM.view);
 
 	infl.dataSetFormM.view.set($("#dataset"));
 

@@ -142,7 +142,7 @@ body {
 	    </ul>            
 	    <div class="yui-content">
 	        [% INCLUDE content1.inc %]
-	        <div id="subsetter">[% INCLUDE WCSFormSubmitterWidget.inc %]</div>
+	        [% INCLUDE WCSFormSubmitterWidget.inc %]
 	    </div>
 	</div>
 </div>
@@ -162,7 +162,7 @@ body {
           Phone: (907) 474-6166<br/>
           Email: <a href="uso@asf.alaska.edu">uso@asf.alaska.edu</a><br/>
         <br/>
-          2011 &copy; Alaska Satellite Facility
+          2011 &copy; Alaska Satellite Facility<br />
           Vertex: ASF&rsquo;s Data Portal V[% c.config.version %]
         </p>
       </div>

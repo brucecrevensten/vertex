@@ -279,11 +279,11 @@ var MenuToggleInputViewV = MenuToggleViewV.extend({
 
 
 
-/*var DataSetFormV = MenuToggleSelectViewV.extend({	
-});*/
+var DataSetFormV = MenuToggleSelectViewV.extend({	
+});
 
 
-var DataSetFormV = MenuToggleViewV.extend({
+var DataSetFormV2 = MenuToggleViewV.extend({
 	initialize: function() {
 		MenuToggleViewV.prototype.initialize.call(this);
 		
@@ -309,14 +309,9 @@ var DataSetFormV = MenuToggleViewV.extend({
 
 			var html = '<div id="accordion">';
 			this.model.selectable.each(jQuery.proxy(function(m) {
-				/*if (this.model.get("selected") == m.get("name")) {
-					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
-				} else {
-					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
-				}*/
 				html+= '<h3><a href="#">'+ m.get("name") +'</a></h3>';
 				html+= '<div>'+ '<div name="layer" id="layer" class="WCSfields"></div>'+'</div>'
-				//html += "<ahref id="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</div>";
+				
 			},this));
 			html += "</div>";
 			$(this.el).html(html);

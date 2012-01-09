@@ -1,26 +1,36 @@
 #subsetter {
 	position: absolute;
-	top: 15px;
+	width: 100%;
 	display: block;
+	top: 45px;
+}
+.dsTable {
+}
+.dsLeftColumn {
+	vertical-align: top;
+	min-width: 290px;
+}
+.dsCenterColumn {
+	vertical-align: top;
+	width: 100%;
+	padding-right: 10px;
+	padding-left: 10px;
+	overflow: hidden;
+}
+.dsRightColumn {
+	vertical-align: top;
+	min-width: 318px;
 }
 #datasetSelection {
 	width: 290px;
 	height: 580px;
 }
 #map {
-	width: 655px;
 	height: 580px;
 	border: 1px ridge silver;
-	display: block;
-	top: 15px;
-	position: absolute;
-	left: 300px;
 }
 #subsetterRightColumn {
-	position: absolute;
-	top: 15px;
-	float: right;
-	left: 980px;
+	width: 300px;
 }
 #formContainer {
 	display: block;
@@ -73,7 +83,7 @@
 	width: 290px;
 }
 .WCSfields {
-	width: 160px;
+	max-width: 130px;
 	float: left;
 	margin-top: 5px;
 	line-height: 25px;
@@ -101,24 +111,54 @@ input.WCSfields {
   	display: block;
   	position: relative;
 }
+.WCSfields option {
+	max-width: 120px;
+}
 .arrow4way {
 	display: block;
 	float: left;
-	margin-left: 8px;
-	margin-right: 3px;
+	margin-left: 10px;
+	margin-right: 5px;
 }
 .filler1 {
-	width: 36px;
+	width: 39px;
 	display: inline-block;
 	float: left;
 	height: 1px;
 }
-.postFieldText {
-	position: relative;
-	margin-top: 5px;
+.subtext {
+	line-height: 11px;
+	position: absolute;
+	width: 130px;
 	color: silver;
-	left: 12px;
-	top: 13px;
+	right: 0;
+	top: 9px;
+	font-size: 10px !important;
+}
+.zoomText {
+	position: absolute;
+	width: 400px;
+	display: block;
+	top: 327px;
+	left: 125px;
+	text-decoration: underline;
+	color: #F58400;
+}
+.zoomText a:link {color: #F58400;}
+.zoomText a:visited {color: #F58400;}
+.zoomText a:active {color: #F58400;}
+.zoomText a:hover {color: #FFFFFF;}
+.postFieldText1 {
+	position: absolute;
+	color: silver;
+	left: 175px;
+	top: 125px;
+}
+.postFieldText2 {
+	position: absolute;
+	color: silver;
+	left: 175px;
+	top: 158px;
 }
 .head {
 	width:100%;
@@ -211,3 +251,4 @@ p{font-size:14px; color:#999;}
 p li{color:#F60;}
 
 h2{margin-top:25px;}
+
