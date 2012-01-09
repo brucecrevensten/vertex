@@ -284,11 +284,17 @@ var MenuToggleInputViewV = MenuToggleViewV.extend({
 
 
 var DataSetFormV = MenuToggleViewV.extend({
+	initialize: function() {
+		MenuToggleViewV.prototype.initialize.call(this);
+		
+			/* I AM RIGHT HERE TRYING TO FIGURE OUT HOW TO RENDER THE ACCORDIAN VIEW */
+		//this.renderTrue  = false;
+	},
 	render: function() {
 		if (this.enabled) {
 			$(this.el).empty();
 
-			var html ="<select>";
+	/*		var html ="<select>";
 
 			this.model.selectable.each(jQuery.proxy(function(m) {
 				if (this.model.get("selected") == m.get("name")) {
@@ -298,7 +304,27 @@ var DataSetFormV = MenuToggleViewV.extend({
 				}
 			},this));
 			html += "</select>";
+			$(this.el).html(html);*/
+
+
+			var html = '<div id="accordion">';
+			this.model.selectable.each(jQuery.proxy(function(m) {
+				/*if (this.model.get("selected") == m.get("name")) {
+					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
+				} else {
+					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
+				}*/
+				html+= '<h3><a href="#">'+ m.get("name") +'</a></h3>';
+				html+= '<div>'+ '<div name="layer" id="layer" class="WCSfields"></div>'+'</div>'
+				//html += "<ahref id="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</div>";
+			},this));
+			html += "</div>";
 			$(this.el).html(html);
+
+			//console.log(html);
+
+
+			$( "#accordion" ).accordion();
 		}
 	}
 });
