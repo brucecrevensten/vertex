@@ -53,37 +53,14 @@
 <body>
 
 <div id="searchMap"></div>
+
 <script type="text/javascript">
-(function() {
-  var jasmineEnv = jasmine.getEnv();
-  jasmineEnv.updateInterval = 1000;
+jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
+jasmine.getEnv().execute();
+</script>
 
-  var trivialReporter = new jasmine.TrivialReporter();
-
-  jasmineEnv.addReporter(trivialReporter);
-  jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
-
-  jasmineEnv.specFilter = function(spec) {
-    return trivialReporter.specFilter(spec);
-  };
-
-  var currentWindowOnload = window.onload;
-
-  window.onload = function() {
-    if (currentWindowOnload) {
-      currentWindowOnload();
-    }
-    execJasmine();
-  };
-
-  function execJasmine() {
-    jasmineEnv.execute();
-  }
-
-  })();
-  </script>
-
-  <div id="filter_start"></div>
-  <div id="filter_end"></div>
-  </body>
-  </html>
+<div id="filter_start"></div>
+<div id="filter_end"></div>
+</body>
+</html>
