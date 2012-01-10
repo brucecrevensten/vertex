@@ -834,8 +834,9 @@ var StateInflator = Backbone.Model.extend({
 
     generateUserInputViews: function() {
       // Generate a View for each dataset
-      console.log("Init stuff");
+    
       var dataSetFormV = new DataSetFormV({model: this.dataSetFormM });
+   
       console.log("The datasetFormV: ");
       console.log(dataSetFormV);
       this.dataSetFormM.view = dataSetFormV;

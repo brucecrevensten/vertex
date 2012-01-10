@@ -279,48 +279,93 @@ var MenuToggleInputViewV = MenuToggleViewV.extend({
 
 
 
-var DataSetFormV = MenuToggleSelectViewV.extend({	
+/*var DataSetFormV = MenuToggleSelectViewV.extend({	
 });
+*/
 
-
-var DataSetFormV2 = MenuToggleViewV.extend({
-	initialize: function() {
+var DataSetFormV = MenuToggleViewV.extend({
+	/*initialize: function() {
+		MenuToggleViewV.prototype.initialize.call(this);
+	},*/
+	/*initialize: function() {
+		console.log("Calling this method");
 		MenuToggleViewV.prototype.initialize.call(this);
 		
-			/* I AM RIGHT HERE TRYING TO FIGURE OUT HOW TO RENDER THE ACCORDIAN VIEW */
+		
 		//this.renderTrue  = false;
-	},
+	},*/
 	render: function() {
+		console.log("Trying to render");
 		if (this.enabled) {
 			$(this.el).empty();
 
-	/*		var html ="<select>";
-
-			this.model.selectable.each(jQuery.proxy(function(m) {
-				if (this.model.get("selected") == m.get("name")) {
-					html += "<option value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</option>";
-				} else {
-					html += "<option value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</option>";
-				}
-			},this));
-			html += "</select>";
-			$(this.el).html(html);*/
-
-
 			var html = '<div id="accordion">';
+			var idx=0;
 			this.model.selectable.each(jQuery.proxy(function(m) {
-				html+= '<h3><a href="#">'+ m.get("name") +'</a></h3>';
-				html+= '<div>'+ '<div name="layer" id="layer" class="WCSfields"></div>'+'</div>'
-				
+			//	console.log("Printing STUFF");
+			//	console.log(m);
+			//	console.log(m.get("name"));
+				html+= '<h3><a href="#'+ " idx="+idx+'" selectedName="'+m.get("name")+'">'+ m.get("name") +'</a></h3>';
+				html+= '<div id='+'layer_'+idx+'>'+ '<div name="layer" class="WCSfields"></div>'+'</div>';
+
+
+				var layers = this.model.get("layers");
+				var layerView = layers[m.get("name")];
+
+				//layerView.set2($('#'))
+
+				console.log(layerView);
+
+				idx++;
 			},this));
 			html += "</div>";
 			$(this.el).html(html);
 
+			idx=0;
+			this.model.selectable.each(jQuery.proxy(function(m) {
+				var layers = this.model.get("layers");
+				var layer = layers[m.get("name")];
+
+				var layerElement = $('#layer_'+idx);
+				//console.log(layerElement);
+				//layerView.set2()
+
+				layer.menuView.set2(layerElement);
+
+				//console.log(layerView);
+
+				idx++;
+
+			},this));
+
 			//console.log(html);
 
 
-			$( "#accordion" ).accordion();
+
+			$( "#accordion" ).accordion({ fillSpace: true });
 		}
+	},
+
+	bindAccordion: function(el) {
+		console.log("Binding");
+		$(el).bind('accordionchange', jQuery.proxy(function(event, ui) {
+
+			var selectedHeader = $(event.target).find('h3[aria-selected="true"]');
+			var selectedName = selectedHeader.find('a').attr('selectedName');
+
+			console.log("SELECTED NAME: " + selectedName);
+			var layer_id = selectedHeader.find('a').attr('idx');
+
+			layer_id = "layer_"+layer_id;
+
+			console.log(this);
+			this.model.set({"selected":selectedName});
+		
+			//console.log("LAYER ID = " + layer_id);
+
+			
+			console.log(selectedHeader);
+		},this));
 	}
 });
 

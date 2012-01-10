@@ -34,7 +34,7 @@ $(function() {
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
+					        "InterpolationMethod": ["MARSHMELLOW", "SMOOTHED ANTIALIASING", "POLYWALK" ],
 							"Projection": ["epsg:4326"]
 					    },
 					    "Africa": {
@@ -42,7 +42,7 @@ $(function() {
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/africa",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					         "InterpolationMethod": ["BILINEAR", "TIME FIRST"],
+					         "InterpolationMethod": ["FAKETYPE","BILINEAR", "TIME FIRST"],
 					         "Projection": ["epsg:4326"]
 					    },
 					    "Central America": {
@@ -50,7 +50,7 @@ $(function() {
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/camerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/camerica",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					         "InterpolationMethod": ["BILINEAR", "TIME FIRST", "SINGLE STEP"],
+					         "InterpolationMethod": ["SEAHORSE","BILINEAR", "TIME FIRST", "SINGLE STEP"],
 					         "Projection": ["epsg:4326"]
 					    },
 					     "South America": {
@@ -58,7 +58,7 @@ $(function() {
 					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/samerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/samerica",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
+					        "InterpolationMethod": ["SPIDER","CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
 							"Projection": ["epsg:4326"]
 					    },
 					     
@@ -79,19 +79,19 @@ $(function() {
 
 	server.restore();
 	
-	console.log(infl);
+	/*console.log(infl);
 	console.log(infl.dataSetFormM);
-	console.log(infl.dataSetFormM.view);
+	console.log(infl.dataSetFormM.view);*/
 
 	infl.dataSetFormM.view.set($("#dataset"));
 
 	// Layer
 	for (dataSetName in dataSetDict) {
-		menuToggleList["LAYERS"][dataSetName].menuView.set2($("#layer"));
+//		menuToggleList["LAYERS"][dataSetName].menuView.set2($("#layer"));
 	}
-	menuToggleList["LAYERS"]["Australia"].menuView.enabled = true;
+//	menuToggleList["LAYERS"]["Australia"].menuView.enabled = true;
 	//menuToggleList["LAYERS"]["Alaska"].menuForm.set({"selected":"AlaskaLayer1"});
-	menuToggleList["LAYERS"]["Australia"].menuView.render();
+
 
 	// Image Format
 	for (dataSetName in dataSetDict) {
@@ -155,7 +155,18 @@ $(function() {
 	dataSetFormM.view.enabled = true;
 	dataSetFormM.set({"selected":"Australia"});
 
+	dataSetFormM.set({"layers": menuToggleList["LAYERS"]});
+
 	dataSetFormM.view.render();
+
+	//console.log(dataSetFormM.view);
+	dataSetFormM.view.bindAccordion($("#dataset"));
+
+///	menuToggleList["LAYERS"]["Australia"].menuView.render();
+
+
+//	menuToggleList[]
+
 
 	window.infl = infl;
 
