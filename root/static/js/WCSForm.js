@@ -327,13 +327,7 @@ var DataSetFormV = MenuToggleViewV.extend({
 				var layer = layers[m.get("name")];
 
 				var layerElement = $('#layer_'+idx);
-				//console.log(layerElement);
-				//layerView.set2()
-
 				layer.menuView.set2(layerElement);
-
-				//console.log(layerView);
-
 				idx++;
 
 			},this));

@@ -591,7 +591,74 @@ var StateInflator = Backbone.Model.extend({
         /*
             The menuFactory is still being worked on. 
         */
-        this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", null, 
+     /*   this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", null, 
+        {
+          name: "change",
+          callback: function(event) {
+            //console.log("LAYER CHANGED");
+              $(this.el).bind(event, jQuery.proxy(function(e) {
+              if (this.enabled) {
+                console.log("LAYER CHANGE DETECTED");
+                var value = $(this.el).find('select').val();
+                this.model.set({selected: value});
+                
+                var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
+                var layerVal = this.model.get("selected");
+                console.log(wmsUrl);
+
+                console.log(layerVal);
+
+                var ds = new OpenLayers.Layer.WMS(wmsUrl + ","+layerVal,
+                  //ds["wmsUrl"],
+                  //"http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
+                  wmsUrl,
+                  {layers: layerVal, CRS: "EPSG:4326"}  // FIXME: pull from json return?
+                );
+
+                window.map.addLayer(ds);
+                window.map.setBaseLayer(ds);
+
+              }
+            },this));
+
+          }
+        }
+      );*/
+
+      this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", 
+      function() {
+          if (this.enabled) {
+            $(this.el).empty();
+
+            console.log("CHECK IT OUT !!!!!!!!!!!!!!!!!!!!!");
+            console.log(this.menuModel.get("name"));
+            var divId = this.menuModel.get("name").replace(/\s/g, "") + "_check";
+            var html ='<div id="'+divId+'">';   //"<select>";
+
+            this.model.selectable.each(jQuery.proxy(function(m) {
+              if (this.model.get("selected") == m.get("name")) {
+                html = "<div "+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</div>";
+                $(this.el).append(html);
+                $('#'+m.get("name")).button();
+
+              } else {
+                html = "<div "+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</div>";
+                $(this.el).append(html);
+                $('#'+m.get("name")).button();
+              }
+            },this));
+            html+="</div>"
+          //  html += "</select>";
+          //  $(this.el).html(html);
+
+           // $(divId).buttonset();
+
+            console.log("OK HERE WE GO!" );
+            console.log($(divId));
+
+            //$('input[type="checkbox"]').button();
+        }
+      }, 
         {
           name: "change",
           callback: function(event) {
