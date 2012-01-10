@@ -6,6 +6,7 @@ api_user_information_url http://www.asf.alaska.edu/program/sdc/asf_api
 
 # Set to 'true' to include google analytics code, 'false' if not
 include_google_analytics = false
+google_analytics_account = 'UA-991100-5'
 
 # set to 'true' to include ems tracker, 'false' if not
 include_ems_tracker = false
