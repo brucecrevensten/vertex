@@ -113,6 +113,13 @@ input.WCSfields {
 }
 .WCSfields option {
 	max-width: 120px;
+	display: block;
+}
+#accordion {
+	width: 250px;
+}
+#accordion .ui-accordion-content-active {
+	height: 100% !important;
 }
 .arrow4way {
 	display: block;
