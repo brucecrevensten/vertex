@@ -345,12 +345,15 @@ var SearchResultsView = Backbone.View.extend(
     _.bindAll(this, "render");
         this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
            if (this.dataTable != null)  {
-             _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {          
-                
+             _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {
                 if (h[1] == 1) {
-                  this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
+                  if(this.mo[$(h[0]).find("div").attr("product_id")]) {
+                    this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
+                  }
                 } else {
-                  this.mo[$(h[0]).find("div").attr("product_id")].setMap(null);
+                  if(this.mo[$(h[0]).find("div").attr("product_id")]) {
+                    this.mo[$(h[0]).find("div").attr("product_id")].setMap(null);
+                  }
                 }
                 h[1]=0;
 
