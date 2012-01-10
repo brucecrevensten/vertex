@@ -13,6 +13,11 @@
 </thead><tbody>
 <tr>
 	<td>click</td>
+	<td>//ul[@id='gpl_ALPSRP247141290']/li/button</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>css=#queue_summary &gt; span.ui-button-text</td>
 	<td></td>
 </tr>
