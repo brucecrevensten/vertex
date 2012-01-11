@@ -108,8 +108,8 @@ var RequestGenerator = Backbone.Collection.extend(
         var requestURL = this.get("requestURL");
 
 
-        console.log(requestURL);
-        console.log(paramStr);
+      //  console.log(requestURL);
+      //  console.log(paramStr);
        // $('#formSub').attr('action', requestURL);
         
        /* var formHTML = '<form id="formSub" action=' + '"'+ requestURL +'"' + ' method="post"> \
@@ -588,6 +588,8 @@ var StateInflator = Backbone.Model.extend({
             },this));
         }
 
+        this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"}, "selectable");
+
         /*
             The menuFactory is still being worked on. 
         */
@@ -630,33 +632,62 @@ var StateInflator = Backbone.Model.extend({
           if (this.enabled) {
             $(this.el).empty();
 
-            console.log("CHECK IT OUT !!!!!!!!!!!!!!!!!!!!!");
-            console.log(this.menuModel.get("name"));
+           // console.log("CHECK IT OUT !!!!!!!!!!!!!!!!!!!!!");
+           // console.log(this.menuModel.get("name"));
             var divId = this.menuModel.get("name").replace(/\s/g, "") + "_check";
-            var html ='<div id="'+divId+'">';   //"<select>";
-
+            var html = '<div id="'+divId+'">';   //"<select>";
+            console.log(html);
             this.model.selectable.each(jQuery.proxy(function(m) {
-              if (this.model.get("selected") == m.get("name")) {
-                html = "<div "+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ "selected="+'"selected"' +  ">"+m.get("name")+"</div>";
-                $(this.el).append(html);
-                $('#'+m.get("name")).button();
+           //   if (this.model.get("selected") == m.get("name")) {
+             //   var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' +  ">"+m.get("name")+"</input>";
+                var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'" / >'+'<label for="'+m.get("name") +'">'+m.get("name")+'</label>';
+                console.log(str);
+                html += str;
+ //html += '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' + 'name="'+ m.get("name")+ '">'+"</input>";
+ 
+               // $(this.el).append(html);
+               $(this.el).append(str);
+                $('#'+m.get("name")).button().click( function() {
+          if( true == $(this).prop('checked') ) {
+            $(this).button( "option", "icons", { primary: "ui-icon-check" });
+          } else {
+            $(this).button( "option", "icons", {} );
+          }
+        }); 
 
-              } else {
-                html = "<div "+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</div>";
-                $(this.el).append(html);
-                $('#'+m.get("name")).button();
-              }
+              /*} else {
+               var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' +  "/ >"+'<label for="'+m.get("name") +'">'+m.get("name")+'</label>';
+
+              //  var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</input>";
+                html+= str;
+            //    html += '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' + 'name="'+ m.get("name")+ '">'+"</input>";
+        $(this.el).append(str);
+                $('#'+m.get("name")).button().click( function() {
+          if( true == $(this).prop('checked') ) {
+            $(this).button( "option", "icons", { primary: "ui-icon-check" });
+          } else {
+            $(this).button( "option", "icons", {} );
+          }
+        }); 
+                
+             //   $('#'+m.get("name")).button();
+              }*/
             },this));
-            html+="</div>"
-          //  html += "</select>";
-          //  $(this.el).html(html);
+            html+="</div>"+"</div>"
+          //  $(this.el).append(html);
 
-           // $(divId).buttonset();
+            console.log(html);
 
-            console.log("OK HERE WE GO!" );
-            console.log($(divId));
-
-            //$('input[type="checkbox"]').button();
+            //console.log(divId);
+            //console.log(html);
+            console.log("The following is the div id of a button set 11 ");
+            console.log("Searching for : " + '#'+divId);
+            console.log($('#'+divId ));
+            
+           // console.log($(this.el));
+       //    $('#'+divId).buttonset();
+         //  $('#'+divId).find('input').button()
+           console.log($('#'+divId).find('input'))
         }
       }, 
         {
@@ -666,14 +697,14 @@ var StateInflator = Backbone.Model.extend({
               $(this.el).bind(event, jQuery.proxy(function(e) {
               if (this.enabled) {
                 console.log("LAYER CHANGE DETECTED");
-                var value = $(this.el).find('select').val();
+                var value = $(this.el).find('input').val();
                 this.model.set({selected: value});
                 
                 var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
                 var layerVal = this.model.get("selected");
-                console.log(wmsUrl);
+               /// console.log(wmsUrl);
 
-                console.log(layerVal);
+             //   console.log(layerVal);
 
                 var ds = new OpenLayers.Layer.WMS(wmsUrl + ","+layerVal,
                   //ds["wmsUrl"],
@@ -717,7 +748,7 @@ var StateInflator = Backbone.Model.extend({
                   if (this.model.get("selected") != null) {
                     html = "<input value="+'"'+this.model.get("selected") +'"'+"></input>";
                   } else {
-                    console.log("EMPTY INPUT");
+                  //  console.log("EMPTY INPUT");
                     html="<input></input>"
                   }
                    $(this.el).html(html);
@@ -736,7 +767,7 @@ var StateInflator = Backbone.Model.extend({
                   if (this.model.get("selected") != null) {
                     html = "<input value="+'"'+this.model.get("selected") +'"'+"></input>";
                   } else {
-                    console.log("EMPTY INPUT");
+                  //  console.log("EMPTY INPUT");
                     html="<input></input>"
                   }
                    $(this.el).html(html);
@@ -760,7 +791,7 @@ var StateInflator = Backbone.Model.extend({
                             
                           // By convention the indices of the valueArray map 1-to-1 to the indices of the elList.
                           var valueArray = this.model.get("selected").split(',');
-                          console.log(valueArray);
+                     //     console.log(valueArray);
 
                           // Each box has an associated set of element id's that's set by the client (interface sense, not web)
                           // so we need to grab each id and use it to render the html
@@ -781,7 +812,7 @@ var StateInflator = Backbone.Model.extend({
                         
 
                 } catch (e) {
-                  console.log(e);
+                //  console.log(e);
                 }
               }
             },
@@ -791,10 +822,10 @@ var StateInflator = Backbone.Model.extend({
 
                     window.mapEvent.bind('update_openlayers_bbox', jQuery.proxy(function(e) {
                       if (this.enabled) {
-                        console.log("DETECTED MAP CHANGE");
+                   //     console.log("DETECTED MAP CHANGE");
                         // String representation of bounding box
                         var value = window.map.layers[0].features[0].geometry.bounds.toString()
-                        console.log(window.map.layers[0].features[0].geometry.bounds.toString());
+                       // console.log(window.map.layers[0].features[0].geometry.bounds.toString());
                         this.model.set({selected: value});
                       }
                     },this));
@@ -807,12 +838,12 @@ var StateInflator = Backbone.Model.extend({
 
                         // console.log(this.enabled);
                         if (this.enabled) {
-                          console.log("CHANGED!!!!");
-                            console.log(window.map);
+                         // console.log("CHANGED!!!!");
+                         //   console.log(window.map);
                              // console.log(this.elList[0]);
                             // console.log(index);
-                            console.log("ALSDKALKDJS");
-                              console.log( $(e.currentTarget).find('input').val() );
+                         //   console.log("ALSDKALKDJS");
+                          //    console.log( $(e.currentTarget).find('input').val() );
                               
                                 var v = $(e.currentTarget).find('input').val();
                                 if (v == null || v == undefined || v == "") {
@@ -846,7 +877,7 @@ var StateInflator = Backbone.Model.extend({
                     }
 // This code below stays
                   this.bind('updateSelected', jQuery.proxy(function() {
-                      console.log("UPDATING SELECTED");
+                    //  console.log("UPDATING SELECTED");
 
                       if (this.enabled) {
                         var valueArray=[];
@@ -854,13 +885,13 @@ var StateInflator = Backbone.Model.extend({
                         for (var index=0; index<this.elList.length; index++) {
                           var v = $(this.elList[index]).find('input').val();
                           valueArray.push(v);
-                          console.log("push " + v);
+                   //       console.log("push " + v);
                         }
                         
                         var value = valueArray.join(',');
 
                         this.model.set({selected: value});
-                        console.log(this.model.get("selected"));
+                      //  console.log(this.model.get("selected"));
                       }
                     },this));
               } 
@@ -879,7 +910,7 @@ var StateInflator = Backbone.Model.extend({
       }
       if (type == "default") {
           if (menuName == "BBOX") {
-            console.log("Creating BBOX");
+          //  console.log("Creating BBOX");
           }
           menu = this.createMenu(dictionary, defaults, renderHandle,binding);
       }
@@ -904,8 +935,8 @@ var StateInflator = Backbone.Model.extend({
     
       var dataSetFormV = new DataSetFormV({model: this.dataSetFormM });
    
-      console.log("The datasetFormV: ");
-      console.log(dataSetFormV);
+     // console.log("The datasetFormV: ");
+     // console.log(dataSetFormV);
       this.dataSetFormM.view = dataSetFormV;
       this.dataSetFormV = dataSetFormV;
       window.dataSetFormV = dataSetFormV;

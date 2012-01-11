@@ -231,9 +231,9 @@ var MenuToggleViewV = Backbone.View.extend({
 	},
 
 	bindSelect: function(ev) {
-		console.log("INVOKING BINDSELECT");
+		//console.log("INVOKING BINDSELECT");
 		$(this.el).bind(ev, jQuery.proxy(function(e) {
-			console.log("bindSelect()");
+		//	console.log("bindSelect()");
 				if (this.enabled) {
 					var value = $(this.el).find('select').val();
 					this.model.set({selected: value});
@@ -269,7 +269,7 @@ var MenuToggleInputViewV = MenuToggleViewV.extend({
           if (this.model.get("selected") != null) {
             html = "<input value="+'"'+this.model.get("selected") +'"'+"></input>";
           } else {
-            console.log("EMPTY INPUT");
+           // console.log("EMPTY INPUT");
             html="<input></input>"
           }
            $(this.el).html(html);
@@ -290,8 +290,6 @@ var DataSetFormV = MenuToggleViewV.extend({
 	/*initialize: function() {
 		console.log("Calling this method");
 		MenuToggleViewV.prototype.initialize.call(this);
-		
-		
 		//this.renderTrue  = false;
 	},*/
 	render: function() {
@@ -306,7 +304,9 @@ var DataSetFormV = MenuToggleViewV.extend({
 			//	console.log(m);
 			//	console.log(m.get("name"));
 				html+= '<h3><a href="#'+ " idx="+idx+'" selectedName="'+m.get("name")+'">'+ m.get("name") +'</a></h3>';
-				html+= '<div id='+'layer_'+idx+'>'+ '<div name="layer" class="WCSfields"></div>'+'</div>';
+				html+= '<div id='+'layer_'+idx+'>'+ 
+			
+				'<div name="layer" class="WCSfields"></div>'+'</div>';
 
 
 				var layers = this.model.get("layers");
@@ -314,7 +314,7 @@ var DataSetFormV = MenuToggleViewV.extend({
 
 				//layerView.set2($('#'))
 
-				console.log(layerView);
+		//		console.log(layerView);
 
 				idx++;
 			},this));
@@ -341,24 +341,24 @@ var DataSetFormV = MenuToggleViewV.extend({
 	},
 
 	bindAccordion: function(el) {
-		console.log("Binding");
+	//	console.log("Binding");
 		$(el).bind('accordionchange', jQuery.proxy(function(event, ui) {
 
 			var selectedHeader = $(event.target).find('h3[aria-selected="true"]');
 			var selectedName = selectedHeader.find('a').attr('selectedName');
 
-			console.log("SELECTED NAME: " + selectedName);
+			//console.log("SELECTED NAME: " + selectedName);
 			var layer_id = selectedHeader.find('a').attr('idx');
 
 			layer_id = "layer_"+layer_id;
 
-			console.log(this);
+			//console.log(this);
 			this.model.set({"selected":selectedName});
 		
 			//console.log("LAYER ID = " + layer_id);
 
 			
-			console.log(selectedHeader);
+		//	console.log(selectedHeader);
 		},this));
 	}
 });
