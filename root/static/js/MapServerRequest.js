@@ -389,8 +389,6 @@ var StateInflator = Backbone.Model.extend({
            $(this.el).html(html);
 
            $('#'+divId).buttonset();
-
-           $('#'+divId).find('input').css('display:block')
             
            $('#'+divId).find('input').change( jQuery.proxy(function(event) {
                 var name = $(event.currentTarget).attr('name');
