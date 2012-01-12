@@ -25,14 +25,14 @@ $(function() {
 					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 							"Projection": ["epsg:4326"]
 					    },
-					/*     "South East Asia Mainland": {
-					        "layers": ["sea-1a","sea-1b","sea-2d"],
+					    "South East Asia Mainland": {
+					        "layers": ["sea-1a","sea-1b"],
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland",
 					        "ImageFormat": ["jpeg", "GTiff"],
 					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 							"Projection": ["epsg:4326"]
-					    },*/
+					    },
 					    "Africa": {
 					        "layers": ["AFR-1A","AFR-1B","AFR-1C"],
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
