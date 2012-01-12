@@ -58,21 +58,6 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>id=triggerSearch</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForElementPresent</td>
-	<td>link=Filter By Platform</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//div[@id='srProcLevelTool']/div/label/span[2]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
 	<td>//ul[@id='addProductsByType']/li[3]/button</td>
 	<td></td>
 </tr>
@@ -92,8 +77,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>verifyText</td>
+	<td>css=div.ui-state-highlight.ui-corner-all &gt; p</td>
+	<td>Your download queue is currently empty.</td>
+</tr>
+<tr>
 	<td>click</td>
-	<td>css=span.ui-icon.ui-icon-closethick</td>
+	<td>//div[4]/div/a/span</td>
 	<td></td>
 </tr>
 </tbody></table>
