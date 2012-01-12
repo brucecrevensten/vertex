@@ -381,7 +381,7 @@ var StateInflator = Backbone.Model.extend({
             var html='<div id="'+divId+'">';
 
             this.model.selectable.each(jQuery.proxy(function(m) {
-                var str = '<input type="radio" name="'+divId+ '" '  +'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'" / >'+'<label for="'+m.get("name") +'">'+m.get("name")+'</label>';
+                var str = '<input type="radio" name="'+divId+ '" '  +'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'" / >'+'<label for="'+m.get("name") +'">'+m.get("name")+'</label><br /><br />';
                 html += str;
             },this));
             html+="</div>"+"</div>"
