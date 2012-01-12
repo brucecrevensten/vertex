@@ -175,8 +175,8 @@ var RequestGenerator = Backbone.Collection.extend(
 
         var requestURL = this.get("requestURL");
 
-          console.log(requestURL);
-        console.log(paramStr);
+      //    console.log(requestURL);
+      //  console.log(paramStr);
 
       //  console.log("ASdlkfjds");
         
@@ -223,8 +223,8 @@ var StateInflator = Backbone.Model.extend({
       try {
       this.generateMetadataPersistenceState(responseData);
       } catch(e) {
-        console.log("Exception");
-        console.log(e);
+       // console.log("Exception");
+      //  console.log(e);
       }
       this.generateUserInputPersistenceState();
       this.generateUserInputViews();
@@ -349,7 +349,7 @@ var StateInflator = Backbone.Model.extend({
           //maxResolution: 15000                                                                  // FIXME: pull from json return?
         });
 
-        console.log(map);
+      //  console.log(map);
 
         var control = new OpenLayers.Control();
         OpenLayers.Util.extend(control, {
@@ -377,8 +377,8 @@ var StateInflator = Backbone.Model.extend({
             boxlayer.addFeatures(feature);
 
             //this.setStroke();
-            console.log("THE BOUNDING BOX IS " );
-            console.log(bbox);
+        //    console.log("THE BOUNDING BOX IS " );
+        //    console.log(bbox);
 
             window.mapEvent.trigger('update_openlayers_bbox');
 
@@ -402,7 +402,7 @@ var StateInflator = Backbone.Model.extend({
           {layers: 'Northern Australia - October - November 1996', CRS: "EPSG:4326"}  // FIXME: pull from json return?
         );
 
-        map.addLayers([datasetLayer, datasetLayer2]);
+    //    map.addLayers([datasetLayer, datasetLayer2]);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.zoomToMaxExtent();
         
@@ -424,7 +424,7 @@ var StateInflator = Backbone.Model.extend({
           //maxResolution: 200                                                                  // FIXME: pull from json return?
         });
 
-        console.log(map);
+     //   console.log(map);
 
         var control = new OpenLayers.Control();
         OpenLayers.Util.extend(control, {
@@ -451,8 +451,8 @@ var StateInflator = Backbone.Model.extend({
             boxlayer.addFeatures(feature);
 
             //this.setStroke();
-            console.log("THE BOUNDING BOX IS " );
-            console.log(bbox);
+       //     console.log("THE BOUNDING BOX IS " );
+       //     console.log(bbox);
 
             window.mapEvent.trigger('update_openlayers_bbox');
 
@@ -464,28 +464,13 @@ var StateInflator = Backbone.Model.extend({
         map.addLayer(boxlayer);
         //http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia
 
-        var datasetLayer = new OpenLayers.Layer.WMS("South East(EPSG:4326)",
-          //ds["wmsUrl"],
-          "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
-          {layers: 'sea-2b', CRS: "EPSG:4326"}  // FIXME: pull from json return?
-        );
-
-        var datasetLayer3 = new OpenLayers.Layer.WMS("South East Asia 2 (EPSG:4326)",
-          //ds["wmsUrl"],
-          "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
-          {layers: 'sea-2d', CRS: "EPSG:4326"}  // FIXME: pull from json return?
-        );
-
-        // sea-2c
-        // sea-2d
-
         var datasetLayer2 = new OpenLayers.Layer.WMS("Australia Test Map",
           //ds["wmsUrl"],
           "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
           {layers: 'au-1', CRS: "EPSG:4326"}  // FIXME: pull from json return?
         );
 
-        map.addLayers([datasetLayer, datasetLayer2, datasetLayer3]);
+        map.addLayers([datasetLayer2]);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
         map.zoomToMaxExtent();
         
@@ -630,73 +615,21 @@ var StateInflator = Backbone.Model.extend({
       this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", 
       function() {
           if (this.enabled) {
-        //    $(this.el).unbind();
-        //    $(this.el).empty();
-
-           // console.log("RADIO4");
-
-           // console.log("CHECK IT OUT !!!!!!!!!!!!!!!!!!!!!");
-           // console.log(this.menuModel.get("name"));
             var divId = this.menuModel.get("name").replace(/\s/g, "") + "_check";
-          //  var html = '<div id="'+divId+'">';   //"<select>";
-// HERE            $(this.el).append('<div id="'+divId+'">');
 
             var html='<div id="'+divId+'">';
 
-           // console.log(html);
             this.model.selectable.each(jQuery.proxy(function(m) {
-           //   if (this.model.get("selected") == m.get("name")) {
-             //   var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' +  ">"+m.get("name")+"</input>";
                 var str = '<input type="radio" name="'+divId+ '" '  +'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'" / >'+'<label for="'+m.get("name") +'">'+m.get("name")+'</label>';
-                //console.log(str);
                 html += str;
- //html += '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' + 'name="'+ m.get("name")+ '">'+"</input>";
- 
-               // $(this.el).append(html);
- // HERE              $(this.el).append(str);
-    /*******            $('#'+m.get("name")).button().click( function() {
-          if( true == $(this).prop('checked') ) {
-            $(this).button( "option", "icons", { primary: "ui-icon-check" });
-          } else {
-            $(this).button( "option", "icons", {} );
-          }
-        });  ********/ 
-
-              /*} else {
-               var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' +  "/ >"+'<label for="'+m.get("name") +'">'+m.get("name")+'</label>';
-
-              //  var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+  ">"+m.get("name")+"</input>";
-                html+= str;
-            //    html += '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' + 'name="'+ m.get("name")+ '">'+"</input>";
-        $(this.el).append(str);
-                $('#'+m.get("name")).button().click( function() {
-          if( true == $(this).prop('checked') ) {
-            $(this).button( "option", "icons", { primary: "ui-icon-check" });
-          } else {
-            $(this).button( "option", "icons", {} );
-          }
-        }); 
-                
-             //   $('#'+m.get("name")).button();
-              }*/
             },this));
             html+="</div>"+"</div>"
 
-
-// HERE          $(this.el).append("</div>"+"</div>");
-       //   console.log("OK HERE WE GO: " + divId);
-     //     console.log(html);
-          $(this.el).html(html);
-
-    
-           // console.log($(this.el));
-       //    $('#'+divId).buttonset();
-         //  $('#'+divId).find('input').button()
-          // console.log($('#'+divId).find('input'));
+           $(this.el).html(html);
 
            $('#'+divId).buttonset();
             
-          $('#'+divId).find('input').change( function(event) {
+           $('#'+divId).find('input').change( jQuery.proxy(function(event) {
                 var name = $(event.currentTarget).attr('name');
 
                 var list = $('input[name="'+name+'"]');
@@ -705,73 +638,58 @@ var StateInflator = Backbone.Model.extend({
                   $(list[i]).attr({'checked':false});
                 }
                 $(event.currentTarget).attr({'checked':true});
+                
+                $(event.currentTarget.parentNode.parentNode).trigger('changeThis');
 
-          //   console.log(event.currentTarget.parentNode.parentNode);
+        },this) );  
 
-        /*  if( true == $(this).prop('checked') ) {
-            $(this).button( "option", "icons", { primary: "ui-icon-check" });
-          } else {
-            $(this).button( "option", "icons", {} );
-          }*/
-        });  
-
-
-                   try {
-             $('#'+divId).find('input')[0].click();
-             } catch(e) {}
-
+            
+        
+              
+             try {
+              //console.log("Clicking!")
+              $('#'+divId).find('input')[0].click();
+             } catch(e) {/* console.log("Caught exception while clicking" + e.toString()); */ }
+            
 
         }
       }, 
         {
-          name: "change",
+          name: "changeThis",
           callback: function(event) {
-         //   console.log("LAYER CHANGED");
-
-          //  console.log(this.el);
-
-            console.log($(event.currentTarget));
+              //console.log(this.el);
               $(this.el).bind(event, jQuery.proxy(function(e) {
 
-                console.log("CHANGE DETECTED 133");
-              if (this.enabled) {
+                if (this.enabled) {
+                  console.log(e);
+                  var selectedElement = $(this.el).children().find('input[checked="checked"]');
 
-                console.log("ENABLED = ");
-                console.log(this);
-
-                console.log(this.el);
-
-                var selectedElement = $(this.el).children().find('input[checked="checked"]');
-                console.log($(this.el));
-                console.log($(this.el).children());
-                console.log("THe selected ELement is ");
-                console.log(selectedElement);
-                var value="";
-                try {
-                  value = $(selectedElement).val();
-                } catch(e) {}
-
-                console.log("VALUE = " + value);
-           
-           console.log("CHanging Base Layer");
-            try {
-               var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
-                var layerVal = this.model.get("selected");
-              
-                var ds = new OpenLayers.Layer.WMS(wmsUrl + ","+layerVal,
-                  wmsUrl,
-                  {layers: layerVal, CRS: "EPSG:4326"}  
-                );
-
-                console.log("CHANGING WMS URL to " + wmsUrl);
-                console.log("LAYERVAL = " + layerVal);
-
-                window.map.addLayer(ds);
-                window.map.setBaseLayer(ds); 
-            } catch(e){
-              console.log("Caught Exception " + e.toString());
-              console.log(e);
-            }
+                  try {
+                    var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
+                    var layerVal = $(selectedElement).val();
+                    this.model.set({"selected":layerVal},{silent:true});
+                    
+                    //console.log("RUN!");
+                  
+                    for (var i=0; i<window.map.layers.length; i++) {
+                      if (window.map.layers[i].name != "Bounding Box") {
+                        window.map.layers[i].destroy();
+                      } 
+                    }
+                      
+                      var newLayer = new OpenLayers.Layer.WMS(
+                                            layerVal,
+                                            wmsUrl,
+                                            {layers: layerVal, CRS: "EPSG:4326"}  
+                                      );
+                        // and set the base layer of the map to the newLayer 
+                      window.map.addLayer(newLayer);
+                      window.map.setBaseLayer(newLayer); 
+        
+                  } catch(e){
+                    console.log("Caught Exception while changing map ");
+                    console.log(e);
+                  }
 
               }
             },this));
@@ -866,91 +784,24 @@ var StateInflator = Backbone.Model.extend({
                             $(this.elList[index]).html(html);
                           }
                         }
-                        
-
                 } catch (e) {
                 //  console.log(e);
                 }
               }
             },
             {
-              name: "change",
+              name: "update_openlayers_bbox",
               callback: function(event) {
 
-                    window.mapEvent.bind('update_openlayers_bbox', jQuery.proxy(function(e) {
+                    window.mapEvent.bind(event, jQuery.proxy(function(e) {
                       if (this.enabled) {
-                   //     console.log("DETECTED MAP CHANGE");
-                        // String representation of bounding box
-                        var value = window.map.layers[0].features[0].geometry.bounds.toString()
-                       // console.log(window.map.layers[0].features[0].geometry.bounds.toString());
-                        this.model.set({selected: value});
+                        var value = window.map.layers[0].features[0].geometry.bounds.toString();
+                        console.log(this.model);
+                        this.model.set({selected: value}, {silent:true});
+                        this.render();
                       }
                     },this));
                     // iterate across each element and bind it's event to a function call
-// This code below can go away
-                    for (var index=0; index<this.elList.length; index++) {
-                      this.index=index;
-                      //console.log()
-                      $(this.elList[index].bind(event, jQuery.proxy(function(e) {
-
-                        // console.log(this.enabled);
-                        if (this.enabled) {
-                         // console.log("CHANGED!!!!");
-                         //   console.log(window.map);
-                             // console.log(this.elList[0]);
-                            // console.log(index);
-                         //   console.log("ALSDKALKDJS");
-                          //    console.log( $(e.currentTarget).find('input').val() );
-                              
-                                var v = $(e.currentTarget).find('input').val();
-                                if (v == null || v == undefined || v == "") {
-                                  v = 0;
-                                }
-
-                              if (this.model.selectList == undefined || 
-                                  this.model.selectList == null) {
-                                    this.model.selectList = [];
-                              }
-
-                              this.model.selectList.push(v);
-                              this.trigger('updateSelected');
-
-                           /*   if (this.elList.length == this.model.selectList.length) {
-                                var anElementsIsFalse=false;
-                                for (var idx=0; idx<this.model.selectList.length; idx++) {
-                                  if (! this.model.selectList[idx]) {
-                                    console.log(this.model.selectList[idx]);
-                                    anElementsIsFalse = true;
-                                  }
-                                }
-                                console.log("Checking ALL ELEMENTS");
-                                console.log(anElementsIsFalse);
-                                if (anElementsIsFalse == false) {
-                                  this.trigger('updateSelected');
-                                }
-                              }*/
-                        }
-                      },this)))
-                    }
-// This code below stays
-                  this.bind('updateSelected', jQuery.proxy(function() {
-                    //  console.log("UPDATING SELECTED");
-
-                      if (this.enabled) {
-                        var valueArray=[];
-
-                        for (var index=0; index<this.elList.length; index++) {
-                          var v = $(this.elList[index]).find('input').val();
-                          valueArray.push(v);
-                   //       console.log("push " + v);
-                        }
-                        
-                        var value = valueArray.join(',');
-
-                        this.model.set({selected: value});
-                      //  console.log(this.model.get("selected"));
-                      }
-                    },this));
               } 
             }
         );

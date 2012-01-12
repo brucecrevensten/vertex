@@ -18,47 +18,47 @@ $(function() {
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["BILINEAR", "NEAREST NEIGHBOR"],
+					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 					        "Projection": ["epsg:4326"]
 					    },
 					    "South East Asia": {
 					        "layers": ["sea-2b","sea-2c","sea-2d"],
-					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/se-asia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
+					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/se-asia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
+					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 							"Projection": ["epsg:4326"]
 					    },
 					     "South East Asia Mainland": {
 					        "layers": ["sea-1a","sea-1b","sea-2d"],
-					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland",
+					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["MARSHMELLOW", "SMOOTHED ANTIALIASING", "POLYWALK" ],
+					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 							"Projection": ["epsg:4326"]
 					    },
 					    "Africa": {
 					        "layers": ["AFR-1A","AFR-1B","AFR-1C"],
-					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/africa",
+					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/africa",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					         "InterpolationMethod": ["FAKETYPE","BILINEAR", "TIME FIRST"],
+					         "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 					         "Projection": ["epsg:4326"]
 					    },
 					    "Central America": {
 					        "layers": ["AM-3"],
-					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/camerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/camerica",
+					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/camerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/camerica",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					         "InterpolationMethod": ["SEAHORSE","BILINEAR", "TIME FIRST", "SINGLE STEP"],
+					         "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 					         "Projection": ["epsg:4326"]
 					    },
 					     "South America": {
 					        "layers": ["AM-1A","AM-1B","AM-1C","AM-1D"],
-					        "wcsUrl": "http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/samerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://testmapserver.daac.asf.alaska.edu/wms/GRFMP/samerica",
+					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/samerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
+					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/samerica",
 					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["SPIDER","CUBIC SPLINE", "SMOOTHED ANTIALIASING", "POLYWALK" ],
+					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 							"Projection": ["epsg:4326"]
 					    },
 					     
@@ -158,6 +158,7 @@ $(function() {
 	dataSetFormM.set({"layers": menuToggleList["LAYERS"]});
 
 	dataSetFormM.view.render();
+	menuToggleList["LAYERS"]["Australia"].menuView.render();
 
 	//console.log(dataSetFormM.view);
 	dataSetFormM.view.bindAccordion($("#dataset"));

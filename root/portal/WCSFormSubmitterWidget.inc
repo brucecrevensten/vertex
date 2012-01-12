@@ -40,14 +40,14 @@
 		        <label for="interpolation" class="WCSfields">Interpolation Method:</label>
 		        <div name="interpolation" id="interpolation" class="WCSfields"  /></div><br />
 		
-		        <label for="imageWidth" class="WCSfields">Resolution X:</label>
+		        <label for="imageWidth" class="WCSfields">Width</label>
 		        <div name="imageWidth" id="imageWidth" class="WCSfields WCSfieldsShort"  /></div>
-		        <div class="postFieldText1">degrees</div>
+		        <div class="postFieldText1">pixels</div>
 		        	<br />
 		
-		        <label for="imageHeight" class="WCSfields">Y:</label>
+		        <label for="imageHeight" class="WCSfields">Height</label>
 		        <div name="imageHeight" id="imageHeight" class="WCSfields WCSfieldsShort"  /></div>
-		        	<div class="postFieldText2">degrees</div>
+		        	<div class="postFieldText2">pixels</div>
 		        	<div style="padding: 60px;"></div>		
 				<label for="b1" class="WCSfields"><!--Top--></label><div id="fill1" class="filler1" /></div>
 				<div id="b2" class="WCSfields WCSfieldsShort" style="margin-bottom: 3px;" /></div><br />

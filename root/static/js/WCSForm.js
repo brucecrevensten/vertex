@@ -286,43 +286,25 @@ var MenuToggleInputViewV = MenuToggleViewV.extend({
 */
 
 var DataSetFormV = MenuToggleViewV.extend({
-	/*initialize: function() {
-		MenuToggleViewV.prototype.initialize.call(this);
-	},*/
-	/*initialize: function() {
-		console.log("Calling this method");
-		MenuToggleViewV.prototype.initialize.call(this);
-		//this.renderTrue  = false;
-	},*/
 	render: function() {
-		console.log("Trying to render");
 		if (this.enabled) {
 			$(this.el).empty();
 
 			var html = '<div id="accordion">';
 			var idx=0;
 			this.model.selectable.each(jQuery.proxy(function(m) {
-			//	console.log("Printing STUFF");
-			//	console.log(m);
-			//	console.log(m.get("name"));
+
 				html+= '<h3><a href="#'+ " idx="+idx+'" selectedName="'+m.get("name")+'">'+ m.get("name") +'</a></h3>';
 				html+= '<div id='+'layer_'+idx+'>'+ 
 			
 				'<div name="layer" class="WCSfields"></div>'+'</div>';
 
-
-				var layers = this.model.get("layers");
-				var layerView = layers[m.get("name")];
-
-				//layerView.set2($('#'))
-
-		//		console.log(layerView);
-
 				idx++;
 			},this));
 			html += "</div>";
 			$(this.el).html(html);
-
+			
+			if (!this.rendered) {
 			idx=0;
 			this.model.selectable.each(jQuery.proxy(function(m) {
 				var layers = this.model.get("layers");
@@ -334,8 +316,9 @@ var DataSetFormV = MenuToggleViewV.extend({
 
 			},this));
 
-			//console.log(html);
+			}
 
+			this.rendered=1;
 
 
 			$( "#accordion" ).accordion({ fillSpace: true });
