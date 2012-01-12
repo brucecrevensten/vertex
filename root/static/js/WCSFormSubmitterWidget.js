@@ -4,9 +4,6 @@ $(function() {
 
 	server = sinon.fakeServer.create();
 
-//bbox=125,-18,126,-17
-
-	// Projection, UNits, Max projection, 
 	server.respondWith("POST", "/fakeURL",
 	           [200, { "Content-Type": "application/json" },
 	            JSON.stringify(
@@ -28,14 +25,14 @@ $(function() {
 					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 							"Projection": ["epsg:4326"]
 					    },
-					     "South East Asia Mainland": {
+					/*     "South East Asia Mainland": {
 					        "layers": ["sea-1a","sea-1b","sea-2d"],
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland",
 					        "ImageFormat": ["jpeg", "GTiff"],
 					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
 							"Projection": ["epsg:4326"]
-					    },
+					    },*/
 					    "Africa": {
 					        "layers": ["AFR-1A","AFR-1B","AFR-1C"],
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
@@ -79,11 +76,6 @@ $(function() {
 	server.restore();
 
 	infl.dataSetFormM.view.set($("#dataset"));
-
-	// Layer
-	for (dataSetName in dataSetDict) {
-//		menuToggleList["LAYERS"][dataSetName].menuView.set2($("#layer"));
-	}
 
 	// Image Format
 	for (dataSetName in dataSetDict) {
@@ -133,17 +125,6 @@ $(function() {
 	menuToggleList["BBOX"]["Australia"].menuView.enabled = true;
 	menuToggleList["BBOX"]["Australia"].menuView.render();
 
-	//console.log("About to render the image width");
-	//menuToggleList["IMAGEWIDTH"]["Alaska"].menuView.render();
-
-		// Interpolation Method
-/*	for (dataSetName in dataSetDict) {
-		menuToggleList["BAND"][dataSetName].menuView.set( $("#band") );
-	}
-	menuToggleList["BAND"]["Alaska"].menuView.enabled = true;
-	menuToggleList["BAND"]["Alaska"].menuForm.set({"selected":"Alaska"});
-	menuToggleList["BAND"]["Alaska"].menuView.render();
-*/
 	dataSetFormM.view.enabled = true;
 	dataSetFormM.set({"selected":"Australia"});
 
@@ -152,14 +133,7 @@ $(function() {
 	dataSetFormM.view.render();
 	menuToggleList["LAYERS"]["Australia"].menuView.render();
 
-	//console.log(dataSetFormM.view);
 	dataSetFormM.view.bindAccordion($("#dataset"));
-
-///	menuToggleList["LAYERS"]["Australia"].menuView.render();
-
-
-//	menuToggleList[]
-
 
 	window.infl = infl;
 
@@ -178,15 +152,9 @@ $(function() {
 
     window.server2 = server2;
 
-	/*fl[0] = menuToggleList["LAYERS"]["Alaska"].menuForm;
-	fl[1] = menuToggleList["IMAGEFORMATS"]["Alaska"].menuForm;
-	fl[2] = menuToggleList["INTERPOLATION"]["Alaska"].menuForm;*/
-
-	//var index =0;
 	for (formName in menuToggleList) {
 		for (dataSetName in menuToggleList[formName]) {
-				console.log(formName);
-				fl.push(menuToggleList[formName][dataSetName].menuForm);
+			fl.push(menuToggleList[formName][dataSetName].menuForm);
 		}
 	}
 
@@ -207,52 +175,9 @@ $(function() {
 	*/
 	window.server2.restore();
 	$('#downloadButton').button({ label: "Download"}).bind("click", jQuery.proxy(function() {
-		//form.setSubmisisonObject(infl.)
-		//form.set({"requestURL": "/fakeURL"});
+		// Tell the form Submitter to grab the WCSURL parameter from the dataset that is selected
 		window.formSub.set({"urlParam": "WCSURL"});
 		window.formSub.submitRequestForm();    
-		//window.server2.respond(); 
-		//window.server2.restore();
-
 	},this));
-
-
-	//$( "#accordion" ).accordion();
-
-	//form.set({"requestURL": })
-/*
-	fl[0] = new DataSetFormM();
-	fl[1] = new OutputProjectionFormM();
-	fl[2] = new ImageFormatFormM();
-	fl[3] = new ImageHeightFormM();
-	fl[4] = new ImageWidthFormM();
-	fl[5] = new InterpolationMethodFormM();
-
-	fl[0].view = new DataSetView({el: $('#dataset'), model: fl[0]});
-	fl[1].view = new OutputProjectionView({el: $('#outProj'), model: fl[1]});
-	fl[2].view = new ImageFormatView({el: $('#imgF'), model: fl[2]});
-	fl[3].view = new ImageHeightView({el: $('#imgH'), model: fl[3]});
-	fl[4].view = new ImageWidthView({el: $('#imgW'), model: fl[4]});
-	fl[5].view = new InterpolationMethodView({el: $('#interp'), model: fl[5]});
-
-	for (i in [0,1,2,3,4,5]) {
-		form.formList.add(i,fl[i]);
-	}
-
-	$('#downloadButton').button({ label: "Download"}).bind("click", jQuery.proxy(function() {
-		form.set({"requestURL": "/fakeURL"});
-		form.submitRequest();    
-		window.server.respond(); 
-	},this));
-
-	$('#dataSetField').live("click", jQuery.proxy(function() {
-		$('.categories').toggle(); 
-	},this));
-
-	$('.categories ul li').live("click", function(e) {
-		console.log(e);
-	});
-
-	window.wcsForm = form; */
 
 });

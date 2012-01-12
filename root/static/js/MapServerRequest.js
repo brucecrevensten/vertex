@@ -21,16 +21,12 @@ var RequestGenerator = Backbone.Collection.extend(
           
          if (f.view != undefined && f.view != null) {
             if (f.view.enabled) {
-             // console.log(f);
             }
   				  if (f.view.enabled && f.get("selected") != "" && f.get("selected") != null
             && f.get("selected") != undefined) { 
-                
-  					   // json=this.merge(json,f.getURLParameters());
-              _.extend(json, f.getURLParameters());
+                _.extend(json, f.getURLParameters());
   				  }
           } else {
-              //json=this.merge(json,f.getURLParameters());
               _.extend(json, f.getURLParameters());
           }
   			},this));
@@ -78,22 +74,17 @@ var RequestGenerator = Backbone.Collection.extend(
       },
 
       submitRequestAJAX: function() {
-       // if (this.get("requestURL") == "") {
           // Find the first enabled form's url to submit to
           if (this.get("urlParam")) {
             
             this.formList.values().each(jQuery.proxy(function(form) {
               if (form.view.enabled) {
                 this.set({"requestURL": form.urlList[this.get("urlParam")]  } );
-                return false; // break out of anon
+                return false; // break out of anonymous function by returning false
               }
             },this));
           }
-           
-       // }
 
-
-  //      console.log("Submitting to " + this.get("requestURL"));
         this.requestGenerator.reset();
 
         var formCollection = this.formList.values();
@@ -107,48 +98,9 @@ var RequestGenerator = Backbone.Collection.extend(
 
         var requestURL = this.get("requestURL");
 
-
-      //  console.log(requestURL);
-      //  console.log(paramStr);
-       // $('#formSub').attr('action', requestURL);
-        
-       /* var formHTML = '<form id="formSub" action=' + '"'+ requestURL +'"' + ' method="post"> \
-                        <input type="submit" value="Submit Comment" /> \
-                        </form>';
-
-        $('#formContainer2').empty();
-        $('#formContainer2').append(formHTML);*/
-
-        //console.log($('#formSub'));
-
-       
-      // $('#formSub').trigger('submit');
-        
-         $('#hifrm').contents().find('body').find('form').attr('action', requestURL);
+        // Accessing an iframe 
+        $('#hifrm').contents().find('body').find('form').attr('action', requestURL);
         $('#hifrm').contents().find('body').find('form').trigger('submit');
-
-        //$()
-          
-        
-
-   //     var xhr = $.ajax(
-   //     {
-    //      type: "GET",
-      //    url: requestURL,
-        //  data: paramJSON,
-     //     dataType: "jsonp",
-        //  context: this,
-          /*success: jQuery.proxy(function(data, textStatus, jqXHR) {
-            this.trigger('request_success');
-            console.log("AJAX SUCCESS");
-          },this),
-          error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
-            this.trigger('request_error');
-            console.log("AJAX FAILURE");
-          }, this)*/
-   //   } );
-
-    //  return xhr;
       },
 
 
@@ -175,11 +127,6 @@ var RequestGenerator = Backbone.Collection.extend(
 
         var requestURL = this.get("requestURL");
 
-      //    console.log(requestURL);
-      //  console.log(paramStr);
-
-      //  console.log("ASdlkfjds");
-        
         $('#hifrm').contents().find('body').find('form').attr('action', requestURL + paramStr);
         $('#hifrm').contents().find('body').find('form').trigger('submit');
 
@@ -222,10 +169,7 @@ var StateInflator = Backbone.Model.extend({
     process: function(responseData) {
       try {
       this.generateMetadataPersistenceState(responseData);
-      } catch(e) {
-       // console.log("Exception");
-      //  console.log(e);
-      }
+      } catch(e) {}
       this.generateUserInputPersistenceState();
       this.generateUserInputViews();
       this.generateCombinantMenu();
@@ -234,8 +178,7 @@ var StateInflator = Backbone.Model.extend({
     generateMetadataPersistenceState: function(responseData) {
       var dataSetDict = {};
 
-      //this.generateMap();
-      this.generateMap2();
+      this.generateMap();
 
       for (dataSetName in responseData["DataSet"]) {
         ds = responseData["DataSet"][dataSetName];
@@ -270,53 +213,6 @@ var StateInflator = Backbone.Model.extend({
           projectionCollection.add(projection);
         }
 
-    /*    var boxlayer;
-        var map = new OpenLayers.Map('map', { // FIXME: This call is causing the state inflator to choke somehow
-          projection: "EPSG:3031",                                                              // FIXME: pull from json return?
-          units: "m",                                                                           // FIXME: pull from json return?
-          maxExtent: new OpenLayers.Bounds(-3174450,-2815950,2867150,2406450),                  // FIXME: pull from json return?
-          maxResolution: 15000                                                                  // FIXME: pull from json return?
-        });
-
-        var datasetLayer = new OpenLayers.Layer.WMS(dataSetName,
-          //ds["wmsUrl"],
-          "http://testmapserver.daac.asf.alaska.edu/wms/amm1",
-          {layers: 'Antarctic 100m Backscatter Coefficient Mosaic (16-bit)', CRS: "EPSG:3031"}  // FIXME: pull from json return?
-        );
-
-        map.addLayers([datasetLayer]);
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
-        map.zoomToMaxExtent();
-        var control = new OpenLayers.Control();
-        OpenLayers.Util.extend(control, {
-          draw: function () {
-            // this Handler.Box will intercept the shift-mousedown
-            // before Control.MouseDefault gets to see it
-            this.box = new OpenLayers.Handler.Box( control,
-              {"done": this.retain},
-              {keyMask: OpenLayers.Handler.MOD_SHIFT});
-            this.box.activate();
-          },
-          retain: function (bounds) {
-            var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
-            var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
-            var bbox = new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
-            var feature = new OpenLayers.Feature.Vector(bbox.toGeometry(), null, {
-              strokeColor: "#4040FF",
-              strokeOpacity: 1.0,
-              strokeWidth: 2,
-              fillOpacity: 0.5,
-              fillColor: "#8080FF"
-            });
-            boxlayer.removeAllFeatures();
-            boxlayer.addFeatures(feature);
-          }
-        });
-        map.addControl(control);
-      
-        boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
-        map.addLayer(boxlayer);
-        */
         // Initialize the Dataset
         dataSetM.set({
             name:dataSetName,
@@ -325,7 +221,6 @@ var StateInflator = Backbone.Model.extend({
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
             projection: projectionCollection,
-           // map: map
         });
         dataSetDict[dataSetName] = dataSetM;
       }
@@ -336,95 +231,15 @@ var StateInflator = Backbone.Model.extend({
 
     },
 
-    generateMap: function() {
+       generateMap: function() {
         this.mapEvent = new MapEvent();
         window.mapEvent = this.mapEvent;
 
         var boxlayer;
 
-        var map = new OpenLayers.Map('map', { // FIXME: This call is causing the state inflator to choke somehow
-          projection: "EPSG:4326",                                                              // FIXME: pull from json return?
-                                                                                     // FIXME: pull from json return?
-          maxExtent: new OpenLayers.Bounds(121, -20, 147.5, -10),                  // FIXME: pull from json return?
-          //maxResolution: 15000                                                                  // FIXME: pull from json return?
+        var map = new OpenLayers.Map('map', { 
+          projection: "EPSG:4326",                                                                                                                          // FIXME: pull from json return?
         });
-
-      //  console.log(map);
-
-        var control = new OpenLayers.Control();
-        OpenLayers.Util.extend(control, {
-          draw: function () {
-            // this Handler.Box will intercept the shift-mousedown
-            // before Control.MouseDefault gets to see it
-            this.box = new OpenLayers.Handler.Box( control,
-              {"done": this.retain},
-              {keyMask: OpenLayers.Handler.MOD_SHIFT});
-            this.box.activate();
-          },
-
-          retain: jQuery.proxy(function (bounds) {
-            var ll = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.left, bounds.bottom));
-            var ur = map.getLonLatFromPixel(new OpenLayers.Pixel(bounds.right, bounds.top));
-            var bbox = new OpenLayers.Bounds(ll.lon, ll.lat, ur.lon, ur.lat);
-            var feature = new OpenLayers.Feature.Vector(bbox.toGeometry(), null, {
-              strokeColor: "#4040FF",
-              strokeOpacity: 1.0,
-              strokeWidth: 2,
-              fillOpacity: 0.5,
-              fillColor: "#8080FF"
-            });
-            boxlayer.removeAllFeatures();
-            boxlayer.addFeatures(feature);
-
-            //this.setStroke();
-        //    console.log("THE BOUNDING BOX IS " );
-        //    console.log(bbox);
-
-            window.mapEvent.trigger('update_openlayers_bbox');
-
-          },this)
-        });
-        map.addControl(control);
-      
-        boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
-        map.addLayer(boxlayer);
-        //http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia
-
-        var datasetLayer = new OpenLayers.Layer.WMS("Australia (EPSG: 4326)",
-          //ds["wmsUrl"],
-          "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
-          {layers: 'Northern Australia - October - November 1996', CRS: "EPSG:4326"}  // FIXME: pull from json return?
-        );
-
-        var datasetLayer2 = new OpenLayers.Layer.WMS("TEST2",
-          //ds["wmsUrl"],
-          "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
-          {layers: 'Northern Australia - October - November 1996', CRS: "EPSG:4326"}  // FIXME: pull from json return?
-        );
-
-    //    map.addLayers([datasetLayer, datasetLayer2]);
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
-        map.zoomToMaxExtent();
-        
-        this.map = map;
-        window.map = map;
-
-    },
-
-       generateMap2: function() {
-        this.mapEvent = new MapEvent();
-        window.mapEvent = this.mapEvent;
-
-        var boxlayer;
-
-        var map = new OpenLayers.Map('map', { // FIXME: This call is causing the state inflator to choke somehow
-          projection: "EPSG:4326",                                                              // FIXME: pull from json return?
-                                                                                     // FIXME: pull from json return?
-         // maxExtent: new OpenLayers.Bounds(121, -20, 147.5, -10),                  // FIXME: pull from json return?
-          //maxResolution: 200                                                                  // FIXME: pull from json return?
-        });
-
-     //   console.log(map);
 
         var control = new OpenLayers.Control();
         OpenLayers.Util.extend(control, {
@@ -450,10 +265,6 @@ var StateInflator = Backbone.Model.extend({
             boxlayer.removeAllFeatures();
             boxlayer.addFeatures(feature);
 
-            //this.setStroke();
-       //     console.log("THE BOUNDING BOX IS " );
-       //     console.log(bbox);
-
             window.mapEvent.trigger('update_openlayers_bbox');
 
           },this)
@@ -462,16 +273,8 @@ var StateInflator = Backbone.Model.extend({
       
         boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
         map.addLayer(boxlayer);
-        //http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia
 
-        var datasetLayer2 = new OpenLayers.Layer.WMS("Australia Test Map",
-          //ds["wmsUrl"],
-          "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
-          {layers: 'au-1', CRS: "EPSG:4326"}  // FIXME: pull from json return?
-        );
-
-        map.addLayers([datasetLayer2]);
-        map.addControl(new OpenLayers.Control.LayerSwitcher());
+        map.addLayers([new OpenLayers.Layer.WMS()]);
         map.zoomToMaxExtent();
         
         this.map = map;
@@ -496,7 +299,6 @@ var StateInflator = Backbone.Model.extend({
           if (binding != null && binding["name"] != null && 
               binding["callback"] != null && 
               typeof(binding["callback"]) == "function") {
-      
               formV.bindFunc = binding["callback"];
               formV.eventName = binding["name"];        
           }
@@ -535,7 +337,7 @@ var StateInflator = Backbone.Model.extend({
           if (binding != null && binding["name"] != null && 
               binding["callback"] != null && 
               typeof(binding["callback"]) == "function") {
-              //console.log("SETTING UP THE BINDING CALLBACK");
+    
               formV.bindFunc = binding["callback"];
               formV.eventName = binding["name"];        
           }
@@ -562,9 +364,7 @@ var StateInflator = Backbone.Model.extend({
     },
 
     generateCombinantMenu: function() {
-      // this is a test
         var bindInput = function(event) {
-
           $(this.el).bind(event, jQuery.proxy(function(e) {
               if (this.enabled) {
                 var value = $(this.el).find('input').val();
@@ -572,45 +372,6 @@ var StateInflator = Backbone.Model.extend({
               }
             },this));
         }
-
-        this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"}, "selectable");
-
-        /*
-            The menuFactory is still being worked on. 
-        */
-     /*   this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", null, 
-        {
-          name: "change",
-          callback: function(event) {
-            //console.log("LAYER CHANGED");
-              $(this.el).bind(event, jQuery.proxy(function(e) {
-              if (this.enabled) {
-                console.log("LAYER CHANGE DETECTED");
-                var value = $(this.el).find('select').val();
-                this.model.set({selected: value});
-                
-                var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
-                var layerVal = this.model.get("selected");
-                console.log(wmsUrl);
-
-                console.log(layerVal);
-
-                var ds = new OpenLayers.Layer.WMS(wmsUrl + ","+layerVal,
-                  //ds["wmsUrl"],
-                  //"http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
-                  wmsUrl,
-                  {layers: layerVal, CRS: "EPSG:4326"}  // FIXME: pull from json return?
-                );
-
-                window.map.addLayer(ds);
-                window.map.setBaseLayer(ds);
-
-              }
-            },this));
-
-          }
-        }
-      );*/
 
       this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", 
       function() {
@@ -641,15 +402,12 @@ var StateInflator = Backbone.Model.extend({
                 
                 $(event.currentTarget.parentNode.parentNode).trigger('changeThis');
 
-        },this) );  
-
-            
-        
+            },this) );  
               
+             // Check the first Layer 
              try {
-              //console.log("Clicking!")
               $('#'+divId).find('input')[0].click();
-             } catch(e) {/* console.log("Caught exception while clicking" + e.toString()); */ }
+             } catch(e) { }
             
 
         }
@@ -657,11 +415,9 @@ var StateInflator = Backbone.Model.extend({
         {
           name: "changeThis",
           callback: function(event) {
-              //console.log(this.el);
               $(this.el).bind(event, jQuery.proxy(function(e) {
 
                 if (this.enabled) {
-                  console.log(e);
                   var selectedElement = $(this.el).children().find('input[checked="checked"]');
 
                   try {
@@ -669,8 +425,7 @@ var StateInflator = Backbone.Model.extend({
                     var layerVal = $(selectedElement).val();
                     this.model.set({"selected":layerVal},{silent:true});
                     
-                    //console.log("RUN!");
-                  
+         
                     for (var i=0; i<window.map.layers.length; i++) {
                       if (window.map.layers[i].name != "Bounding Box") {
                         window.map.layers[i].destroy();
@@ -682,13 +437,11 @@ var StateInflator = Backbone.Model.extend({
                                             wmsUrl,
                                             {layers: layerVal, CRS: "EPSG:4326"}  
                                       );
-                        // and set the base layer of the map to the newLayer 
+                       
                       window.map.addLayer(newLayer);
                       window.map.setBaseLayer(newLayer); 
         
                   } catch(e){
-                    console.log("Caught Exception while changing map ");
-                    console.log(e);
                   }
 
               }
@@ -723,7 +476,7 @@ var StateInflator = Backbone.Model.extend({
                   if (this.model.get("selected") != null) {
                     html = "<input value="+'"'+this.model.get("selected") +'"'+"></input>";
                   } else {
-                  //  console.log("EMPTY INPUT");
+                 
                     html="<input></input>"
                   }
                    $(this.el).html(html);
@@ -735,14 +488,13 @@ var StateInflator = Backbone.Model.extend({
             callback: bindInput
         });
         this.menuFactory('IMAGEHEIGHT', this.dataSetDict, null, {"paramName": "height"}, "default", 
-        //MenuToggleInputViewV.prototype.render, 
+  
         function() {
             if (this.enabled) {
               var html="";
                   if (this.model.get("selected") != null) {
                     html = "<input value="+'"'+this.model.get("selected") +'"'+"></input>";
                   } else {
-                  //  console.log("EMPTY INPUT");
                     html="<input></input>"
                   }
                    $(this.el).html(html);
@@ -766,7 +518,6 @@ var StateInflator = Backbone.Model.extend({
                             
                           // By convention the indices of the valueArray map 1-to-1 to the indices of the elList.
                           var valueArray = this.model.get("selected").split(',');
-                     //     console.log(valueArray);
 
                           // Each box has an associated set of element id's that's set by the client (interface sense, not web)
                           // so we need to grab each id and use it to render the html
@@ -785,7 +536,6 @@ var StateInflator = Backbone.Model.extend({
                           }
                         }
                 } catch (e) {
-                //  console.log(e);
                 }
               }
             },
@@ -796,18 +546,14 @@ var StateInflator = Backbone.Model.extend({
                     window.mapEvent.bind(event, jQuery.proxy(function(e) {
                       if (this.enabled) {
                         var value = window.map.layers[0].features[0].geometry.bounds.toString();
-                        console.log(this.model);
                         this.model.set({selected: value}, {silent:true});
                         this.render();
                       }
                     },this));
-                    // iterate across each element and bind it's event to a function call
+                    
               } 
             }
         );
-
-        //this.menuFactory('IMAGEWIDTH', this.dataSetDict, null, {"paramName: width"});
-
     },
 
     // The type parameter is used to decide which View to render
@@ -817,9 +563,6 @@ var StateInflator = Backbone.Model.extend({
           menu = this.createMenuSelectable(dictionary, selectableKey, defaults, renderHandle, binding);
       }
       if (type == "default") {
-          if (menuName == "BBOX") {
-          //  console.log("Creating BBOX");
-          }
           menu = this.createMenu(dictionary, defaults, renderHandle,binding);
       }
       this.menu[menuName] = menu;
@@ -839,12 +582,7 @@ var StateInflator = Backbone.Model.extend({
     },
 
     generateUserInputViews: function() {
-      // Generate a View for each dataset
-    
       var dataSetFormV = new DataSetFormV({model: this.dataSetFormM });
-   
-     // console.log("The datasetFormV: ");
-     // console.log(dataSetFormV);
       this.dataSetFormM.view = dataSetFormV;
       this.dataSetFormV = dataSetFormV;
       window.dataSetFormV = dataSetFormV;
