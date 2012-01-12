@@ -222,10 +222,12 @@ var MenuToggleViewV = Backbone.View.extend({
 			},this));
 
 			this.menuModel.bind('paint', jQuery.proxy(function() {
+				//console.log("paint detected");
 				this.viewGroup.disable();
 				this.enabled = true;
 				this.viewGroup.clear();
 				this.render();
+
 			},this));
 		}
 	},
@@ -341,24 +343,17 @@ var DataSetFormV = MenuToggleViewV.extend({
 	},
 
 	bindAccordion: function(el) {
-	//	console.log("Binding");
 		$(el).bind('accordionchange', jQuery.proxy(function(event, ui) {
 
 			var selectedHeader = $(event.target).find('h3[aria-selected="true"]');
 			var selectedName = selectedHeader.find('a').attr('selectedName');
 
-			//console.log("SELECTED NAME: " + selectedName);
 			var layer_id = selectedHeader.find('a').attr('idx');
 
 			layer_id = "layer_"+layer_id;
 
-			//console.log(this);
 			this.model.set({"selected":selectedName});
-		
-			//console.log("LAYER ID = " + layer_id);
 
-			
-		//	console.log(selectedHeader);
 		},this));
 	}
 });

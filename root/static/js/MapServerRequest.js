@@ -630,30 +630,37 @@ var StateInflator = Backbone.Model.extend({
       this.menuFactory('LAYERS', this.dataSetDict, "layers", {"paramName":"COVERAGE"},"selectable", 
       function() {
           if (this.enabled) {
-            $(this.el).empty();
+        //    $(this.el).unbind();
+        //    $(this.el).empty();
+
+           // console.log("RADIO4");
 
            // console.log("CHECK IT OUT !!!!!!!!!!!!!!!!!!!!!");
            // console.log(this.menuModel.get("name"));
             var divId = this.menuModel.get("name").replace(/\s/g, "") + "_check";
-            var html = '<div id="'+divId+'">';   //"<select>";
-            console.log(html);
+          //  var html = '<div id="'+divId+'">';   //"<select>";
+// HERE            $(this.el).append('<div id="'+divId+'">');
+
+            var html='<div id="'+divId+'">';
+
+           // console.log(html);
             this.model.selectable.each(jQuery.proxy(function(m) {
            //   if (this.model.get("selected") == m.get("name")) {
              //   var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' +  ">"+m.get("name")+"</input>";
-                var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'" / >'+'<label for="'+m.get("name") +'">'+m.get("name")+'</label>';
-                console.log(str);
+                var str = '<input type="radio" name="'+divId+ '" '  +'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'" / >'+'<label for="'+m.get("name") +'">'+m.get("name")+'</label>';
+                //console.log(str);
                 html += str;
  //html += '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' + 'name="'+ m.get("name")+ '">'+"</input>";
  
                // $(this.el).append(html);
-               $(this.el).append(str);
-                $('#'+m.get("name")).button().click( function() {
+ // HERE              $(this.el).append(str);
+    /*******            $('#'+m.get("name")).button().click( function() {
           if( true == $(this).prop('checked') ) {
             $(this).button( "option", "icons", { primary: "ui-icon-check" });
           } else {
             $(this).button( "option", "icons", {} );
           }
-        }); 
+        });  ********/ 
 
               /*} else {
                var str = '<input type="checkbox" '+'id="'+m.get("name")+'"'+" value="+'"'+m.get("name")+'"'+ " selected="+'"selected"' +  "/ >"+'<label for="'+m.get("name") +'">'+m.get("name")+'</label>';
@@ -674,47 +681,97 @@ var StateInflator = Backbone.Model.extend({
               }*/
             },this));
             html+="</div>"+"</div>"
-          //  $(this.el).append(html);
 
-            console.log(html);
 
-            //console.log(divId);
-            //console.log(html);
-            console.log("The following is the div id of a button set 11 ");
-            console.log("Searching for : " + '#'+divId);
-            console.log($('#'+divId ));
-            
+// HERE          $(this.el).append("</div>"+"</div>");
+       //   console.log("OK HERE WE GO: " + divId);
+     //     console.log(html);
+          $(this.el).html(html);
+
+    
            // console.log($(this.el));
        //    $('#'+divId).buttonset();
          //  $('#'+divId).find('input').button()
-           console.log($('#'+divId).find('input'))
+          // console.log($('#'+divId).find('input'));
+
+           $('#'+divId).buttonset();
+            
+          $('#'+divId).find('input').change( function(event) {
+                var name = $(event.currentTarget).attr('name');
+
+                var list = $('input[name="'+name+'"]');
+
+                for (var i=0; i<list.length; i++) {
+                  $(list[i]).attr({'checked':false});
+                }
+                $(event.currentTarget).attr({'checked':true});
+
+          //   console.log(event.currentTarget.parentNode.parentNode);
+
+        /*  if( true == $(this).prop('checked') ) {
+            $(this).button( "option", "icons", { primary: "ui-icon-check" });
+          } else {
+            $(this).button( "option", "icons", {} );
+          }*/
+        });  
+
+
+                   try {
+             $('#'+divId).find('input')[0].click();
+             } catch(e) {}
+
+
         }
       }, 
         {
           name: "change",
           callback: function(event) {
-            //console.log("LAYER CHANGED");
+         //   console.log("LAYER CHANGED");
+
+          //  console.log(this.el);
+
+            console.log($(event.currentTarget));
               $(this.el).bind(event, jQuery.proxy(function(e) {
+
+                console.log("CHANGE DETECTED 133");
               if (this.enabled) {
-                console.log("LAYER CHANGE DETECTED");
-                var value = $(this.el).find('input').val();
-                this.model.set({selected: value});
-                
-                var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
+
+                console.log("ENABLED = ");
+                console.log(this);
+
+                console.log(this.el);
+
+                var selectedElement = $(this.el).children().find('input[checked="checked"]');
+                console.log($(this.el));
+                console.log($(this.el).children());
+                console.log("THe selected ELement is ");
+                console.log(selectedElement);
+                var value="";
+                try {
+                  value = $(selectedElement).val();
+                } catch(e) {}
+
+                console.log("VALUE = " + value);
+           
+           console.log("CHanging Base Layer");
+            try {
+               var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
                 var layerVal = this.model.get("selected");
-               /// console.log(wmsUrl);
-
-             //   console.log(layerVal);
-
+              
                 var ds = new OpenLayers.Layer.WMS(wmsUrl + ","+layerVal,
-                  //ds["wmsUrl"],
-                  //"http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
                   wmsUrl,
-                  {layers: layerVal, CRS: "EPSG:4326"}  // FIXME: pull from json return?
+                  {layers: layerVal, CRS: "EPSG:4326"}  
                 );
 
+                console.log("CHANGING WMS URL to " + wmsUrl);
+                console.log("LAYERVAL = " + layerVal);
+
                 window.map.addLayer(ds);
-                window.map.setBaseLayer(ds);
+                window.map.setBaseLayer(ds); 
+            } catch(e){
+              console.log("Caught Exception " + e.toString());
+              console.log(e);
+            }
 
               }
             },this));
