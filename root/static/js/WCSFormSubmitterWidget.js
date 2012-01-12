@@ -14,7 +14,6 @@ $(function() {
 			        "DataSet": {
 				        "Australia": {
 					        "layers": ["au-1"],
-					        //"wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&COVERAGE=northern_australia&bbox=125,-18,126,-17&CRS=epsg:4326&width=500&height=500&format=jpeg",
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
 					        "ImageFormat": ["jpeg", "GTiff"],
@@ -78,10 +77,6 @@ $(function() {
 	server.respond(); 
 
 	server.restore();
-	
-	/*console.log(infl);
-	console.log(infl.dataSetFormM);
-	console.log(infl.dataSetFormM.view);*/
 
 	infl.dataSetFormM.view.set($("#dataset"));
 
@@ -89,9 +84,6 @@ $(function() {
 	for (dataSetName in dataSetDict) {
 //		menuToggleList["LAYERS"][dataSetName].menuView.set2($("#layer"));
 	}
-//	menuToggleList["LAYERS"]["Australia"].menuView.enabled = true;
-	//menuToggleList["LAYERS"]["Alaska"].menuForm.set({"selected":"AlaskaLayer1"});
-
 
 	// Image Format
 	for (dataSetName in dataSetDict) {
@@ -193,9 +185,8 @@ $(function() {
 	//var index =0;
 	for (formName in menuToggleList) {
 		for (dataSetName in menuToggleList[formName]) {
-			if (formName != "INTERPOLATION") {
+				console.log(formName);
 				fl.push(menuToggleList[formName][dataSetName].menuForm);
-			}
 		}
 	}
 
