@@ -368,7 +368,7 @@ var StateInflator = Backbone.Model.extend({
           $(this.el).bind(event, jQuery.proxy(function(e) {
               if (this.enabled) {
                 var value = $(this.el).find('input').val();
-                this.model.set({selected: value});
+                this.model.set({selected: value}, {silent:true});
               }
             },this));
         }
