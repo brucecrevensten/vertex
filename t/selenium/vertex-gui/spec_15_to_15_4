@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://testvertex.daac.asf.alaska.edu/" />
+<title>spec_15</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">spec_15</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>css=div#geographic_widget.ui-accordion-content input#filter_bbox</td>
+	<td>-148.70,64.35,-146.48,65.22</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Date</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=season_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTable</td>
+	<td>id=seasonal_search.0.0</td>
+	<td>JanFebMarAprMayJunJulAugSepOctNovDec</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=season_start</td>
+	<td>JanFebMarAprMayJunJulAugSepOctNovDec</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=season_end</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=repeat_start</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTable</td>
+	<td>id=seasonal_search.1.0</td>
+	<td>19901991199219931994199519961997199819992000200120022003200420052006200720082009201020112012</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=repeat_start</td>
+	<td>19901991199219931994199519961997199819992000200120022003200420052006200720082009201020112012</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>id=repeat_end</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTable</td>
+	<td>id=seasonal_search.1.2</td>
+	<td>19901991199219931994199519961997199819992000200120022003200420052006200720082009201020112012</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=repeat_end</td>
+	<td>19901991199219931994199519961997199819992000200120022003200420052006200720082009201020112012</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=filter_repeat</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=repeat_start</td>
+	<td>label=2010</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=season_end</td>
+	<td>label=Apr</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=#season_end &gt; option[value=&quot;4&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>id=repeat_end</td>
+	<td>label=2011</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Platforms</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_UA</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_E1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=pf_J1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=triggerSearch</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>link=Filter By Platform</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>id=srCount</td>
+	<td>24 results found</td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>2011-01-30</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>2011-01-06</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>2009-12</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>2011-05</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextNotPresent</td>
+	<td>2012-01</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
