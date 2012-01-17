@@ -1,9 +1,9 @@
 var ProcessingType = Backbone.Model.extend({});
 var ProcessingTypes = Backbone.Collection.extend({
-  model: ProcessingType,
+  model: ProcessingType
 });
 
-var processingTypes = new ProcessingTypes( 
+var processingTypes = new ProcessingTypes(
   [
     {"level":"L0","id":"L1.0","display":"Level 1.0","description":"Reconstructed, unprocessed signal data with radiometric- and geometric-correction coefficients appended but not applied."},
     {"level":"L1","id":"L1.1","display":"Level 1.1","description":"Single Look Complex products provided in slant range geometry and compressed in range and azimuth. Individual files are provided for each polarization for multi-polarization modes."},

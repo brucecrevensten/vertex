@@ -40,40 +40,15 @@
   <script type="text/javascript" src="spec/fixtures/searchReturn.js"></script>
 
   <!-- include spec files here... -->
-  <script type="text/javascript" src="spec/PageTagsSpec.js"></script>
+  <script type="text/javascript" src="spec/DataProductSpec.js"></script>
 
 </head>
 <body>
 
 <div id="searchMap"></div>
 <script type="text/javascript">
-  (function() {
-    var jasmineEnv = jasmine.getEnv();
-    jasmineEnv.updateInterval = 1000;
-
-    var trivialReporter = new jasmine.TrivialReporter();
-
-    jasmineEnv.addReporter(trivialReporter);
-    jasmine.getEnv().addReporter(new jasmine.JUnitXmlReporter());
-
-    jasmineEnv.specFilter = function(spec) {
-      return trivialReporter.specFilter(spec);
-    };
-
-    var currentWindowOnload = window.onload;
-
-    window.onload = function() {
-      if (currentWindowOnload) {
-        currentWindowOnload();
-      }
-      execJasmine();
-    };
-
-    function execJasmine() {
-      jasmineEnv.execute();
-    }
-
-  })();
+  jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+  jasmine.getEnv().execute();
 </script>
 
   <div id="filter_start"></div>

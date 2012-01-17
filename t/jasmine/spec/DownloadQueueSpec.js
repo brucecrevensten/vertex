@@ -69,7 +69,7 @@ describe("Download Queue", function() {
 
       dp1 = new DataProduct( { "BYTES":500 } );
       dq.add( dp1 );
-      expect( dq.length ).toEqual( 1 ); 
+      expect( dq.length ).toEqual( 1 );
       expect( dqsv.render().el.innerHTML ).toContain('Download queue <span class="nonempty">(1 item, 500 B)</span>');
       dp2 = new DataProduct( { "BYTES":10000 } );
       dp3 = new DataProduct( { "BYTES":20000 } );
@@ -77,14 +77,14 @@ describe("Download Queue", function() {
       dp5 = new DataProduct( { "BYTES":5500000000 } );
       dp6 = new DataProduct( { "BYTES":1900000000000 } );
       dq.add( [ dp2, dp3, dp4, dp5, dp6 ] );
-      expect( dq.length ).toEqual( 6 ); 
+      expect( dq.length ).toEqual( 6 );
       expect( dqsv.render().el.innerHTML ).toContain('Download queue <span class="nonempty">(6 items, 1.73 TB)</span>');
 
       });
   });
 
   describe("Download Queue modal popup", function() {
-  
+
     describe("Download Queue table of queue contents", function() {
 
       dq = new DownloadQueue();
@@ -102,7 +102,7 @@ describe("Download Queue", function() {
       r = dqv.render().el.innerHTML;
 
       it("lists the products in the queue", function() {
-      
+
         expect( r ).toContain('granule1');
         expect( r ).toContain('granule2');
         expect( r ).toContain('granule3');
@@ -123,6 +123,6 @@ describe("Download Queue", function() {
         expect( r ).toContain('Download');
       });
     });
-  });  
+  });
 });
 
