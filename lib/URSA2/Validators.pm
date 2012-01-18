@@ -103,7 +103,7 @@ sub offnadir {
 sub processing {
 
   my ($self, $processing) = @_;
-  my @a = qw(L0 L1 L1.1 L1.0 L1.5 BROWSE COMPLEX KMZ METADATA PROJECTED STOKES);
+  my @a = qw(L0 L1 L1.1 L1.0 L1.5 BROWSE COMPLEX KMZ METADATA PROJECTED STOKES ATI 3FP PTIF LTIF CTIF PSTOKES LSTOKES CSTOKES DEM JPG);
   if( -1 != firstidx { $_ eq 'any' } @{$processing} ) {
     return \@a;
   }
