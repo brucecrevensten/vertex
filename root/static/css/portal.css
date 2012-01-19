@@ -1,5 +1,7 @@
 body {
-   background: url(../images/satellitebackground.png);
+   background: url(../images/sdcbackground.jpg) no-repeat;
+   background-size: 100% 100% cover;
+   background-origin: content-box;
 }
 
 body * {
@@ -19,6 +21,8 @@ text-decoration: underline;
 /* surrounds all application functionality */
 #contents {
   position: relative;
+  display: block;
+  height: 600px;
 }
 
 #wrapper {
@@ -28,9 +32,10 @@ text-decoration: underline;
   border: 2px solid #eee;
   padding: 1.5em;
   margin: 1em auto;
-  width: 90%;
+  width: 95%;
   min-width: 1300px;
   position: relative;
+  height: 785;
 }
 
 #tableleftcol {
@@ -100,11 +105,12 @@ footer {
   font-color: #878787 !important;
   font-size: x-small;
   clear: both;
-  margin: 1ex 0;
   border: 1px solid #ccc;
   padding: 2ex 0;
-  background: #efefef;
+/*  background: #efefef;*/
   height: 75px;
+  background-color: #dddddd;
+  margin: 1ex 0 0;
 }
 
 footer h2 { 
@@ -121,6 +127,10 @@ footer div#centerer {
 footer div#footer_contact{
   text-align: left; 
   width: 15em;
+  position: relative;
+  overflow: visible;
+  white-space: nowrap;
+  bottom: 28px;
 }
 
 nav {
@@ -129,6 +139,7 @@ display: none;
 
 footer p {
 line-height: 110%;
+color: gray;
 }
 
 footer div div {

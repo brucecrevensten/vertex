@@ -4,6 +4,47 @@
 <meta charset="utf-8" />
 <title>Vertex: ASF's Data Portal</title>
 
+<!--Overrides of the Yahoo UI Skin needed for the tab groups -->
+<style type="text/css">
+/*margin and padding on body element
+  can introduce errors in determining
+  element position and are not recommended;
+  we turn them off as a foundation for YUI
+  CSS treatments. */
+body {
+	margin:0;
+	padding:0;
+}
+
+.yui-skin-sam .yui-navset .yui-content {
+	background-color: #efefef !important;
+}
+
+.yui-skin-sam .yui-navset .yui-content, .yui-skin-sam .yui-navset .yui-navset-top .yui-content {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #243356 #CCCCCC #CCCCCC !important;
+    border-right: 1px solid #CCCCCC!important;
+    border-style: solid;
+    border-width: 1px;
+    padding: 0.25em 0.5em;
+}
+
+</style>
+
+<!--Scripts and CSS needed by the Yahoo UI Tab Control-->
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/fonts/fonts-min.css" />
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/tabview/assets/skins/sam/tabview.css" />
+<script type="text/javascript" src="http://yui.yahooapis.com/2.9.0/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+
+<script type="text/javascript" src="http://yui.yahooapis.com/2.9.0/build/element/element-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/2.9.0/build/tabview/tabview-min.js"></script>
+</head>
+<!--End of Yahoo UI Tab Control Scripts and CSS-->
+
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/reset.css') %]" />
@@ -42,7 +83,23 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/Dictionary.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.placeholder.js') %]"></script>
 
+<!--scripts/links needed by the form subsetter-->
+
+<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/WCSFormSubmitterWidget.css') %]" />
+<!--<link rel="stylesheet" type="text/css" href="../static/css/ui-darkness/jquery-ui-1.8.16.custom.css" />-->
+<!--<script type="text/javascript" src="../static/js/jquery-1.6.4.min.js"></script>-->
+<script type="text/javascript" src="../static/js/underscore-min.js"></script>
+<script type="text/javascript" src="../static/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="../static/js/backbone-min.js"></script>
+<script type="text/javascript" src="../static/js/sinon-1.2.0.js"></script>
+<script type="text/javascript" src="../static/js/Dictionary.js"></script>
+<script type="text/javascript" src="../static/js/MapServerRequest.js"></script>
+<script type="text/javascript" src="../static/js/WCSForm.js"></script>
+<script type="text/javascript" src="../static/js/OpenLayers-2.11/OpenLayers.js"></script><!--FIXME-->
+<script type="text/javascript" src="../static/js/WCSFormSubmitterWidget.js"></script>
+
 </head>
+
 <body>
 
 
@@ -77,85 +134,20 @@
     If you do not currently have access to the restricted ASF Datapool products, please click the 'Register' button below to visit the ASF SDC proposal submission page for guidance or contact User Support at uso@asf.alaska.edu
   </div>
 
-  <div id="contents">
 
-    <div id="platform_profile" style="display: none;"></div>
-    <div id="product_profile" style="display: none;"></div>
-    <div id="download_queue"><table id="download_queue_table" style="width: 100%"></table></div>
-    <div id="platform_facet" style="display: none;"></div>
-
-	  <table><tr><td id="tableleftcol">
-    <div id="leftColumn">
-
-      <div id="filters"></div>
-      <div style="margin: 1em 0;" id="platform_facets"></div>
-      <div style="margin: 1em 0;">
-
-        <button id="triggerSearch"></button>
-		    <button id="stopSearch"></button>
-		    <button id="resetSearch"></button>
-
-		    <div>
-          <br />
-          <div id="searchMessage"></div>
-		    </div>
-      </div>
-    </div>
-
-    </td><td id="tablecentercol">
-
-    <div id="centerColumn">
-      <div id="searchMap"></div>
-    </div> <!-- end center column -->
-
-    </td><td id="tablerightcol">
-
-    <div id="rightColumn">
-
-	    <!-- default search message -->
-		  <div class="ui-widget">
-	      <div id="before-search-msg" class="ui-state-highlight ui-corner-all">
-	        <strong>Please use the map and/or the search parameters on the left to select your search criteria.</strong>
-	      </div>
+<div id="tabGroup" class="yui-skin-sam">
+	<div id="vertex-content" class="yui-navset">
+	    <ul class="yui-nav">
+	        <li class="selected"><a href="#contents"><em>ASF Datapool</em></a></li>
+	        <li><a href="#subsetter"><em>ASF Subsetter</em></a></li>
+	    </ul>            
+	    <div class="yui-content">
+	        [% INCLUDE content1.inc %]
+	        [% INCLUDE WCSFormSubmitterWidget.inc %]
 	    </div>
+	</div>
+</div>
 
-      <!-- loading async spinner -->
-      <div class="ui-widget">
-        <div id="async-spinner" class="ui-state-highlight ui-corner-all">
-          <span class="ui-icon"></span>
-          <strong>Loading search results&hellip;</strong>
-        </div>
-      </div>
-
-      <!-- results banner -->
-      <div class="ui-widget">
-        <div id="results-banner" class="ui-state-highlight ui-corner-all">
-          <span class="ui-icon ui-icon-info"></span>
-          <strong>No results were found</strong> for your current search criteria.
-        </div>
-      </div>
-
-      <!-- error banner -->
-      <div class="ui-widget">
-        <div id="error-message" class="ui-state-error ui-corner-all">
-          <span class="ui-icon ui-icon-alert"></span>
-          <code id="error-message-text"></code>
-        </div>
-      </div>
-
-
-		  <div>
-		    <div id="srCount"></div>
-	      <div id="srProcLevelTool"></div>
-		  </div>
-
-      <div id="con">
-        <table id="searchResults" style="margin:20px 0px 20px 0px;"></table>
-      </div>
-    </div>
-    </td></tr></table>
-
-  </div> <!-- end contents -->
 <div id="feedbackForm"></div>
   <footer>
     <div id="centerer">
@@ -171,7 +163,7 @@
           Phone: (907) 474-6166<br/>
           Email: <a href="uso@asf.alaska.edu">uso@asf.alaska.edu</a><br/>
         <br/>
-          2011 &copy; Alaska Satellite Facility
+          2011 &copy; Alaska Satellite Facility<br />
           Vertex: ASF&rsquo;s Data Portal V[% c.config.version %]
         </p>
       </div>
@@ -185,6 +177,11 @@
     <div style="clear:both;">&nbsp;</div>
   </footer>
 </div>
+
+<!--Script to instantiate the tab view-->
+<script type="text/javascript">
+    var tabView = new YAHOO.widget.TabView('vertex-content');
+</script>
 
 [% IF c.config.include_google_analytics == 'true' %]
 <!-- Begin Google Analytics Code -->
