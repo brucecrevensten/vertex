@@ -217,6 +217,7 @@ var StateInflator = Backbone.Model.extend({
         dataSetM.set({
             name:dataSetName,
             layers:layerCollection,
+            // andy - add spatial extent retrieval here.
             urlList: { WCSURL:ds["wcsUrl"], WMSURL:ds["wmsUrl"] },
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
@@ -238,9 +239,10 @@ var StateInflator = Backbone.Model.extend({
         var boxlayer;
 
         var map = new OpenLayers.Map('map', { 
-          projection: "EPSG:4326",                                                                                                                          // FIXME: pull from json return?
+          projection: "EPSG:4326",            // FIXME: pull from json return?
         });
 
+        // used to display bounding box control
         var control = new OpenLayers.Control();
         OpenLayers.Util.extend(control, {
           draw: function () {
@@ -265,17 +267,23 @@ var StateInflator = Backbone.Model.extend({
             boxlayer.removeAllFeatures();
             boxlayer.addFeatures(feature);
 
+
+
             window.mapEvent.trigger('update_openlayers_bbox');
 
           },this)
         });
         map.addControl(control);
-      
+
+        
         boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
         map.addLayer(boxlayer);
+        // Andy - get the bounding box to stay on top 
+        // boxlayer.moveLayerToTop();
+
 
         map.addLayers([new OpenLayers.Layer.WMS()]);
-        map.zoomToMaxExtent();
+        // map.zoomToMaxExtent();
         
         this.map = map;
         window.map = map;
@@ -413,6 +421,7 @@ var StateInflator = Backbone.Model.extend({
         }
       }, 
         {
+          // this changes the layer being displayed
           name: "changeThis",
           callback: function(event) {
               $(this.el).bind(event, jQuery.proxy(function(e) {
@@ -425,21 +434,38 @@ var StateInflator = Backbone.Model.extend({
                     var layerVal = $(selectedElement).val();
                     this.model.set({"selected":layerVal},{silent:true});
                     
-         
-                    for (var i=0; i<window.map.layers.length; i++) {
+                    // iterate through all layers and destroy them
+                    for (var i=0; i<map.layers.length; i++) {
                       if (window.map.layers[i].name != "Bounding Box") {
                         window.map.layers[i].destroy();
                       } 
                     }
                       
+                      var worldMap = new OpenLayers.Layer.WMS(
+                        "OpenLayers WMS",
+                        "http://vmap0.tiles.osgeo.org/wms/vmap0",
+                        {'layers':'basic'},
+                        {isBaseLayer: true} );
+                      window.map.addLayer(worldMap);
+                      
+                      // create a new layer which will be displayed
+                      // this should be based upon the
                       var newLayer = new OpenLayers.Layer.WMS(
                                             layerVal,
                                             wmsUrl,
-                                            {layers: layerVal, CRS: "EPSG:4326"}  
+                                            {layers: layerVal, CRS: "EPSG:4326", transparent: "true"},
+                                            {isBaseLayer: false}  
                                       );
-                       
+
+                      // add our new layer and display it
                       window.map.addLayer(newLayer);
-                      window.map.setBaseLayer(newLayer); 
+
+                      window.map.zoomToMaxExtent();
+                      var newLayerExtent = new OpenLayers.Bounds(121.00088135454, -19.99984094179, 147.501182236066, -9.99937503771669);
+                      window.map.zoomToExtent(newLayerExtent);
+
+                      // map.setBaseLayer(worldMap); 
+                      // map.setBaseLayer(newLayer); 
         
                   } catch(e){
                   }

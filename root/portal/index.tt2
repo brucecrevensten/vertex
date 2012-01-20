@@ -98,6 +98,7 @@ body {
 <script type="text/javascript" src="../static/js/OpenLayers-2.11/OpenLayers.js"></script><!--FIXME-->
 <script type="text/javascript" src="../static/js/WCSFormSubmitterWidget.js"></script>
 
+
 </head>
 
 <body>

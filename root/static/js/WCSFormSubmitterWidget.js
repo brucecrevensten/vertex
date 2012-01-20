@@ -4,6 +4,7 @@ $(function() {
 
 	server = sinon.fakeServer.create();
 
+	// andy - add additional lat/long return data here
 	server.respondWith("POST", "/fakeURL",
 	           [200, { "Content-Type": "application/json" },
 	            JSON.stringify(
