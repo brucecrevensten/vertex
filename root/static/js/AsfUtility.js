@@ -1,5 +1,5 @@
 var AsfUtility = {
-  bytesToString:function(bytes) {
+  bytesToString: function(bytes) {
 
     var kilobyte = 1024;
     var megabyte = kilobyte * 1024;
@@ -20,11 +20,11 @@ var AsfUtility = {
 
     } else if (bytes >= terabyte) {
       return (bytes / terabyte).toFixed(precision) + ' TB';
-    } 
+    }
   },
   rtrim: function(str, charlist) {
-    // Removes trailing whitespace  
-    // 
+    // Removes trailing whitespace
+    //
     // version: 1103.1210
     // discuss at: http://phpjs.org/functions/rtrim    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
     // +      input by: Erkekjetter
@@ -34,11 +34,11 @@ var AsfUtility = {
     // *     example 1: rtrim('    Kevin van Zonneveld    ');
     // *     returns 1: '    Kevin van Zonneveld'
     charlist = !charlist ? ' \\s\u00A0' : (charlist + '').replace(/([\[\]\(\)\.\?\/\*\{\}\+\$\^\:])/g, '\\$1');
-    var re = new RegExp('[' + charlist + ']+$', 'g');    return (str + '').replace(re, '');
+    var re = new RegExp('[' + charlist + ']+$', 'g'); return (str + '').replace(re, '');
   },
   ucfirst: function(str) {
     str += '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
-}
+};
 

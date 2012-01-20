@@ -1,183 +1,184 @@
-$(function() {	
+$(function() {
 
-	var server;
+  var server;
 
-	server = sinon.fakeServer.create();
+  server = sinon.fakeServer.create();
 
-	server.respondWith("POST", "/fakeURL",
-	           [200, { "Content-Type": "application/json" },
-	            JSON.stringify(
-		        {
-			        "DataSet": {
-				        "Australia": {
-					        "layers": ["au-1"],
-					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia",
-					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
-					        "Projection": ["epsg:4326"]
-					    },
-					    "South East Asia": {
-					        "layers": ["sea-2b","sea-2c","sea-2d"],
-					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/se-asia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
-					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
-							"Projection": ["epsg:4326"]
-					    },
-					    "South East Asia Mainland": {
-					        "layers": ["sea-1a","sea-1b"],
-					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland",
-					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
-							"Projection": ["epsg:4326"]
-					    },
-					    "Africa": {
-					        "layers": ["AFR-1A","AFR-1B","AFR-1C"],
-					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/africa",
-					        "ImageFormat": ["jpeg", "GTiff"],
-					         "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
-					         "Projection": ["epsg:4326"]
-					    },
-					    "Central America": {
-					        "layers": ["AM-3"],
-					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/camerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/camerica",
-					        "ImageFormat": ["jpeg", "GTiff"],
-					         "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
-					         "Projection": ["epsg:4326"]
-					    },
-					     "South America": {
-					        "layers": ["AM-1A","AM-1B","AM-1C","AM-1D"],
-					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/samerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
-					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/samerica",
-					        "ImageFormat": ["jpeg", "GTiff"],
-					        "InterpolationMethod": ["NEAREST_NEIGHBOUR","BILINEAR"],
-							"Projection": ["epsg:4326"]
-					    },
-					     
-				    },
+  server.respondWith('POST', '/fakeURL',
+      [200, { 'Content-Type': 'application/json' },
+       JSON.stringify({
+         'DataSet': {
+           'Australia': {
+             'layers': ['au-1'],
+             'wcsUrl': 'http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&',
+             'wmsUrl': 'http://mapserver.daac.asf.alaska.edu/wms/GRFMP/australia',
+             'ImageFormat': ['jpeg', 'GTiff'],
+             'InterpolationMethod': ['NEAREST_NEIGHBOUR', 'BILINEAR'],
+             'Projection': ['epsg:4326']
+           },
+           'South East Asia': {
+             'layers': ['sea-2b', 'sea-2c', 'sea-2d'],
+             'wcsUrl': 'http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/se-asia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&',
+             'wmsUrl': 'http://mapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia',
+             'ImageFormat': ['jpeg', 'GTiff'],
+             'InterpolationMethod': ['NEAREST_NEIGHBOUR', 'BILINEAR'],
+             'Projection': ['epsg:4326']
+           },
+           'South East Asia Mainland': {
+             'layers': ['sea-1a', 'sea-1b'],
+             'wcsUrl': 'http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/seasia-mainland?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&',
+             'wmsUrl': 'http://mapserver.daac.asf.alaska.edu/wms/GRFMP/seasia-mainland',
+             'ImageFormat': ['jpeg', 'GTiff'],
+             'InterpolationMethod': ['NEAREST_NEIGHBOUR', 'BILINEAR'],
+             'Projection': ['epsg:4326']
+           },
+           'Africa': {
+             'layers': ['AFR-1A', 'AFR-1B', 'AFR-1C'],
+             'wcsUrl': 'http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/africa?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&',
+             'wmsUrl': 'http://mapserver.daac.asf.alaska.edu/wms/GRFMP/africa',
+             'ImageFormat': ['jpeg', 'GTiff'],
+             'InterpolationMethod': ['NEAREST_NEIGHBOUR', 'BILINEAR'],
+             'Projection': ['epsg:4326']
+           },
+           'Central America': {
+             'layers': ['AM-3'],
+             'wcsUrl': 'http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/camerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&',
+             'wmsUrl': 'http://mapserver.daac.asf.alaska.edu/wms/GRFMP/camerica',
+             'ImageFormat': ['jpeg', 'GTiff'],
+             'InterpolationMethod': ['NEAREST_NEIGHBOUR', 'BILINEAR'],
+             'Projection': ['epsg:4326']
+           },
+           'South America': {
+             'layers': ['AM-1A', 'AM-1B', 'AM-1C', 'AM-1D'],
+             'wcsUrl': 'http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/samerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&',
+             'wmsUrl': 'http://mapserver.daac.asf.alaska.edu/wms/GRFMP/samerica',
+             'ImageFormat': ['jpeg', 'GTiff'],
+             'InterpolationMethod': ['NEAREST_NEIGHBOUR', 'BILINEAR'],
+             'Projection': ['epsg:4326']
+           }
 
-	            })]);
+         }
 
-	window.server = server;
+       })]);
+
+  window.server = server;
 
 
-	var infl = new StateInflator();
-	
-	this.infl = infl;
+  var infl = new StateInflator();
 
-	infl.inflate('/fakeURL'); 
+  this.infl = infl;
 
-	server.respond(); 
+  infl.inflate('/fakeURL');
 
-	server.restore();
+  server.respond();
 
-	infl.dataSetFormM.view.set($("#dataset"));
+  server.restore();
 
-	// Image Format
-	for (dataSetName in dataSetDict) {
-		menuToggleList["IMAGEFORMATS"][dataSetName].menuView.set2($("#imageFormat"));
-	}
-	menuToggleList["IMAGEFORMATS"]["Australia"].menuView.enabled = true;
-	menuToggleList["IMAGEFORMATS"]["Australia"].menuView.render();
+  infl.dataSetFormM.view.set($('#dataset'));
 
-	// Interpolation Method
-	for (dataSetName in dataSetDict) {
-		menuToggleList["INTERPOLATION"][dataSetName].menuView.set2($("#interpolation"));
-	}
-	menuToggleList["INTERPOLATION"]["Australia"].menuView.enabled = true;
-	menuToggleList["INTERPOLATION"]["Australia"].menuView.render();
+  // Image Format
+  for (dataSetName in dataSetDict) {
+    menuToggleList['IMAGEFORMATS'][dataSetName].menuView.set2($('#imageFormat'));
+  }
+  menuToggleList['IMAGEFORMATS']['Australia'].menuView.enabled = true;
+  menuToggleList['IMAGEFORMATS']['Australia'].menuView.render();
 
-	// Projection 
-	for (dataSetName in dataSetDict) {
-		menuToggleList["PROJECTION"][dataSetName].menuView.set2($("#projection"));
-	}
-	menuToggleList["PROJECTION"]["Australia"].menuView.enabled = true;
-	menuToggleList["PROJECTION"]["Australia"].menuView.render();
+  // Interpolation Method
+  for (dataSetName in dataSetDict) {
+    menuToggleList['INTERPOLATION'][dataSetName].menuView.set2($('#interpolation'));
+  }
+  menuToggleList['INTERPOLATION']['Australia'].menuView.enabled = true;
+  menuToggleList['INTERPOLATION']['Australia'].menuView.render();
 
-	// Image Width 
-	for (dataSetName in dataSetDict) {
-		menuToggleList["IMAGEWIDTH"][dataSetName].menuView.set2($("#imageWidth"));
-	}	
-	menuToggleList["IMAGEWIDTH"]["Australia"].menuView.enabled = true;
+  // Projection
+  for (dataSetName in dataSetDict) {
+    menuToggleList['PROJECTION'][dataSetName].menuView.set2($('#projection'));
+  }
+  menuToggleList['PROJECTION']['Australia'].menuView.enabled = true;
+  menuToggleList['PROJECTION']['Australia'].menuView.render();
 
-	// Image Height 
-	for (dataSetName in dataSetDict) {
-		menuToggleList["IMAGEHEIGHT"][dataSetName].menuView.set2($("#imageHeight"));
-	}
-	menuToggleList["IMAGEHEIGHT"]["Australia"].menuView.enabled = true;	
+  // Image Width
+  for (dataSetName in dataSetDict) {
+    menuToggleList['IMAGEWIDTH'][dataSetName].menuView.set2($('#imageWidth'));
+  }
+  menuToggleList['IMAGEWIDTH']['Australia'].menuView.enabled = true;
 
-	// BBOX 
-	for (dataSetName in dataSetDict) {
-		var elList = [];
+  // Image Height
+  for (dataSetName in dataSetDict) {
+    menuToggleList['IMAGEHEIGHT'][dataSetName].menuView.set2($('#imageHeight'));
+  }
+  menuToggleList['IMAGEHEIGHT']['Australia'].menuView.enabled = true;
 
-		elList[0] = $("#b0");
-		elList[1] = $("#b1");
-		elList[2] = $("#b2");
-		elList[3] = $("#b3");
+  // BBOX
+  for (dataSetName in dataSetDict) {
+    var elList = [];
 
-		menuToggleList["BBOX"][dataSetName].menuView.set3(elList);
-	}
+    elList[0] = $('#b0');
+    elList[1] = $('#b1');
+    elList[2] = $('#b2');
+    elList[3] = $('#b3');
 
-	menuToggleList["BBOX"]["Australia"].menuView.enabled = true;
-	menuToggleList["BBOX"]["Australia"].menuView.render();
+    menuToggleList['BBOX'][dataSetName].menuView.set3(elList);
+  }
 
-	dataSetFormM.view.enabled = true;
-	dataSetFormM.set({"selected":"Australia"});
+  menuToggleList['BBOX']['Australia'].menuView.enabled = true;
+  menuToggleList['BBOX']['Australia'].menuView.render();
 
-	dataSetFormM.set({"layers": menuToggleList["LAYERS"]});
+  dataSetFormM.view.enabled = true;
+  dataSetFormM.set({'selected': 'Australia'});
 
-	dataSetFormM.view.render();
-	menuToggleList["LAYERS"]["Australia"].menuView.render();
+  dataSetFormM.set({'layers': menuToggleList['LAYERS']});
 
-	dataSetFormM.view.bindAccordion($("#dataset"));
+  dataSetFormM.view.render();
+  menuToggleList['LAYERS']['Australia'].menuView.render();
 
-	window.infl = infl;
+  dataSetFormM.view.bindAccordion($('#dataset'));
 
-	var form = new FormSubmitter();
+  window.infl = infl;
 
-	var fl = [];
+  var form = new FormSubmitter();
 
-	var server2;
+  var fl = [];
 
-	server2 = sinon.fakeServer.create();
+  var server2;
 
-	server2.respondWith("POST", "/AlaskaURL",
-	           [200, { "Content-Type": "application/json" },
-	            JSON.stringify(
-		        {"SUCCESS":"SUCESS"})]);
+  server2 = sinon.fakeServer.create();
 
-    window.server2 = server2;
+  server2.respondWith('POST', '/AlaskaURL',
+      [200, { 'Content-Type': 'application/json' },
+       JSON.stringify({
+         'SUCCESS': 'SUCESS'
+       })
+      ]);
 
-	for (formName in menuToggleList) {
-		for (dataSetName in menuToggleList[formName]) {
-			fl.push(menuToggleList[formName][dataSetName].menuForm);
-		}
-	}
+  window.server2 = server2;
 
-	var formSub = new FormSubmitter();
-	formSub.set({"urlParam": "WCSURL"});
+  for (formName in menuToggleList) {
+    for (dataSetName in menuToggleList[formName]) {
+      fl.push(menuToggleList[formName][dataSetName].menuForm);
+    }
+  }
 
-	for (i in fl) {
-		formSub.formList.add(i, fl[i]);
-	}
+  var formSub = new FormSubmitter();
+  formSub.set({'urlParam': 'WCSURL'});
 
-	window.formSub = formSub;
-	/* 
-		When the download button is clicked then the form needs to submit the request 
-		to the proper url. The proper URL in this case will be the url of the WCS service
-		associated with the dataset. This URL will be located in the model associated with 
-		dataset. We get the currently selected 
-			
-	*/
-	window.server2.restore();
-	$('#downloadButton').button({ label: "Download"}).bind("click", jQuery.proxy(function() {
-		// Tell the form Submitter to grab the WCSURL parameter from the dataset that is selected
-		window.formSub.set({"urlParam": "WCSURL"});
-		window.formSub.submitRequestForm();    
-	},this));
+  for (i in fl) {
+    formSub.formList.add(i, fl[i]);
+  }
+
+  window.formSub = formSub;
+  /*
+    When the download button is clicked then the form needs to submit the request
+    to the proper url. The proper URL in this case will be the url of the WCS service
+    associated with the dataset. This URL will be located in the model associated with
+    dataset. We get the currently selected
+
+    */
+  window.server2.restore();
+  $('#downloadButton').button({ label: 'Download'}).bind('click', jQuery.proxy(function() {
+    // Tell the form Submitter to grab the WCSURL parameter from the dataset that is selected
+    window.formSub.set({'urlParam': 'WCSURL'});
+    window.formSub.submitRequestForm();
+  },this));
 
 });
