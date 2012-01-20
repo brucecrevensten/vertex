@@ -111,10 +111,15 @@ input.WCSfields {
   	display: block;
   	position: relative;
 }
-.WCSfields option {
-	max-width: 120px;
+.WCSfields select option {
+	max-width: 100px;
 	display: block;
 }
+.WCSfields select {
+	max-width: 130px;
+	display: block;
+}
+
 #accordion {
 	width: 250px;
 }
