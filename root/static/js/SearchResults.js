@@ -43,24 +43,6 @@ var SearchResults = Backbone.Collection.extend(
           this.add( data[i], { 'silent' : true} );
           dp = this.get( data[i].id );
         }
-
-        // Create the DataProductFile, add to the collection in the DataProduct
-        dp.files.add( { 
-          thumbnail: data[i].THUMBNAIL,
-          productId: data[i].GRANULENAME,
-          id: data[i].ID,
-          processingType: data[i].PROCESSINGTYPE,
-          processingTypeDisplay: data[i].PROCESSINGTYPEDISPLAY,
-          processingLevel: data[i].PROCESSINGLEVEL,
-          processingDescription: data[i].PROCESSINGDESCRIPTION,
-          url: data[i].URL,
-          platform: data[i].PLATFORM,
-          acquisitionDate: data[i].ACQUISITIONDATE,
-          bytes: data[i].BYTES,
-          sizeText: AsfUtility.bytesToString(data[i].BYTES),
-          md5sum: data[i].MD5SUM,
-          filename: data[i].FILENAME
-        });
       }
     },
 
@@ -132,6 +114,7 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
 		$("#srCount").empty();
   },
   render: function() {
+  /*
     $(this.el).empty();
     var w = $('<div/>').html( '<input type="checkbox" id="toggleProcMenu" /><label for="toggleProcMenu">Add all by type&hellip...</label>');
     w.find('#toggleProcMenu').button(
@@ -189,6 +172,7 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
     }, this);
     $(this.el).append(w).append(m);
     return this;
+  */
   },
 });
 

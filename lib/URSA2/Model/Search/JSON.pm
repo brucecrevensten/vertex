@@ -72,14 +72,63 @@ sub doQuery {
     );
   }
   # Numify strings that only contain numbers.
+  URSA2->log->debug(Dumper($res));
+  my $tmp = {};
   foreach my $row (@{$res}) {
+    my $g = $row->{'GRANULENAME'};
+    if(!exists($tmp->{$g})) {
+    # E2_84210_STD_F283
+      $tmp->{$g} = {
+        'ACQUISITIONDATETEXT' => $row->{'ACQUISITIONDATETEXT'},
+        'ACQUISITIONDATE'     => $row->{'ACQUISITIONDATE'},
+        'ASCENDINGDESCENDING' => $row->{'ASCENDINGDESCENDING'},
+        'BEAMMODEDESC'        => $row->{'BEAMMODEDESC'},
+        'BEAMMODETYPE'        => $row->{'BEAMMODETYPE'},
+        'BROWSE'              => $row->{'BROWSE'},
+        'CENTERLAT'           => $row->{'CENTERLAT'},
+        'CENTERLON'           => $row->{'CENTERLON'},
+        'FARADAYROTATION'     => $row->{'FARADAYROTATION'},
+        'FARENDLAT'           => $row->{'FARENDLAT'},
+        'FARENDLON'           => $row->{'FARENDLON'},
+        'FARSTARTLAT'         => $row->{'FARSTARTLAT'},
+        'FARSTARTLON'         => $row->{'FARSTARTLON'},
+        'FRAMENUMBER'         => $row->{'FRAMENUMBER'},
+        'GRANULENAME'         => $row->{'GRANULENAME'},
+        'GRANULETYPE'         => $row->{'GRANULETYPE'},
+        'MISSIONNAME'         => $row->{'MISSIONNAME'},
+        'NEARENDLAT'          => $row->{'NEARENDLAT'},
+        'NEARENDLON'          => $row->{'NEARENDLON'},
+        'NEARSTARTLAT'        => $row->{'NEARSTARTLAT'},
+        'NEARSTARTLON'        => $row->{'NEARSTARTLON'},
+        'OFFNADIRANGLE'       => $row->{'OFFNADIRANGLE'},
+        'ORBIT'               => $row->{'ORBIT'},
+        'PATHNUMBER'          => $row->{'PATHNUMBER'},
+        'PLATFORM'            => $row->{'PLATFORM'},
+        'POLARIZATION'        => $row->{'POLARIZATION'},
+        'PRODUCTNAME'         => $row->{'PRODUCTNAME'},
+        'SENSOR'              => $row->{'SENSOR'},
+      };
+      $tmp->{$g}->{'FILES'} = [];
+    }
+    push(@{$tmp->{$g}->{'FILES'}}, {
+      'PROCESSINGDATE'      => $row->{'PROCESSINGDATE'},
+      'PROCESSINGTYPE' => $row->{'PROCESSINGTYPE'},
+      'PROCESSINGTYPEDISPLAY' => $row->{'PROCESSINGTYPEDISPLAY'},
+      'PROCESSINGTYPEDESCRIPTION' => $row->{'PROCESSINGTYPEDESCRIPTION'},
+      'PROCESSINGLEVEL' => $row->{'PROCESSINGLEVEL'},
+      'URL' => $row->{'URL'},
+      'BYTES' => $row->{'BYTES'} + 0,
+      'MD5SUM' => $row->{'MD5SUM'},
+    });
+
     foreach my $key (keys(%{$row})) {
       if($row->{$key} && $row->{$key} =~ /^(-)?\d+(\.\d+)?$/) {
         $row->{$key} +=0;
       }
     }
   }
-  return(JSON::XS->new->utf8->encode($res));
+  URSA2->log->debug(Dumper($tmp));
+  return(JSON::XS->new->utf8->encode($tmp));
 }
 
 1;

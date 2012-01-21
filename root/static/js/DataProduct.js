@@ -175,7 +175,7 @@ window.showInlineProductFiles = function(event, product) {
     var model = SearchApp.searchResults.get( product );
 
     var c = $('<ul/>', { 'class':'granuleProductList', 'id':'gpl_'+product } );
-    model.files.each( function( file, w, r ) {
+    _.each(model.get('FILES'), function(file) {
       
       // skip if BROWSE
       if( 'BROWSE' == file.get('processingType')) { return; }
