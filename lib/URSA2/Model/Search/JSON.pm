@@ -58,8 +58,10 @@ sub doQuery {
   }
 
   my $res;
+  my $sth;
   eval {
-    $res = $dbh->selectall_arrayref($sql, { Slice => {} });
+    $sth = $dbh->prepare($sql);
+    $sth->execute();
   };
   if( $dbh->err ) {
     DbException->throw(
@@ -71,14 +73,11 @@ sub doQuery {
       message => Dumper($@)
     );
   }
-  # Numify strings that only contain numbers.
-  URSA2->log->debug(Dumper($res));
-  my $tmp = {};
-  foreach my $row (@{$res}) {
+  while(my $row = $sth->fetchrow_hashref) {
     my $g = $row->{'GRANULENAME'};
-    if(!exists($tmp->{$g})) {
+    if(!exists($res->{$g})) {
     # E2_84210_STD_F283
-      $tmp->{$g} = {
+      $res->{$g} = {
         'ACQUISITIONDATETEXT' => $row->{'ACQUISITIONDATETEXT'},
         'ACQUISITIONDATE'     => $row->{'ACQUISITIONDATE'},
         'ASCENDINGDESCENDING' => $row->{'ASCENDINGDESCENDING'},
@@ -108,9 +107,9 @@ sub doQuery {
         'PRODUCTNAME'         => $row->{'PRODUCTNAME'},
         'SENSOR'              => $row->{'SENSOR'},
       };
-      $tmp->{$g}->{'FILES'} = [];
+      $res->{$g}->{'FILES'} = [];
     }
-    push(@{$tmp->{$g}->{'FILES'}}, {
+    push(@{$res->{$g}->{'FILES'}}, {
       'PROCESSINGDATE'      => $row->{'PROCESSINGDATE'},
       'PROCESSINGTYPE' => $row->{'PROCESSINGTYPE'},
       'PROCESSINGTYPEDISPLAY' => $row->{'PROCESSINGTYPEDISPLAY'},
@@ -121,14 +120,8 @@ sub doQuery {
       'MD5SUM' => $row->{'MD5SUM'},
     });
 
-    foreach my $key (keys(%{$row})) {
-      if($row->{$key} && $row->{$key} =~ /^(-)?\d+(\.\d+)?$/) {
-        $row->{$key} +=0;
-      }
-    }
   }
-  URSA2->log->debug(Dumper($tmp));
-  return(JSON::XS->new->utf8->encode($tmp));
+  return(JSON::XS->new->utf8->encode($res));
 }
 
 1;
