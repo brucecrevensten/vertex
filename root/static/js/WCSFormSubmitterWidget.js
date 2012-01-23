@@ -71,7 +71,7 @@ $(function() {
 					        "boundsTop": 22
 					    },
 					     "South America": {
-					        "layers": ["AM-1A","AM-1B","AM-1C","AM-1D"],
+					        "layers": ["AM"],
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/samerica?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/samerica",
 					        "ImageFormat": ["jpeg", "GTiff"],

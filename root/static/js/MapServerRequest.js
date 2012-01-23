@@ -217,7 +217,6 @@ var StateInflator = Backbone.Model.extend({
         dataSetM.set({
             name:dataSetName,
             layers:layerCollection,
-            // andy - add spatial extent retrieval here.
             urlList: { WCSURL:ds["wcsUrl"], WMSURL:ds["wmsUrl"] },
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
@@ -270,8 +269,7 @@ var StateInflator = Backbone.Model.extend({
             });
             boxlayer.removeAllFeatures();
             boxlayer.addFeatures(feature);
-
-
+            map.setLayerIndex(boxlayer, map.layers.length);
 
             window.mapEvent.trigger('update_openlayers_bbox');
 
@@ -279,15 +277,11 @@ var StateInflator = Backbone.Model.extend({
         });
         map.addControl(control);
 
-        
+        map.addLayers([new OpenLayers.Layer.WMS()]);
+
         boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
         map.addLayer(boxlayer);
-        // Andy - get the bounding box to stay on top 
-        // boxlayer.moveLayerToTop();
-
-
-        map.addLayers([new OpenLayers.Layer.WMS()]);
-        // map.zoomToMaxExtent();
+        map.setLayerIndex(boxlayer, map.layers.length);
         
         this.map = map;
         window.map = map;
@@ -440,44 +434,50 @@ var StateInflator = Backbone.Model.extend({
                     var boundsBottom = this.menuModel.get("boundsBottom");
                     var boundsRight = this.menuModel.get("boundsRight");
                     var boundsTop = this.menuModel.get("boundsTop");
+
                     this.model.set({"selected":layerVal},{silent:true});
+
+                    var boxlayer = null;
                     
                     // iterate through all layers and destroy them
                     for (var i=0; i<map.layers.length; i++) {
                       if (window.map.layers[i].name != "Bounding Box") {
                         window.map.layers[i].destroy();
-                      } 
+                      } else {
+                        boxlayer = window.map.layers[i];
+                      }
                     }
-                      
-                      var worldMap = new OpenLayers.Layer.WMS(
-                        "OpenLayers WMS",
-                        "http://vmap0.tiles.osgeo.org/wms/vmap0",
-                        {'layers':'basic'},
-                        {isBaseLayer: true} );
-                      window.map.addLayer(worldMap);
-                      
-                      // create a new layer which will be displayed
-                      // this should be based upon the
-                      var newLayer = new OpenLayers.Layer.WMS(
-                                            layerVal,
-                                            wmsUrl,
-                                            {layers: layerVal, CRS: "EPSG:4326", transparent: "true"},
-                                            {isBaseLayer: false}  
-                                      );
+                    
+                    // create the base layer  
+                    var worldMap = new OpenLayers.Layer.WMS(
+                      "OpenLayers WMS",
+                      "http://vmap0.tiles.osgeo.org/wms/vmap0",
+                      {'layers':'basic'},
+                      {isBaseLayer: true} );
+                    window.map.addLayer(worldMap);
+                    
+                    // create a new layer which will be displayed on top of the base layer
+                    var newLayer = new OpenLayers.Layer.WMS(
+                                          layerVal,
+                                          wmsUrl,
+                                          {layers: layerVal, CRS: "EPSG:4326", transparent: "true"},
+                                          {isBaseLayer: false}  
+                                    );
+                    window.map.addLayer(newLayer);
 
-                      // add our new layer and display it
-                      window.map.addLayer(newLayer);
+                    // if the boxlayer exists then put it on top
+                    if (boxlayer != null) {map.setLayerIndex(boxlayer, map.layers.length);}
 
-                      window.map.zoomToMaxExtent();
-                      // var newLayerExtent = new OpenLayers.Bounds(121.00088135454, -19.99984094179, 147.501182236066, -9.99937503771669);
-                      var newLayerExtent = new OpenLayers.Bounds(boundsLeft, boundsBottom, boundsRight, boundsTop);
-                      window.map.zoomToExtent(newLayerExtent);
 
-                      // map.setBaseLayer(worldMap); 
-                      // map.setBaseLayer(newLayer); 
-        
-                  } catch(e){
-                  }
+                    // get the bounds of the new layer (not the base layer) and zoom to the new layer
+                    var newLayerExtent = new OpenLayers.Bounds(boundsLeft, boundsBottom, boundsRight, boundsTop);
+                    window.map.zoomToExtent(newLayerExtent);
+
+                    // map.setBaseLayer(worldMap); 
+                    // map.setBaseLayer(newLayer); 
+      
+                } catch(e){
+                }
 
               }
             },this));
