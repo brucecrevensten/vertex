@@ -178,15 +178,17 @@ window.showInlineProductFiles = function(event, product) {
     _.each(model.get('FILES'), function(file) {
       
       // skip if BROWSE
-      if( 'BROWSE' == file.get('processingType')) { return; }
+      if( 'BROWSE' == file.PROCESSINGTYPE) { return; }
+
+      var id = file.GRANULENAME;
 
       var lit = $('<li/>');
       var btn = $('<button>Add to queue...</button>', {
         'class': 'tool_enqueuer',
         'title': 'Add to download queue',
-        'id': "b_"+file.id
-      }).attr('product_id', file.get('productId'))
-      .attr('product_file_id', file.id)
+        'id': "b_"+ id
+      }).attr('product_id', id)
+      .attr('product_file_id', id)
       .bind( 'click', function(event) {
           event.stopPropagation();
           var el = $(this);
@@ -213,7 +215,7 @@ window.showInlineProductFiles = function(event, product) {
         }
         ).button(
           {
-            'label': file.get('processingTypeDisplay') + ' (' + file.get('sizeText') + ')',
+            'label': file.PROCESSINGTYPEDISPLAY + ' (' + AsfUtility.bytesToString(file.BYTES) + ')',
             'icons': {
               'primary':'ui-icon-circle-plus'
             }

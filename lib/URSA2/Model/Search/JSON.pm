@@ -110,6 +110,7 @@ sub doQuery {
       $res->{$g}->{'FILES'} = [];
     }
     push(@{$res->{$g}->{'FILES'}}, {
+      'GRANULENAME'         => $row->{'GRANULENAME'},
       'PROCESSINGDATE'      => $row->{'PROCESSINGDATE'},
       'PROCESSINGTYPE' => $row->{'PROCESSINGTYPE'},
       'PROCESSINGTYPEDISPLAY' => $row->{'PROCESSINGTYPEDISPLAY'},

@@ -32,7 +32,7 @@ var SearchResults = Backbone.Collection.extend(
       // when we reset this main collection.
       this.reset();
       var dp;
-		
+      var start = new Date().getTime();		
       for ( var i in data ) {
         // Munge this data to get a local true ID (granule name)
         data[i].id = data[i].GRANULENAME;
@@ -44,6 +44,9 @@ var SearchResults = Backbone.Collection.extend(
           dp = this.get( data[i].id );
         }
       }
+      
+      var end = new Date().getTime();		
+      console.log('Build loop: ' + (end - start));
     },
 
     filter: function() {
@@ -332,6 +335,7 @@ var SearchResultsView = Backbone.View.extend(
     var ur = SearchApp.user.getWidgetRenderer();
     var li="";
     var li_2="";
+    var start = new Date().getTime();		
     this.collection.each( function( model, i, l ) {   
           var d = model.toJSON();
         
@@ -353,6 +357,8 @@ var SearchResultsView = Backbone.View.extend(
       li_2 += li;
       }, this);
 
+      var end = new Date().getTime();		
+      console.log('build html loop: ' + (end - start));
       var tableHtml =
               '<thead>'+
                 '<tr>'+
@@ -368,6 +374,7 @@ var SearchResultsView = Backbone.View.extend(
     
 
     // Enhance the table using a DataTable object. 
+    start = new Date().getTime();		
      this.dataTable = $('#searchResults').dataTable(
       { 
            "oLanguage": {
@@ -391,6 +398,8 @@ var SearchResultsView = Backbone.View.extend(
 
            }
     });
+    end = new Date().getTime();		
+    console.log('build datatable: ' + (end - start));
 
     SearchApp.dataTable = this.dataTable;
 
