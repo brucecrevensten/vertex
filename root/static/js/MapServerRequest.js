@@ -206,7 +206,7 @@ var StateInflator = Backbone.Model.extend({
           interpolationMethodCollection.add(interpolation);
         }
 
-        // Construct the Interpolation Methods
+        // Construct the Projection Methods
         var projectionCollection = new Backbone.Collection();
         for (projectionIndex in ds["Projection"]) {
           var projection = new ProjectionM({name: ds["Projection"][projectionIndex]});
@@ -222,6 +222,10 @@ var StateInflator = Backbone.Model.extend({
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
             projection: projectionCollection,
+            boundsLeft: ds["boundsLeft"],
+            boundsBottom: ds["boundsBottom"],
+            boundsRight: ds["boundsRight"],
+            boundsTop: ds["boundsTop"]
         });
         dataSetDict[dataSetName] = dataSetM;
       }
@@ -432,6 +436,10 @@ var StateInflator = Backbone.Model.extend({
                   try {
                     var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
                     var layerVal = $(selectedElement).val();
+                    var boundsLeft = this.menuModel.get("boundsLeft");
+                    var boundsBottom = this.menuModel.get("boundsBottom");
+                    var boundsRight = this.menuModel.get("boundsRight");
+                    var boundsTop = this.menuModel.get("boundsTop");
                     this.model.set({"selected":layerVal},{silent:true});
                     
                     // iterate through all layers and destroy them
@@ -461,7 +469,8 @@ var StateInflator = Backbone.Model.extend({
                       window.map.addLayer(newLayer);
 
                       window.map.zoomToMaxExtent();
-                      var newLayerExtent = new OpenLayers.Bounds(121.00088135454, -19.99984094179, 147.501182236066, -9.99937503771669);
+                      // var newLayerExtent = new OpenLayers.Bounds(121.00088135454, -19.99984094179, 147.501182236066, -9.99937503771669);
+                      var newLayerExtent = new OpenLayers.Bounds(boundsLeft, boundsBottom, boundsRight, boundsTop);
                       window.map.zoomToExtent(newLayerExtent);
 
                       // map.setBaseLayer(worldMap); 
