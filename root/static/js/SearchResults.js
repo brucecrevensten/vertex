@@ -54,8 +54,6 @@ var SearchResults = Backbone.Collection.extend(
 
     fetchSearchResults: function(searchURL, searchData, callback) {
       
-      this.data = {}; // flush previous result set
-
 	   var xhr = $.ajax(
         {
           type: "POST",
@@ -68,16 +66,14 @@ var SearchResults = Backbone.Collection.extend(
           if (callback != null) {
               callback(); // this is for using sinon spys in unit tests
            }
-            this.data = data;
-			     
             this.filteredProductCount = undefined; // Reset filtered state
-            this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
+            this.unfilteredProductCount = _.uniq( _.pluck( data, 'GRANULENAME' )).length;
 
             // Fetch distinct platforms that were found
-            this.platforms = _.uniq( _.pluck( this.data, 'PLATFORM') );
-            this.procTypes = _.uniq( _.pluck( this.data, 'PROCESSINGTYPE') );
+            this.platforms = _.uniq( _.pluck( data, 'PLATFORM') );
+            this.procTypes = _.uniq( _.pluck( data, 'PROCESSINGTYPE') );
       
-            this.build(this.data);
+            this.build(data);
 
             this.trigger('refresh');
 			    
