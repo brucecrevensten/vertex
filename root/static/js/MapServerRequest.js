@@ -473,6 +473,7 @@ var StateInflator = Backbone.Model.extend({
                     var newLayerExtent = new OpenLayers.Bounds(boundsLeft, boundsBottom, boundsRight, boundsTop);
                     window.map.zoomToExtent(newLayerExtent);
 
+
                     // map.setBaseLayer(worldMap); 
                     // map.setBaseLayer(newLayer); 
       
