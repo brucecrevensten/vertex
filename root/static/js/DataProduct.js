@@ -22,9 +22,9 @@ var DataProductFile = Backbone.Model.extend( {
       var obj = SearchApp.searchResults.get(this.get('GRANULENAME'));
       this.set( {
          'acquisitionDateText': SearchApp.searchResults.get(this.get('GRANULENAME')).get('ACQUISITIONDATE').substring(0,10),
-         'thumbnail': obj.get('THUMBNAIL'),
-         'id': obj.get('id'),
-         'platform': obj.get('PLATFORM'),
+         'THUMBNAIL': obj.get('THUMBNAIL'),
+         'id': this.get('product_file_id'),
+         'PLATFORM': obj.get('PLATFORM'),
          'sizeText': AsfUtility.bytesToString(this.get('BYTES'))
       });
     }
@@ -191,13 +191,10 @@ window.showInlineProductFiles = function(event, product) {
       var file_id = file.GRANULENAME + '_' + file.PROCESSINGTYPE;
 
       var lit = $('<li/>');
-      var btn = $('<button>Add to queue...</button>', {
-        'class': 'tool_enqueuer',
-        'title': 'Add to download queue',
-        'id': "b_"+ id
-      }).attr('product_id', id)
-      .attr('product_file_id', file_id)
-      .bind( 'click', function(event) {
+      var btn = $('<button>Add to queue...</button>')
+        .attr('product_id', id).attr('id', 'b_' + file_id)
+        .attr('product_file_id', file_id)
+        .bind( 'click', function(event) {
           event.stopPropagation();
           var el = $(this);
           if ( el.prop('disabled') == 'disabled' ) { return false; }

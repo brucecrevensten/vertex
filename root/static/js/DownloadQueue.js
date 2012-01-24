@@ -5,7 +5,7 @@ var DownloadQueue = Backbone.Collection.extend(
 
   getSizeInBytes:function() {
     return _.reduce(
-      this.pluck("bytes"),
+      this.pluck("BYTES"),
       function(memo, size) {
         return memo + size;
       },
@@ -196,16 +196,15 @@ var DownloadQueueView = Backbone.View.extend(
       
       this.collection.each( function(m) {
         var row = m.toJSON();
-        row.thumbnail = SearchApp.searchResults.get(m.get('GRANULENAME')).get('THUMBNAIL');
         table = table + _.template('\
 <tr>\
 <td style="vertical-align: middle; line-height: 30px;">\
-<img style="height: 30px; float: left;" src="<%= thumbnail %>" title="<%= GRANULENAME %>" />\
+<img style="height: 30px; float: left;" src="<%= THUMBNAIL %>" title="<%= GRANULENAME %>" />\
 <span style="height: 30px; display: inline-block;" vertical-align: middle" ><%= FILENAME %></span>\
 </div>\
 </td>\
-<td><%= processingTypeDisplay %></td>\
-<td><%= platform %></td>\
+<td><%= PROCESSINGTYPEDISPLAY %></td>\
+<td><%= PLATFORM %></td>\
 <td><%= acquisitionDateText %></td>\
 <td><%= sizeText %></td>\
 <td>\
@@ -305,9 +304,9 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
 				}
 			
 			}else {
-        		e.data.collection.remove( SearchApp.searchResults.get( $(e.currentTarget).attr('product_id') ).files.get( $(e.currentTarget).attr('product_file_id') ));
+        		e.data.collection.remove($(this).attr('product_file_id'));
 				e.data.collection.trigger('queue:remove');
-				
+			    	
 					$("#b_"+$(e.currentTarget).attr('product_file_id')).toggleClass('tool-dequeue');
 					$("#b_"+$(e.currentTarget).attr('product_file_id')).prop('selected','false');
 					$("#b_"+$(e.currentTarget).attr('product_file_id')).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
