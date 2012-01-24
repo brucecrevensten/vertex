@@ -214,6 +214,7 @@ window.showInlineProductFiles = function(event, product) {
             }
             el.toggleClass('tool-dequeue');
             el.prop('selected','selected');
+            SearchApp.downloadQueue.remove(el.attr('product_file_id'));
             SearchApp.downloadQueue.add(_.find(SearchApp.searchResults.get(
               el.attr('product_id')).get('FILES'), function(obj) {
                 return((obj.product_file_id === el.attr('product_file_id')));
