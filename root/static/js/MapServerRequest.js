@@ -241,9 +241,19 @@ var StateInflator = Backbone.Model.extend({
 
         var boxlayer;
 
-        var map = new OpenLayers.Map('map', { 
-          projection: "EPSG:4326",            // FIXME: pull from json return?
-        });
+        var options = {
+            projection: new OpenLayers.Projection("EPSG:900913"),
+            units: "m",
+            maxResolution: 156543.0339,
+            maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
+                                             20037508.34, 20037508.34)
+        };
+
+        map = new OpenLayers.Map('map', options);
+
+        // var map = new OpenLayers.Map('map', { 
+        //   projection: "EPSG:4326",            // FIXME: pull from json return?
+        // });
 
         // used to display bounding box control
         var control = new OpenLayers.Control();
@@ -448,22 +458,42 @@ var StateInflator = Backbone.Model.extend({
                       }
                     }
                     
-                    // create the base layer  
-                    var worldMap = new OpenLayers.Layer.WMS(
-                      "OpenLayers WMS",
-                      "http://vmap0.tiles.osgeo.org/wms/vmap0",
-                      {'layers':'basic'},
-                      {isBaseLayer: true} );
-                    window.map.addLayer(worldMap);
+                    // // create the base layer  
+                    // var worldMap = new OpenLayers.Layer.WMS(
+                    //   "OpenLayers WMS",
+                    //   "http://vmap0.tiles.osgeo.org/wms/vmap0",
+                    //   {'layers':'basic'},
+                    //   {isBaseLayer: true} );
+                    // window.map.addLayer(worldMap);
                     
+
+                    // create Google Mercator layers
+                    var gmap = new OpenLayers.Layer.Google(
+                        "Google Streets",
+                        {'sphericalMercator': true,
+                         'maxExtent': new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34)
+                        }
+                    );
+                    gmap.setIsBaseLayer(true);
+                    window.map.addLayer(gmap);
+
                     // create a new layer which will be displayed on top of the base layer
                     var newLayer = new OpenLayers.Layer.WMS(
                                           layerVal,
                                           wmsUrl,
-                                          {layers: layerVal, CRS: "EPSG:4326", transparent: "true"},
-                                          {isBaseLayer: false}  
+                                          {layers: layerVal, CRS: "EPSG:4326", transparent: "true"}
                                     );
+                    newLayer.setIsBaseLayer(false);
                     window.map.addLayer(newLayer);
+
+
+                    // // create WMS layer
+                    // var wms = new OpenLayers.Layer.WMS(
+                    //     "World Map",
+                    //     "http://vmap0.tiles.osgeo.org/wms/vmap0",
+                    //     {'layers': 'basic', 'transparent': true}
+                    // );
+                    // window.map.addLayer(wms);
 
                     // if the boxlayer exists then put it on top
                     if (boxlayer != null) {map.setLayerIndex(boxlayer, map.layers.length);}
@@ -471,7 +501,9 @@ var StateInflator = Backbone.Model.extend({
 
                     // get the bounds of the new layer (not the base layer) and zoom to the new layer
                     var newLayerExtent = new OpenLayers.Bounds(boundsLeft, boundsBottom, boundsRight, boundsTop);
+                    newLayerExtent.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection('EPSG:900913'));
                     window.map.zoomToExtent(newLayerExtent);
+                    window.map.redraw();
 
 
                     // map.setBaseLayer(worldMap); 
