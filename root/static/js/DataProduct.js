@@ -62,11 +62,11 @@ var DataProductFilesView = Backbone.View.extend( {
     }
 
     var l = jQuery('<ul/>', { 'class': 'downloads'});
-    this.collection.each( function(el, i, list) {
-
-      e = el.toJSON();
+    _.each(this.options.files, function(el, i, list) {
       // Skip if type = BROWSE
-      if( 'BROWSE' == e.processingType ) { return; }
+      if( 'BROWSE' == el.PROCESSINGTYPE ) { return; }
+
+      el.sizeText = AsfUtility.bytesToString(el.BYTES);
    
       var li = jQuery('<li/>');
       if(disabled) {
@@ -77,17 +77,17 @@ var DataProductFilesView = Backbone.View.extend( {
           'icons': {
               'primary': "ui-icon-circle-arrow-s"
             }, 
-            label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) }) );
+            label: _.template("&nbsp;&nbsp;&nbsp;<%= PROCESSINGTYPEDISPLAY %> (<%= sizeText %>)", el) }) );
       } else {
         li.append( jQuery('<a/>', {
-          'href': e.url,
+          'href': el.URL,
           'class': 'tool_download',
           'target': '_blank',
         }).button( {
           'icons': {
             'primary': "ui-icon-circle-arrow-s"
           },
-          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", e) 
+          label: _.template("&nbsp;&nbsp;&nbsp;<%= PROCESSINGTYPEDISPLAY %> (<%= sizeText %>)", el) 
         }).click(function() {
           if(typeof ntptEventTag == 'function') {
             ntptEventTag('ev=downloadProduct');
@@ -99,26 +99,32 @@ var DataProductFilesView = Backbone.View.extend( {
       li.append( $('<button>Add to queue</button>', {
         'class': 'tool_enqueuer',
         'title': 'Add to download queue'
-      }).attr('product_id', e.productId).attr('product_file_id', e.id).click( function(e) {
-        if ( $(this).prop('disabled') == 'disabled' ) { return false; }
-        if ( $(this).prop('selected') == 'selected' ) {
+      }).attr('product_id', el.GRANULENAME).attr('product_file_id', el.product_file_id).click( function(e) {
+        var el = $(this);
+        if ( el.prop('disabled') == 'disabled' ) { return false; }
+        if ( el.prop('selected') == 'selected' ) {
           if(typeof ntptEventTag == 'function') {
-            ntptDropPair('product_file_id', $(this).attr('product_file_id'));
+            ntptDropPair('product_file_id', el.attr('product_file_id'));
             ntptEventTag('ev=removeProductFromQueue');
           }
-          $(this).toggleClass('tool-dequeue');
-          $(this).prop('selected','false');
-          SearchApp.downloadQueue.remove( SearchApp.searchResults.get( $(this).attr('product_id') ).files.get( $(this).attr('product_file_id') ));
-          $(this).button( "option", "icons", { primary: "ui-icon-circle-plus" } );
+          el.toggleClass('tool-dequeue');
+          el.prop('selected','false');
+          SearchApp.downloadQueue.remove(el.attr('product_file_id'));
+          el.button( "option", "icons", { primary: "ui-icon-circle-plus" } );
         } else {
           if(typeof ntptEventTag == 'function') {
-            ntptAddPair('product_file_id', $(this).attr('product_file_id'));
+            ntptAddPair('product_file_id', el.attr('product_file_id'));
             ntptEventTag('ev=addProductToQueue');
           }
-          $(this).toggleClass('tool-dequeue');
-          $(this).prop('selected','selected');
-          SearchApp.downloadQueue.add( SearchApp.searchResults.get( $(this).attr('product_id')).files.get( $(this).attr('product_file_id')) );
-          $(this).button( "option", "icons", { primary: "ui-icon-circle-minus" } );
+          el.toggleClass('tool-dequeue');
+          el.prop('selected','selected');
+          SearchApp.downloadQueue.remove(el.attr('product_file_id'));
+          SearchApp.downloadQueue.add(_.find(SearchApp.searchResults.get(
+            el.attr('product_id')).get('FILES'), function(obj) {
+              return((obj.product_file_id === el.attr('product_file_id')));
+            }
+          ));
+          el.button( "option", "icons", { primary: "ui-icon-circle-minus" } );
         }
       }).button(
         {

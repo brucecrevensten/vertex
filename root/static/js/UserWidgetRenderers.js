@@ -76,9 +76,9 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
 	},
 	ppFileList: function( m ) {
     if ( 'UAVSAR' == m.get('PLATFORM') ) {
-      return new DataProductFilesView( { collection: m.files } ).renderForProfile();
+      return new DataProductFilesView( { files: m.get('FILES') } ).renderForProfile();
     } else {
-      return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { collection: m.files } ).renderForProfile( { 'disabled': true }));
+      return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { files: m.get('FILES') } ).renderForProfile( { 'disabled': true }));
     }
   },
   // This code is in the critical rendering loop -- avoid _.template()
