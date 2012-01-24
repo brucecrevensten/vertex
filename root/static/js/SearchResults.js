@@ -32,19 +32,8 @@ var SearchResults = Backbone.Collection.extend(
       // when we reset this main collection.
       this.reset();
       var dp;
-      var start = new Date().getTime();		
-      for ( var i in data ) {
-        // Munge this data to get a local true ID (granule name)
-        data[i].id = data[i].GRANULENAME;
-        
-        // Create the DataProduct if it doesn't already exist
-        dp = this.get( data[i].id );
-        if( _.isUndefined(dp) ) {
-          this.add( data[i], { 'silent' : true} );
-          dp = this.get( data[i].id );
-        }
-      }
-      
+      var start = new Date().getTime();
+      this.add(data, {'silent': true});
       var end = new Date().getTime();		
       console.log('Build loop: ' + (end - start));
     },
@@ -70,8 +59,8 @@ var SearchResults = Backbone.Collection.extend(
             this.unfilteredProductCount = _.uniq( _.pluck( data, 'GRANULENAME' )).length;
 
             // Fetch distinct platforms that were found
-            this.platforms = _.uniq( _.pluck( data, 'PLATFORM') );
-            this.procTypes = _.uniq( _.pluck( data, 'PROCESSINGTYPE') );
+            this.platforms = _.uniq(_.pluck(data, 'PLATFORM'));
+            this.procTypes = _.uniq(_.pluck(data, 'PROCESSINGTYPE'));
       
             this.build(data);
 

@@ -94,6 +94,7 @@ sub doQuery {
         'FRAMENUMBER'         => $row->{'FRAMENUMBER'},
         'GRANULENAME'         => $row->{'GRANULENAME'},
         'GRANULETYPE'         => $row->{'GRANULETYPE'},
+        'id'                  => $row->{'GRANULENAME'},
         'MISSIONNAME'         => $row->{'MISSIONNAME'},
         'NEARENDLAT'          => $row->{'NEARENDLAT'},
         'NEARENDLON'          => $row->{'NEARENDLON'},
@@ -106,23 +107,25 @@ sub doQuery {
         'POLARIZATION'        => $row->{'POLARIZATION'},
         'PRODUCTNAME'         => $row->{'PRODUCTNAME'},
         'SENSOR'              => $row->{'SENSOR'},
+        'THUMBNAIL'           => $row->{'THUMBNAIL'},
       };
       $res->{$g}->{'FILES'} = [];
     }
     push(@{$res->{$g}->{'FILES'}}, {
-      'GRANULENAME'         => $row->{'GRANULENAME'},
-      'PROCESSINGDATE'      => $row->{'PROCESSINGDATE'},
-      'PROCESSINGTYPE' => $row->{'PROCESSINGTYPE'},
-      'PROCESSINGTYPEDISPLAY' => $row->{'PROCESSINGTYPEDISPLAY'},
+      'product_file_id'           => $row->{'GRANULENAME'} . '_' . $row->{'PROCESSINGTYPE'},
+      'GRANULENAME'               => $row->{'GRANULENAME'},
+      'PROCESSINGDATE'            => $row->{'PROCESSINGDATE'},
+      'PROCESSINGTYPE'            => $row->{'PROCESSINGTYPE'},
+      'PROCESSINGTYPEDISPLAY'     => $row->{'PROCESSINGTYPEDISPLAY'},
       'PROCESSINGTYPEDESCRIPTION' => $row->{'PROCESSINGTYPEDESCRIPTION'},
-      'PROCESSINGLEVEL' => $row->{'PROCESSINGLEVEL'},
-      'URL' => $row->{'URL'},
-      'BYTES' => $row->{'BYTES'} + 0,
-      'MD5SUM' => $row->{'MD5SUM'},
+      'PROCESSINGLEVEL'           => $row->{'PROCESSINGLEVEL'},
+      'URL'                       => $row->{'URL'},
+      'BYTES'                     => $row->{'BYTES'} + 0,
+      'MD5SUM'                    => $row->{'MD5SUM'},
     });
 
   }
-  return(JSON::XS->new->utf8->encode($res));
+  return(JSON::XS->new->utf8->encode([@{$res}{keys %{$res}}]));
 }
 
 1;
