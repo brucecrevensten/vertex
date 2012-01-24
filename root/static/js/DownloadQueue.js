@@ -195,11 +195,13 @@ var DownloadQueueView = Backbone.View.extend(
     if( 0 < this.collection.length ) {
       
       this.collection.each( function(m) {
+        var row = m.toJSON();
+        row.thumbnail = SearchApp.searchResults.get(m.get('GRANULENAME')).get('THUMBNAIL');
         table = table + _.template('\
 <tr>\
 <td style="vertical-align: middle; line-height: 30px;">\
-<img style="height: 30px; float: left;" src="<%= thumbnail %>" title="<%= productId %>" />\
-<span style="height: 30px; display: inline-block;" vertical-align: middle" ><%= filename %></span>\
+<img style="height: 30px; float: left;" src="<%= thumbnail %>" title="<%= GRANULENAME %>" />\
+<span style="height: 30px; display: inline-block;" vertical-align: middle" ><%= FILENAME %></span>\
 </div>\
 </td>\
 <td><%= processingTypeDisplay %></td>\
@@ -207,11 +209,11 @@ var DownloadQueueView = Backbone.View.extend(
 <td><%= acquisitionDateText %></td>\
 <td><%= sizeText %></td>\
 <td>\
-<a product_file_id="<%= id %>" product_id="<%= productId %>" class="remove">Remove from queue</a>\
-<input type="hidden" name="products[]" value="<%= filename %>" />\
+<a product_file_id="<%= id %>" product_id="<%= GRANULENAME %>" class="remove">Remove from queue</a>\
+<input type="hidden" name="products[]" value="<%= FILENAME %>" />\
 </td>\
 </tr>\
-', m.toJSON());
+', row);
       });
 
       var pageTemplate = { 

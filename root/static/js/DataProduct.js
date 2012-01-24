@@ -2,7 +2,7 @@ var DataProductFile = Backbone.Model.extend( {
  /* Structure of this model:
   {
           thumbnail: data[i].THUMBNAIL,
-          productId: data[i].GRANULENAME,
+          granulename: data[i].GRANULENAME,
           id: data[i].ID,
           processingType: data[i].PROCESSINGTYPE,
           processingTypeDisplay: data[i].PROCESSINGTYPEDISPLAY,
@@ -18,9 +18,16 @@ var DataProductFile = Backbone.Model.extend( {
   }
  */
   initialize: function() {
-    this.set( {
-       'acquisitionDateText': $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('acquisitionDate').substring(0,10)))
-    });
+    if(window.SearchApp && SearchApp.searchResults.get(this.get('GRANULENAME'))) {
+      var obj = SearchApp.searchResults.get(this.get('GRANULENAME'));
+      this.set( {
+         'acquisitionDateText': SearchApp.searchResults.get(this.get('GRANULENAME')).get('ACQUISITIONDATE').substring(0,10),
+         'thumbnail': obj.get('THUMBNAIL'),
+         'id': obj.get('id'),
+         'platform': obj.get('PLATFORM'),
+         'sizeText': AsfUtility.bytesToString(this.get('BYTES'))
+      });
+    }
   }
 } );
 
@@ -181,6 +188,7 @@ window.showInlineProductFiles = function(event, product) {
       if( 'BROWSE' == file.PROCESSINGTYPE) { return; }
 
       var id = file.GRANULENAME;
+      var file_id = file.GRANULENAME + '_' + file.PROCESSINGTYPE;
 
       var lit = $('<li/>');
       var btn = $('<button>Add to queue...</button>', {
@@ -188,7 +196,7 @@ window.showInlineProductFiles = function(event, product) {
         'title': 'Add to download queue',
         'id': "b_"+ id
       }).attr('product_id', id)
-      .attr('product_file_id', id)
+      .attr('product_file_id', file_id)
       .bind( 'click', function(event) {
           event.stopPropagation();
           var el = $(this);
@@ -200,7 +208,11 @@ window.showInlineProductFiles = function(event, product) {
             }
             el.toggleClass('tool-dequeue');
             el.prop('selected','false');
-            SearchApp.downloadQueue.remove( SearchApp.searchResults.get( el.attr('product_id') ).files.get( el.attr('product_file_id') ));
+            SearchApp.downloadQueue.remove(_.find(SearchApp.searchResults.get(
+              el.attr('product_id')).get('FILES'), function(obj) {
+                return((obj.product_file_id === el.attr('product_file_id')));
+              }
+            ));
             el.button( "option", "icons", { primary: "ui-icon-circle-plus" } );
           } else {
             if(typeof ntptEventTag == 'function') {
@@ -209,7 +221,11 @@ window.showInlineProductFiles = function(event, product) {
             }
             el.toggleClass('tool-dequeue');
             el.prop('selected','selected');
-            SearchApp.downloadQueue.add( SearchApp.searchResults.get( el.attr('product_id')).files.get( el.attr('product_file_id')) );
+            SearchApp.downloadQueue.add(_.find(SearchApp.searchResults.get(
+              el.attr('product_id')).get('FILES'), function(obj) {
+                return((obj.product_file_id === el.attr('product_file_id')));
+              }
+            ));
             el.button( "option", "icons", { primary: "ui-icon-circle-minus" } );
           }
         }

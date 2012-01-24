@@ -112,6 +112,7 @@ sub doQuery {
       $res->{$g}->{'FILES'} = [];
     }
     push(@{$res->{$g}->{'FILES'}}, {
+      'FILENAME'                  => $row->{'FILENAME'},
       'product_file_id'           => $row->{'GRANULENAME'} . '_' . $row->{'PROCESSINGTYPE'},
       'GRANULENAME'               => $row->{'GRANULENAME'},
       'PROCESSINGDATE'            => $row->{'PROCESSINGDATE'},
