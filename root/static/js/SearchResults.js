@@ -171,23 +171,6 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this);
-        this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
-           if (this.dataTable != null)  {
-             _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {
-                if (h[1] == 1) {
-                  if(this.mo[$(h[0]).find("div").attr("product_id")]) {
-                    this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
-                  }
-                } else {
-                  if(this.mo[$(h[0]).find("div").attr("product_id")]) {
-                    this.mo[$(h[0]).find("div").attr("product_id")].setMap(null);
-                  }
-                }
-                h[1]=0;
-
-              },this));
-          }
-    },this));
 
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
@@ -344,15 +327,14 @@ var SearchResultsView = Backbone.View.extend(
           "sScrollY": "500px",
           "iDisplayLength": 1000, // default number of rows per page
           "bLengthChange": false ,// do not allow users to change the default page length
-          //"fnDrawCallback": jQuery.proxy(function() {
-          //    this.trigger("DrawPolygonsOnMap");
-          //  },this),
-          "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
+          "fnPreDrawCallback": this.clearOverlays,
+          "fnRowCallback": jQuery.proxy(function(nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
           $(nRow).attr('id', 'result_row_' + aData.id);
           $(nRow).attr('product_id', aData.id);
           $(nRow).attr('onclick', 'window.showProductProfile(\''+aData.id+'\'); return false;');
+          this.renderOnMap(aData);
           return(nRow);
-          },
+          }, this),
           "bDeferRender": true
     });
     end = new Date().getTime();		
@@ -399,45 +381,25 @@ var SearchResultsView = Backbone.View.extend(
     $(this.el).height( 575 - ( $('#active-filters').outerHeight() + 31 )); // 31px = fixed height of ProcTypeButton
   },
 
-  renderOnMap: function() {
-    this.bounds = new google.maps.LatLngBounds();
-    var changeBounds=false; 
-
-    _.each(SearchApp.dataTable.fnGetData(), jQuery.proxy(function(h) {
-          var dp = this.collection.get( $(h[0]).find("div").attr("product_id") );
-        if (!dp.get("filtered")) {
-          changeBounds=true; 
-          e = dp.toJSON();
-          
-          this.bounds.extend(new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON));
-          this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
-          this.bounds.extend(new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON));
-          this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
-
-          this.mo[ e.id ] = new google.maps.Polygon({
-              paths: new Array(
-                new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON),
-                new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON),
-                new google.maps.LatLng(e.FARENDLAT, e.FARENDLON),
-                new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
-              ),
-              fillColor: '#777777',
-              fillOpacity: this.default_tile_opacity,
-              strokeColor: '#333333',
-              strokeOpacity: 1,
-              strokeWeight: 2,
-              zIndex: 1000,
-              clickable: true
-            });
-          this.mo[ e.id ].setMap(searchMap);
-      }
-
-      }, this));
-
-      if (changeBounds) {
-        searchMap.fitBounds( this.bounds );
-      }
+  renderOnMap: function(aData) {
+    this.mo[aData.id] = new google.maps.Polygon({
+      paths: new Array(
+        new google.maps.LatLng(aData.NEARSTARTLAT, aData.NEARSTARTLON),
+        new google.maps.LatLng(aData.FARSTARTLAT, aData.FARSTARTLON),
+        new google.maps.LatLng(aData.FARENDLAT, aData.FARENDLON),
+        new google.maps.LatLng(aData.NEARENDLAT, aData.NEARENDLON)
+      ),
+      fillColor: '#777777',
+      fillOpacity: this.default_tile_opacity,
+      strokeColor: '#333333',
+      strokeOpacity: 1,
+      strokeWeight: 2,
+      zIndex: 1000,
+      clickable: true
+    });
+    this.mo[ aData.id ].setMap(searchMap);
   },
+
   clearOverlays: function() {
 
     if( this.activePoly ) {
@@ -455,7 +417,6 @@ var SearchResultsView = Backbone.View.extend(
     });
     this.mo = {}; 
     this.activePoly = null;
-
   },
   refreshMap: function() {
     this.clearOverlays();
