@@ -23,7 +23,7 @@ $(function() {
 					        "boundsTop": -9.99937503771669
 					    },
 					    "South East Asia": {
-					        "layers": ["sea-2b","sea-2c","sea-2d"],
+					        "layers": ["SEA"],
 					        "wcsUrl": "http://mapserver.daac.asf.alaska.edu/wcs/GRFMP/se-asia?SERVICE=WCS&VERSION=1.0.0&REQUEST=GetCoverage&",
 					        "wmsUrl": "http://mapserver.daac.asf.alaska.edu/wms/GRFMP/se-asia",
 					        "ImageFormat": ["jpeg", "GTiff"],
