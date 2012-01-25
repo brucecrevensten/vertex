@@ -335,7 +335,8 @@ var SearchResultsView = Backbone.View.extend(
           { 'fnRender': this.dtCell, 'aTargets': [0], 'sClass': 'productRow' },
         ],
            "oLanguage": {
-            "sSearch": "Find"
+            "sSearch": "Find",
+            "sProcessing": "Processing..."
            },
           "bProcessing": true,
           "bAutoWidth": true,
@@ -343,14 +344,15 @@ var SearchResultsView = Backbone.View.extend(
           "sScrollY": "500px",
           "iDisplayLength": 1000, // default number of rows per page
           "bLengthChange": false ,// do not allow users to change the default page length
-          "fnDrawCallback": jQuery.proxy(function() {
-              this.trigger("DrawPolygonsOnMap");
-            },this),
-           "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
-              aData[1]=1;
-              return nRow;
-
-           },
+          //"fnDrawCallback": jQuery.proxy(function() {
+          //    this.trigger("DrawPolygonsOnMap");
+          //  },this),
+          "fnRowCallback": function(nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
+          $(nRow).attr('id', 'result_row_' + aData.id);
+          $(nRow).attr('product_id', aData.id);
+          $(nRow).attr('onclick', 'window.showProductProfile(\''+aData.id+'\'); return false;');
+          return(nRow);
+          },
           "bDeferRender": true
     });
     end = new Date().getTime();		
