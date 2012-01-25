@@ -207,8 +207,29 @@ var SearchResultsView = Backbone.View.extend(
 
     this.showBeforeSearchMessage();
     this.dtCellTemplate = _.template('\
+      <img title="<%= GRANULENAME %>" src="<%= THUMBNAIL %>" />\
+      <% if("ALOS" === PLATFORM) { %>\
+        <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> PALSAR\
+          <span class="beam"><%= BEAMMODETYPE %></span>\
+          <span class="date"><%= acquisitionDateText %></span>\
+        <\h4>\
+        <p>Frame <%= FRAMENUMBER %>, Path <%= PATHNUMBER %></p>\
+        <p>Off-Nadir <%= OFFNADIRANGLE %>&deg;</p>\
+      <% } else if("UAVSAR" == PLATFORM) { %>\
+        <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> \
+          <span class="beam"><%= BEAMMODETYPE %></span>\
+          <span class="date"><%= acquisitionDateText %></span>\
+        <\h4>\
+        <p><%= MISSIONNAME %></p>\
+      <% } else { %>\
+        <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> \
+          <span class="beam"><%= BEAMMODETYPE %></span>\
+          <span class="date"><%= acquisitionDateText %></span>\
+        <\h4>\
+        <p>Frame <%= FRAMENUMBER %>, Path <%= ORBIT %></p>\
+      <% } %>\
       <div class="productRowTools">\
-      <button title="More information&hellip;" role="button" class="ui--button ui-widget ui-state-default ui-corner-all ui-button-icon-only">\
+      <button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">\
       <span class="ui-button-icon-primary ui-icon ui-icon-help"></span>\
       <span class="ui-button-text">More information&hellip;</span>\
       </button>\
@@ -291,27 +312,6 @@ var SearchResultsView = Backbone.View.extend(
     this.clearOverlays();
   },
 
-  getPlatformRowTemplate: function( p ) {
-    switch(p) {
-      case 'ALOS':
-        return '\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> PALSAR <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
-  <p>Frame <%= FRAMENUMBER %>, Path <%= PATHNUMBER %></p>\
-  <p>Off-Nadir <%= OFFNADIRANGLE %>&deg;</p>\
-';
-        break;
-      case 'UAVSAR':
-        return '\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
-  <p><%= MISSIONNAME %></p>\
-';
-        break;
-      default: return '\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
-  <p>Frame <%= FRAMENUMBER %>, Orbit <%= ORBIT %></p>\
-';
-    }
-  },
   render: function(args) {
     this.trigger('render');
     this.dataTable = null;
