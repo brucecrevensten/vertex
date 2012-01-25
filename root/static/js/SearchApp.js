@@ -23,7 +23,7 @@ window.SearchAppView = Backbone.View.extend({
     this.filterDictionaryE2 = new Dictionary();
     this.filterDictionaryJ1 = new Dictionary();
 
-    $.fn.dataTableExt.afnFiltering.push(
+    /*$.fn.dataTableExt.afnFiltering.push(
       jQuery.proxy( function( oSettings, aData, iDataIndex ) {
         var h = $(aData[0]);
         var c = h.find("div").attr("product_id"); // might make this faster by providing lookup using iDataIndex
@@ -241,7 +241,7 @@ window.SearchAppView = Backbone.View.extend({
       return returnVal;  
         
       }, this)
-  );
+  );*/
 
 	 $.storage = new $.store();
 

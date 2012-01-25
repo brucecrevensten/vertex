@@ -170,7 +170,7 @@ var SearchResultsView = Backbone.View.extend(
   dataTable: null,
   hasRendered: false,
   initialize: function() {
-    _.bindAll(this, "render");
+    _.bindAll(this);
         this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
            if (this.dataTable != null)  {
              _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {
@@ -206,6 +206,19 @@ var SearchResultsView = Backbone.View.extend(
     this.options.postFilters.bind('refreshMap', this.refreshMap);
 
     this.showBeforeSearchMessage();
+    this.dtCellTemplate = _.template('\
+      <div class="productRowTools">\
+      <button title="More information&hellip;" role="button" class="ui--button ui-widget ui-state-default ui-corner-all ui-button-icon-only">\
+      <span class="ui-button-icon-primary ui-icon ui-icon-help"></span>\
+      <span class="ui-button-text">More information&hellip;</span>\
+      </button>\
+      <div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \'<%= id %>\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="<%= id %>">\
+      <span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>\
+      <span class="ui-button-text">Show files&hellip;</span>\
+      <span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>\
+      </div>\
+      </div>\
+    ');
   },
 
   showBeforeSearchMessage: function() {
@@ -321,6 +334,7 @@ var SearchResultsView = Backbone.View.extend(
     var li="";
     var li_2="";
     var start = new Date().getTime();		
+    /*
     this.collection.each( function( model, i, l ) {   
           var d = model.toJSON();
         
@@ -341,7 +355,7 @@ var SearchResultsView = Backbone.View.extend(
   
       li_2 += li;
       }, this);
-
+*/
       var end = new Date().getTime();		
       console.log('build html loop: ' + (end - start));
       var tableHtml =
@@ -362,14 +376,15 @@ var SearchResultsView = Backbone.View.extend(
     start = new Date().getTime();		
      this.dataTable = $('#searchResults').dataTable(
       { 
+        'aaData': this.collection.toJSON(),
+        'aoColumnDefs': [
+          { 'fnRender': this.dtCell, 'aTargets': [0], 'sClass': 'productRow' },
+        ],
            "oLanguage": {
             "sSearch": "Find"
            },
           "bProcessing": true,
           "bAutoWidth": true,
-          "aoColumns": [
-            {"sWidth": "100%"}
-          ],
           "bDestroy": true,     // destroy old table
           "sScrollY": "500px",
           "iDisplayLength": 1000, // default number of rows per page
@@ -381,7 +396,8 @@ var SearchResultsView = Backbone.View.extend(
               aData[1]=1;
               return nRow;
 
-           }
+           },
+          "bDeferRender": true
     });
     end = new Date().getTime();		
     console.log('build datatable: ' + (end - start));
@@ -393,9 +409,9 @@ var SearchResultsView = Backbone.View.extend(
 
 
     this.showResults();
-    this.clearOverlays();
-    this.renderOnMap();
-    this.resetHeight();
+    //this.clearOverlays();
+    //this.renderOnMap();
+    //this.resetHeight();
 
    
 
@@ -415,6 +431,10 @@ var SearchResultsView = Backbone.View.extend(
     this.trigger('render:finish');
     return this;
 
+  },
+
+  dtCell: function(row) {
+    return(this.dtCellTemplate(row.aData));
   },
 
   resetHeight: function() {
