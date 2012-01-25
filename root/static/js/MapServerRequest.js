@@ -241,6 +241,7 @@ var StateInflator = Backbone.Model.extend({
 
         var boxlayer;
 
+        // setup the option to use the projection for Google maps
         var options = {
             projection: new OpenLayers.Projection("EPSG:900913"),
             units: "m",
@@ -250,10 +251,6 @@ var StateInflator = Backbone.Model.extend({
         };
 
         map = new OpenLayers.Map('map', options);
-
-        // var map = new OpenLayers.Map('map', { 
-        //   projection: "EPSG:4326",            // FIXME: pull from json return?
-        // });
 
         // used to display bounding box control
         var control = new OpenLayers.Control();
@@ -287,8 +284,9 @@ var StateInflator = Backbone.Model.extend({
         });
         map.addControl(control);
 
-        map.addLayers([new OpenLayers.Layer.WMS()]);
+        // map.addLayers([new OpenLayers.Layer.WMS()]);
 
+        // add layer for bounding box and set index so it is the top layer
         boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
         map.addLayer(boxlayer);
         map.setLayerIndex(boxlayer, map.layers.length);
@@ -458,56 +456,37 @@ var StateInflator = Backbone.Model.extend({
                       }
                     }
                     
-                    // // create the base layer  
-                    // var worldMap = new OpenLayers.Layer.WMS(
-                    //   "OpenLayers WMS",
-                    //   "http://vmap0.tiles.osgeo.org/wms/vmap0",
-                    //   {'layers':'basic'},
-                    //   {isBaseLayer: true} );
-                    // window.map.addLayer(worldMap);
-                    
-
                     // create Google Mercator layers
-                    var gmap = new OpenLayers.Layer.Google(
+                    var googleLayer = new OpenLayers.Layer.Google(
                         "Google Streets",
                         {'sphericalMercator': true,
                          'maxExtent': new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34)
                         }
                     );
-                    gmap.setIsBaseLayer(true);
-                    window.map.addLayer(gmap);
+                    googleLayer.setIsBaseLayer(true);
+                    window.map.addLayer(googleLayer);
 
                     // create a new layer which will be displayed on top of the base layer
-                    var newLayer = new OpenLayers.Layer.WMS(
+                    var asfLayer = new OpenLayers.Layer.WMS(
                                           layerVal,
                                           wmsUrl,
                                           {layers: layerVal, CRS: "EPSG:4326", transparent: "true"}
                                     );
-                    newLayer.setIsBaseLayer(false);
-                    window.map.addLayer(newLayer);
+                    asfLayer.setIsBaseLayer(false);
+                    window.map.addLayer(asfLayer);
 
-
-                    // // create WMS layer
-                    // var wms = new OpenLayers.Layer.WMS(
-                    //     "World Map",
-                    //     "http://vmap0.tiles.osgeo.org/wms/vmap0",
-                    //     {'layers': 'basic', 'transparent': true}
-                    // );
-                    // window.map.addLayer(wms);
+                    // map.setBaseLayer(googleLayer); 
 
                     // if the boxlayer exists then put it on top
                     if (boxlayer != null) {map.setLayerIndex(boxlayer, map.layers.length);}
 
-
                     // get the bounds of the new layer (not the base layer) and zoom to the new layer
-                    var newLayerExtent = new OpenLayers.Bounds(boundsLeft, boundsBottom, boundsRight, boundsTop);
-                    newLayerExtent.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection('EPSG:900913'));
-                    window.map.zoomToExtent(newLayerExtent);
+                    var asfLayerExtent = new OpenLayers.Bounds(boundsLeft, boundsBottom, boundsRight, boundsTop);
+                    asfLayerExtent.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection('EPSG:900913'));
+                    window.map.zoomToExtent(asfLayerExtent);
+                    googleLayer.refresh();
+                    asfLayer.refresh();
                     window.map.redraw();
-
-
-                    // map.setBaseLayer(worldMap); 
-                    // map.setBaseLayer(newLayer); 
       
                 } catch(e){
                 }
