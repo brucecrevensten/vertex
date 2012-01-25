@@ -296,24 +296,22 @@ var SearchResultsView = Backbone.View.extend(
   render: function(args) {
     this.trigger('render');
     this.dataTable = null;
-   
 
 	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
       this.clearOverlays();
-	  if (args != "authSuccess") {
+      if (args != "authSuccess") {
       	this.showNoResults();
   	  }
-	  return this;
+      return this;
     }
 
-    // Enhance the table using a DataTable object. 
     start = new Date().getTime();		
      this.dataTable = $('#searchResults').dataTable(
       { 
         'aaData': this.collection.toJSON(),
         'aoColumnDefs': [
-          { 'fnRender': this.dtCell, 'aTargets': [0], 'sClass': 'productRow' },
+          { 'fnRender': this.dtCell, 'aTargets': [0] },
         ],
            "oLanguage": {
             "sSearch": "Find",
@@ -328,11 +326,12 @@ var SearchResultsView = Backbone.View.extend(
           "fnPreDrawCallback": this.clearOverlays,
           "fnDrawCallback": this.setMapBounds,
           "fnRowCallback": jQuery.proxy(function(nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
-          $(nRow).attr('id', 'result_row_' + aData.id);
-          $(nRow).attr('product_id', aData.id);
-          $(nRow).attr('onclick', 'window.showProductProfile(\''+aData.id+'\'); return false;');
-          this.renderOnMap(aData);
-          return(nRow);
+            $(nRow).attr('id', 'result_row_' + aData.id);
+            $(nRow).attr('product_id', aData.id);
+            $(nRow).addClass('productRow');
+            $(nRow).attr('onclick', 'window.showProductProfile(\''+aData.id+'\'); return false;');
+            this.renderOnMap(aData);
+            return(nRow);
           }, this),
           "bDeferRender": true
     });
