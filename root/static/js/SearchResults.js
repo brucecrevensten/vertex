@@ -171,18 +171,15 @@ var SearchResultsView = Backbone.View.extend(
   hasRendered: false,
   initialize: function() {
     _.bindAll(this);
-
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
-
     this.default_tile_opacity=0.2;
-   
- 	this.model.bind('authSuccess', jQuery.proxy(function() {
-		this.render('authSuccess');
-	},this)
-	);
+    this.model.bind('authSuccess', jQuery.proxy(function() {
+      this.render('authSuccess');
+    },this));
+    this.mapBounds = new google.maps.LatLngBounds();
 
     // Observe changes to the post-filters
     this.options.postFilters.bind('change', this.render);
@@ -329,6 +326,7 @@ var SearchResultsView = Backbone.View.extend(
           "iDisplayLength": 1000, // default number of rows per page
           "bLengthChange": false ,// do not allow users to change the default page length
           "fnPreDrawCallback": this.clearOverlays,
+          "fnDrawCallback": this.setMapBounds,
           "fnRowCallback": jQuery.proxy(function(nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
           $(nRow).attr('id', 'result_row_' + aData.id);
           $(nRow).attr('product_id', aData.id);
@@ -383,13 +381,14 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   renderOnMap: function(aData) {
+    
+    var p1 = new google.maps.LatLng(aData.NEARSTARTLAT, aData.NEARSTARTLON);
+    var p2 = new google.maps.LatLng(aData.FARSTARTLAT, aData.FARSTARTLON);
+    var p3 = new google.maps.LatLng(aData.FARENDLAT, aData.FARENDLON);
+    var p4 = new google.maps.LatLng(aData.NEARENDLAT, aData.NEARENDLON);
+
     this.mo[aData.id] = new google.maps.Polygon({
-      paths: new Array(
-        new google.maps.LatLng(aData.NEARSTARTLAT, aData.NEARSTARTLON),
-        new google.maps.LatLng(aData.FARSTARTLAT, aData.FARSTARTLON),
-        new google.maps.LatLng(aData.FARENDLAT, aData.FARENDLON),
-        new google.maps.LatLng(aData.NEARENDLAT, aData.NEARENDLON)
-      ),
+      paths: new Array(p1, p2, p3, p4),
       fillColor: '#777777',
       fillOpacity: this.default_tile_opacity,
       strokeColor: '#333333',
@@ -399,6 +398,14 @@ var SearchResultsView = Backbone.View.extend(
       clickable: true
     });
     this.mo[ aData.id ].setMap(searchMap);
+    this.mapBounds.extend(p1);
+    this.mapBounds.extend(p2);
+    this.mapBounds.extend(p3);
+    this.mapBounds.extend(p4);
+  },
+
+  setMapBounds: function(oSettings) {
+    searchMap.fitBounds(this.mapBounds);
   },
 
   clearOverlays: function() {
@@ -418,6 +425,7 @@ var SearchResultsView = Backbone.View.extend(
     });
     this.mo = {}; 
     this.activePoly = null;
+    this.mapBounds = new google.maps.LatLngBounds();
   },
   refreshMap: function() {
     this.clearOverlays();
