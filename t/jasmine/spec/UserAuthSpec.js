@@ -1,42 +1,49 @@
 describe("UserAuth.js", function(){
   beforeEach( function() {
-    //$.storage.del('q_cookie_');
-    jasmine.getFixtures().fixturesPath = 'spec/fixtures/';
+
+    jasmine.getFixtures().fixturesPath = 'spec/fixtures';
     loadFixtures('SearchApp.html');
 
     window.SearchApp = new SearchAppView();
 
+    this.xhr = sinon.useFakeXMLHttpRequest();
+    var requests = this.requests = [];
+
+    this.xhr.onCreate = function (xhr) {
+      requests.push(xhr);
+    };
+
   });
 
   afterEach( function() {
-    //$.storage.del('q_cookie_');
+    this.xhr.restore();
   });
 
   describe("User: Backbone.Model", function(){
     it('Can be created with default values for its attributes.', function() {
-      var user = new User();
-      expect(user.get("authenticated")).toBe(false);
-      expect(user.get("userid")).toBe('');
-      expect(user.get("password")).toBe('');
-      expect(user.get("authType")).toBe('');
-      expect(user.get("user_first_name")).toBe('');
+      this.user = new User();
+
+      console.log(this.user);
+      expect(this.user.get("authenticated")).toBeFalsy();
+      expect(this.user.get("userid")).toBe('');
+      expect(this.user.get("password")).toBe('');
+      expect(this.user.get("authType")).toBe('');
+      expect(this.user.get("user_first_name")).toBe('');
+
     });
 
     it('Will set passed attributes on the model instance when created.', function() {
-      var user = new User({
-        authenticated: false,
-        userid: 'testUser',
-        password: 'testest',
-        authType: 'LEGACY',
-        user_first_name: 'Tester'
-      });
+      this.user = new User(fixtures.testUser);
 
-      expect(user.get("authenticated")).toBe(false);
-      expect(user.get("userid")).toBe('testUser');
-      expect(user.get("password")).toBe('testest');
-      expect(user.get("authType")).toBe('LEGACY');
-      expect(user.get("user_first_name")).toBe('Tester');
+      expect(this.user.get("authenticated")).toBeFalsy();
+      expect(this.user.get("userid")).toBe('testUser');
+      expect(this.user.get("password")).toBe('testest');
+      expect(this.user.get("authType")).toBe('LEGACY');
+      expect(this.user.get("user_first_name")).toBe('Tester');
+
     });
+
+
   });
 
 });
