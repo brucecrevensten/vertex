@@ -222,6 +222,7 @@ var SearchResultsView = Backbone.View.extend(
       <span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>\
       </div>\
       </div>\
+      <div style="clear:both;"></div>\
     ');
   },
 
