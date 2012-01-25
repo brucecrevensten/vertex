@@ -326,52 +326,6 @@ var SearchResultsView = Backbone.View.extend(
 	  return this;
     }
 
-    $('#con').empty(); 
-
-    var el = $('<table id="searchResults" width="375" style="margin:20px 0px 20px 0px;"></table>');
-  
-    var ur = SearchApp.user.getWidgetRenderer();
-    var li="";
-    var li_2="";
-    var start = new Date().getTime();		
-    /*
-    this.collection.each( function( model, i, l ) {   
-          var d = model.toJSON();
-        
-         li = '<tr><td class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
-          + ur.srThumbnail( model )
-          + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
-          + '<div class="productRowTools">'
-          + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
-          + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
-          + '<span class="ui-button-text">More information&hellip;</span>'
-          + '</button>'
-          + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
-          + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
-          + '<span class="ui-button-text">Show files&hellip;</span>'
-          + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
-          + '</div>'
-          + '</div><div style="clear:both;"></div></td></tr>';
-  
-      li_2 += li;
-      }, this);
-*/
-      var end = new Date().getTime();		
-      console.log('build html loop: ' + (end - start));
-      var tableHtml =
-              '<thead>'+
-                '<tr>'+
-                  '<th></th>'+
-                '</tr>'+
-              '</thead>'+
-              '<tbody>'+
-                li_2 +
-              '</tbody>';
-        el.html(tableHtml);
-
-        $('#con').append(el); // append the table to it's container
-    
-
     // Enhance the table using a DataTable object. 
     start = new Date().getTime();		
      this.dataTable = $('#searchResults').dataTable(
