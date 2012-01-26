@@ -345,11 +345,6 @@ var SearchResultsView = Backbone.View.extend(
 
 
     this.showResults();
-    //this.clearOverlays();
-    //this.renderOnMap();
-    //this.resetHeight();
-
-   
 
     if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
       $("#srCount").empty().html(_.template("<%= total %> results found",
@@ -380,23 +375,17 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   renderOnMap: function(aData) {
-    
+
     var p1 = new google.maps.LatLng(aData.NEARSTARTLAT, aData.NEARSTARTLON);
     var p2 = new google.maps.LatLng(aData.FARSTARTLAT, aData.FARSTARTLON);
     var p3 = new google.maps.LatLng(aData.FARENDLAT, aData.FARENDLON);
     var p4 = new google.maps.LatLng(aData.NEARENDLAT, aData.NEARENDLON);
+    
+    var polyOptions = _.clone(this.polygonDefault);
+    polyOptions.paths = [p1, p2, p3, p4];
 
-    this.mo[aData.id] = new google.maps.Polygon({
-      paths: new Array(p1, p2, p3, p4),
-      fillColor: '#777777',
-      fillOpacity: this.default_tile_opacity,
-      strokeColor: '#333333',
-      strokeOpacity: 1,
-      strokeWeight: 2,
-      zIndex: 1000,
-      clickable: true
-    });
-    this.mo[ aData.id ].setMap(searchMap);
+    this.mo[aData.id] = new google.maps.Polygon(polyOptions);
+    this.mo[aData.id].setMap(searchMap);
     this.mapBounds.extend(p1);
     this.mapBounds.extend(p2);
     this.mapBounds.extend(p3);
@@ -409,7 +398,7 @@ var SearchResultsView = Backbone.View.extend(
 
   clearOverlays: function() {
 
-    if( this.activePoly ) {
+    if(this.activePoly) {
       this.mo[this.activePoly].setOptions({
         fillColor: '#777777',
         fillOpacity: this.default_tile_opacity,
@@ -430,63 +419,43 @@ var SearchResultsView = Backbone.View.extend(
     this.clearOverlays();
     this.renderOnMap();
   },
+  polygonDefault: {
+    fillColor: '#777777',
+    fillOpacity: this.default_tile_opacity,
+    strokeColor: '#333333',
+    strokeOpacity: 1,
+    strokeWeight: 2,
+    zIndex: 1000,
+    clickable: true
+  },
+  polygonInQueue: {
+    fillColor: '#77aaFF',
+    fillOpacity: 0.5,
+    strokeColor: '#336699',
+    strokeOpacity: 0.5,
+    zIndex: 10001 // just above the search area bbox zindex
+  },
+  polygonHighlight: {
+    fillColor: '#FFFFB4',
+    fillOpacity: .75,
+    strokeColor: '#FFFF00',
+    strokeOpacity: 1,
+    zIndex: 1500
+  },
   removeHighlight: function(e) {
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
-    if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), $(e.currentTarget).attr("product_id") )) {
+    if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('GRANULENAME'), $(e.currentTarget).attr("product_id") )) {
       // It's in the DQ, turn it blue again  
-      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-        fillColor: '#77aaFF',
-        fillOpacity: 0.5,
-        strokeColor: '#336699',
-        strokeOpacity: 0.5,
-        zIndex: 10001 // just above the search area bbox zindex
-      });
+      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions(this.polygonInQueue);
     } else {
-      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-        fillColor: '#777777',
-        fillOpacity: this.default_tile_opacity,
-        strokeColor: '#333333',
-        strokeOpacity: 1,
-        zIndex: 1000
-      });
+      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions(this.polygonDefault);
     }
-  
   },
 
   toggleHighlight: function(e) {
-
-    if( e.view.SearchApp.searchResultsView.activePoly ) {
-      // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
-      if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), e.view.SearchApp.searchResultsView.activePoly )) {
-        // It's in the DQ, turn it blue again  
-        e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-          fillColor: '#77aaFF',
-          fillOpacity: 0.5,
-          strokeColor: '#336699',
-          strokeOpacity: 0.5,
-          zIndex: 1500
-        });
-      } else {
-        e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-          fillColor: '#777777',
-          fillOpacity: this.default_tile_opacity,
-          strokeColor: '#333333',
-          strokeOpacity: 1,
-          zIndex: 1000
-        });
-      }
-    }
-
     e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
 
-    e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-      fillColor: '#FFFFB4',
-      fillOpacity: .75,
-      strokeColor: '#FFFF00',
-      strokeOpacity: 1,
-      zIndex: 1500
-    });
-
+    e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions(this.polygonHighlight);
    },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.
