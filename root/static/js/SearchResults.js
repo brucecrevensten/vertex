@@ -306,7 +306,7 @@ var SearchResultsView = Backbone.View.extend(
           "iDisplayLength": 1000, // default number of rows per page
           "bLengthChange": false ,// do not allow users to change the default page length
           "fnPreDrawCallback": this.clearOverlays,
-          "fnDrawCallback": this.setMapBounds,
+          "fnDrawCallback": jQuery.proxy(this.dtDrawCallback, this),
           "fnRowCallback": jQuery.proxy(function(nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
             $(nRow).attr('id', 'result_row_' + aData.id);
             $(nRow).attr('product_id', aData.id);
@@ -318,13 +318,9 @@ var SearchResultsView = Backbone.View.extend(
           "bDeferRender": true
     });
 
-    SearchApp.dataTable = this.dataTable;
-
-    $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
-    $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
-
-
     this.showResults();
+
+    SearchApp.dataTable = this.dataTable;
 
     if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
       $("#srCount").empty().html(_.template("<%= total %> results found",
@@ -346,6 +342,12 @@ var SearchResultsView = Backbone.View.extend(
 
   dtCell: function(row) {
     return(this.dtCellTemplate(row.aData));
+  },
+
+  dtDrawCallback: function() {
+    this.setMapBounds();
+    $('.productRow').on('mouseenter', this.toggleHighlight );
+    $('.productRow').on('mouseleave', this.removeHighlight );
   },
 
   resetHeight: function() {
@@ -424,22 +426,21 @@ var SearchResultsView = Backbone.View.extend(
   },
   removeHighlight: function(e) {
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
-    if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('GRANULENAME'), $(e.currentTarget).attr("product_id") )) {
+    if ( -1 != _.indexOf( SearchApp.downloadQueue.pluck('GRANULENAME'), $(e.currentTarget).attr("product_id") )) {
       // It's in the DQ, turn it blue again  
-      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions(this.polygonInQueue);
+      this.mo[this.activePoly].setOptions(this.polygonInQueue);
     } else {
-      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions(this.polygonDefault);
+      this.mo[this.activePoly].setOptions(this.polygonDefault);
     }
   },
 
   toggleHighlight: function(e) {
-    e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
-
-    e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions(this.polygonHighlight);
+    this.activePoly = $(e.currentTarget).attr("product_id");
+    this.mo[this.activePoly].setOptions(this.polygonHighlight);
    },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.
-  // (this array is 1:1 with the results, so overlay [0] here is product [0] in the results)
+  // Only contains the rows that are currently being displayed in the datatable.
   mo: {},
   // the currently active/hightlighted polygon
   activePoly: null
