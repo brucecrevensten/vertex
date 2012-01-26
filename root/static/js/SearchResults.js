@@ -189,7 +189,7 @@ var SearchResultsView = Backbone.View.extend(
           <span class="beam"><%= BEAMMODETYPE %></span>\
           <span class="date"><%= acquisitionDateText %></span>\
         <\h4>\
-        <p>Frame <%= FRAMENUMBER %>, Path <%= ORBIT %></p>\
+        <p>Frame <%= FRAMENUMBER %>, Orbit <%= ORBIT %></p>\
       <% } %>\
       <div class="productRowTools">\
       <button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">\
