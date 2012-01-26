@@ -452,7 +452,12 @@ var StateInflator = Backbone.Model.extend({
                       if (window.map.layers[i].name != "Bounding Box") {
                         window.map.layers[i].destroy();
                       } else {
+                        // This logic is here in-case we wanted to not destroy
+                        // the bounding box and keep it when the user selected
+                        // another region. For now we'll just delete the
+                        // layer like all the rest
                         boxlayer = window.map.layers[i];
+                        // window.map.layers[i].destroy();
                       }
                     }
                     

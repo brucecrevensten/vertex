@@ -1,3 +1,34 @@
+// Yahoo UI Skin - Start overrides of the Yahoo UI Skin needed for the tab groups
+
+/*margin and padding on body element
+  can introduce errors in determining
+  element position and are not recommended;
+  we turn them off as a foundation for YUI
+  CSS treatments. */
+body {
+  margin:0;
+  padding:0;
+}
+
+.yui-skin-sam .yui-navset .yui-content {
+  background-color: #efefef !important;
+}
+
+.yui-skin-sam .yui-navset .yui-content, .yui-skin-sam .yui-navset .yui-navset-top .yui-content {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #243356 #CCCCCC #CCCCCC !important;
+    border-right: 1px solid #CCCCCC!important;
+    border-style: solid;
+    border-width: 1px;
+    padding: 0.25em 0.5em;
+}
+
+// Yahoo UI Skin - End of overrides
+
 #subsetter {
 	position: absolute;
 	width: 100%;
@@ -17,6 +48,7 @@
 	padding-left: 10px;
 	overflow: hidden;
 }
+
 .dsRightColumn {
 	vertical-align: top;
 	min-width: 318px;
@@ -211,8 +243,6 @@ input.WCSfields {
 	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
-
-
 .bottom_container{
 	width:980px;
 	float:left;
@@ -224,7 +254,6 @@ input.WCSfields {
 	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
-
 .clear {
 	clear:both;
 }
@@ -234,32 +263,31 @@ img{border:0px;}
 .subscribe{
 	margin:10px;}
 
-
-
 #right_column{
 	float:right;
 	width:300px;
 	margin:15px;
-	}
-	
+	}	
+
 #left_column{
 	float:left;
 	width:600px;
 	margin:15px;
-	}	
-	
+	}		
+
 .thumb{float:left;
 margin-right:10px;
 width:140px;
 height:140px;
-}	
-	
-h2 li{color:#333;
-text-decoration:none;}	
+}		
 
+h2 li{color:#333;
+text-decoration:none;
+}	
 h2 li:hover{text-decoration:underline;}	
 
 p{font-size:14px; color:#999;}
+
 p li{color:#F60;}
 
 h2{margin-top:25px;}
