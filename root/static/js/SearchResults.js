@@ -11,20 +11,6 @@ var SearchResults = Backbone.Collection.extend(
 
     },
 
-/*    clearAllPoly: function(map) {
-        for (var i=0; i< this.models.length; i++) {
-          if (map[this.models[i].id]) {
-            this.
-          }
-        
-        } 
-                                  if (this.mo[d.id]) {
-                                    this.mo[d.id].setMap(null); 
-                                  }
-                                 },this) 
-                               ); 
-    },*/
-
     // build the nested model structure of DataProducts and DataProductFiles
     build: function(data) {
       this.trigger('build');
@@ -32,10 +18,7 @@ var SearchResults = Backbone.Collection.extend(
       // when we reset this main collection.
       this.reset();
       var dp;
-      var start = new Date().getTime();
       this.add(data, {'silent': true});
-      var end = new Date().getTime();		
-      console.log('Build loop: ' + (end - start));
     },
 
     filter: function() {
@@ -56,7 +39,7 @@ var SearchResults = Backbone.Collection.extend(
               callback(); // this is for using sinon spys in unit tests
            }
             this.filteredProductCount = undefined; // Reset filtered state
-            this.unfilteredProductCount = _.uniq( _.pluck( data, 'GRANULENAME' )).length;
+            this.unfilteredProductCount = data.length;
 
             // Fetch distinct platforms that were found
             this.platforms = _.uniq(_.pluck(data, 'PLATFORM'));
@@ -306,19 +289,18 @@ var SearchResultsView = Backbone.View.extend(
       return this;
     }
 
-    start = new Date().getTime();		
      this.dataTable = $('#searchResults').dataTable(
       { 
         'aaData': this.collection.toJSON(),
         'aoColumnDefs': [
-          { 'fnRender': this.dtCell, 'aTargets': [0] },
+          { 'fnRender': this.dtCell, 'aTargets': [0] }
         ],
            "oLanguage": {
             "sSearch": "Find",
             "sProcessing": "Processing..."
            },
           "bProcessing": true,
-          "bAutoWidth": true,
+          "bAutoWidth": false,
           "bDestroy": true,     // destroy old table
           "sScrollY": "500px",
           "iDisplayLength": 1000, // default number of rows per page
@@ -335,8 +317,6 @@ var SearchResultsView = Backbone.View.extend(
           }, this),
           "bDeferRender": true
     });
-    end = new Date().getTime();		
-    console.log('build datatable: ' + (end - start));
 
     SearchApp.dataTable = this.dataTable;
 
