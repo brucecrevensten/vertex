@@ -3,8 +3,6 @@ var SearchResults = Backbone.Collection.extend(
     url: AsfDataportalConfig.apiUrl,
     model: DataProduct,
 
-    // platforms found in result set list
-    platforms: [], 
     error: '',
 
     initialize: function() {
@@ -41,10 +39,6 @@ var SearchResults = Backbone.Collection.extend(
             this.filteredProductCount = undefined; // Reset filtered state
             this.unfilteredProductCount = data.length;
 
-            // Fetch distinct platforms that were found
-            this.platforms = _.uniq(_.pluck(data, 'PLATFORM'));
-            this.procTypes = _.uniq(_.pluck(data, 'PROCESSINGTYPE'));
-      
             this.build(data);
 
             this.trigger('refresh');
