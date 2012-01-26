@@ -301,14 +301,7 @@ var SearchResultsView = Backbone.View.extend(
           "bLengthChange": false ,// do not allow users to change the default page length
           "fnPreDrawCallback": this.clearOverlays,
           "fnDrawCallback": jQuery.proxy(this.dtDrawCallback, this),
-          "fnRowCallback": jQuery.proxy(function(nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
-            $(nRow).attr('id', 'result_row_' + aData.id);
-            $(nRow).attr('product_id', aData.id);
-            $(nRow).addClass('productRow');
-            $(nRow).attr('onclick', 'window.showProductProfile(\''+aData.id+'\'); return false;');
-            this.renderOnMap(aData);
-            return(nRow);
-          }, this),
+          "fnRowCallback": jQuery.proxy(this.dtRowCallback, this),
           "bDeferRender": true
     });
 
@@ -342,6 +335,15 @@ var SearchResultsView = Backbone.View.extend(
     this.setMapBounds();
     $('.productRow').on('mouseenter', this.toggleHighlight );
     $('.productRow').on('mouseleave', this.removeHighlight );
+  },
+
+  dtRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+    $(nRow).attr('id', 'result_row_' + aData.id);
+    $(nRow).attr('product_id', aData.id);
+    $(nRow).addClass('productRow');
+    $(nRow).attr('onclick', 'window.showProductProfile(\''+aData.id+'\'); return false;');
+    this.renderOnMap(aData);
+    return(nRow);
   },
 
   resetHeight: function() {
