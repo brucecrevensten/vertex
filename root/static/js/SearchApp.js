@@ -17,21 +17,34 @@ $(function() {
 
 window.SearchAppView = Backbone.View.extend({	
   initialize: function() {
+
     $.fn.dataTableExt.afnFiltering.push(
       jQuery.proxy( function( oSettings, aData, iDataIndex ) {
         var data = oSettings.aoData[iDataIndex]._aData;
         var key = data.BEAMMODETYPE + ' ' + data.OFFNADIRANGLE;
         var platform = data.PLATFORM;
-        var postfilter = _.find(this.postFilters.postFilters,
-          function(row) { return row.platform === platform; }
-        );
-        var pkeys = postfilter.get('beamoffnadir');
-        if(0 === pkeys.length) {
-          return(true);
+        if(_.any(_.pluck(this.postFilters.postFilters, 'active'))) {
+          // Only apply active filters.
+          var data = oSettings.aoData[iDataIndex]._aData;
+          var key = data.BEAMMODETYPE + ' ' + data.OFFNADIRANGLE;
+          var platform = data.PLATFORM;
+          var postfilter = _.find(this.postFilters.postFilters,
+            function(row) { return(row.active && (row.platform === platform)); }
+          );
+          if(_.isUndefined(postfilter)) {
+            return(false);
+          }
+          var pkeys = postfilter.get('beamoffnadir');
+          if(_.isUndefined(pkeys) || (0 === pkeys.length)) {
+            return(false);
+          } else {
+            return(_.any(pkeys, function(row) {
+              return(row === key);
+            }));
+          }
         } else {
-          return(_.any(pkeys, function(row) {
-            return(row === key);
-          }));
+          // None of the filters are active. So we should show everything.
+          return(true);
         }
       }, this)
     );

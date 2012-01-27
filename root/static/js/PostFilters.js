@@ -166,6 +166,7 @@ var AlosFacet = PlatformFacet.extend(
   {
     name: "ALOS",
     platform: 'ALOS',
+    active: false,
     defaults: {
       path: null,
       frame: null,
@@ -183,7 +184,7 @@ var AlosFacet = PlatformFacet.extend(
         'PLR 23.1',
         'WB1',
         'WB2'*/
-      ]
+      ],
     },
     initialize: function() {
 
@@ -277,25 +278,20 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
   },
   setFilters: function() {
-     // Beam Modes
-        $(this.el).find('.beamSelector').each( function(i, element) { 
-          $(element).find('input').click(function(e) {
-
-            $('.ui-dialog-buttonpane').find('button:contains("Apply")').button().focus();
-
-            var el = $(e.currentTarget);
-             if (el.attr('checked') == "checked") {
-                if (!SearchApp.filterDictionaryA3.has( el.val() )) {
-                  SearchApp.filterDictionaryA3.add( el.val(), el.val() );
-                }
-              } else {
-                if ( SearchApp.filterDictionaryA3.has( el.val() ) ) {
-                  SearchApp.filterDictionaryA3.remove( el.val() );
-                }
-              }  
-          });     
-        });
-
+    this.model.set({'beamoffnadir': []}, {'silent': true});
+    this.model.active = false;
+    // Beam Modes
+    $(this.el).find('input.beamSelector').each(jQuery.proxy(function(i, element) {
+      var e = $(element);
+      if(e.attr('checked') === 'checked') {
+        var a = this.model.get('beamoffnadir');
+        a.push(e.val());
+        _.uniq(a);
+        this.model.set({'beamoffnadir': a}, {'silent': true});
+        this.model.active = true;
+      }
+    }, this));
+    /*
        // Flight Directions
        $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
 
@@ -331,7 +327,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
                SearchApp.filterDictionaryA3.add('FRAMEALOS',el.val());
             }
           }, this));
-
+  */
   },
   render: function() {
 
@@ -349,8 +345,9 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       buttons: {
         "Apply": jQuery.proxy(function() 
                  { 
+                    this.setFilters();
                     SearchApp.dataTable.fnDraw();
-                    SearchApp.searchResultsView.refreshMap();
+                    //SearchApp.searchResultsView.refreshMap();
                   },this),
         "Reset": jQuery.proxy( function() {
           this.model.set(this.model.defaults);
