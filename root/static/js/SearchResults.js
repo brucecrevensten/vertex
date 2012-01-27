@@ -130,6 +130,9 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
               filesToAdd.push(file);
             }
           });
+        _.each(filesToAdd, function(row) {
+          SearchApp.downloadQueue.remove(row.product_file_id, {'silent':true});
+        });
         SearchApp.downloadQueue.add(filesToAdd, {'silent':true} );
         SearchApp.downloadQueue.trigger('add');
       }
