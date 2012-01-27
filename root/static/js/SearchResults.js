@@ -117,19 +117,20 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
         }
 
         var filesToAdd = [];
-        SearchApp.searchResults.each(
-          function(aProduct)
-            {   
-              filesToAdd.push( aProduct.files.select( 
-                function(aFile)
-                  { 
-                    return aFile.get('processingType') == pl;
-                  }
-                )
-              );
+        _.each(SearchApp.searchResultsView.dataTable.fnGetFilteredData(),
+          function(aProduct) {
+            var file = null;
+            file = _.find(aProduct.FILES, function(row) {
+              if(pl === row.PROCESSINGTYPE) {
+                return(true);
+              }
+              return(false);
+            });
+            if(file) {
+              filesToAdd.push(file);
             }
-          );
-        SearchApp.downloadQueue.add( _.union(filesToAdd), {'silent':true} ); // suspend extra flashes of queue button
+          });
+        SearchApp.downloadQueue.add(filesToAdd, {'silent':true} );
         SearchApp.downloadQueue.trigger('add');
       }
       );
@@ -345,7 +346,7 @@ var SearchResultsView = Backbone.View.extend(
     $('.productRow').on('mouseleave', this.removeHighlight );
     var a = []
     _.each(oSettings.aiDisplay, function(val, key) {
-      a = _.union(_.pluck(oSettings.aoData[key]._aData.FILES,
+      a = _.union(_.pluck(oSettings.aoData[val]._aData.FILES,
         'PROCESSINGTYPE'), a);
     });
     this.collection.procTypes = a;
