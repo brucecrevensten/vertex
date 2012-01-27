@@ -59,7 +59,7 @@ var PostFiltersView = Backbone.View.extend(
     var u = jQuery('<ul/>');
 
     for ( var i in this.widgets ) {
-      if( -1 != _.indexOf( this.options.searchResults.platforms, this.widgets[i].name )) {
+      if( -1 != _.indexOf( _.uniq(this.options.searchResults.pluck('PLATFORM')), this.widgets[i].name )) {
         u.append( jQuery('<li/>').append( this.widgets[i].render().el) );
         render = true;
       } 

@@ -2,7 +2,7 @@ var SearchResults = Backbone.Collection.extend(
   {
     url: AsfDataportalConfig.apiUrl,
     model: DataProduct,
-
+    
     error: '',
 
     initialize: function() {
