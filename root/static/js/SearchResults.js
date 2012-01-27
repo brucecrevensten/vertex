@@ -197,6 +197,13 @@ var SearchResultsView = Backbone.View.extend(
       </div>\
       <div style="clear:both;"></div>\
     ');
+    $.fn.dataTableExt.oApi.fnGetFilteredData = function(oSettings) {
+      var a = [];
+      _.each(oSettings.aiDisplay, function(val, key) {
+        a.push(oSettings.aoData[oSettings.aiDisplay[key]]._aData);
+      });
+      return(a);
+    };
   },
 
   showBeforeSearchMessage: function() {
@@ -337,8 +344,8 @@ var SearchResultsView = Backbone.View.extend(
     $('.productRow').on('mouseenter', this.toggleHighlight );
     $('.productRow').on('mouseleave', this.removeHighlight );
     var a = []
-    _.each(oSettings.aiDisplay, function(i) {
-      a = _.union(_.pluck(oSettings.aoData[i]._aData.FILES,
+    _.each(oSettings.aiDisplay, function(val, key) {
+      a = _.union(_.pluck(oSettings.aoData[key]._aData.FILES,
         'PROCESSINGTYPE'), a);
     });
     this.collection.procTypes = a;
