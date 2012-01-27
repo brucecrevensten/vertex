@@ -73,13 +73,13 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
     this.collection.bind('clear_results', this.clear_results);
+    this.collection.bind('refreshProcTypes', this.render);
   },
   clear_results: function() {
 		$(this.el).empty();
 		$("#srCount").empty();
   },
   render: function() {
-  /*
     $(this.el).empty();
     var w = $('<div/>').html( '<input type="checkbox" id="toggleProcMenu" /><label for="toggleProcMenu">Add all by type&hellip...</label>');
     w.find('#toggleProcMenu').button(
@@ -137,7 +137,6 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
     }, this);
     $(this.el).append(w).append(m);
     return this;
-  */
   },
 });
 
@@ -282,7 +281,7 @@ var SearchResultsView = Backbone.View.extend(
   	  }
       return this;
     }
-
+    var start = new Date().getTime()
      this.dataTable = $('#searchResults').dataTable(
       { 
         'aaData': this.collection.toJSON(),
@@ -304,7 +303,8 @@ var SearchResultsView = Backbone.View.extend(
           "fnRowCallback": jQuery.proxy(this.dtRowCallback, this),
           "bDeferRender": true
     });
-
+    var end = new Date().getTime();
+    console.log('dt loop: ' + (end - start));
     this.showResults();
 
     SearchApp.dataTable = this.dataTable;
@@ -331,10 +331,20 @@ var SearchResultsView = Backbone.View.extend(
     return(this.dtCellTemplate(row.aData));
   },
 
-  dtDrawCallback: function() {
+  dtDrawCallback: function(oSettings) {
+    var start = new Date().getTime();
     this.setMapBounds();
     $('.productRow').on('mouseenter', this.toggleHighlight );
     $('.productRow').on('mouseleave', this.removeHighlight );
+    var a = []
+    _.each(oSettings.aiDisplay, function(i) {
+      a = _.union(_.pluck(oSettings.aoData[i]._aData.FILES,
+        'PROCESSINGTYPE'), a);
+    });
+    this.collection.procTypes = a;
+    this.collection.trigger('refreshProcTypes');
+    var end = new Date().getTime();
+    console.log('dtDrawCallback: ' + (end - start));
   },
 
   dtRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
