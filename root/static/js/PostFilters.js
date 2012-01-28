@@ -16,7 +16,7 @@ var PostFilters = Backbone.Model.extend(
 
     reset: function() {
       for( var i in this.postFilters ) {
-        this.postFilters[i].set(this.postFilters[i].defaults);
+        this.postFilters[i].reset();
         this.postFilters[i].trigger('reset');
       }
     },
