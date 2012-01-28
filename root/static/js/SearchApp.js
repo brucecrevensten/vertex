@@ -36,16 +36,6 @@ window.SearchAppView = Backbone.View.extend({
           } else {
             return(postfilter.filter(data));
           }
-          /*
-          var pkeys = postfilter.get('beamoffnadir');
-          if(_.isUndefined(pkeys) || (0 === pkeys.length)) {
-            return(false);
-          } else {
-            return(_.any(pkeys, function(row) {
-              return(row === key);
-            }));
-          }
-          */
         } else {
           // None of the filters are active. So we should show everything.
           return(true);

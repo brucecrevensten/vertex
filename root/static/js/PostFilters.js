@@ -388,7 +388,10 @@ var AlosFacetButton = PlatformFacetView.extend( {
 var RadarsatFacet = PlatformFacet.extend(
   {
     initialize: function() {
-      
+    },
+    reset: function() {
+      this.set(this.defaults);
+      this.set({'beam': []});
     },
     defaults: {
       path: null,
@@ -427,7 +430,22 @@ var RadarsatFacet = PlatformFacet.extend(
       return new RadarsatFacetButton({model: this});
     },
     
-    filter: function( d ) {
+    filter: function(data) {
+      var ret = false;
+      var beam = data.BEAMMODETYPE;
+      if(_.any(this.get('beam'), function(row) { return(row === beam); })) {
+        ret = true;
+      }
+      if(this.get('frame') === data.FRAMENUMBER) {
+        ret = true;
+      }
+      if(this.get('path') === data.PATHNUMBER) {
+        ret = true;
+      }
+      if(this.get('direction') == data.ASCENDINGDESCENDING.toUpperCase()) {
+        ret = true;
+      }
+      return(ret);
     }
   }
 );
@@ -542,61 +560,39 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
     this.setFilters();
   },
   setFilters: function() {
+    this.model.reset();
     
-     $(this.el).find('.beamSelector').each( function(i, element) { 
-
-          $(element).find('input').click(function(e) {
-            $('.ui-dialog-buttonpane').find('button:contains("Apply")').button().focus();
-            var el = $(e.currentTarget);
-                if (el.attr('checked') == "checked") {
-            if (!SearchApp.filterDictionaryR1.has( el.val() )) {
-              SearchApp.filterDictionaryR1.add( el.val(), el.val() );
-            }
-          } else {
-            if ( SearchApp.filterDictionaryR1.has( el.val() ) ) {
-              SearchApp.filterDictionaryR1.remove( el.val() );
-            }
-          }  
-          });     
-        });
-          
-
-       // Flight Directions
-       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
-
-        $('.ui-dialog-buttonpane').find('button:contains("Apply")').button().focus();
-
-          var curEl = $(e.currentTarget);
-          $(this.el).find('input[type="radio"]').each( function(i,element) {
-                SearchApp.filterDictionaryR1.remove( $(element).val() );
-          });
-          if (curEl.val() != "any") {
-             SearchApp.filterDictionaryR1.add($(curEl).val()); 
-          }
-        },this));     
-
-
-             //  Path
-     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
-       $('.ui-dialog-buttonpane').find('button:contains("Apply")').attr("class", 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover');
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionaryR1.remove('ORBITRADARSAT');
-            } else {
-               SearchApp.filterDictionaryR1.add('ORBITRADARSAT',el.val());
-            }
-          }, this));
-
-          //  FRAME
-     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
-       $('.ui-dialog-buttonpane').find('button:contains("Apply")').attr("class", 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover');
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionaryR1.remove('FRAMERADARSAT');
-            } else {
-               SearchApp.filterDictionaryR1.add('FRAMERADARSAT',el.val());
-            }
-          }, this));
+    $(this.el).find('input.beamSelector').each(jQuery.proxy(function(i, row) { 
+      var e = $(row);
+      if(e.attr('checked') === 'checked') {
+        var a = this.model.get('beamoffnadir');
+        a.push(e.val());
+        _.uniq(a);
+        this.model.set({'beamoffnadir': a}, {'silent': true});
+        this.model.active = true;
+      }
+    }, this));
+    $(this.el).find('input[name=direction]').each(jQuery.proxy(function(i, row){
+      var e = $(row);
+      if((e.attr('checked') === 'checked') && (e.val() != 'any')) {
+        this.model.set({'direction': e.val()}, {'silent': true});
+        this.model.active = true;
+      }
+    }, this));
+    $(this.el).find('input[name=path]').each(jQuery.proxy(function(i, row) {
+      var e = $(row);
+      if(e.val() != '') {
+        this.model.set({'path': e.val()}, {'silent': true});
+        this.model.active = true;
+      }
+    }, this));
+    $(this.el).find('input[name=frame]').each(jQuery.proxy(function(i, row) {
+      var e = $(row);
+      if(e.val() != '') {
+        this.model.set({'frame': e.val()}, {'silent': true});
+        this.model.active = true;
+      }
+    }, this));
   },
   render: function() {
     
@@ -612,15 +608,14 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       title: "RADARSAT-1 Platform Options",
       position: [40,110],
       buttons: {
-        "Apply": function() { 
-            SearchApp.dataTable.fnDraw();
-            SearchApp.searchResultsView.refreshMap();/*$(this).dialog('close');*/ },
-        "Reset": jQuery.proxy( function() {
-          this.model.set(this.model.defaults);
-          this.renderHtml();
-          SearchApp.filterDictionaryR1.clear();
+        "Apply": jQuery.proxy(function() { 
+          this.setFilters();
           SearchApp.dataTable.fnDraw();
-          SearchApp.searchResultsView.refreshMap();
+        }, this),
+        "Reset": jQuery.proxy( function() {
+          this.model.reset();
+          this.renderHtml();
+          SearchApp.dataTable.fnDraw();
         }, this)
       }
     }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
