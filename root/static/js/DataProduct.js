@@ -120,7 +120,7 @@ var DataProductFilesView = Backbone.View.extend( {
           el.prop('selected','selected');
           SearchApp.downloadQueue.remove(el.attr('product_file_id'));
           SearchApp.downloadQueue.add(_.find(SearchApp.searchResults.get(
-            el.attr('product_id')).get('FILES'), function(obj) {
+            el.attr('product_id')).get('files'), function(obj) {
               return((obj.product_file_id === el.attr('product_file_id')));
             }
           ));
@@ -186,7 +186,7 @@ window.showInlineProductFiles = function(event, product) {
     var model = SearchApp.searchResults.get( product );
 
     var c = $('<ul/>', { 'class':'granuleProductList', 'id':'gpl_'+product } );
-    _.each(model.get('FILES'), function(file) {
+    _.each(model.get('files'), function(file) {
       
       // skip if BROWSE
       if( 'BROWSE' == file.processingType) { return; }
@@ -220,7 +220,7 @@ window.showInlineProductFiles = function(event, product) {
             el.prop('selected','selected');
             SearchApp.downloadQueue.remove(el.attr('product_file_id'));
             SearchApp.downloadQueue.add(_.find(SearchApp.searchResults.get(
-              el.attr('product_id')).get('FILES'), function(obj) {
+              el.attr('product_id')).get('files'), function(obj) {
                 return((obj.product_file_id === el.attr('product_file_id')));
               }
             ));
