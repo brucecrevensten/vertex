@@ -71,16 +71,7 @@ var PostFiltersView = Backbone.View.extend(
       
       var r = jQuery('<button/>').click( jQuery.proxy( function(e) {
         this.model.reset();
-        
-        SearchApp.filterDictionaryA3.clear();
-        SearchApp.filterDictionaryE1.clear();
-        SearchApp.filterDictionaryE2.clear();
-        SearchApp.filterDictionaryR1.clear();
-        SearchApp.filterDictionaryJ1.clear();
-           
         SearchApp.dataTable.fnDraw();
-        SearchApp.searchResultsView.refreshMap();
-      
       }, this ) ).button( { icons: { primary: 'ui-icon-refresh'}, label: 'Reset all filters'});
 
       d.append(u);
@@ -187,11 +178,38 @@ var AlosFacet = PlatformFacet.extend(
       ],
     },
     initialize: function() {
-
+    },
+    reset: function() {
+      this.set(this.defaults);
+      this.set({'beamoffnadir': []});
     },
     getWidget: function() {
       return new AlosFacetButton({model: this});
     },
+
+    filter: function(data) {
+      var ret = false;
+      var key = '';
+      if(data.BEAMMODETYPE === 'WB1' || data.BEAMMODETYPE === 'WB2') {
+        // Special case for WB* -- We don't always know the off nadir angle.
+        key = data.BEAMMODETYPE;
+      } else {
+        key = data.BEAMMODETYPE + ' ' + data.OFFNADIRANGLE;
+      }
+      if(_.any(this.get('beamoffnadir'), function(row) {return(row === key);})){
+        ret = true;
+      }
+      if(this.get('frame') === data.FRAMENUMBER) {
+        ret = true;
+      }
+      if(this.get('path') === data.PATHNUMBER) {
+        ret = true;
+      }
+      if(this.get('direction') == data.ASCENDINGDESCENDING.toUpperCase()) {
+        ret = true;
+      }
+      return(ret);
+    }
   }
 );
 
@@ -281,8 +299,8 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     this.model.set({'beamoffnadir': []}, {'silent': true});
     this.model.active = false;
     // Beam Modes
-    $(this.el).find('input.beamSelector').each(jQuery.proxy(function(i, element) {
-      var e = $(element);
+    $(this.el).find('input.beamSelector').each(jQuery.proxy(function(i, row) {
+      var e = $(row);
       if(e.attr('checked') === 'checked') {
         var a = this.model.get('beamoffnadir');
         a.push(e.val());
@@ -291,43 +309,27 @@ var AlosFacetDialog = PlatformFacetView.extend( {
         this.model.active = true;
       }
     }, this));
-    /*
-       // Flight Directions
-       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
-
-        $('.ui-dialog-buttonpane').find('button:contains("Apply")').button().focus();
-
-          var curEl = $(e.currentTarget);
-          $(this.el).find('input[type="radio"]').each( function(i,element) {
-                SearchApp.filterDictionaryA3.remove( $(element).val() + " ALOS" );
-          });
-          if (curEl.val() != "any") {
-             SearchApp.filterDictionaryA3.add($(curEl).val() + " ALOS");
-          }
-        },this));     
-
-      // ALOS Path
-     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
-      $('.ui-dialog-buttonpane').find('button:contains("Apply")').attr("class", 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover');
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionaryA3.remove('PATHALOS');
-            } else {
-               SearchApp.filterDictionaryA3.add('PATHALOS',el.val());
-            }
-          }, this));
-
-          // ALOS FRAME
-     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
-     $('.ui-dialog-buttonpane').find('button:contains("Apply")').attr("class", 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover');
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              SearchApp.filterDictionaryA3.remove('FRAMEALOS');
-            } else {
-               SearchApp.filterDictionaryA3.add('FRAMEALOS',el.val());
-            }
-          }, this));
-  */
+    $(this.el).find('input[name=direction]').each(jQuery.proxy(function(i, row){
+      var e = $(row);
+      if((e.attr('checked') === 'checked') && (e.val() != 'any')) {
+        this.model.set({'direction': e.val()}, {'silent': true});
+        this.model.active = true;
+      }
+    }, this));
+    $(this.el).find('input[name=path]').each(jQuery.proxy(function(i, row) {
+      var e = $(row);
+      if(e.val() != '') {
+        this.model.set({'path': e.val()}, {'silent': true});
+        this.model.active = true;
+      }
+    }, this));
+    $(this.el).find('input[name=frame]').each(jQuery.proxy(function(i, row) {
+      var e = $(row);
+      if(e.val() != '') {
+        this.model.set({'frame': e.val()}, {'silent': true});
+        this.model.active = true;
+      }
+    }, this));
   },
   render: function() {
 
@@ -347,14 +349,11 @@ var AlosFacetDialog = PlatformFacetView.extend( {
                  { 
                     this.setFilters();
                     SearchApp.dataTable.fnDraw();
-                    //SearchApp.searchResultsView.refreshMap();
                   },this),
         "Reset": jQuery.proxy( function() {
-          this.model.set(this.model.defaults);
+          this.model.reset();
           this.renderHtml();
-          SearchApp.filterDictionaryA3.clear();
           SearchApp.dataTable.fnDraw();
-          SearchApp.searchResultsView.refreshMap();
         }, this)
       }
     }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } ); 

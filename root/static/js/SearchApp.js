@@ -33,7 +33,10 @@ window.SearchAppView = Backbone.View.extend({
           );
           if(_.isUndefined(postfilter)) {
             return(false);
+          } else {
+            return(postfilter.filter(data));
           }
+          /*
           var pkeys = postfilter.get('beamoffnadir');
           if(_.isUndefined(pkeys) || (0 === pkeys.length)) {
             return(false);
@@ -42,6 +45,7 @@ window.SearchAppView = Backbone.View.extend({
               return(row === key);
             }));
           }
+          */
         } else {
           // None of the filters are active. So we should show everything.
           return(true);
@@ -180,13 +184,6 @@ window.SearchAppView = Backbone.View.extend({
       $("#triggerSearch").button('disable').focus();
       $("#con").html('');
        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>');
-
-       this.filterDictionaryA3.clear();
-       this.filterDictionaryR1.clear();
-       this.filterDictionaryE1.clear();
-       this.filterDictionaryE2.clear();
-       this.filterDictionaryJ1.clear();
-
 
     },this));
 
