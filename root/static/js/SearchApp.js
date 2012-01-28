@@ -23,7 +23,7 @@ window.SearchAppView = Backbone.View.extend({
         if(_.any(_.pluck(this.postFilters.postFilters, 'active'))) {
           // Only apply active filters.
           var data = oSettings.aoData[iDataIndex]._aData;
-          var platform = data.PLATFORM;
+          var platform = data.platform;
           var postfilter = _.find(this.postFilters.postFilters,
             function(row) { return(row.active && (row.platform === platform)); }
           );

@@ -5,7 +5,7 @@ var DownloadQueue = Backbone.Collection.extend(
 
   getSizeInBytes:function() {
     return _.reduce(
-      this.pluck("BYTES"),
+      this.pluck("bytes"),
       function(memo, size) {
         return memo + size;
       },
@@ -199,17 +199,17 @@ var DownloadQueueView = Backbone.View.extend(
         table = table + _.template('\
 <tr>\
 <td style="vertical-align: middle; line-height: 30px;">\
-<img style="height: 30px; float: left;" src="<%= THUMBNAIL %>" title="<%= GRANULENAME %>" />\
-<span style="height: 30px; display: inline-block;" vertical-align: middle" ><%= FILENAME %></span>\
+<img style="height: 30px; float: left;" src="<%= thumbnail %>" title="<%= granuleName %>" />\
+<span style="height: 30px; display: inline-block;" vertical-align: middle" ><%= fileName %></span>\
 </div>\
 </td>\
-<td><%= PROCESSINGTYPEDISPLAY %></td>\
-<td><%= PLATFORM %></td>\
+<td><%= processingTypeDisplay %></td>\
+<td><%= platform %></td>\
 <td><%= acquisitionDateText %></td>\
 <td><%= sizeText %></td>\
 <td>\
-<a product_file_id="<%= id %>" product_id="<%= GRANULENAME %>" class="remove">Remove from queue</a>\
-<input type="hidden" name="products[]" value="<%= FILENAME %>" />\
+<a product_file_id="<%= id %>" product_id="<%= granuleName %>" class="remove">Remove from queue</a>\
+<input type="hidden" name="products[]" value="<%= fileName %>" />\
 </td>\
 </tr>\
 ', row);

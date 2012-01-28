@@ -120,8 +120,8 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
         _.each(SearchApp.searchResultsView.dataTable.fnGetFilteredData(),
           function(aProduct) {
             var file = null;
-            file = _.find(aProduct.FILES, function(row) {
-              if(pl === row.PROCESSINGTYPE) {
+            file = _.find(aProduct.files, function(row) {
+              if(pl === row.processingType) {
                 return(true);
               }
               return(false);
@@ -167,26 +167,26 @@ var SearchResultsView = Backbone.View.extend(
 
     this.showBeforeSearchMessage();
     this.dtCellTemplate = _.template('\
-      <img title="<%= GRANULENAME %>" src="<%= THUMBNAIL %>" />\
-      <% if("ALOS" === PLATFORM) { %>\
-        <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> PALSAR\
-          <span class="beam"><%= BEAMMODETYPE %></span>\
+      <img title="<%= granuleName %>" src="<%= thumbnail %>" />\
+      <% if("ALOS" === platform) { %>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %> PALSAR\
+          <span class="beam"><%= beamModeType %></span>\
           <span class="date"><%= acquisitionDateText %></span>\
         <\h4>\
-        <p>Frame <%= FRAMENUMBER %>, Path <%= PATHNUMBER %></p>\
-        <p>Off-Nadir <%= OFFNADIRANGLE %>&deg;</p>\
-      <% } else if("UAVSAR" == PLATFORM) { %>\
-        <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> \
-          <span class="beam"><%= BEAMMODETYPE %></span>\
+        <p>Frame <%= frameNumber %>, Path <%= pathNumber %></p>\
+        <p>Off-Nadir <%= offNadirAngle %>&deg;</p>\
+      <% } else if("UAVSAR" == platform) { %>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %> \
+          <span class="beam"><%= beamModeType %></span>\
           <span class="date"><%= acquisitionDateText %></span>\
         <\h4>\
-        <p><%= MISSIONNAME %></p>\
+        <p><%= missionName %></p>\
       <% } else { %>\
-        <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> \
-          <span class="beam"><%= BEAMMODETYPE %></span>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %> \
+          <span class="beam"><%= beamModeType %></span>\
           <span class="date"><%= acquisitionDateText %></span>\
         <\h4>\
-        <p>Frame <%= FRAMENUMBER %>, Orbit <%= ORBIT %></p>\
+        <p>Frame <%= frameNumber %>, Orbit <%= orbit %></p>\
       <% } %>\
       <div class="productRowTools">\
       <button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">\
@@ -349,8 +349,8 @@ var SearchResultsView = Backbone.View.extend(
     $('.productRow').on('mouseleave', this.removeHighlight );
     var a = []
     _.each(oSettings.aiDisplay, function(val, key) {
-      a = _.union(_.pluck(oSettings.aoData[val]._aData.FILES,
-        'PROCESSINGTYPE'), a);
+      a = _.union(_.pluck(oSettings.aoData[val]._aData.files,
+        'processingType'), a);
     });
     this.collection.procTypes = a;
     this.collection.trigger('refreshProcTypes');
@@ -375,10 +375,10 @@ var SearchResultsView = Backbone.View.extend(
 
   renderOnMap: function(aData) {
 
-    var p1 = new google.maps.LatLng(aData.NEARSTARTLAT, aData.NEARSTARTLON);
-    var p2 = new google.maps.LatLng(aData.FARSTARTLAT, aData.FARSTARTLON);
-    var p3 = new google.maps.LatLng(aData.FARENDLAT, aData.FARENDLON);
-    var p4 = new google.maps.LatLng(aData.NEARENDLAT, aData.NEARENDLON);
+    var p1 = new google.maps.LatLng(aData.nearStartLat, aData.nearStartLon);
+    var p2 = new google.maps.LatLng(aData.farStartLat, aData.farStartLon);
+    var p3 = new google.maps.LatLng(aData.farEndLat, aData.farEndLon);
+    var p4 = new google.maps.LatLng(aData.nearEndLat, aData.nearEndLon);
     
     var polyOptions = _.clone(this.polygonDefault);
     polyOptions.paths = [p1, p2, p3, p4];
@@ -443,7 +443,7 @@ var SearchResultsView = Backbone.View.extend(
   },
   removeHighlight: function(e) {
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
-    if ( -1 != _.indexOf( SearchApp.downloadQueue.pluck('GRANULENAME'), $(e.currentTarget).attr("product_id") )) {
+    if ( -1 != _.indexOf( SearchApp.downloadQueue.pluck('granuleName'), $(e.currentTarget).attr("product_id") )) {
       // It's in the DQ, turn it blue again  
       this.mo[this.activePoly].setOptions(this.polygonInQueue);
     } else {

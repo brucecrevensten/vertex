@@ -1,31 +1,31 @@
 var DataProductFile = Backbone.Model.extend( {
  /* Structure of this model:
   {
-          thumbnail: data[i].THUMBNAIL,
-          granulename: data[i].GRANULENAME,
-          id: data[i].ID,
-          processingType: data[i].PROCESSINGTYPE,
-          processingTypeDisplay: data[i].PROCESSINGTYPEDISPLAY,
-          processingLevel: data[i].PROCESSINGLEVEL,
-          processingDescription: data[i].PROCESSINGDESCRIPTION,
-          url: data[i].URL,
-          platform: data[i].PLATFORM,
-          acquisitionDate: data[i].ACQUISITIONDATE,
-          bytes: data[i].BYTES,
-          sizeText: AsfUtility.bytesToString(data[i].BYTES),
-          md5sum: data[i].MD5SUM,
-          filename: data[i].FILENAME
+          thumbnail: data[i].thumbnail,
+          granuleName: data[i].granuleName,
+          id: data[i].id,
+          processingType: data[i].processingType,
+          processingTypeDisplay: data[i].processingTypeDisplay,
+          processingLevel: data[i].processingLevel,
+          processingTypeDescription: data[i].processingTypeDescription,
+          url: data[i].url,
+          platform: data[i].platform,
+          acquisitionDate: data[i].acquisitionDate,
+          bytes: data[i].bytes,
+          sizeText: AsfUtility.bytesToString(data[i].bytes),
+          md5sum: data[i].md5sum,
+          filename: data[i].fileName
   }
  */
   initialize: function() {
-    if(window.SearchApp && SearchApp.searchResults.get(this.get('GRANULENAME'))) {
-      var obj = SearchApp.searchResults.get(this.get('GRANULENAME'));
+    if(window.SearchApp && SearchApp.searchResults.get(this.get('granuleName'))) {
+      var obj = SearchApp.searchResults.get(this.get('granuleName'));
       this.set( {
-         'acquisitionDateText': SearchApp.searchResults.get(this.get('GRANULENAME')).get('ACQUISITIONDATE').substring(0,10),
-         'THUMBNAIL': obj.get('THUMBNAIL'),
+         'acquisitionDateText': obj.get('acquisitionDateText'),
+         'thumbnail': obj.get('thumbnail'),
          'id': this.get('product_file_id'),
-         'PLATFORM': obj.get('PLATFORM'),
-         'sizeText': AsfUtility.bytesToString(this.get('BYTES'))
+         'platform': obj.get('platform'),
+         'sizeText': AsfUtility.bytesToString(this.get('bytes'))
       });
     }
   }
@@ -64,9 +64,9 @@ var DataProductFilesView = Backbone.View.extend( {
     var l = jQuery('<ul/>', { 'class': 'downloads'});
     _.each(this.options.files, function(el, i, list) {
       // Skip if type = BROWSE
-      if( 'BROWSE' == el.PROCESSINGTYPE ) { return; }
+      if( 'BROWSE' == el.processingType ) { return; }
 
-      el.sizeText = AsfUtility.bytesToString(el.BYTES);
+      el.sizeText = AsfUtility.bytesToString(el.bytes);
    
       var li = jQuery('<li/>');
       if(disabled) {
@@ -77,17 +77,17 @@ var DataProductFilesView = Backbone.View.extend( {
           'icons': {
               'primary': "ui-icon-circle-arrow-s"
             }, 
-            label: _.template("&nbsp;&nbsp;&nbsp;<%= PROCESSINGTYPEDISPLAY %> (<%= sizeText %>)", el) }) );
+            label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", el) }) );
       } else {
         li.append( jQuery('<a/>', {
-          'href': el.URL,
+          'href': el.url,
           'class': 'tool_download',
           'target': '_blank',
         }).button( {
           'icons': {
             'primary': "ui-icon-circle-arrow-s"
           },
-          label: _.template("&nbsp;&nbsp;&nbsp;<%= PROCESSINGTYPEDISPLAY %> (<%= sizeText %>)", el) 
+          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", el) 
         }).click(function() {
           if(typeof ntptEventTag == 'function') {
             ntptEventTag('ev=downloadProduct');
@@ -99,7 +99,7 @@ var DataProductFilesView = Backbone.View.extend( {
       li.append( $('<button>Add to queue</button>', {
         'class': 'tool_enqueuer',
         'title': 'Add to download queue'
-      }).attr('product_id', el.GRANULENAME).attr('product_file_id', el.product_file_id).click( function(e) {
+      }).attr('product_id', el.granuleName).attr('product_file_id', el.product_file_id).click( function(e) {
         var el = $(this);
         if ( el.prop('disabled') == 'disabled' ) { return false; }
         if ( el.prop('selected') == 'selected' ) {
@@ -144,18 +144,16 @@ var DataProduct = Backbone.Model.extend({
   initialize: function() {
     this.name = 'DataProduct';
     this.files = new DataProductFiles();
-    var fdr = this.get('FARADAYROTATION');
+    var fdr = this.get('faradayRotation');
     if(_.isNumber(fdr)) {
       fdr = fdr.toFixed(2);
     }
     this.set({
-      'ASCENDINGDESCENDING': AsfUtility.ucfirst( this.get('ASCENDINGDESCENDING')),
-      'acquisitionDateText': ( true != _.isUndefined( this.get('ACQUISITIONDATE') ) ) ?
-        $.datepicker.formatDate( 'yy-mm-dd', $.datepicker.parseDate('yy-mm-dd', this.get('ACQUISITIONDATE').substring(0,10))) : '',
-      'FARADAYROTATION': fdr
+      'ascendingDescending': AsfUtility.ucfirst( this.get('ascendingDescending')),
+      'faradayRotation': fdr
     });
-    if(this.get('BEAMMODETYPE') == 'POL') {
-      this.set({'BEAMMODETYPE': 'PolSAR'});
+    if(this.get('beamModeType') == 'POL') {
+      this.set({'beamModeType': 'PolSAR'});
     }
   }
 });
@@ -191,10 +189,10 @@ window.showInlineProductFiles = function(event, product) {
     _.each(model.get('FILES'), function(file) {
       
       // skip if BROWSE
-      if( 'BROWSE' == file.PROCESSINGTYPE) { return; }
+      if( 'BROWSE' == file.processingType) { return; }
 
-      var id = file.GRANULENAME;
-      var file_id = file.GRANULENAME + '_' + file.PROCESSINGTYPE;
+      var id = file.granuleName;
+      var file_id = file.granuleName + '_' + file.processingType;
 
       var lit = $('<li/>');
       var btn = $('<button>Add to queue...</button>')
@@ -231,7 +229,7 @@ window.showInlineProductFiles = function(event, product) {
         }
         ).button(
           {
-            'label': file.PROCESSINGTYPEDISPLAY + ' (' + AsfUtility.bytesToString(file.BYTES) + ')',
+            'label': file.processingTypeDisplay + ' (' + AsfUtility.bytesToString(file.bytes) + ')',
             'icons': {
               'primary':'ui-icon-circle-plus'
             }
@@ -268,51 +266,51 @@ var DataProductView = Backbone.View.extend(
   {
     width: 500, // width of the rendered Product Profile; will be changed depending on missing image, etc
     getTemplate: function() {
-      switch(this.model.get('PLATFORM')) {
+      switch(this.model.get('platform')) {
         case 'ALOS': return '\
 <h4>ALOS PALSAR</h4>\
 <ul class="metadata">\
-<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= BEAMMODEDESC %>"><%= BEAMMODETYPE %></span></li>\
-<li><span>Orbit</span>: <%= ORBIT %></li>\
-<li><span>Path</span>: <%= PATHNUMBER %></li>\
-<li><span>Frame</span>: <%= FRAMENUMBER %></li>\
+<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= beamModeDesc %>"><%= beamModeType %></span></li>\
+<li><span>Orbit</span>: <%= orbit %></li>\
+<li><span>Path</span>: <%= pathNumber %></li>\
+<li><span>Frame</span>: <%= frameNumber %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
-<li><span>Faraday rotation</span>: <%= FARADAYROTATION %>&deg;</li>\
-<li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
-<li><span>Off Nadir Angle</span>: <%= OFFNADIRANGLE %>&deg;</li>\
+<li><span>Faraday rotation</span>: <%= faradayRotation %>&deg;</li>\
+<li><span>Ascending/Descending</span>: <%= ascendingDescending %></li>\
+<li><span>Off Nadir Angle</span>: <%= offNadirAngle %>&deg;</li>\
 <li><span>Frequency</span>: L-Band</li>\
-<li><span>Polarization</span>: <%= POLARIZATION %></li>\
+<li><span>Polarization</span>: <%= polarization %></li>\
 </ul>\
 ';
         case 'UAVSAR': return '\
 <ul class="metadata">\
-<li><span>Mission</span>: <%= MISSIONNAME %></li>\
-<li><span>Beam mode</span>: <%= BEAMMODEDESC %></li>\
+<li><span>Mission</span>: <%= missionName %></li>\
+<li><span>Beam mode</span>: <%= beamModeDesc %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
 <li><span>Frequency</span>: L-Band</li>\
-<li><span>Polarization</span>: <%= POLARIZATION %></li>\
+<li><span>Polarization</span>: <%= polarization %></li>\
 </ul>\
 ';
         case 'JERS-1': return '\
 <ul class="metadata">\
-<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= BEAMMODEDESC %>"><%= BEAMMODETYPE %></span></li>\
-<li><span>Frame</span>: <%= FRAMENUMBER %></li>\
-<li><span>Orbit</span>: <%= ORBIT %></li>\
+<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= beamModeDesc %>"><%= beamModeType %></span></li>\
+<li><span>Frame</span>: <%= frameNumber %></li>\
+<li><span>Orbit</span>: <%= orbit %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
-<li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
+<li><span>Ascending/Descending</span>: <%= ascendingDescending %></li>\
 <li><span>Frequency</span>: L-Band</li>\
-<li><span>Polarization</span>: <%= POLARIZATION %></li>\
+<li><span>Polarization</span>: <%= polarization %></li>\
 </ul>\
 ';
         default: return '\
 <ul class="metadata">\
-<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= BEAMMODEDESC %>"><%= BEAMMODETYPE %></span></li>\
-<li><span>Frame</span>: <%= FRAMENUMBER %></li>\
-<li><span>Orbit</span>: <%= ORBIT %></li>\
+<li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= beamModeDesc %>"><%= beamModeType %></span></li>\
+<li><span>Frame</span>: <%= frameNumber %></li>\
+<li><span>Orbit</span>: <%= orbit %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
-<li><span>Ascending/Descending</span>: <%= ASCENDINGDESCENDING %></li>\
+<li><span>Ascending/Descending</span>: <%= ascendingDescending %></li>\
 <li><span>Frequency</span>: C-Band</li>\
-<li><span>Polarization</span>: <%= POLARIZATION %></li>\
+<li><span>Polarization</span>: <%= polarization %></li>\
 </ul>\
 ';
 

@@ -59,7 +59,7 @@ var PostFiltersView = Backbone.View.extend(
     var u = jQuery('<ul/>');
 
     for ( var i in this.widgets ) {
-      if( -1 != _.indexOf( _.uniq(this.options.searchResults.pluck('PLATFORM')), this.widgets[i].name )) {
+      if( -1 != _.indexOf( _.uniq(this.options.searchResults.pluck('platform')), this.widgets[i].name )) {
         u.append( jQuery('<li/>').append( this.widgets[i].render().el) );
         render = true;
       } 
@@ -190,22 +190,22 @@ var AlosFacet = PlatformFacet.extend(
     filter: function(data) {
       var ret = false;
       var key = '';
-      if(data.BEAMMODETYPE === 'WB1' || data.BEAMMODETYPE === 'WB2') {
+      if(data.beamModeType === 'WB1' || data.beamModeType === 'WB2') {
         // Special case for WB* -- We don't always know the off nadir angle.
-        key = data.BEAMMODETYPE;
+        key = data.beamModeType;
       } else {
-        key = data.BEAMMODETYPE + ' ' + data.OFFNADIRANGLE;
+        key = data.beamModeType + ' ' + data.offNadirAngle;
       }
       if(_.any(this.get('beamoffnadir'), function(row) {return(row === key);})){
         ret = true;
       }
-      if(this.get('frame') === data.FRAMENUMBER) {
+      if(this.get('frame') === data.frameNumber) {
         ret = true;
       }
-      if(this.get('path') === data.PATHNUMBER) {
+      if(this.get('path') === data.pathNumber) {
         ret = true;
       }
-      if(this.get('direction') == data.ASCENDINGDESCENDING.toUpperCase()) {
+      if(this.get('direction') == data.ascendingDescending.toUpperCase()) {
         ret = true;
       }
       return(ret);
@@ -432,17 +432,17 @@ var RadarsatFacet = PlatformFacet.extend(
     
     filter: function(data) {
       var ret = false;
-      var beam = data.BEAMMODETYPE;
+      var beam = data.beamModeType;
       if(_.any(this.get('beam'), function(row) { return(row === beam); })) {
         ret = true;
       }
-      if(this.get('frame') === data.FRAMENUMBER) {
+      if(this.get('frame') === data.frameNumber) {
         ret = true;
       }
-      if(this.get('path') === data.PATHNUMBER) {
+      if(this.get('path') === data.pathNumber) {
         ret = true;
       }
-      if(this.get('direction') == data.ASCENDINGDESCENDING.toUpperCase()) {
+      if(this.get('direction') == data.ascendingDescending.toUpperCase()) {
         ret = true;
       }
       return(ret);
@@ -646,13 +646,13 @@ var LegacyFacet = PlatformFacet.extend(
     },
     filter: function(data) {
       var ret = false;
-      if(this.get('frame') === data.FRAMENUMBER) {
+      if(this.get('frame') === data.frameNumber) {
         ret = true;
       }
-      if(this.get('path') === data.PATHNUMBER) {
+      if(this.get('path') === data.pathNumber) {
         ret = true;
       }
-      if(this.get('direction') == data.ASCENDINGDESCENDING.toUpperCase()) {
+      if(this.get('direction') == data.ascendingDescending.toUpperCase()) {
         ret = true;
       }
       return(ret);
