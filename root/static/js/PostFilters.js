@@ -200,10 +200,10 @@ var AlosFacet = PlatformFacet.extend(
       if(_.any(this.get('beamoffnadir'), function(row) {return(row === key);})){
         ret = true;
       }
-      if(this.get('frame') === data.frameNumber) {
+      if(this.get('frame') == data.frameNumber) {
         ret = true;
       }
-      if(this.get('path') === data.pathNumber) {
+      if(this.get('path') == data.pathNumber) {
         ret = true;
       }
       if(this.get('direction') == data.ascendingDescending.toUpperCase()) {
@@ -439,10 +439,10 @@ var RadarsatFacet = PlatformFacet.extend(
       if(_.any(this.get('beam'), function(row) { return(row === beam); })) {
         ret = true;
       }
-      if(this.get('frame') === data.frameNumber) {
+      if(this.get('frame') == data.frameNumber) {
         ret = true;
       }
-      if(this.get('path') === data.orbit) {
+      if(this.get('path') == data.orbit) {
         ret = true;
       }
       if(this.get('direction') == data.ascendingDescending.toUpperCase()) {
@@ -651,10 +651,10 @@ var LegacyFacet = PlatformFacet.extend(
     },
     filter: function(data) {
       var ret = false;
-      if(this.get('frame') === data.frameNumber) {
+      if(this.get('frame') == data.frameNumber) {
         ret = true;
       }
-      if(this.get('path') === data.orbit) {
+      if(this.get('path') == data.orbit) {
         ret = true;
       }
       if(this.get('direction') == data.ascendingDescending.toUpperCase()) {
