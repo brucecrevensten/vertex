@@ -182,6 +182,7 @@ var AlosFacet = PlatformFacet.extend(
     reset: function() {
       this.set(this.defaults, {'silent': true});
       this.set({'beamoffnadir': []}, {'silent': true});
+      this.active = false;
     },
     getWidget: function() {
       return new AlosFacetButton({model: this});
@@ -392,7 +393,9 @@ var RadarsatFacet = PlatformFacet.extend(
     reset: function() {
       this.set(this.defaults, {'silent': true});
       this.set({'beam': []}, {'silent': true});
+      this.active = false;
     },
+    active: false,
     defaults: {
       path: null,
       frame: null,
@@ -634,8 +637,10 @@ var LegacyFacet = PlatformFacet.extend(
       frame: null,
       direction: 'any'
     },
+    active: false,
     reset: function() {
       this.set(this.defaults, {'silent': true});
+      this.active = false;
     },
     initialize: function(d) {
       this.platform = d.platform;
