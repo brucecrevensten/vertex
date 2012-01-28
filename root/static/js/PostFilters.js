@@ -634,6 +634,9 @@ var LegacyFacet = PlatformFacet.extend(
       frame: null,
       direction: 'any'
     },
+    reset: function() {
+      this.set(this.defaults, {'silent': true});
+    },
     initialize: function(d) {
       this.platform = d.platform;
       this.offset = d.offset;
@@ -641,7 +644,18 @@ var LegacyFacet = PlatformFacet.extend(
     getWidget: function() {
       return new LegacyFacetButton({model: this});
     },
-    filter: function( d ) {
+    filter: function(data) {
+      var ret = false;
+      if(this.get('frame') === data.FRAMENUMBER) {
+        ret = true;
+      }
+      if(this.get('path') === data.PATHNUMBER) {
+        ret = true;
+      }
+      if(this.get('direction') == data.ASCENDINGDESCENDING.toUpperCase()) {
+        ret = true;
+      }
+      return(ret);
     }
   }
 );
@@ -692,65 +706,32 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   },
 
   setFilters: function() {
-
-      if (this.model.platform == "JERS-1") {
-        this.filterDictionaryObject=SearchApp.filterDictionaryJ1;
+    this.model.reset();
+    this.model.active = false;
+    
+    $(this.el).find('input[name=direction]').each(jQuery.proxy(function(i, row){
+      var e = $(row);
+      if((e.attr('checked') === 'checked') && (e.val() != 'any')) {
+        this.model.set({'direction': e.val()}, {'silent': true});
+        this.model.active = true;
       }
-      if (this.model.platform == "ERS-1") {
-        this.filterDictionaryObject=SearchApp.filterDictionaryE1;
+    }, this));
+    $(this.el).find('input[name=path]').each(jQuery.proxy(function(i, row) {
+      var e = $(row);
+      if(e.val() != '') {
+        this.model.set({'path': e.val()}, {'silent': true});
+        this.model.active = true;
       }
-      if (this.model.platform == "ERS-2") {
-        this.filterDictionaryObject=SearchApp.filterDictionaryE2;
+    }, this));
+    $(this.el).find('input[name=frame]').each(jQuery.proxy(function(i, row) {
+      var e = $(row);
+      if(e.val() != '') {
+        this.model.set({'frame': e.val()}, {'silent': true});
+        this.model.active = true;
       }
-     var filterDictionaryObject = this.filterDictionaryObject;
-         // Flight Directions
-       $(this.el).find('input[name="direction"]').click(jQuery.proxy(function(e) {
-        $('.ui-dialog-buttonpane').find('button:contains("Apply")').button().focus();
-          var curEl = $(e.currentTarget);
-          $(this.el).find('input[type="radio"]').each( jQuery.proxy(function(i,element) {
-                filterDictionaryObject.remove( $(element).val() + this.model.platform );
-          },this));
-          if (curEl.val() != "any") {
-             filterDictionaryObject.add($(curEl).val() + this.model.platform, $(curEl).val());
-          }
-        },this)); 
-
-                //  Path
-     $(this.el).find('input[name="path"]').bind('input', jQuery.proxy(function(e) { 
-       $('.ui-dialog-buttonpane').find('button:contains("Apply")').attr("class", 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover');
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-               
-              filterDictionaryObject.remove("ORBIT"+this.model.platform);
-            } else {
-              filterDictionaryObject.add("ORBIT"+this.model.platform,el.val());
-            }
-          }, this));
-
-          //  FRAME
-     $(this.el).find('input[name="frame"]').bind('input', jQuery.proxy(function(e) { 
-       $('.ui-dialog-buttonpane').find('button:contains("Apply")').attr("class", 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-hover');
-            var el = $(e.currentTarget);
-            if (el.val() == "") {
-              filterDictionaryObject.remove("FRAME"+this.model.platform);
-            } else {
-               filterDictionaryObject.add("FRAME"+this.model.platform,el.val());
-            }
-          }, this));
+    }, this));
   },
   render: function() {
-     
-      if (this.model.platform == "JERS-1") {
-        this.filterDictionaryObject=SearchApp.filterDictionaryJ1;
-      }
-      if (this.model.platform == "ERS-1") {
-        this.filterDictionaryObject=SearchApp.filterDictionaryE1;
-      }
-      if (this.model.platform == "ERS-2") {
-        this.filterDictionaryObject=SearchApp.filterDictionaryE2;
-      }
-     var filterDictionaryObject = this.filterDictionaryObject;
-    
     if( true !== this.hasRendered ) {
       this.renderHtml();
     }
@@ -763,26 +744,14 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
       title: this.model.platform + " Platform Options",
       position: [50 + this.model.offset, 120 + this.model.offset ],
       buttons: {
-        "Apply": function() {  
-            SearchApp.dataTable.fnDraw();
-          SearchApp.searchResultsView.refreshMap();
-          },
-        "Reset": jQuery.proxy( function() {
-          this.model.set(this.model.defaults);
-          this.renderHtml();
-          
-           if (this.model.platform == "JERS-1") {
-            SearchApp.filterDictionaryJ1.clear();
-           }
-           if (this.model.platform == "ERS-1") {
-              SearchApp.filterDictionaryE1.clear();
-            }
-            if (this.model.platform == "ERS-2") {
-                  
-                SearchApp.filterDictionaryE2.clear();
-            }
+        "Apply": jQuery.proxy(function() {  
+          this.setFilters();
           SearchApp.dataTable.fnDraw();
-          SearchApp.searchResultsView.refreshMap();
+          }, this),
+        "Reset": jQuery.proxy( function() {
+          this.model.reset();
+          this.renderHtml();
+          SearchApp.dataTable.fnDraw();
         }, this)
       }
     });

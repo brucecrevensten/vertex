@@ -20,13 +20,9 @@ window.SearchAppView = Backbone.View.extend({
 
     $.fn.dataTableExt.afnFiltering.push(
       jQuery.proxy( function( oSettings, aData, iDataIndex ) {
-        var data = oSettings.aoData[iDataIndex]._aData;
-        var key = data.BEAMMODETYPE + ' ' + data.OFFNADIRANGLE;
-        var platform = data.PLATFORM;
         if(_.any(_.pluck(this.postFilters.postFilters, 'active'))) {
           // Only apply active filters.
           var data = oSettings.aoData[iDataIndex]._aData;
-          var key = data.BEAMMODETYPE + ' ' + data.OFFNADIRANGLE;
           var platform = data.PLATFORM;
           var postfilter = _.find(this.postFilters.postFilters,
             function(row) { return(row.active && (row.platform === platform)); }
