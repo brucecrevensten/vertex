@@ -180,8 +180,8 @@ var AlosFacet = PlatformFacet.extend(
     initialize: function() {
     },
     reset: function() {
-      this.set(this.defaults);
-      this.set({'beamoffnadir': []});
+      this.set(this.defaults, {'silent': true});
+      this.set({'beamoffnadir': []}, {'silent': true});
     },
     getWidget: function() {
       return new AlosFacetButton({model: this});
@@ -296,7 +296,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
   },
   setFilters: function() {
-    this.model.set({'beamoffnadir': []}, {'silent': true});
+    this.model.reset();
     this.model.active = false;
     // Beam Modes
     $(this.el).find('input.beamSelector').each(jQuery.proxy(function(i, row) {
@@ -390,8 +390,8 @@ var RadarsatFacet = PlatformFacet.extend(
     initialize: function() {
     },
     reset: function() {
-      this.set(this.defaults);
-      this.set({'beam': []});
+      this.set(this.defaults, {'silent': true});
+      this.set({'beam': []}, {'silent': true});
     },
     defaults: {
       path: null,
@@ -476,6 +476,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   initialize: function() {
     _.bindAll(this);
     this.model.bind('change', this.renderHtml, this);
+    this.model.bind('reset', this.renderHtml, this);
   },
   beamModes: [
     { title: "Extended High Incidence Beam, Off-Nadir 52-58&deg;",
@@ -561,11 +562,12 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
   },
   setFilters: function() {
     this.model.reset();
+    this.model.active = false;
     
     $(this.el).find('input.beamSelector').each(jQuery.proxy(function(i, row) { 
       var e = $(row);
       if(e.attr('checked') === 'checked') {
-        var a = this.model.get('beamoffnadir');
+        var a = this.model.get('beam');
         a.push(e.val());
         _.uniq(a);
         this.model.set({'beamoffnadir': a}, {'silent': true});
