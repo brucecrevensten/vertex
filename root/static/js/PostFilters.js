@@ -439,7 +439,7 @@ var RadarsatFacet = PlatformFacet.extend(
       if(this.get('frame') === data.frameNumber) {
         ret = true;
       }
-      if(this.get('path') === data.pathNumber) {
+      if(this.get('path') === data.orbit) {
         ret = true;
       }
       if(this.get('direction') == data.ascendingDescending.toUpperCase()) {
@@ -649,7 +649,7 @@ var LegacyFacet = PlatformFacet.extend(
       if(this.get('frame') === data.frameNumber) {
         ret = true;
       }
-      if(this.get('path') === data.pathNumber) {
+      if(this.get('path') === data.orbit) {
         ret = true;
       }
       if(this.get('direction') == data.ascendingDescending.toUpperCase()) {
