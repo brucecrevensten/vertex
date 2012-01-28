@@ -356,7 +356,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
           SearchApp.dataTable.fnDraw();
         }, this)
       }
-    }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } ); 
+    }); 
    
     
      
@@ -620,7 +620,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
           SearchApp.dataTable.fnDraw();
         }, this)
       }
-    }).bind( "dialogclose", function(event, ui) {SearchApp.dataTable.fnDraw(); } );
+    });
 
 
   }
@@ -755,12 +755,5 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
         }, this)
       }
     });
-
-      
-    
-
-
-
   }
-}
-);
+});
