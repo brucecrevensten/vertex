@@ -292,7 +292,6 @@ var SearchResultsView = Backbone.View.extend(
   	  }
       return this;
     }
-    var start = new Date().getTime()
      this.dataTable = $('#searchResults').dataTable(
       { 
         'aaData': this.collection.toJSON(),
@@ -314,8 +313,6 @@ var SearchResultsView = Backbone.View.extend(
           "fnRowCallback": jQuery.proxy(this.dtRowCallback, this),
           "bDeferRender": true
     });
-    var end = new Date().getTime();
-    console.log('dt loop: ' + (end - start));
     this.showResults();
 
     SearchApp.dataTable = this.dataTable;
@@ -343,7 +340,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   dtDrawCallback: function(oSettings) {
-    var start = new Date().getTime();
     this.setMapBounds();
     $('.productRow').on('mouseenter', this.toggleHighlight );
     $('.productRow').on('mouseleave', this.removeHighlight );
@@ -354,8 +350,6 @@ var SearchResultsView = Backbone.View.extend(
     });
     this.collection.procTypes = a;
     this.collection.trigger('refreshProcTypes');
-    var end = new Date().getTime();
-    console.log('dtDrawCallback: ' + (end - start));
   },
 
   dtRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
