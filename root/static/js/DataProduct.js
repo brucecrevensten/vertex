@@ -144,9 +144,11 @@ var DataProduct = Backbone.Model.extend({
   initialize: function() {
     this.name = 'DataProduct';
     this.files = new DataProductFiles();
-    var fdr = this.get('faradayRotation');
+    var fdr = parseFloat(this.get('faradayRotation'));
     if(_.isNumber(fdr)) {
       fdr = fdr.toFixed(2);
+    } else {
+      fdr = this.get('faradayRotation');
     }
     this.set({
       'ascendingDescending': AsfUtility.ucfirst( this.get('ascendingDescending')),
