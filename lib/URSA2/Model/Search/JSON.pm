@@ -77,7 +77,6 @@ sub doQuery {
     my $g = $row->{'GRANULENAME'};
     if(!exists($res->{$g})) {
       $res->{$g} = {
-        'acquisitionDateText' => $row->{'ACQUISITIONDATETEXT'},
         'acquisitionDate'     => $row->{'ACQUISITIONDATE'},
         'ascendingDescending' => $row->{'ASCENDINGDESCENDING'},
         'beamModeDesc'        => $row->{'BEAMMODEDESC'},

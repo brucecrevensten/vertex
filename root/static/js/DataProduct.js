@@ -21,7 +21,7 @@ var DataProductFile = Backbone.Model.extend( {
     if(window.SearchApp && SearchApp.searchResults.get(this.get('granuleName'))) {
       var obj = SearchApp.searchResults.get(this.get('granuleName'));
       this.set( {
-         'acquisitionDateText': obj.get('acquisitionDateText'),
+         'acquisitionDateText': obj.get('acquisitionDate').substring(0,10),
          'thumbnail': obj.get('thumbnail'),
          'id': this.get('product_file_id'),
          'platform': obj.get('platform'),
@@ -150,6 +150,7 @@ var DataProduct = Backbone.Model.extend({
     }
     this.set({
       'ascendingDescending': AsfUtility.ucfirst( this.get('ascendingDescending')),
+      'acquisitionDateText': this.get('acquisitionDate').substr(0,10),
       'faradayRotation': fdr
     });
     if(this.get('beamModeType') == 'POL') {
