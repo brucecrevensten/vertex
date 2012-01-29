@@ -32,7 +32,7 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
         $(this).remove();
         $('#ppImageLoading').hide();
       });
-      var s = m.files.select( function(row) { return ( 'browse' == row.get('processingType') ) } );
+      var s = m.files.select( function(row) { return ( 'BROWSE' == row.get('processingType') ) } );
       t.load(function() {
         // Scale the image to be no bigger then 512px and preserve the aspect
         // ratio. This must be done here, we can only get the image dimensions
