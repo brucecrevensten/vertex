@@ -691,6 +691,7 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   initialize: function() {
     _.bindAll(this);
     this.model.bind('change', this.renderHtml, this);
+    this.model.bind('reset', this.renderHtml, this);
   },
   renderHtml: function() {
     var el = $(this.el);
