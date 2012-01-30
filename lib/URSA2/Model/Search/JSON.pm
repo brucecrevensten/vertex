@@ -99,7 +99,7 @@ sub doQuery {
         'nearStartLat'        => $row->{'NEARSTARTLAT'} + 0,
         'nearStartLon'        => $row->{'NEARSTARTLON'} + 0,
         'offNadirAngle'       => $row->{'OFFNADIRANGLE'},
-        'orbit'               => $row->{'ORBIT'} + 0,
+        'orbit'               => $row->{'ORBIT'},
         'pathNumber'          => $row->{'PATHNUMBER'},
         'platform'            => $row->{'PLATFORM'},
         'polarization'        => $row->{'POLARIZATION'},
