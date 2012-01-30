@@ -172,20 +172,20 @@ var SearchResultsView = Backbone.View.extend(
         <h4 title="<%= beamModeDesc %>"><%= platform %> PALSAR\
           <span class="beam"><%= beamModeType %></span>\
           <span class="date"><%= acquisitionDateText %></span>\
-        <\h4>\
+        </h4>\
         <p>Frame <%= frameNumber %>, Path <%= pathNumber %></p>\
         <p>Off-Nadir <%= offNadirAngle %>&deg;</p>\
       <% } else if("UAVSAR" == platform) { %>\
         <h4 title="<%= beamModeDesc %>"><%= platform %> \
           <span class="beam"><%= beamModeType %></span>\
           <span class="date"><%= acquisitionDateText %></span>\
-        <\h4>\
+        </h4>\
         <p><%= missionName %></p>\
       <% } else { %>\
         <h4 title="<%= beamModeDesc %>"><%= platform %> \
           <span class="beam"><%= beamModeType %></span>\
           <span class="date"><%= acquisitionDateText %></span>\
-        <\h4>\
+        </h4>\
         <p>Frame <%= frameNumber %>, Orbit <%= orbit %></p>\
       <% } %>\
       <div class="productRowTools">\
