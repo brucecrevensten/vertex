@@ -292,26 +292,26 @@ var SearchResultsView = Backbone.View.extend(
   	  }
       return this;
     }
-     this.dataTable = $('#searchResults').dataTable(
-      { 
-        'aaData': this.collection.toJSON(),
-        'aoColumnDefs': [
+    this.dataTable = $('#searchResults').dataTable({ 
+      'aaData': this.collection.toJSON(),
+      'aoColumnDefs': [
           { 'fnRender': this.dtCell, 'aTargets': [0] }
-        ],
-           "oLanguage": {
-            "sSearch": "Find",
-            "sProcessing": "Processing..."
-           },
-          "bProcessing": true,
-          "bAutoWidth": false,
-          "bDestroy": true,     // destroy old table
-          "sScrollY": "500px",
-          "iDisplayLength": 1000, // default number of rows per page
-          "bLengthChange": false ,// do not allow users to change the default page length
-          "fnPreDrawCallback": this.clearOverlays,
-          "fnDrawCallback": jQuery.proxy(this.dtDrawCallback, this),
-          "fnRowCallback": jQuery.proxy(this.dtRowCallback, this),
-          "bDeferRender": true
+      ],
+      "oLanguage": {
+        "sSearch": "Find",
+        "sProcessing": "Processing..."
+      },
+      "bProcessing": true,
+      "bAutoWidth": false,
+      "bDestroy": true,
+      "sScrollY": "500px",
+      "iDisplayLength": 1000,
+      "bLengthChange": false ,
+      "fnPreDrawCallback": this.clearOverlays,
+      "fnDrawCallback": jQuery.proxy(this.dtDrawCallback, this),
+      "fnRowCallback": jQuery.proxy(this.dtRowCallback, this),
+      //"bDeferRender": true,
+      //'sDom': '<"top"pif>rt<"bottom"l><"clear">'
     });
     this.showResults();
 
