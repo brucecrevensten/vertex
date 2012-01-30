@@ -157,9 +157,11 @@ SKIP: {
   $mech->post_ok($surn, { granule_list => 'R1_63549_ST1_F165,R1_65186_ST3_F291', format => 'json', processing => 'L0' });
   my $json = from_json( $mech->content() );
   my $f = 1;
-  foreach my $g ( @{$json}) {
-    if ( $g->{'PROCESSINGTYPE'} ne 'L0' ) {
-      $f = 0;
+  foreach my $g (@{$json}) {
+    foreach my $row (@{$g->{'files'}}) {
+      if ( $row->{'processingType'} ne 'L0' ) {
+        $f = 0;
+      }
     }
   }
   is($f, 1, 'TC1127: specifying processing level only returns items with that processing level');
