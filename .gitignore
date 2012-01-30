@@ -4,3 +4,9 @@ root/static/js/AsfConfig.js
 vertex.esproj
 WCSFormSubmitterWidget.htm
 WCSFormSubmitterWidget_original.css
+/nbproject/private/
+nbproject
+vertex-sprint-11.sublime-workspace
+vertex-sprint-11.sublime-project
+vertex-sprint-11.esproj
+sftp-config.json

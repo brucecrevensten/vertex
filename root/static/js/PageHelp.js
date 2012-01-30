@@ -1,0 +1,141 @@
+var PageHelp = Backbone.Model.extend({
+	url: AsfDataportalConfig.PageHelpUrl,
+	defaults: {
+		'name':'unknown',
+		'email':'unknown'
+	},
+	validate: function(attrs) {
+                if( true == _.isUndefined( attrs.name ) || 0 == attrs.name ) {
+			return { 'type':'local', 'message':'"Name" field is required to submit this form.'};
+                }
+                if( true == _.isUndefined( attrs.email ) || 0 == attrs.email ) {
+			return { 'type':'local', 'message':'"Email" field is required to submit this form.'}
+                }
+		if( true == _.isUndefined( attrs.comment ) || 0 == attrs.comment ) {
+			return { 'type':'local', 'message':'"Comment" field is required to submit this form.'};
+		}
+	}
+});
+
+var PageHelpButton = Backbone.View.extend( {
+	el: '#PageHelpButton',
+	render: function() {
+		$(this.el).html( '<a>PageHelp</a>' ).click( function() {
+      if(typeof ntptEventTag == 'function') {
+        ntptEventTag('ev=PageHelp');
+      }
+			var v = new PageHelpForm( { model: new PageHelp() } );
+			v.render();
+		}).button({
+			'label':'PageHelp',
+			'icons': {
+				'primary':'ui-icon-mail-closed'
+			}
+		});
+	}
+});
+
+var PageHelpForm = Backbone.View.extend({
+	el: '#PageHelpForm',
+	initialize: function() {
+		_.bindAll(this, "render");
+	},
+	render: function() {
+		$(this.el).html(
+'<form>\
+<p>We welcome your comments!  If you need direct support or help, please contact ASF User Support at uso@asf.alaska.edu or at (907) 474-6166.</p><br />\
+<p class="alert">Submission of this form will send your comments to our Vertex support group mailing list and discussion forum which can be accessed directly at <a href="http://groups.google.com/group/asf-vertex">http://groups.google.com/group/asf-vertex</a></p>\
+<div>\
+<label for="fc_name">Name (Required)</label><input id="fc_name" class="required" size="30" name="name" />\
+</div>\
+<div>\
+<label for="fc_email">Email (Required)</label><input id="fc_email" class="required" size="30" name="email" />\
+</div>\
+<div>\
+<label for="fc_comments">Comments (Required)</label><textarea id="fc_comments" class="required" cols="40" rows="8" name="comment" /></textarea>\
+</div>\
+<input id="fc_userid" type="hidden" name="userid" />\
+</form>\
+');
+		$(this.el).find('#fc_userid').val( SearchApp.user.userid );
+		$(this.el).dialog(
+			{
+	      		width: 400,
+		      	modal: true,
+		      	draggable: false,
+		      	resizable: false,
+		      	title: "Give us PageHelp on this user interface!",
+		      	position: "center",
+		      	buttons:
+		      	{
+				"Cancel" : function()
+					{
+						$( this ).dialog('close');
+					},
+				"Send PageHelp": $.proxy( function()
+					{
+            if(typeof ntptEventTag == 'function') {
+              ntptEventTag('ev=submitPageHelp');
+            }
+						this.model.save( $(this.el).find('form').serializeJSON(),
+							{
+								success: $.proxy( function(model, response)
+									{
+										$(this.el).html(
+'<div class="ui-widget">\
+<div class="ui-state-highlight ui-corner-all" style="padding: 1em;"><p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>\
+<strong>Thanks!</strong>&nbsp;\
+Your PageHelp has been recorded.\
+</p></div></div>\
+										').dialog(
+											{
+												width: 400,
+												modal: true,
+												draggable: false,
+												resizable: false,
+												title: "Thanks for providing PageHelp!",
+												position: "center",
+												buttons:
+													{
+														'Close' : function()
+															{ $(this).dialog('close'); }
+													}
+											}
+										);
+									}, this),
+								error: $.proxy( function(model, response)
+									{ 
+										// Error local (validation) or remote (server trouble?)
+										if( true != _.isUndefined( response.type ) && 'local' == response.type ) {
+											alert(response.message);
+										} else {
+											$(this.el).html(
+	'<div class="ui-widget">\
+	<div class="ui-state-error ui-corner-all" style="padding: 1em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>\
+	Sorry, an error occurred and your PageHelp could not be saved.  Please email uso@asf.alaska.edu or call (907) 474-4166 if you would like to contribute some PageHelp.\
+	</p></div></div>\
+										').dialog(
+											{
+												width: 400,
+												modal: true,
+												draggable: false,
+												resizable: false,
+												title: "Failed to save PageHelp",
+												position: "center",
+												buttons:
+													{
+														'Close' : function() { $(this).dialog('close'); }
+													}
+											}
+										);
+									}
+								}, this)
+			  				}	
+			  			);
+			  		}, this) // end submit PageHelp button
+			  	}
+			}
+		);
+	    return this;
+	}
+});
