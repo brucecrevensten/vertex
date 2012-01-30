@@ -57,7 +57,7 @@ describe("UserAuth.js", function(){
       console.log(this.user);
     });
 
-    it('Will provide Universal credentials to authorized users', function(){
+    it('Will provide credentials to authorized users', function(){
       this.user = new User({"userid": "testUser", "password": "testtest"});
 
       expect(this.user.authenticate).toBeDefined();
@@ -72,16 +72,18 @@ describe("UserAuth.js", function(){
       //test the widget renderer values that they are for universal
     });
 
-    it('Will provide ALOS credentials to authorized users', function(){
-
-    });
-
-    it('Will provide LEGACY credentials to authorized users', function(){
-
-    });
-
     it('Will default to providing Unrestricted credentials to users without other authentication', function(){
+      this.user = new User({"userid": "testUser", "password": "testtest"});
 
+      expect(this.user.authenticate).toBeDefined();
+
+      this.user.authenticate();
+      expect(this.requests.length).toEqual(1);
+
+      this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "Unrestricted", "user_first_name":"Tester"}');
+      console.log(this.user);
+      expect(this.user.get("authenticated")).toBeTruthy();
+      expect(this.user.get("authType")).toBe("Unrestricted");
     });
 
 
