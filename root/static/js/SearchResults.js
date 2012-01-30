@@ -310,7 +310,7 @@ var SearchResultsView = Backbone.View.extend(
       "fnPreDrawCallback": this.clearOverlays,
       "fnDrawCallback": jQuery.proxy(this.dtDrawCallback, this),
       "fnRowCallback": jQuery.proxy(this.dtRowCallback, this),
-      //"bDeferRender": true,
+      "bDeferRender": true,
       //'sDom': '<"top"pif>rt<"bottom"l><"clear">'
     });
     this.showResults();
