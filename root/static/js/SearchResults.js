@@ -166,7 +166,7 @@ var SearchResultsView = Backbone.View.extend(
 
     this.showBeforeSearchMessage();
     this.dtCellTemplate = _.template('\
-      <img title="<%= granuleName %>" src="<%= thumbnail %>" />\
+      <img class="lazy-thumbnail" data-original="<%= thumbnail %>" title="<%= granuleName %>" src="static/images/grey.gif" />\
       <% if("ALOS" === platform) { %>\
         <h4 title="<%= beamModeDesc %>"><%= platform %> PALSAR\
           <span class="beam"><%= beamModeType %></span>\
@@ -311,6 +311,9 @@ var SearchResultsView = Backbone.View.extend(
     this.setMapBounds();
     $('.productRow').on('mouseenter', this.toggleHighlight );
     $('.productRow').on('mouseleave', this.removeHighlight );
+    $('img.lazy-thumbnail').lazyload({
+      'container': $('div.dataTables_scrollBody')
+    });
     var a = []
     _.each(oSettings.aiDisplay, function(val, key) {
       a = _.union(_.pluck(oSettings.aoData[val]._aData.files,
