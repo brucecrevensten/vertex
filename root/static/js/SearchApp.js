@@ -42,13 +42,6 @@ window.SearchAppView = Backbone.View.extend({
     );
     this.searchParametersView.render();  
 
-    this.activeSearchFiltersView = new ActiveSearchFiltersView(
-    { 
-      'searchParameters': this.searchParameters,
-      'postFilters': this.postFilters
-    }
-    );
-
     this.downloadQueue = new DownloadQueue();
     this.downloadQueueView = new DownloadQueueView( 
     { 
@@ -193,120 +186,6 @@ $.fn.serializeJSON=function() {
 	};
 }
 );
-
-var ActiveSearchFiltersView = Backbone.View.extend(
-{
-  el: '#active-filters-list',
-  initialize: function() {
-
-    _.bindAll(this);
-    this.options.searchParameters.bind('change', this.render);
-    this.options.postFilters.bind('change', this.render);
-
-  },
-  render: function() {
-    $('#active-filters').show();
-    $(this.el).empty();
-    var p = this.options.searchParameters.get('platform');
-    var platformText;
-    if ( _.isEqual( p, AsfPlatformConfig.platform ) ) {
-      platformText = 'All Platforms';
-    } else if( _.isEmpty( p ) ) {
-      platformText = 'No platforms selected'
-    } else {
-      platformText = AsfUtility.rtrim( _.reduce( p, function( m, e ) {
-        return m + AsfPlatformConfig.platformTypes[e] + ', ';
-      }, ''), ', ');
-    }
-
-    var activeDateAndPlatforms = this.options.searchParameters.toJSON();
-    activeDateAndPlatforms['platformText'] = platformText;
-
-    $(this.el).append(
-      _.template('<h4><%= platformText %>: <%= start %>&mdash;<%= end %></li>', activeDateAndPlatforms )
-    );
-    var ul = $('<ul/>');
-
-    var postFilterText;
-    if( true != _.isUndefined( this.options.postFilters ) ) {
-      
-      // We want to iterate over the list of post filters, hence
-      // the unfortunate syntax below
-      _.each( this.options.postFilters.postFilters, function(e, i, l) {
-
-        var f = e.toJSON();
-
-        var postFilterItems = [];
-        if( f.direction && 'any' != f.direction ) {
-          postFilterItems.push( AsfUtility.ucfirst( f.direction ) );
-        }
-        if( f.path ) {
-          // ALOS = special case
-          if( 'ALOS' == i ) {
-            postFilterItems.push( 'Path(s) ' + f.path);
-          } else {
-            postFilterItems.push( 'Orbit(s) ' + f.path);
-          }
-        }
-        if( f.frame ) {
-          postFilterItems.push('Frame(s) '+f.frame)  
-        }
-
-        // ALOS case
-        if( f.beamoffnadir ) {
-          var beamsOffNadirs = [];
-          if ( _.isEqual( f.beamoffnadir, e.defaults.beamoffnadir ) ) {
-            // this either means that _all_ beam modes are selected, so don't paint anything
-          } else {
-            
-            if( _.isEqual( ['empty'], f.beamoffnadir ) ) {
-              // No beam modes selected
-              beamsOffNadirs.push('(No beam modes selected)');
-            } else { 
-              _.each( f.beamoffnadir, function( e, i, l ) {
-                if( 'WB1' == e ) {
-                  beamsOffNadirs.push('WB1');
-                } else if( 'WB2' == e ) {
-                  beamsOffNadirs.push('WB1');                
-                } else {
-                  beamsOffNadirs.push(e.substr(0, 3) + ' (' + e.substr(3) + '&deg;)');
-                }
-              });
-            postFilterItems.push(beamsOffNadirs.join(' / '));
-            }
-          }          
-        }
-
-        // RADARSAT case
-        if( f.beam ) {
-          var beams = [];
-          if( _.isEqual( f.beam, e.defaults.beam) ) {
-            // All beam modes selected, don't display anything
-          } else {
-            if( _.isEqual( ['empty'], e.beam )) {
-              beams.push( '(No beam modes selected)' );            
-            } else {
-              _.each( f.beam, function( e, i, l ) {
-                beams.push(e.substring(1, 3));
-              });
-            }
-            postFilterItems.push(beams.join(' / '));
-          }
-        }
-
-        if( true != _.isEmpty( postFilterItems ) ) {
-          ul.append(
-            _.template('<li><%= postFilters %></li>', { 'postFilters': e.platform + ': '+postFilterItems.join(', ') } )
-          );
-        }
-
-      }, this);
-    }
-    $(this.el).append(ul);
-    return this;
-  }
-
-});
 
 JSON.stringify = JSON.stringify || function (obj) {
 	var t = typeof (obj);

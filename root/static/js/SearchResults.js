@@ -209,7 +209,6 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#results-banner").hide();
     $('#before-search-msg').show();
-    $('#active-filters').hide();
   },
 
   showResults: function() {
@@ -219,7 +218,6 @@ var SearchResultsView = Backbone.View.extend(
     $('#platform_facets').show();
     $("#error-message").hide();
     $("#results-banner").hide();
-    $('#active-filters').show();
     $('#srProcLevelTool').show(); 
   },
 
@@ -231,12 +229,10 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $('#platform_facets').hide();
     this.clearOverlays();
-    $('#active-filters').show();
     $('#srProcLevelTool').hide();
   },
 
   showError: function(jqXHR) {
-    $('#active-filters').show();
     $('#srProcLevelTool').hide();
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
@@ -257,7 +253,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showNoResults: function() {
-    $('#active-filters').show();
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").show();
@@ -332,12 +327,6 @@ var SearchResultsView = Backbone.View.extend(
     $(nRow).attr('onclick', 'window.showProductProfile(\''+aData.id+'\'); return false;');
     this.renderOnMap(aData);
     return(nRow);
-  },
-
-  resetHeight: function() {
-    // 580 = maximum possible height of the search results, before
-    // other dynamic page elements are rendered.
-    $(this.el).height( 575 - ( $('#active-filters').outerHeight() + 31 )); // 31px = fixed height of ProcTypeButton
   },
 
   renderOnMap: function(aData) {
