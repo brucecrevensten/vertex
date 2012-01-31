@@ -36,13 +36,8 @@ var SearchResults = Backbone.Collection.extend(
           if (callback != null) {
               callback(); // this is for using sinon spys in unit tests
            }
-            this.filteredProductCount = undefined; // Reset filtered state
-            this.unfilteredProductCount = data.length;
-
             this.build(data);
-
             this.trigger('refresh');
-			    
         }, this),
         error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
