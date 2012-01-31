@@ -207,7 +207,7 @@ window.showInlineProductFiles = function(event, product) {
           if ( el.prop('disabled') == 'disabled' ) { return false; }
           if ( el.prop('selected') == 'selected' ) {
             if(typeof ntptEventTag == 'function') {
-              ntptDropPair('product_file_id', $(this).attr('product_file_id'));
+              ntptDropPair('product_file_id', el.attr('product_file_id'));
               ntptEventTag('ev=removeProductFromQueue');
             }
             el.toggleClass('tool-dequeue');
@@ -216,7 +216,7 @@ window.showInlineProductFiles = function(event, product) {
             el.button( "option", "icons", { primary: "ui-icon-circle-plus" } );
           } else {
             if(typeof ntptEventTag == 'function') {
-              ntptAddPair('product_file_id', $(this).attr('product_file_id'));
+              ntptAddPair('product_file_id', el.attr('product_file_id'));
               ntptEventTag('ev=addProductToQueue');
             }
             el.toggleClass('tool-dequeue');
