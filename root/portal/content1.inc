@@ -66,7 +66,6 @@
 
 		
 		  <div>
-		    <div id="srCount"></div>
 	      <div id="srProcLevelTool"></div>
 		  </div>
 

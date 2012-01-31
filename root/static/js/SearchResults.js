@@ -77,7 +77,6 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
   },
   clear_results: function() {
 		$(this.el).empty();
-		$("#srCount").empty();
   },
   render: function() {
     $(this.el).empty();
@@ -228,7 +227,6 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#results-banner").hide();
     $('#active-filters').show();
-    $('#srCount').show();
     $('#srProcLevelTool').show(); 
   },
 
@@ -239,7 +237,6 @@ var SearchResultsView = Backbone.View.extend(
     $('#searchResults').hide();
     $("#error-message").hide();
     $('#platform_facets').hide();
-    $('#srCount').hide();
     this.clearOverlays();
     $('#active-filters').show();
     $('#srProcLevelTool').hide();
@@ -247,7 +244,6 @@ var SearchResultsView = Backbone.View.extend(
 
   showError: function(jqXHR) {
     $('#active-filters').show();
-    $('#srCount').hide();
     $('#srProcLevelTool').hide();
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
@@ -269,7 +265,6 @@ var SearchResultsView = Backbone.View.extend(
 
   showNoResults: function() {
     $('#active-filters').show();
-    $('#srCount').hide();
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").show();
@@ -311,28 +306,13 @@ var SearchResultsView = Backbone.View.extend(
       "fnDrawCallback": jQuery.proxy(this.dtDrawCallback, this),
       "fnRowCallback": jQuery.proxy(this.dtRowCallback, this),
       "bDeferRender": true,
-      //'sDom': '<"top"pif>rt<"bottom"l><"clear">'
+      'sDom': 'f<"top"pi>rt<"clear">'
     });
     this.showResults();
 
     SearchApp.dataTable = this.dataTable;
-
-    if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
-      $("#srCount").empty().html(_.template("<%= total %> results found",
-        { 'total' : this.collection.unfilteredProductCount }
-      )); 
-    } else {
-      $("#srCount").empty().html(_.template("<span><%= filtered %> filtered from</span> <%= total %> results",
-        { 
-          'total' : this.collection.unfilteredProductCount,
-          'filtered' : this.collection.filteredProductCount
-        }
-      ));
-    
-    }
     this.trigger('render:finish');
     return this;
-
   },
 
   dtCell: function(row) {

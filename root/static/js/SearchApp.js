@@ -166,7 +166,6 @@ window.SearchAppView = Backbone.View.extend({
 
       e.data.sr.trigger('clear_results');
       e.data.srv.showBeforeSearchMessage();
-      $("#srCount").empty()
       $("#triggerSearch").button('disable').focus();
       $("#con").html('');
        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>');

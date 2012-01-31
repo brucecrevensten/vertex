@@ -68,6 +68,10 @@ fieldset{padding-left:2em;margin:1em 0 1ex;}
 legend{font-weight:bold;margin:0 0 1ex -2em !important;padding:0 0 1ex 0;}
 #download_queue_table{width:100%;}
 #searchResults{border-top:1px solid #888;overflow:auto;height:600px;width:385px !important;}
+#searchResults_wrapper div.top{height:19px;}
+#searchResults_filter{float:right;margin-top:-25px;width:auto;}
+#searchResults_info{margin-top:-10px;width:auto;}
+#searchResults_info dataTables_filter{height:19px;}
 #searchResults li{display:block;padding:1em 1ex 1ex 1ex;clear:both;cursor:pointer;}
 #searchResults td{display:block;padding:1em 1ex 1ex 1ex;clear:both;cursor:pointer;}
 #searchResults li.productRow.inQueue{background-color:#77aaff !important;}
@@ -167,7 +171,7 @@ input.login_fields{display:block;position:relative;}
 #feedbackForm label{display:block;}
 #feedbackForm div{margin:1em;}
 .dataTables_scrollHead{display:none;}
-#searchResults_filter label{font-weight:bold;margin:0 0 1em 0;padding:1ex;font-size:12pt !important;}
+#searchResults_filter label{font-weight:bold;font-size:12pt !important;}
 .dataTables_info{font-weight:bold;margin:0 0 1em 0;padding:1ex;font-size:12pt !important;}
 div.error{color:red;font-weight:bold;}
 body{margin:0;padding:0;}
