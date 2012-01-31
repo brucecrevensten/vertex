@@ -17,28 +17,6 @@ $(function() {
 
 window.SearchAppView = Backbone.View.extend({	
   initialize: function() {
-
-    $.fn.dataTableExt.afnFiltering.push(
-      jQuery.proxy( function( oSettings, aData, iDataIndex ) {
-        if(_.any(_.pluck(this.postFilters.postFilters, 'active'))) {
-          // Only apply active filters.
-          var data = oSettings.aoData[iDataIndex]._aData;
-          var platform = data.platform;
-          var postfilter = _.find(this.postFilters.postFilters,
-            function(row) { return(row.active && (row.platform === platform)); }
-          );
-          if(_.isUndefined(postfilter)) {
-            return(false);
-          } else {
-            return(postfilter.filter(data));
-          }
-        } else {
-          // None of the filters are active. So we should show everything.
-          return(true);
-        }
-      }, this)
-    );
-
    $.storage = new $.store();
 
     this.user = new User();

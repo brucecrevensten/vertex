@@ -200,13 +200,6 @@ var SearchResultsView = Backbone.View.extend(
       </div>\
       <div style="clear:both;"></div>\
     ');
-    $.fn.dataTableExt.oApi.fnGetFilteredData = function(oSettings) {
-      var a = [];
-      _.each(oSettings.aiDisplay, function(val, key) {
-        a.push(oSettings.aoData[oSettings.aiDisplay[key]]._aData);
-      });
-      return(a);
-    };
   },
 
   showBeforeSearchMessage: function() {
