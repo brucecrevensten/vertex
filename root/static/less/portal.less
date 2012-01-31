@@ -1,5 +1,5 @@
 body {
-   background: url(../images/sdcbackground.jpg) no-repeat;
+   background: url(/static/images/sdcbackground.jpg) no-repeat;
    background-size: 100% 100% cover;
    background-origin: content-box;
 }
@@ -121,7 +121,7 @@ footer h2 {
 footer div#centerer {
   width: 1000px;
   margin: 0 auto;
-  background: #efefef url(../images/asflogo-footer.png) no-repeat top right;
+  background: #efefef url(/static/images/asflogo-footer.png) no-repeat top right;
 }
 
 footer div#footer_contact{
@@ -170,6 +170,25 @@ legend {
   overflow: auto;
   height: 600px;
   width: 385px !important;
+}
+
+#searchResults_wrapper div.top {
+  height: 19px;
+}
+
+#searchResults_filter {
+  float: right;
+  margin-top: -25px;
+  width: auto;
+}
+
+#searchResults_info {
+  margin-top: -10px;
+  width: auto;
+}
+
+#searchResults_info dataTables_filter {
+  height: 19px;
 }
 
 #searchResults li {
@@ -287,6 +306,8 @@ legend {
 #searchResults h4, #searchResults h4 * {
   font-size: 11pt !important;
   font-weight: bold;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 #searchResults h4 span.beam {
@@ -312,6 +333,10 @@ legend {
 
 #searchResults p {
   font-size: 10pt !important;
+  color: black;
+  font-weight: normal;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
 #searchResults li button {
@@ -390,7 +415,7 @@ label.hover {
 }
 
 #async-spinner span {
-  background: transparent url(../images/ajax-loader.gif);
+  background: transparent url(/static/images/ajax-loader.gif);
 }
 
 #geographic_widget p {
@@ -482,7 +507,7 @@ button.tool_enqueuer.tool-dequeue:hover {
 #platform_profile #uavsar-platform-image {
   width: 336px;
   height: 200px;
-  background-image: transparent url(../images/uavsar.png);
+  background-image: transparent url(/static/images/uavsar.png);
 }
 
 #platform_profile {
@@ -595,7 +620,7 @@ input.login_fields {
 #srProcLevelTool ul {
   margin: 0 0 1em 0;
   padding: 1ex;
-  float left;
+  float: left;
 }
 
 #srCount {
@@ -615,7 +640,7 @@ input.login_fields {
 
 #feedbackButton:hover {
   cursor: pointer;
-};
+}
 
 #feedbackForm p {
   line-height: 120% !important;
@@ -649,8 +674,6 @@ input.login_fields {
 
 #searchResults_filter label {
   font-weight: bold;
-  margin: 0 0 1em 0;
-  padding: 1ex;
   font-size: 12pt !important;
 
 }

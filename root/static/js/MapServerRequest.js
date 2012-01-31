@@ -206,7 +206,7 @@ var StateInflator = Backbone.Model.extend({
           interpolationMethodCollection.add(interpolation);
         }
 
-        // Construct the Interpolation Methods
+        // Construct the Projection Methods
         var projectionCollection = new Backbone.Collection();
         for (projectionIndex in ds["Projection"]) {
           var projection = new ProjectionM({name: ds["Projection"][projectionIndex]});
@@ -221,6 +221,10 @@ var StateInflator = Backbone.Model.extend({
             imageFormats:imageFormatCollection,
             interpolationMethod:interpolationMethodCollection,
             projection: projectionCollection,
+            boundsLeft: ds["boundsLeft"],
+            boundsBottom: ds["boundsBottom"],
+            boundsRight: ds["boundsRight"],
+            boundsTop: ds["boundsTop"]
         });
         dataSetDict[dataSetName] = dataSetM;
       }
@@ -237,10 +241,18 @@ var StateInflator = Backbone.Model.extend({
 
         var boxlayer;
 
-        var map = new OpenLayers.Map('map', { 
-          projection: "EPSG:4326",                                                                                                                          // FIXME: pull from json return?
-        });
+        // setup the option to use the projection for Google maps
+        var options = {
+            projection: new OpenLayers.Projection("EPSG:900913"),
+            units: "m",
+            maxResolution: 156543.0339,
+            maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
+                                             20037508.34, 20037508.34)
+        };
 
+        map = new OpenLayers.Map('map', options);
+
+        // used to display bounding box control
         var control = new OpenLayers.Control();
         OpenLayers.Util.extend(control, {
           draw: function () {
@@ -264,18 +276,20 @@ var StateInflator = Backbone.Model.extend({
             });
             boxlayer.removeAllFeatures();
             boxlayer.addFeatures(feature);
+            map.setLayerIndex(boxlayer, map.layers.length);
 
             window.mapEvent.trigger('update_openlayers_bbox');
 
           },this)
         });
         map.addControl(control);
-      
+
+        // map.addLayers([new OpenLayers.Layer.WMS()]);
+
+        // add layer for bounding box and set index so it is the top layer
         boxlayer = new OpenLayers.Layer.Vector("Bounding Box");
         map.addLayer(boxlayer);
-
-        map.addLayers([new OpenLayers.Layer.WMS()]);
-        map.zoomToMaxExtent();
+        map.setLayerIndex(boxlayer, map.layers.length);
         
         this.map = map;
         window.map = map;
@@ -413,6 +427,7 @@ var StateInflator = Backbone.Model.extend({
         }
       }, 
         {
+          // this changes the layer being displayed
           name: "changeThis",
           callback: function(event) {
               $(this.el).bind(event, jQuery.proxy(function(e) {
@@ -423,26 +438,63 @@ var StateInflator = Backbone.Model.extend({
                   try {
                     var wmsUrl = this.menuModel.get("urlList")["WMSURL"];
                     var layerVal = $(selectedElement).val();
+                    var boundsLeft = this.menuModel.get("boundsLeft");
+                    var boundsBottom = this.menuModel.get("boundsBottom");
+                    var boundsRight = this.menuModel.get("boundsRight");
+                    var boundsTop = this.menuModel.get("boundsTop");
+
                     this.model.set({"selected":layerVal},{silent:true});
+
+                    var boxlayer = null;
                     
-         
-                    for (var i=0; i<window.map.layers.length; i++) {
+                    // iterate through all layers and destroy them
+                    for (var i=0; i<map.layers.length; i++) {
                       if (window.map.layers[i].name != "Bounding Box") {
                         window.map.layers[i].destroy();
-                      } 
+                      } else {
+                        // This logic is here in-case we wanted to not destroy
+                        // the bounding box and keep it when the user selected
+                        // another region. For now we'll just delete the
+                        // layer like all the rest
+                        boxlayer = window.map.layers[i];
+                        // window.map.layers[i].destroy();
+                      }
                     }
-                      
-                      var newLayer = new OpenLayers.Layer.WMS(
-                                            layerVal,
-                                            wmsUrl,
-                                            {layers: layerVal, CRS: "EPSG:4326"}  
-                                      );
-                       
-                      window.map.addLayer(newLayer);
-                      window.map.setBaseLayer(newLayer); 
-        
-                  } catch(e){
-                  }
+                    
+                    // create Google Mercator layers
+                    var googleLayer = new OpenLayers.Layer.Google(
+                        "Google Streets",
+                        {'sphericalMercator': true,
+                         'maxExtent': new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34)
+                        }
+                    );
+                    googleLayer.setIsBaseLayer(true);
+                    window.map.addLayer(googleLayer);
+
+                    // create a new layer which will be displayed on top of the base layer
+                    var asfLayer = new OpenLayers.Layer.WMS(
+                                          layerVal,
+                                          wmsUrl,
+                                          {layers: layerVal, CRS: "EPSG:4326", transparent: "true"}
+                                    );
+                    asfLayer.setIsBaseLayer(false);
+                    window.map.addLayer(asfLayer);
+
+                    // map.setBaseLayer(googleLayer); 
+
+                    // if the boxlayer exists then put it on top
+                    if (boxlayer != null) {map.setLayerIndex(boxlayer, map.layers.length);}
+
+                    // get the bounds of the new layer (not the base layer) and zoom to the new layer
+                    var asfLayerExtent = new OpenLayers.Bounds(boundsLeft, boundsBottom, boundsRight, boundsTop);
+                    asfLayerExtent.transform(new OpenLayers.Projection('EPSG:4326'), new OpenLayers.Projection('EPSG:900913'));
+                    window.map.zoomToExtent(asfLayerExtent);
+                    googleLayer.refresh();
+                    asfLayer.refresh();
+                    window.map.redraw();
+      
+                } catch(e){
+                }
 
               }
             },this));

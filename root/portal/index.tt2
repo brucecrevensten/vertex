@@ -4,37 +4,6 @@
 <meta charset="utf-8" />
 <title>Vertex: ASF's Data Portal</title>
 
-<!--Overrides of the Yahoo UI Skin needed for the tab groups -->
-<style type="text/css">
-/*margin and padding on body element
-  can introduce errors in determining
-  element position and are not recommended;
-  we turn them off as a foundation for YUI
-  CSS treatments. */
-body {
-	margin:0;
-	padding:0;
-}
-
-.yui-skin-sam .yui-navset .yui-content {
-	background-color: #efefef !important;
-}
-
-.yui-skin-sam .yui-navset .yui-content, .yui-skin-sam .yui-navset .yui-navset-top .yui-content {
-    -moz-border-bottom-colors: none;
-    -moz-border-image: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-color: #243356 #CCCCCC #CCCCCC !important;
-    border-right: 1px solid #CCCCCC!important;
-    border-style: solid;
-    border-width: 1px;
-    padding: 0.25em 0.5em;
-}
-
-</style>
-
 <!--Scripts and CSS needed by the Yahoo UI Tab Control-->
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/fonts/fonts-min.css" />
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/tabview/assets/skins/sam/tabview.css" />
@@ -42,15 +11,15 @@ body {
 
 <script type="text/javascript" src="http://yui.yahooapis.com/2.9.0/build/element/element-min.js"></script>
 <script type="text/javascript" src="http://yui.yahooapis.com/2.9.0/build/tabview/tabview-min.js"></script>
-</head>
+
 <!--End of Yahoo UI Tab Control Scripts and CSS-->
 
 <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/reset.css') %]" />
+<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/less/css/vertex.css') %]" />
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/demo_table_jui.css') %]" />
 <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/ui-darkness/jquery-ui-1.8.16.custom.css') %]" />
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/portal.css') %]" />
+<!-- <link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/js/bootstrap/bootstrap.min.css') %]" /> -->
 
 <!-- enable html5 element formatting with older IE versions -->
 <!--[if lt IE 9]>
@@ -61,10 +30,12 @@ body {
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfConfig.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfPlatformConfig.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.7.1.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.lazyload.min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.store.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery-ui-1.8.16.custom.min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.dataTables.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.dataTables.asf-plug-ins.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfUtility.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>
@@ -80,23 +51,30 @@ body {
 <script type="text/javascript" src="[% c.uri_for('/static/js/UserAuth.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/SearchApp.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/Feedback.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/PageHelp.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/Dictionary.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.placeholder.js') %]"></script>
 
 <!--scripts/links needed by the form subsetter-->
 
-<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/WCSFormSubmitterWidget.css') %]" />
-<!--<link rel="stylesheet" type="text/css" href="../static/css/ui-darkness/jquery-ui-1.8.16.custom.css" />-->
-<!--<script type="text/javascript" src="../static/js/jquery-1.6.4.min.js"></script>-->
-<script type="text/javascript" src="../static/js/underscore-min.js"></script>
-<script type="text/javascript" src="../static/js/jquery-ui-1.8.16.custom.min.js"></script>
-<script type="text/javascript" src="../static/js/backbone-min.js"></script>
-<script type="text/javascript" src="../static/js/sinon-1.2.0.js"></script>
-<script type="text/javascript" src="../static/js/Dictionary.js"></script>
-<script type="text/javascript" src="../static/js/MapServerRequest.js"></script>
-<script type="text/javascript" src="../static/js/WCSForm.js"></script>
-<script type="text/javascript" src="../static/js/OpenLayers-2.11/OpenLayers.js"></script><!--FIXME-->
-<script type="text/javascript" src="../static/js/WCSFormSubmitterWidget.js"></script>
+<script src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-modal-min.js') %]"></script>
+<script src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-twipsy-min.js') %]"></script>
+<script src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-popover-min.js') %]"></script>
+
+<!--<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/ui-darkness/jquery-ui-1.8.16.custom.css') %]" />-->
+<!--<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.6.4.min.js') %]"></script>-->
+<script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-ui-1.8.16.custom.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/sinon-1.2.0.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/Dictionary.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/MapServerRequest.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/WCSForm.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/OpenLayers-2.11/OpenLayers.js') %]"></script><!--FIXME-->
+<script type="text/javascript" src="[% c.uri_for('/static/js/WCSFormSubmitterWidget.js') %]"></script>
+
+
+</style>
 
 </head>
 
@@ -114,6 +92,7 @@ body {
       <div id="user_tools"></div>
       <div id="queue_summary"></div>
       <div id="feedbackButton"></div>
+      <div id="PageHelpButton"></div>
     </div>
 	</div>
   </header>
@@ -152,10 +131,10 @@ body {
   <footer>
     <div id="centerer">
       <div>
-        <a target="_blank" href="http://www.asf.alaska.edu"><img src="../static/images/asflogo-footer.png" /></a>
+        <a target="_blank" href="http://www.asf.alaska.edu"><img src="[% c.uri_for('/static/images/asflogo-footer.png') %]" /></a>
       </div>
       <div>
-        <a target="_blank" href="http://www.gi.alaska.edu"><img src="../static/images/gi-logo.png" /></a>
+        <a target="_blank" href="http://www.gi.alaska.edu"><img src="[% c.uri_for('/static/images/gi-logo.png') %]" /></a>
       </div>
       <div id="footer_contact">
         <h2>Alaska Satellite Facility</h2>
@@ -168,10 +147,10 @@ body {
         </p>
       </div>
       <div>
-        <a target="_blank" href="http://www.uaf.edu"><img src="../static/images/uaf-logo.png"></a>
+        <a target="_blank" href="http://www.uaf.edu"><img src="[% c.uri_for('/static/images/uaf-logo.png') %]"></a>
       </div>
       <div>
-        <a target="_blank" href="http://esdis.eosdis.nasa.gov/"><img src="../static/images/nasa-logo.png"></a>
+        <a target="_blank" href="http://esdis.eosdis.nasa.gov/"><img src="[% c.uri_for('/static/images/nasa-logo.png') %]"></a>
       </div>
     </div>
     <div style="clear:both;">&nbsp;</div>

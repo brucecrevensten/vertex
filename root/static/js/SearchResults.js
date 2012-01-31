@@ -2,28 +2,12 @@ var SearchResults = Backbone.Collection.extend(
   {
     url: AsfDataportalConfig.apiUrl,
     model: DataProduct,
-
-    // platforms found in result set list
-    platforms: [], 
+    
     error: '',
 
     initialize: function() {
 
     },
-
-/*    clearAllPoly: function(map) {
-        for (var i=0; i< this.models.length; i++) {
-          if (map[this.models[i].id]) {
-            this.
-          }
-        
-        } 
-                                  if (this.mo[d.id]) {
-                                    this.mo[d.id].setMap(null); 
-                                  }
-                                 },this) 
-                               ); 
-    },*/
 
     // build the nested model structure of DataProducts and DataProductFiles
     build: function(data) {
@@ -32,36 +16,7 @@ var SearchResults = Backbone.Collection.extend(
       // when we reset this main collection.
       this.reset();
       var dp;
-		
-      for ( var i in data ) {
-        // Munge this data to get a local true ID (granule name)
-        data[i].id = data[i].GRANULENAME;
-        
-        // Create the DataProduct if it doesn't already exist
-        dp = this.get( data[i].id );
-        if( _.isUndefined(dp) ) {
-          this.add( data[i], { 'silent' : true} );
-          dp = this.get( data[i].id );
-        }
-
-        // Create the DataProductFile, add to the collection in the DataProduct
-        dp.files.add( { 
-          thumbnail: data[i].THUMBNAIL,
-          productId: data[i].GRANULENAME,
-          id: data[i].ID,
-          processingType: data[i].PROCESSINGTYPE,
-          processingTypeDisplay: data[i].PROCESSINGTYPEDISPLAY,
-          processingLevel: data[i].PROCESSINGLEVEL,
-          processingDescription: data[i].PROCESSINGDESCRIPTION,
-          url: data[i].URL,
-          platform: data[i].PLATFORM,
-          acquisitionDate: data[i].ACQUISITIONDATE,
-          bytes: data[i].BYTES,
-          sizeText: AsfUtility.bytesToString(data[i].BYTES),
-          md5sum: data[i].MD5SUM,
-          filename: data[i].FILENAME
-        });
-      }
+      this.add(data, {'silent': true});
     },
 
     filter: function() {
@@ -69,8 +24,6 @@ var SearchResults = Backbone.Collection.extend(
 
     fetchSearchResults: function(searchURL, searchData, callback) {
       
-      this.data = {}; // flush previous result set
-
 	   var xhr = $.ajax(
         {
           type: "POST",
@@ -83,19 +36,8 @@ var SearchResults = Backbone.Collection.extend(
           if (callback != null) {
               callback(); // this is for using sinon spys in unit tests
            }
-            this.data = data;
-			     
-            this.filteredProductCount = undefined; // Reset filtered state
-            this.unfilteredProductCount = _.uniq( _.pluck( this.data, 'GRANULENAME' )).length;
-
-            // Fetch distinct platforms that were found
-            this.platforms = _.uniq( _.pluck( this.data, 'PLATFORM') );
-            this.procTypes = _.uniq( _.pluck( this.data, 'PROCESSINGTYPE') );
-      
-            this.build(this.data);
-
+            this.build(data);
             this.trigger('refresh');
-			    
         }, this),
         error: jQuery.proxy( function(jqXHR, textStatus, errorThrown) {
           switch(jqXHR.status) {
@@ -114,150 +56,6 @@ var SearchResults = Backbone.Collection.extend(
 		return xhr;
 
     },
-
-    comparator: function(m) {
-      var retval = 0;
-      var platform = m.get('PLATFORM');
-      var beam = m.get('BEAMMODETYPE');
-      var offnadir = m.get('OFFNADIRANGLE');
-      var acqdate = m.get('ACQUISITIONDATE');
-      acqdate = 90000000 - acqdate.replace(/^(\d\d\d\d)-(\d\d)-(\d\d).+/, "$1$2$3");
-      var platvals = {
-        'UAVSAR':     100000000000,
-        'ALOS':       200000000000,
-        'RADARSAT-1': 300000000000,
-        'ERS-1':      400000000000,
-        'ERS-2':      500000000000,
-        'JERS-1':     600000000000
-      };
-      var beamvals = {
-        'UAVSAR':     {
-          'PolSAR':  {
-            'NA': 100000000
-          },
-        },
-        'ALOS':       {
-          'FBS':  {
-            '21.5': 100000000,
-            '34.3': 200000000,
-            '41.5': 300000000,
-            '50.8': 400000000,
-            'NA': 600000000,
-          },
-          'FBD':  {
-            '34.3': 700000000,
-            'NA': 800000000,
-          },
-          'PLR':  {
-            '21.5': 900000000,
-            '23.1': 1000000000,
-            'NA': 1100000000,
-          },
-          'WB1':  {
-            '24.6': 1200000000,
-            '25.9': 1300000000,
-            '27.1': 1400000000,
-            'NA': 1500000000
-          },
-          'WB2':  {
-            '27.1': 1600000000,
-            'NA': 1700000000
-          },
-        },
-        'RADARSAT-1': {
-          'EH3':  {
-            'NA': 100000000,
-          },
-          'EH4':  {
-            'NA': 200000000,
-          },
-          'EH6':  {
-            'NA': 300000000,
-          },
-          'EL1':  {
-            'NA': 400000000,
-          },
-          'FN1':  {
-            'NA': 500000000,
-          },
-          'FN2':  {
-            'NA': 600000000,
-          },
-          'FN3':  {
-            'NA': 700000000,
-          },
-          'FN4':  {
-            'NA': 800000000,
-          },
-          'FN5':  {
-            'NA': 900000000,
-          },
-          'SNA':  {
-            'NA': 1000000000,
-          },
-          'SNB':  {
-            'NA': 1100000000,
-          },
-          'SWA':  {
-            'NA': 1200000000,
-          },
-          'SWB':  {
-            'NA': 1300000000,
-          },
-          'ST1':  {
-            'NA': 1400000000,
-          },
-          'ST2':  {
-            'NA': 1500000000,
-          },
-          'ST3':  {
-            'NA': 1600000000,
-          },
-          'ST4':  {
-            'NA': 1700000000,
-          },
-          'ST5':  {
-            'NA': 1800000000,
-          },
-          'ST6':  {
-            'NA': 1900000000,
-          },
-          'ST7':  {
-            'NA': 2000000000,
-          },
-          'WD1': {
-            'NA': 2100000000,
-          },
-          'WD2': {
-            'NA': 2200000000,
-          },
-          'WD3': {
-            'NA': 2300000000,
-          },
-        },
-        'ERS-1':      {
-          'STD':  {
-            'NA': 100000000,
-          },
-        },
-        'ERS-2':      {
-          'STD':  {
-            'NA': 100000000,
-          },
-        },
-        'JERS-1': {
-          'STD':  {
-            'NA': 100000000,
-          },
-        },
-      };
-      if(undefined === beamvals[platform][beam][offnadir]) {
-        retval = platvals[platform]+9900000000+acqdate;
-      } else {
-        retval = platvals[platform]+beamvals[platform][beam][offnadir]+acqdate;
-      }
-      return(retval);
-    }
   }
 );
 
@@ -270,10 +68,10 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
     this.collection.bind('clear_results', this.clear_results);
+    this.collection.bind('refreshProcTypes', this.render);
   },
   clear_results: function() {
 		$(this.el).empty();
-		$("#srCount").empty();
   },
   render: function() {
     $(this.el).empty();
@@ -313,19 +111,23 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
         }
 
         var filesToAdd = [];
-        SearchApp.searchResults.each(
-          function(aProduct)
-            {   
-              filesToAdd.push( aProduct.files.select( 
-                function(aFile)
-                  { 
-                    return aFile.get('processingType') == pl;
-                  }
-                )
-              );
+        _.each(SearchApp.searchResultsView.dataTable.fnGetFilteredData(),
+          function(aProduct) {
+            var file = null;
+            file = _.find(aProduct.files, function(row) {
+              if(pl === row.processingType) {
+                return(true);
+              }
+              return(false);
+            });
+            if(file) {
+              filesToAdd.push(file);
             }
-          );
-        SearchApp.downloadQueue.add( _.union(filesToAdd), {'silent':true} ); // suspend extra flashes of queue button
+          });
+        _.each(filesToAdd, function(row) {
+          SearchApp.downloadQueue.remove(row.product_file_id, {'silent':true});
+        });
+        SearchApp.downloadQueue.add(filesToAdd, {'silent':true} );
         SearchApp.downloadQueue.trigger('add');
       }
       );
@@ -342,42 +144,57 @@ var SearchResultsView = Backbone.View.extend(
   dataTable: null,
   hasRendered: false,
   initialize: function() {
-    _.bindAll(this, "render");
-        this.bind('DrawPolygonsOnMap', jQuery.proxy(function() {
-           if (this.dataTable != null)  {
-             _.each(this.dataTable.fnGetData(), jQuery.proxy(function(h) {
-                if (h[1] == 1) {
-                  if(this.mo[$(h[0]).find("div").attr("product_id")]) {
-                    this.mo[$(h[0]).find("div").attr("product_id")].setMap(searchMap);
-                  }
-                } else {
-                  if(this.mo[$(h[0]).find("div").attr("product_id")]) {
-                    this.mo[$(h[0]).find("div").attr("product_id")].setMap(null);
-                  }
-                }
-                h[1]=0;
-
-              },this));
-          }
-    },this));
-
+    _.bindAll(this);
     // Observe changes to this collection
     this.collection.bind('refresh', this.render);
     this.collection.bind('add', this.render);
     this.collection.bind('remove', this.render);
-
     this.default_tile_opacity=0.2;
-   
- 	this.model.bind('authSuccess', jQuery.proxy(function() {
-		this.render('authSuccess');
-	},this)
-	);
+    this.model.bind('authSuccess', jQuery.proxy(function() {
+      this.render('authSuccess');
+    },this));
+    this.mapBounds = new google.maps.LatLngBounds();
 
     // Observe changes to the post-filters
     this.options.postFilters.bind('change', this.render);
     this.options.postFilters.bind('refreshMap', this.refreshMap);
 
     this.showBeforeSearchMessage();
+    this.dtCellTemplate = _.template('\
+      <img class="lazy-thumbnail" data-original="<%= thumbnail %>" title="<%= granuleName %>" src="static/images/grey.gif" />\
+      <% if("ALOS" === platform) { %>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %> PALSAR\
+          <span class="beam"><%= beamModeType %></span>\
+          <span class="date"><%= acquisitionDateText %></span>\
+        </h4>\
+        <p>Frame <%= frameNumber %>, Path <%= pathNumber %></p>\
+        <p>Off-Nadir <%= offNadirAngle %>&deg;</p>\
+      <% } else if("UAVSAR" == platform) { %>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %> \
+          <span class="beam"><%= beamModeType %></span>\
+          <span class="date"><%= acquisitionDateText %></span>\
+        </h4>\
+        <p><%= missionName %></p>\
+      <% } else { %>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %> \
+          <span class="beam"><%= beamModeType %></span>\
+          <span class="date"><%= acquisitionDateText %></span>\
+        </h4>\
+        <p>Frame <%= frameNumber %>, Orbit <%= orbit %></p>\
+      <% } %>\
+      <div class="productRowTools">\
+      <button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">\
+      <span class="ui-button-icon-primary ui-icon ui-icon-help"></span>\
+      <span class="ui-button-text">More information&hellip;</span>\
+      </button>\
+      <div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \'<%= id %>\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="<%= id %>">\
+      <span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>\
+      <span class="ui-button-text">Show files&hellip;</span>\
+      <span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>\
+      </div>\
+      </div>\
+      <div style="clear:both;"></div>\
+    ');
   },
 
   showBeforeSearchMessage: function() {
@@ -387,7 +204,6 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#results-banner").hide();
     $('#before-search-msg').show();
-    $('#active-filters').hide();
   },
 
   showResults: function() {
@@ -397,8 +213,6 @@ var SearchResultsView = Backbone.View.extend(
     $('#platform_facets').show();
     $("#error-message").hide();
     $("#results-banner").hide();
-    $('#active-filters').show();
-    $('#srCount').show();
     $('#srProcLevelTool').show(); 
   },
 
@@ -409,15 +223,11 @@ var SearchResultsView = Backbone.View.extend(
     $('#searchResults').hide();
     $("#error-message").hide();
     $('#platform_facets').hide();
-    $('#srCount').hide();
     this.clearOverlays();
-    $('#active-filters').show();
     $('#srProcLevelTool').hide();
   },
 
   showError: function(jqXHR) {
-    $('#active-filters').show();
-    $('#srCount').hide();
     $('#srProcLevelTool').hide();
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
@@ -438,8 +248,6 @@ var SearchResultsView = Backbone.View.extend(
   },
 
   showNoResults: function() {
-    $('#active-filters').show();
-    $('#srCount').hide();
     $('#before-search-msg').hide();
     $("#async-spinner").hide();
     $("#results-banner").show();
@@ -450,187 +258,100 @@ var SearchResultsView = Backbone.View.extend(
     this.clearOverlays();
   },
 
-  getPlatformRowTemplate: function( p ) {
-    switch(p) {
-      case 'ALOS':
-        return '\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> PALSAR <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
-  <p>Frame <%= FRAMENUMBER %>, Path <%= PATHNUMBER %></p>\
-  <p>Off-Nadir <%= OFFNADIRANGLE %>&deg;</p>\
-';
-        break;
-      case 'UAVSAR':
-        return '\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
-  <p><%= MISSIONNAME %></p>\
-';
-        break;
-      default: return '\
-  <h4 title="<%= BEAMMODEDESC %>"><%= PLATFORM %> <span class="beam"><%= BEAMMODETYPE %></span><span class="date"><%= acquisitionDateText %></span></h4>\
-  <p>Frame <%= FRAMENUMBER %>, Orbit <%= ORBIT %></p>\
-';
-    }
-  },
   render: function(args) {
     this.trigger('render');
     this.dataTable = null;
-   
 
 	// Do not show no results message if we're logging in. 
     if( 0 == this.collection.length) {
       this.clearOverlays();
-	  if (args != "authSuccess") {
+      if (args != "authSuccess") {
       	this.showNoResults();
   	  }
-	  return this;
+      return this;
     }
-
-    $('#con').empty(); 
-
-    var el = $('<table id="searchResults" width="375" style="margin:20px 0px 20px 0px;"></table>');
-  
-    var ur = SearchApp.user.getWidgetRenderer();
-    var li="";
-    var li_2="";
-    this.collection.each( function( model, i, l ) {   
-          var d = model.toJSON();
-        
-         li = '<tr><td class="productRow" id="result_row_'+d.id+'" product_id="'+d.id+'" onclick="window.showProductProfile(\''+d.id+'\'); return false;">'
-          + ur.srThumbnail( model )
-          + _.template( this.getPlatformRowTemplate( d.PLATFORM ), d) 
-          + '<div class="productRowTools">'
-          + '<button title="More information&hellip;" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only">'
-          + '<span class="ui-button-icon-primary ui-icon ui-icon-help"></span>'
-          + '<span class="ui-button-text">More information&hellip;</span>'
-          + '</button>'
-          + '<div title="Show files&hellip;" onclick="window.showInlineProductFiles(event, \''+d.id+'\'); return false;" class="tool_enqueuer ui-button ui-widget ui-state-default ui-corner-all ui-button-icons-only queue_toggler" product_id="'+d.id+'">'
-          + '<span class="ui-button-icon-primary ui-icon ui-icon-circle-plus"></span>'
-          + '<span class="ui-button-text">Show files&hellip;</span>'
-          + '<span class="ui-button-icon-secondary ui-icon ui-icon-triangle-1-s"></span>'
-          + '</div>'
-          + '</div><div style="clear:both;"></div></td></tr>';
-  
-      li_2 += li;
-      }, this);
-
-      var tableHtml =
-              '<thead>'+
-                '<tr>'+
-                  '<th></th>'+
-                '</tr>'+
-              '</thead>'+
-              '<tbody>'+
-                li_2 +
-              '</tbody>';
-        el.html(tableHtml);
-
-        $('#con').append(el); // append the table to it's container
-    
-
-    // Enhance the table using a DataTable object. 
-     this.dataTable = $('#searchResults').dataTable(
-      { 
-           "oLanguage": {
-            "sSearch": "Find"
-           },
-          "bProcessing": true,
-          "bAutoWidth": true,
-          "aoColumns": [
-            {"sWidth": "100%"}
-          ],
-          "bDestroy": true,     // destroy old table
-          "sScrollY": "500px",
-          "iDisplayLength": 1000, // default number of rows per page
-          "bLengthChange": false ,// do not allow users to change the default page length
-          "fnDrawCallback": jQuery.proxy(function() {
-              this.trigger("DrawPolygonsOnMap");
-            },this),
-           "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) { 
-              aData[1]=1;
-              return nRow;
-
-           }
+    this.dataTable = $('#searchResults').dataTable({ 
+      'aaData': this.collection.toJSON(),
+      'aoColumnDefs': [
+          { 'fnRender': this.dtCell, 'aTargets': [0] }
+      ],
+      "oLanguage": {
+        "sSearch": "Find",
+        "sProcessing": "Processing..."
+      },
+      "bProcessing": true,
+      "bAutoWidth": false,
+      "bDestroy": true,
+      "sScrollY": "500px",
+      "iDisplayLength": 1000,
+      "bLengthChange": false ,
+      "fnPreDrawCallback": this.clearOverlays,
+      "fnDrawCallback": jQuery.proxy(this.dtDrawCallback, this),
+      "fnRowCallback": jQuery.proxy(this.dtRowCallback, this),
+      "bDeferRender": true,
+      'sDom': 'f<"top"pi>rt<"clear">'
     });
+    this.showResults();
 
     SearchApp.dataTable = this.dataTable;
-
-    $('.productRow').live('mouseenter', { view: this }, this.toggleHighlight );
-    $('.productRow').live('mouseleave', { view: this }, this.removeHighlight );
-
-
-    this.showResults();
-    this.clearOverlays();
-    this.renderOnMap();
-    this.resetHeight();
-
-   
-
-    if ( true == _.isUndefined( this.collection.filteredProductCount ) || ( this.collection.filteredProductCount == this.collection.unfilteredProductCount )) {
-      $("#srCount").empty().html(_.template("<%= total %> results found",
-        { 'total' : this.collection.unfilteredProductCount }
-      )); 
-    } else {
-      $("#srCount").empty().html(_.template("<span><%= filtered %> filtered from</span> <%= total %> results",
-        { 
-          'total' : this.collection.unfilteredProductCount,
-          'filtered' : this.collection.filteredProductCount
-        }
-      ));
-    
-    }
     this.trigger('render:finish');
     return this;
-
   },
 
-  resetHeight: function() {
-    // 580 = maximum possible height of the search results, before
-    // other dynamic page elements are rendered.
-    $(this.el).height( 575 - ( $('#active-filters').outerHeight() + 31 )); // 31px = fixed height of ProcTypeButton
+  dtCell: function(row) {
+    return(this.dtCellTemplate(row.aData));
   },
 
-  renderOnMap: function() {
-    this.bounds = new google.maps.LatLngBounds();
-    var changeBounds=false; 
-
-    _.each(SearchApp.dataTable.fnGetData(), jQuery.proxy(function(h) {
-          var dp = this.collection.get( $(h[0]).find("div").attr("product_id") );
-        if (!dp.get("filtered")) {
-          changeBounds=true; 
-          e = dp.toJSON();
-          
-          this.bounds.extend(new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON));
-          this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
-          this.bounds.extend(new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON));
-          this.bounds.extend(new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON));
-
-          this.mo[ e.id ] = new google.maps.Polygon({
-              paths: new Array(
-                new google.maps.LatLng(e.NEARSTARTLAT, e.NEARSTARTLON),
-                new google.maps.LatLng(e.FARSTARTLAT, e.FARSTARTLON),
-                new google.maps.LatLng(e.FARENDLAT, e.FARENDLON),
-                new google.maps.LatLng(e.NEARENDLAT, e.NEARENDLON)
-              ),
-              fillColor: '#777777',
-              fillOpacity: this.default_tile_opacity,
-              strokeColor: '#333333',
-              strokeOpacity: 1,
-              strokeWeight: 2,
-              zIndex: 1000,
-              clickable: true
-            });
-          this.mo[ e.id ].setMap(searchMap);
-      }
-
-      }, this));
-
-      if (changeBounds) {
-        searchMap.fitBounds( this.bounds );
-      }
+  dtDrawCallback: function(oSettings) {
+    this.setMapBounds();
+    $('.productRow').on('mouseenter', this.toggleHighlight );
+    $('.productRow').on('mouseleave', this.removeHighlight );
+    $('img.lazy-thumbnail').lazyload({
+      'container': $('div.dataTables_scrollBody')
+    });
+    var a = []
+    _.each(oSettings.aiDisplay, function(val, key) {
+      a = _.union(_.pluck(oSettings.aoData[val]._aData.files,
+        'processingType'), a);
+    });
+    this.collection.procTypes = a;
+    this.collection.trigger('refreshProcTypes');
   },
+
+  dtRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+    $(nRow).attr('id', 'result_row_' + aData.id);
+    $(nRow).attr('product_id', aData.id);
+    $(nRow).addClass('productRow');
+    $(nRow).attr('onclick', 'window.showProductProfile(\''+aData.id+'\'); return false;');
+    this.renderOnMap(aData);
+    return(nRow);
+  },
+
+  renderOnMap: function(aData) {
+
+    var p1 = new google.maps.LatLng(aData.nearStartLat, aData.nearStartLon);
+    var p2 = new google.maps.LatLng(aData.farStartLat, aData.farStartLon);
+    var p3 = new google.maps.LatLng(aData.farEndLat, aData.farEndLon);
+    var p4 = new google.maps.LatLng(aData.nearEndLat, aData.nearEndLon);
+    
+    var polyOptions = _.clone(this.polygonDefault);
+    polyOptions.paths = [p1, p2, p3, p4];
+
+    this.mo[aData.id] = new google.maps.Polygon(polyOptions);
+    this.mo[aData.id].setMap(searchMap);
+    this.mapBounds.extend(p1);
+    this.mapBounds.extend(p2);
+    this.mapBounds.extend(p3);
+    this.mapBounds.extend(p4);
+  },
+
+  setMapBounds: function(oSettings) {
+    searchMap.fitBounds(this.mapBounds);
+  },
+
   clearOverlays: function() {
 
-    if( this.activePoly ) {
+    if(this.activePoly) {
       this.mo[this.activePoly].setOptions({
         fillColor: '#777777',
         fillOpacity: this.default_tile_opacity,
@@ -645,73 +366,52 @@ var SearchResultsView = Backbone.View.extend(
     });
     this.mo = {}; 
     this.activePoly = null;
-
+    this.mapBounds = new google.maps.LatLngBounds();
   },
   refreshMap: function() {
     this.clearOverlays();
     this.renderOnMap();
   },
+  polygonDefault: {
+    fillColor: '#777777',
+    fillOpacity: this.default_tile_opacity,
+    strokeColor: '#333333',
+    strokeOpacity: 1,
+    strokeWeight: 2,
+    zIndex: 1000,
+    clickable: true
+  },
+  polygonInQueue: {
+    fillColor: '#77aaFF',
+    fillOpacity: 0.5,
+    strokeColor: '#336699',
+    strokeOpacity: 0.5,
+    zIndex: 10001 // just above the search area bbox zindex
+  },
+  polygonHighlight: {
+    fillColor: '#FFFFB4',
+    fillOpacity: .75,
+    strokeColor: '#FFFF00',
+    strokeOpacity: 1,
+    zIndex: 1500
+  },
   removeHighlight: function(e) {
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
-    if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), $(e.currentTarget).attr("product_id") )) {
+    if ( -1 != _.indexOf( SearchApp.downloadQueue.pluck('granuleName'), $(e.currentTarget).attr("product_id") )) {
       // It's in the DQ, turn it blue again  
-      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-        fillColor: '#77aaFF',
-        fillOpacity: 0.5,
-        strokeColor: '#336699',
-        strokeOpacity: 0.5,
-        zIndex: 10001 // just above the search area bbox zindex
-      });
+      this.mo[this.activePoly].setOptions(this.polygonInQueue);
     } else {
-      e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-        fillColor: '#777777',
-        fillOpacity: this.default_tile_opacity,
-        strokeColor: '#333333',
-        strokeOpacity: 1,
-        zIndex: 1000
-      });
+      this.mo[this.activePoly].setOptions(this.polygonDefault);
     }
-  
   },
 
   toggleHighlight: function(e) {
-
-    if( e.view.SearchApp.searchResultsView.activePoly ) {
-      // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
-      if ( -1 != _.indexOf( e.view.SearchApp.downloadQueue.pluck('productId'), e.view.SearchApp.searchResultsView.activePoly )) {
-        // It's in the DQ, turn it blue again  
-        e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-          fillColor: '#77aaFF',
-          fillOpacity: 0.5,
-          strokeColor: '#336699',
-          strokeOpacity: 0.5,
-          zIndex: 1500
-        });
-      } else {
-        e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-          fillColor: '#777777',
-          fillOpacity: this.default_tile_opacity,
-          strokeColor: '#333333',
-          strokeOpacity: 1,
-          zIndex: 1000
-        });
-      }
-    }
-
-    e.view.SearchApp.searchResultsView.activePoly = $(e.currentTarget).attr("product_id");
-
-    e.view.SearchApp.searchResultsView.mo[e.view.SearchApp.searchResultsView.activePoly].setOptions({
-      fillColor: '#FFFFB4',
-      fillOpacity: .75,
-      strokeColor: '#FFFF00',
-      strokeOpacity: 1,
-      zIndex: 1500
-    });
-
+    this.activePoly = $(e.currentTarget).attr("product_id");
+    this.mo[this.activePoly].setOptions(this.polygonHighlight);
    },
   // use this array for clearing the overlays from the map when the results change(?)
   // also for highlighting by changing the fillColor, strokeColor, etc.
-  // (this array is 1:1 with the results, so overlay [0] here is product [0] in the results)
+  // Only contains the rows that are currently being displayed in the datatable.
   mo: {},
   // the currently active/hightlighted polygon
   activePoly: null
