@@ -30,10 +30,12 @@
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfConfig.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfPlatformConfig.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.7.1.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.lazyload.min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.cookie.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.store.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery-ui-1.8.16.custom.min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/jquery.dataTables.min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.dataTables.asf-plug-ins.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/AsfUtility.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>

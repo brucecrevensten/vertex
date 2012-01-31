@@ -195,11 +195,12 @@ var DownloadQueueView = Backbone.View.extend(
     if( 0 < this.collection.length ) {
       
       this.collection.each( function(m) {
+        var row = m.toJSON();
         table = table + _.template('\
 <tr>\
 <td style="vertical-align: middle; line-height: 30px;">\
-<img style="height: 30px; float: left;" src="<%= thumbnail %>" title="<%= productId %>" />\
-<span style="height: 30px; display: inline-block;" vertical-align: middle" ><%= filename %></span>\
+<img style="height: 30px; float: left;" src="<%= thumbnail %>" title="<%= granuleName %>" />\
+<span style="height: 30px; display: inline-block;" vertical-align: middle" ><%= fileName %></span>\
 </div>\
 </td>\
 <td><%= processingTypeDisplay %></td>\
@@ -207,11 +208,11 @@ var DownloadQueueView = Backbone.View.extend(
 <td><%= acquisitionDateText %></td>\
 <td><%= sizeText %></td>\
 <td>\
-<a product_file_id="<%= id %>" product_id="<%= productId %>" class="remove">Remove from queue</a>\
-<input type="hidden" name="products[]" value="<%= filename %>" />\
+<a product_file_id="<%= id %>" product_id="<%= granuleName %>" class="remove">Remove from queue</a>\
+<input type="hidden" name="products[]" value="<%= fileName %>" />\
 </td>\
 </tr>\
-', m.toJSON());
+', row);
       });
 
       var pageTemplate = { 
@@ -303,9 +304,9 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
 				}
 			
 			}else {
-        		e.data.collection.remove( SearchApp.searchResults.get( $(e.currentTarget).attr('product_id') ).files.get( $(e.currentTarget).attr('product_file_id') ));
+        		e.data.collection.remove($(this).attr('product_file_id'));
 				e.data.collection.trigger('queue:remove');
-				
+			    	
 					$("#b_"+$(e.currentTarget).attr('product_file_id')).toggleClass('tool-dequeue');
 					$("#b_"+$(e.currentTarget).attr('product_file_id')).prop('selected','false');
 					$("#b_"+$(e.currentTarget).attr('product_file_id')).button( "option", "icons", { primary: "ui-icon-circle-plus" } );

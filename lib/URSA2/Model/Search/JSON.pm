@@ -58,8 +58,10 @@ sub doQuery {
   }
 
   my $res;
+  my $sth;
   eval {
-    $res = $dbh->selectall_arrayref($sql, { Slice => {} });
+    $sth = $dbh->prepare($sql);
+    $sth->execute();
   };
   if( $dbh->err ) {
     DbException->throw(
@@ -71,15 +73,57 @@ sub doQuery {
       message => Dumper($@)
     );
   }
-  # Numify strings that only contain numbers.
-  foreach my $row (@{$res}) {
-    foreach my $key (keys(%{$row})) {
-      if($row->{$key} && $row->{$key} =~ /^(-)?\d+(\.\d+)?$/) {
-        $row->{$key} +=0;
-      }
+  while(my $row = $sth->fetchrow_hashref) {
+    my $g = $row->{'GRANULENAME'};
+    if(!exists($res->{$g})) {
+      $res->{$g} = {
+        'acquisitionDate'     => $row->{'ACQUISITIONDATE'},
+        'ascendingDescending' => $row->{'ASCENDINGDESCENDING'},
+        'beamModeDesc'        => $row->{'BEAMMODEDESC'},
+        'beamModeType'        => $row->{'BEAMMODETYPE'},
+        'browse'              => $row->{'BROWSE'},
+        'centerLat'           => $row->{'CENTERLAT'} + 0,
+        'centerLon'           => $row->{'CENTERLON'} + 0,
+        'faradayRotation'     => $row->{'FARADAYROTATION'},
+        'farEndLat'           => $row->{'FARENDLAT'} + 0,
+        'farEndLon'           => $row->{'FARENDLON'} + 0,
+        'farStartLat'         => $row->{'FARSTARTLAT'} + 0,
+        'farStartLon'         => $row->{'FARSTARTLON'} + 0,
+        'frameNumber'         => $row->{'FRAMENUMBER'},
+        'granuleName'         => $row->{'GRANULENAME'},
+        'granuleType'         => $row->{'GRANULETYPE'},
+        'id'                  => $row->{'GRANULENAME'},
+        'missionName'         => $row->{'MISSIONNAME'},
+        'nearEndLat'          => $row->{'NEARENDLAT'} + 0,
+        'nearEndLon'          => $row->{'NEARENDLON'} + 0,
+        'nearStartLat'        => $row->{'NEARSTARTLAT'} + 0,
+        'nearStartLon'        => $row->{'NEARSTARTLON'} + 0,
+        'offNadirAngle'       => $row->{'OFFNADIRANGLE'},
+        'orbit'               => $row->{'ORBIT'},
+        'pathNumber'          => $row->{'PATHNUMBER'},
+        'platform'            => $row->{'PLATFORM'},
+        'polarization'        => $row->{'POLARIZATION'},
+        'productName'         => $row->{'PRODUCTNAME'},
+        'sensor'              => $row->{'SENSOR'},
+        'thumbnail'           => $row->{'THUMBNAIL'},
+      };
+      $res->{$g}->{'files'} = [];
     }
+    push(@{$res->{$g}->{'files'}}, {
+      'fileName'                  => $row->{'FILENAME'},
+      'product_file_id'           => $row->{'GRANULENAME'} . '_' . $row->{'PROCESSINGTYPE'},
+      'granuleName'               => $row->{'GRANULENAME'},
+      'processingDate'            => $row->{'PROCESSINGDATE'},
+      'processingType'            => $row->{'PROCESSINGTYPE'},
+      'processingTypeDisplay'     => $row->{'PROCESSINGTYPEDISPLAY'},
+      'processingTypeDescription' => $row->{'PROCESSINGTYPEDESCRIPTION'},
+      'processingLevel'           => $row->{'PROCESSINGLEVEL'},
+      'url'                       => $row->{'URL'},
+      'bytes'                     => $row->{'BYTES'} + 0,
+      'md5sum'                    => $row->{'MD5SUM'},
+    });
   }
-  return(JSON::XS->new->utf8->encode($res));
+  return(JSON::XS->new->utf8->encode([@{$res}{keys %{$res}}]));
 }
 
 1;
