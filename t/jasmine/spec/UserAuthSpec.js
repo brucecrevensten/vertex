@@ -6,8 +6,6 @@ describe("UserAuth.js", function(){
 
     window.SearchApp = new SearchAppView();
 
-
-
     this.xhr = sinon.useFakeXMLHttpRequest();
     var requests = this.requests = [];
 
@@ -53,11 +51,10 @@ describe("UserAuth.js", function(){
       this.user.authenticate();
       expect(this.requests.length).toEqual(1);
 
-      console.log('communicate to get creds');
-      console.log(this.requests[0]);
 
       this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "UNIVERSAL", "user_first_name":"Tester"}');
-      console.log(this.user);
+      expect(true).toBe(false);
+      //need to test that the ajax request was called
     });
 
     it('Will provide credentials to authorized users', function(){
@@ -68,15 +65,12 @@ describe("UserAuth.js", function(){
       this.user.authenticate();
       expect(this.requests.length).toEqual(1);
 
-      console.log('provide creds to authd users');
-      console.log(this.requests[0]);
-
-
       this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "UNIVERSAL", "user_first_name":"Tester"}');
       console.log(this.user);
       expect(this.user.get("authenticated")).toBeTruthy();
       expect(this.user.get("authType")).toBe("UNIVERSAL");
-      //test the widget renderer values that they are for universal
+      expect(true).toBe(false);
+      //need test the widget renderer values that they are for universal
     });
 
     it('Will default to providing Unrestricted credentials to users without other authentication', function(){
@@ -87,14 +81,13 @@ describe("UserAuth.js", function(){
       this.user.authenticate();
       expect(this.requests.length).toEqual(1);
 
-      console.log('default to unrestricted');
-      console.log(this.requests[0]);
-
-
       this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "Unrestricted", "user_first_name":"Tester"}');
-      console.log(this.user);
+
       expect(this.user.get("authenticated")).toBeTruthy();
       expect(this.user.get("authType")).toBe("Unrestricted");
+
+      expect(true).toBe(false);
+      //need test the widget renderer values that they are for unrestricted
     });
 
 
