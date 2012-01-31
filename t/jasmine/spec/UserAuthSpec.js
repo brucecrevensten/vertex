@@ -53,7 +53,8 @@ describe("UserAuth.js", function(){
       this.user.authenticate();
       expect(this.requests.length).toEqual(1);
 
-      console.log(requests[0]);
+      console.log('communicate to get creds');
+      console.log(this.requests[0]);
 
       this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "UNIVERSAL", "user_first_name":"Tester"}');
       console.log(this.user);
@@ -66,6 +67,10 @@ describe("UserAuth.js", function(){
 
       this.user.authenticate();
       expect(this.requests.length).toEqual(1);
+
+      console.log('provide creds to authd users');
+      console.log(this.requests[0]);
+
 
       this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "UNIVERSAL", "user_first_name":"Tester"}');
       console.log(this.user);
@@ -81,6 +86,10 @@ describe("UserAuth.js", function(){
 
       this.user.authenticate();
       expect(this.requests.length).toEqual(1);
+
+      console.log('default to unrestricted');
+      console.log(this.requests[0]);
+
 
       this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "Unrestricted", "user_first_name":"Tester"}');
       console.log(this.user);

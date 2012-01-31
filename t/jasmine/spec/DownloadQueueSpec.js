@@ -2,12 +2,10 @@
 describe("Download Queue", function() {
   it("should allow items to be added to it", function() {
     dq = new DownloadQueue();
-    dp = new DataProduct(
-      {"id":1,"GRANULENAME":"ALPSRP234721390","PRODUCTNAME":"ALPSRP234721390","PLATFORM":"ALOS","SENSOR":"SAR","BEAMMODETYPE":"FBD","BEAMMODEDESC":"ALOS PALSAR sensor: High Resolution Observation Mode (dual polarization)","ORBIT":23472,"PATHNUMBER":158,"FRAMENUMBER":1390,"ACQUISITIONDATE":"2010-06-21 04:27:26","PROCESSINGDATE":"2011-01-11 22:56:57","PROCESSINGTYPE":"BROWSE","STARTTIME":"2010-06-21 04:27:22","ENDTIME":"2010-06-21 04:27:26","CENTERLAT":69.52,"CENTERLON":-98.4504,"NEARSTARTLAT":69.207,"NEARSTARTLON":-99.103,"NEARENDLAT":69.699,"NEARENDLON":-99.437,"FARSTARTLAT":69.336,"FARSTARTLON":-97.48,"FARENDLAT":69.83,"FARENDLON":-97.778,"FARADAYROTATION":3.091217,"ASCENDINGDESCENDING":"ASCENDING","URL":"http://testdatapool.daac.asf.alaska.edu:80/BROWSE/A3/ALPSRP234721390.jpg","BYTES":542548,"FILESIZE":.52,"OFFNADIRANGLE":34.3,"MD5SUM":"c910145b9b9e7965f19e9990d1a7c367","GRANULEDESC":"ALOS PALSAR scene","GRANULETYPE":"ALOS_PALSAR_SCENE","FILENAME":"ALPSRP234721390.jpg","SHAPE":{"SDO_GTYPE":2003,"SDO_SRID":8307,"SDO_ELEM_INFO":[1,1003,1],"SDO_ORDINATES":[-99.103,69.207,-97.48,69.336,-97.778,69.83,-99.437,69.699,-99.103,69.207]}
-      });
+    dp = new DataProduct(searchReturn[0]);
     dq.add( dp );
     expect( dq.length ).toEqual( 1 );
-    expect( dq.get(1).toJSON().GRANULENAME ).toEqual( 'ALPSRP234721390' );
+    expect( dq.at(0).toJSON().GRANULENAME ).toEqual( 'E2_81917_STD_F305' );
   });
 
   it("should allow you to remove items from the queue", function() {
