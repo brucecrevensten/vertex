@@ -364,11 +364,20 @@ var GeographicWidget = BaseWidget.extend(
       } else {
         y = e - w;
       }
+
+      if (x < 0) {
+        x = x * -1;
+      }
+      if (y < 0) {
+       y = y * -1;
+      }
       
-      if( x * y > 10) { 
-        this.searchAreaOverlay.setOptions(fillColor: '#FFFFFF');
+      if( x * y > 100) { 
+        this.searchAreaOverlay.setOptions({ fillColor: '#CD2626' });
+        $('#searchMessage').text('Warning: The search area you have entered is very large and may take a while to return.');
       } else {
-        this.searchAreaOverlay.setOptions(fillColor: '#0066CC');
+        this.searchAreaOverlay.setOptions({ fillColor: '#0066CC' });
+        $('#searchMessage').empty();
       }
 
       var latLngBounds = new google.maps.LatLngBounds(

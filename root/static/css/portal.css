@@ -621,6 +621,10 @@ input.login_fields {
   line-height: 120% !important;
 }
 
+#searchMessage {
+  color: #cd2626;
+}
+
 #feedbackForm p.alert {
   color: #00ebf5;
 }
