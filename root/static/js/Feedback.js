@@ -41,7 +41,7 @@ var FeedbackForm = Backbone.View.extend({
     _.bindAll(this, "render");
   },
   render: function() {
-    $(this.el).html('
+    $(this.el).html('\
     <form>\
     <p>We welcome your comments!  If you need direct support or help, please contact ASF User Support at uso@asf.alaska.edu or at (907) 474-6166.</p><br />\
     <p class="alert">Submission of this form will send your comments to our Vertex support group mailing list and discussion forum which can be accessed directly at <a href="http://groups.google.com/group/asf-vertex">http://groups.google.com/group/asf-vertex</a></p>\
@@ -76,7 +76,7 @@ var FeedbackForm = Backbone.View.extend({
         }
         this.model.save( $(this.el).find('form').serializeJSON(),{
           success: $.proxy( function(model, response){
-            $(this.el).html('
+            $(this.el).html('\
             <div class="ui-widget">\
             <div class="ui-state-highlight ui-corner-all" style="padding: 1em;"><p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>\
             <strong>Thanks!</strong>&nbsp;\
