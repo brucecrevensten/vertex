@@ -10,7 +10,7 @@ $.fn.dataTableExt.oApi.fnGetFilteredData = function(oSettings) {
 // Custom filtering for vertex's datable search results.
 $.fn.dataTableExt.afnFiltering.push(
   jQuery.proxy( function( oSettings, aData, iDataIndex ) {
-    if(_.any(_.pluck(SearchApp.postFilters.postFilters, 'active'))) {
+    if(oSettings.nTable.id == 'searchResults' && _.any(_.pluck(SearchApp.postFilters.postFilters, 'active')) ) {
       // Only apply active filters.
       var data = oSettings.aoData[iDataIndex]._aData;
       var platform = data.platform;
