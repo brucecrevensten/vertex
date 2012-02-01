@@ -1,345 +1,347 @@
 // This test references Spec#17.2-17.7
 
 describe("Test object construction", function() {
-	it("Should successfully construct the state objects", function() {
-	 	var fl =[];
-	 	fl[0] = new DataSetM();
-	 	fl[1] = new LayerM();
-	 	fl[2] = new OutputProjectionM();
-	 	fl[3] = new InterpolationMethodM();
-	 	fl[4] = new ImageFormatM();
-	 	fl[5] = new WCSFormM();
-	 	fl[6] = new LayerFormM();
-	 	fl[7] = new DataSetFormM();
-	 	fl[8] = new OutputProjectionFormM();
-	 	fl[9] = new InterpolationMethodFormM();
-	 	fl[10] = new ImageFormatFormM();
-	 	fl[11] = new ImageHeightFormM();
-	 	fl[12] = new ImageWidthFormM();
-	 	fl[13] = new WCSFormV();
-	 	fl[14] = new DataSetFormV();
-	 	fl[15] = new LayerFormV();
-	 	fl[16] = new OutputProjectionFormV();
-	 	fl[17] = new ImageFormatFormV();
-	 	fl[18] = new ImageHeightFormV();
-	 	fl[19] = new ImageWidthFormV();
-	 	fl[20] = new InterpolationMethodFormV();
-	 	fl[21] = new ViewGroup();
+  it("Should successfully construct the state objects", function() {
+    var fl =[];
+    fl[0] = new DataSetM();
+    fl[1] = new LayerM();
+    fl[2] = new OutputProjectionM();
+    fl[3] = new InterpolationMethodM();
+    fl[4] = new ImageFormatM();
+    fl[5] = new WCSFormM();
+    fl[6] = new LayerFormM();
+    fl[7] = new DataSetFormM();
+    fl[8] = new OutputProjectionFormM();
+    fl[9] = new InterpolationMethodFormM();
+    fl[10] = new ImageFormatFormM();
+    fl[11] = new ImageHeightFormM();
+    fl[12] = new ImageWidthFormM();
+    fl[13] = new WCSFormV();
+    fl[14] = new DataSetFormV();
+    fl[15] = new LayerFormV();
+    fl[16] = new OutputProjectionFormV();
+    fl[17] = new ImageFormatFormV();
+    fl[18] = new ImageHeightFormV();
+    fl[19] = new ImageWidthFormV();
+    fl[20] = new InterpolationMethodFormV();
+    fl[21] = new ViewGroup();
 
-	 	for (var i=0; i<=20; i++) {
-	 		expect(fl[i]).toNotBe(null);
-	 	}
-	});
+    for (var i=0; i<=20; i++) {
+      expect(fl[i]).toNotBe(null);
+    }
+  });
 
 
-	it("Should construct the request generator", function() {
-		var c = new RequestGenerator();
-		expect(c).toNotBe(null);
-	});
+  it("Should construct the request generator", function() {
+    var c = new RequestGenerator();
+    expect(c).toNotBe(null);
+  });
 
-	it("Should construct the form submitter", function() {
-		var c = new FormSubmitter();
-		expect(c).toNotBe(null);
-	});
+  it("Should construct the form submitter", function() {
+    var c = new FormSubmitter();
+    expect(c).toNotBe(null);
+  });
 
-	it("Should construct the state inflator", function() {
-		var c = new StateInflator();
-		expect(c).toNotBe(null);
-	});
+  it("Should construct the state inflator", function() {
+    var c = new StateInflator();
+    expect(c).toNotBe(null);
+  });
 });
 
 describe("Test StateInflator", function() {
-	// Create a sinon server 
-	var server;
+  // Create a sinon server
+  var server;
 
-	server = sinon.fakeServer.create();
+  server = sinon.fakeServer.create();
 
-	server.respondWith("POST", "/fakeURL",
-       [200, { "Content-Type": "application/json" },
-        JSON.stringify(
-        {
-	        "DataSet": {
-		        "Austrailia": {
-			        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
-			        "wcsUrl": "/AustrailiaURL",
-			        "wmsUrl": "/AustrailiaURL2",
-			        "ImageFormat": ["JPEG", "BMP", "TIFF"]
-			    },
-			    "Alaska": {
-			        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
-			        "wcsUrl": "/AlaskaURL",
-			        "wmsUrl": "/AlaskaURL2",
-			        "ImageFormat": ["BMP", "GEOTIFF"]
-			    },
-			    "Africa": {
-			        "layers": ["AfricaLayer1"],
-			        "wcsUrl": "/AfricaURL",
-			        "wmsUrl": "/AfricaURL2",
-			        "ImageFormat": ["GEOTIFF"]
-			    }
-		    },
+  server.respondWith("POST", "/fakeURL",
+  [200, { "Content-Type": "application/json" },
+  JSON.stringify({
+    "DataSet": {
+      "Austrailia": {
+        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
+        "wcsUrl": "/AustrailiaURL",
+        "wmsUrl": "/AustrailiaURL2",
+        "ImageFormat": ["JPEG", "BMP", "TIFF"]
+      },
+      "Alaska": {
+        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
+        "wcsUrl": "/AlaskaURL",
+        "wmsUrl": "/AlaskaURL2",
+        "ImageFormat": ["BMP", "GEOTIFF"]
+      },
+      "Africa": {
+        "layers": ["AfricaLayer1"],
+        "wcsUrl": "/AfricaURL",
+        "wmsUrl": "/AfricaURL2",
+        "ImageFormat": ["GEOTIFF"]
+      }
+    },
 
-        })]);
+  })
+  ]
+);
 
-	window.server = server;
+window.server = server;
 
-	var infl = new StateInflator();
-	
-	infl.inflate('/fakeURL'); 
+var infl = new StateInflator();
 
-	server.respond(); 
-	it("Should instantiate state objects from HTTP request", function() {
-		expect(infl.dataSetDict).toNotBe(null);
-		expect(infl.dataSetFormM).toNotBe(null);
-		expect(infl.layerFormMDict).toNotBe(null);
-		expect(infl.imageFormatFormMDict).toNotBe(null);
-		expect(infl.dataSetFormV).toNotBe(null);
-		expect(infl.layerFormVDict).toNotBe(null);
-		expect(infl.imageFormatFormVDict).toNotBe(null);
-	});
+infl.inflate('/fakeURL');
 
-	it("The Datasets should be properly constructed", function() { 
-		expect(infl.dataSetDict["Austrailia"]).toNotBe(null);
-		expect(infl.dataSetDict["Austrailia"].get("layers").models[0].get("name") ).toBe("AusLayer1");
-		expect(infl.dataSetDict["Austrailia"].get("layers").models[1].get("name") ).toBe("AusLayer2");
-		expect(infl.dataSetDict["Austrailia"].get("layers").models[2].get("name") ).toBe("AusLayer3");
-		expect(infl.dataSetDict["Austrailia"].get("WCSURL")).toBe("/AustrailiaURL");
-		expect(infl.dataSetDict["Austrailia"].get("WMSURL")).toBe("/AustrailiaURL2");
-		expect(infl.dataSetDict["Austrailia"].get("imageFormats").models[0].get("name") ).toBe("JPEG");
-		expect(infl.dataSetDict["Austrailia"].get("imageFormats").models[1].get("name") ).toBe("BMP");
-		expect(infl.dataSetDict["Austrailia"].get("imageFormats").models[2].get("name") ).toBe("TIFF");
+server.respond();
+it("Should instantiate state objects from HTTP request", function() {
+  expect(infl.dataSetDict).toNotBe(null);
+  expect(infl.dataSetFormM).toNotBe(null);
+  expect(infl.layerFormMDict).toNotBe(null);
+  expect(infl.imageFormatFormMDict).toNotBe(null);
+  expect(infl.dataSetFormV).toNotBe(null);
+  expect(infl.layerFormVDict).toNotBe(null);
+  expect(infl.imageFormatFormVDict).toNotBe(null);
+});
 
-		expect(infl.dataSetDict["Alaska"]).toNotBe(null);
-		expect(infl.dataSetDict["Alaska"].get("layers").models[0].get("name") ).toBe("AlaskaLayer1");
-		expect(infl.dataSetDict["Alaska"].get("layers").models[1].get("name") ).toBe("AlaskaLayer2");
-		expect(infl.dataSetDict["Alaska"].get("WCSURL")).toBe("/AlaskaURL");
-		expect(infl.dataSetDict["Alaska"].get("WMSURL")).toBe("/AlaskaURL2");
-		expect(infl.dataSetDict["Alaska"].get("imageFormats").models[0].get("name") ).toBe("BMP");
-		expect(infl.dataSetDict["Alaska"].get("imageFormats").models[1].get("name") ).toBe("GEOTIFF");
+it("The Datasets should be properly constructed", function() {
+  expect(infl.dataSetDict["Austrailia"]).toNotBe(null);
+  expect(infl.dataSetDict["Austrailia"].get("layers").models[0].get("name") ).toBe("AusLayer1");
+  expect(infl.dataSetDict["Austrailia"].get("layers").models[1].get("name") ).toBe("AusLayer2");
+  expect(infl.dataSetDict["Austrailia"].get("layers").models[2].get("name") ).toBe("AusLayer3");
+  expect(infl.dataSetDict["Austrailia"].get("WCSURL")).toBe("/AustrailiaURL");
+  expect(infl.dataSetDict["Austrailia"].get("WMSURL")).toBe("/AustrailiaURL2");
+  expect(infl.dataSetDict["Austrailia"].get("imageFormats").models[0].get("name") ).toBe("JPEG");
+  expect(infl.dataSetDict["Austrailia"].get("imageFormats").models[1].get("name") ).toBe("BMP");
+  expect(infl.dataSetDict["Austrailia"].get("imageFormats").models[2].get("name") ).toBe("TIFF");
 
-		expect(infl.dataSetDict["Africa"]).toNotBe(null);
-		expect(infl.dataSetDict["Africa"].get("layers").models[0].get("name") ).toBe("AfricaLayer1");
-		expect(infl.dataSetDict["Africa"].get("WCSURL")).toBe("/AfricaURL");
-		expect(infl.dataSetDict["Africa"].get("WMSURL")).toBe("/AfricaURL2");
-		expect(infl.dataSetDict["Africa"].get("imageFormats").models[0].get("name") ).toBe("GEOTIFF");	
-	});
+  expect(infl.dataSetDict["Alaska"]).toNotBe(null);
+  expect(infl.dataSetDict["Alaska"].get("layers").models[0].get("name") ).toBe("AlaskaLayer1");
+  expect(infl.dataSetDict["Alaska"].get("layers").models[1].get("name") ).toBe("AlaskaLayer2");
+  expect(infl.dataSetDict["Alaska"].get("WCSURL")).toBe("/AlaskaURL");
+  expect(infl.dataSetDict["Alaska"].get("WMSURL")).toBe("/AlaskaURL2");
+  expect(infl.dataSetDict["Alaska"].get("imageFormats").models[0].get("name") ).toBe("BMP");
+  expect(infl.dataSetDict["Alaska"].get("imageFormats").models[1].get("name") ).toBe("GEOTIFF");
+
+  expect(infl.dataSetDict["Africa"]).toNotBe(null);
+  expect(infl.dataSetDict["Africa"].get("layers").models[0].get("name") ).toBe("AfricaLayer1");
+  expect(infl.dataSetDict["Africa"].get("WCSURL")).toBe("/AfricaURL");
+  expect(infl.dataSetDict["Africa"].get("WMSURL")).toBe("/AfricaURL2");
+  expect(infl.dataSetDict["Africa"].get("imageFormats").models[0].get("name") ).toBe("GEOTIFF");
+});
 });
 
 
 // This will test the requests that are sent to the server
-// under the conditions that some of the forms are enabled and some 
+// under the conditions that some of the forms are enabled and some
 // disabled
 describe("Test FormSubmitter", function() {
-	it("Should generate state 'by hand', create a form 'by hand' and submit an ajax request", function() {
-		form = new FormSubmitter();
+  it("Should generate state 'by hand', create a form 'by hand' and submit an ajax request", function() {
+    form = new FormSubmitter();
 
-		var fl = [];
+    var fl = [];
 
-		fl[0] = new DataSetFormM({"selected":"datasetName"});
-		fl[1] = new OutputProjectionFormM({"selected": "outputProjectionName"});
-		fl[2] = new ImageFormatFormM({"selected": "imageFormatName"});
-		fl[3] = new ImageHeightFormM({"selected":12});
-		fl[4] = new ImageWidthFormM({"selected":34});
-		fl[5] = new InterpolationMethodFormM({"selected":"interpolationMethodName"});
+    fl[0] = new DataSetFormM({"selected":"datasetName"});
+    fl[1] = new OutputProjectionFormM({"selected": "outputProjectionName"});
+    fl[2] = new ImageFormatFormM({"selected": "imageFormatName"});
+    fl[3] = new ImageHeightFormM({"selected":12});
+    fl[4] = new ImageWidthFormM({"selected":34});
+    fl[5] = new InterpolationMethodFormM({"selected":"interpolationMethodName"});
 
-		fl[0].view = new DataSetFormV({model: fl[0]});
-		fl[1].view = new OutputProjectionFormV({model: fl[1]});
-		fl[2].view = new ImageFormatFormV({model: fl[2]});
-		fl[3].view = new ImageHeightFormV({model: fl[3]});
-		fl[4].view = new ImageWidthFormV({model: fl[4]});
-		fl[5].view = new InterpolationMethodFormV({model: fl[5]});
+    fl[0].view = new DataSetFormV({model: fl[0]});
+    fl[1].view = new OutputProjectionFormV({model: fl[1]});
+    fl[2].view = new ImageFormatFormV({model: fl[2]});
+    fl[3].view = new ImageHeightFormV({model: fl[3]});
+    fl[4].view = new ImageWidthFormV({model: fl[4]});
+    fl[5].view = new InterpolationMethodFormV({model: fl[5]});
 
-		for (i in [0,1,2,3,4]) {
-			fl[i].view.enabled=true;
-		}
-		fl[5].view.enabled=false;
+    for (i in [0,1,2,3,4]) {
+      fl[i].view.enabled=true;
+    }
+    fl[5].view.enabled=false;
 
-		expect(form.formList).toNotBe(null);
+    expect(form.formList).toNotBe(null);
 
-		for (i in [0,1,2,3,4,5]) {
-			form.formList.add(i,fl[i]);
-		}
+    for (i in [0,1,2,3,4,5]) {
+      form.formList.add(i,fl[i]);
+    }
 
-		// Create a sinon server
-		// submit a request (form.submitRequest() )
-		// inspect the contents of the request
+    // Create a sinon server
+    // submit a request (form.submitRequest() )
+    // inspect the contents of the request
 
-		var  fakeUrl = "fakeUrl";
-		form.set({"requestURL": fakeUrl});   
+    var  fakeUrl = "fakeUrl";
+    form.set({"requestURL": fakeUrl});
 
-		var server;
+    var server;
 
-		server = sinon.fakeServer.create();
+    server = sinon.fakeServer.create();
 
 
-		server.respondWith("POST", fakeUrl,
-		           [200, { "Content-Type": "application/json" }, JSON.stringify({"Success":"Yes"})]);
+    server.respondWith("POST", fakeUrl,
+    [200, { "Content-Type": "application/json" }, JSON.stringify({"Success":"Yes"})]);
 
-		form.submitRequest();
+    form.submitRequest();
 
-		server.respond(); 
+    server.respond();
 
-		// Test the enabled/disabled feature
-		expect(server.requests[0].requestBody).toEqual("Dataset=datasetName&OutputProjection=outputProjectionName&ImageFormat=imageFormatName&ImageHeight=12&ImageWidth=34");
+    // Test the enabled/disabled feature
+    expect(server.requests[0].requestBody).toEqual("Dataset=datasetName&OutputProjection=outputProjectionName&ImageFormat=imageFormatName&ImageHeight=12&ImageWidth=34");
 
-		form.enable(5);
-		form.submitRequest();
+    form.enable(5);
+    form.submitRequest();
 
-		expect(server.requests[1].requestBody).toEqual("Dataset=datasetName&OutputProjection=outputProjectionName&ImageFormat=imageFormatName&ImageHeight=12&ImageWidth=34&InterpolationMethod=interpolationMethodName");
-	
-		server.restore(); 
-	});
+    expect(server.requests[1].requestBody).toEqual("Dataset=datasetName&OutputProjection=outputProjectionName&ImageFormat=imageFormatName&ImageHeight=12&ImageWidth=34&InterpolationMethod=interpolationMethodName");
 
-	it("Should inflate the state dynamically, generate a form with a Dataset,\
-	 Layer, and ImageFormat 'by hand', and submit an ajax request", function() {
-		// Create a sinon server 
-		var server;
+    server.restore();
+  });
 
-		server = sinon.fakeServer.create();
+  it("Should inflate the state dynamically, generate a form with a Dataset,\
+  Layer, and ImageFormat 'by hand', and submit an ajax request", function() {
+    // Create a sinon server
+    var server;
 
-		server.respondWith("POST", "/fakeURL",
-	       [200, { "Content-Type": "application/json" },
-	        JSON.stringify(
-	        {
-		        "DataSet": {
-			        "Austrailia": {
-				        "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
-				        "wcsUrl": "/AustrailiaURL",
-				        "wmsUrl": "/AustrailiaURL2",
-				        "ImageFormat": ["JPEG", "BMP", "TIFF"]
-				    },
-				    "Alaska": {
-				        "layers": ["AlaskaLayer1", "AlaskaLayer2"],
-				        "wcsUrl": "/AlaskaURL",
-				        "wmsUrl": "/AlaskaURL2",
-				        "ImageFormat": ["BMP", "GEOTIFF"]
-				    },
-				    "Africa": {
-				        "layers": ["AfricaLayer1"],
-				        "wcsUrl": "/AfricaURL",
-				        "wmsUrl": "/AfricaURL2",
-				        "ImageFormat": ["GEOTIFF"]
-				    }
-			    },
+    server = sinon.fakeServer.create();
 
-	        })]);
+    server.respondWith("POST", "/fakeURL",
+    [200, { "Content-Type": "application/json" },
+    JSON.stringify({
+      "DataSet": {
+        "Austrailia": {
+          "layers": ["AusLayer1", "AusLayer2","AusLayer3" ],
+          "wcsUrl": "/AustrailiaURL",
+          "wmsUrl": "/AustrailiaURL2",
+          "ImageFormat": ["JPEG", "BMP", "TIFF"]
+        },
+        "Alaska": {
+          "layers": ["AlaskaLayer1", "AlaskaLayer2"],
+          "wcsUrl": "/AlaskaURL",
+          "wmsUrl": "/AlaskaURL2",
+          "ImageFormat": ["BMP", "GEOTIFF"]
+        },
+        "Africa": {
+          "layers": ["AfricaLayer1"],
+          "wcsUrl": "/AfricaURL",
+          "wmsUrl": "/AfricaURL2",
+          "ImageFormat": ["GEOTIFF"]
+        }
+      },
 
-		var infl = new StateInflator();
-		infl.inflate('/fakeURL'); 
-		server.respond(); 
+    })
+    ]
+  );
 
-		form = new FormSubmitter();
+  var infl = new StateInflator();
+  infl.inflate('/fakeURL');
+  server.respond();
 
-		var formList = [];
+  form = new FormSubmitter();
 
-		// Select the Alaska Dataset and submit and ajax request 
-		formList[0] = infl.dataSetFormM;
-		expect(formList[0]).toNotBe(null);
-		expect(formList[0]).toNotBe(undefined);
-		// First choose an incorrect selection
-		formList[0].set({"selected": "Argentina"}); // should not work because this DataSet is not defined
-		
-		expect(formList[0].get("selected")).toNotBe("Argentina");
+  var formList = [];
 
-		// Now choose alaska
-		formList[0].set({"selected": "Alaska"});
-		expect(formList[0].get("selected")).toBe("Alaska");
+  // Select the Alaska Dataset and submit and ajax request
+  formList[0] = infl.dataSetFormM;
+  expect(formList[0]).toNotBe(null);
+  expect(formList[0]).toNotBe(undefined);
+  // First choose an incorrect selection
+  formList[0].set({"selected": "Argentina"}); // should not work because this DataSet is not defined
 
-		expect(formList[0].view.enabled).toBe(false);
-		formList[0].view.enabled = true;
+  expect(formList[0].get("selected")).toNotBe("Argentina");
 
-		formList[1] = infl.layerFormMDict[formList[0].get("selected")];
-		formList[1].set({"selected": "FakeLayer"});
-		expect(formList[1].get("selected")).toNotBe("FakeLayer");
-		formList[1].set({"selected": "AlaskaLayer1"});
-		expect(formList[1].get("selected")).toBe("AlaskaLayer1");
-		formList[1].view.enabled = true;
+  // Now choose alaska
+  formList[0].set({"selected": "Alaska"});
+  expect(formList[0].get("selected")).toBe("Alaska");
 
-		formList[2] = infl.imageFormatFormMDict[formList[0].get("selected")];
-		formList[2].set({"selected": "FakeImageFormat"});
-		expect(formList[2].get("selected")).toNotBe("FakeImageFormat");
-		formList[2].set({"selected": "BMP"});
-		expect(formList[2].get("selected")).toBe("BMP");
-		formList[2].view.enabled = true;
+  expect(formList[0].view.enabled).toBe(false);
+  formList[0].view.enabled = true;
 
-		expect(form.formList).toNotBe(null);
+  formList[1] = infl.layerFormMDict[formList[0].get("selected")];
+  formList[1].set({"selected": "FakeLayer"});
+  expect(formList[1].get("selected")).toNotBe("FakeLayer");
+  formList[1].set({"selected": "AlaskaLayer1"});
+  expect(formList[1].get("selected")).toBe("AlaskaLayer1");
+  formList[1].view.enabled = true;
 
-		for (i in [0,1,2]) {
-			form.formList.add(i,formList[i]);
-		}
+  formList[2] = infl.imageFormatFormMDict[formList[0].get("selected")];
+  formList[2].set({"selected": "FakeImageFormat"});
+  expect(formList[2].get("selected")).toNotBe("FakeImageFormat");
+  formList[2].set({"selected": "BMP"});
+  expect(formList[2].get("selected")).toBe("BMP");
+  formList[2].view.enabled = true;
 
-		expect(form.formList.length).toBe(3);
+  expect(form.formList).toNotBe(null);
 
-		// Create a sinon server
-		// submit a request (form.submitRequest() )
-		// inspect the contents of the request
+  for (i in [0,1,2]) {
+    form.formList.add(i,formList[i]);
+  }
 
-		var  fakeUrl = "fakeUrl";
-		form.set({"requestURL": fakeUrl});   
+  expect(form.formList.length).toBe(3);
 
-		server.restore(); 
+  // Create a sinon server
+  // submit a request (form.submitRequest() )
+  // inspect the contents of the request
 
-		var server2 = sinon.fakeServer.create();
+  var  fakeUrl = "fakeUrl";
+  form.set({"requestURL": fakeUrl});
 
-		server2.respondWith("POST", fakeUrl,
-		           [200, { "Content-Type": "application/json" }, JSON.stringify({"Success":"Yes"})]);
+  server.restore();
 
-		form.submitRequest();
+  var server2 = sinon.fakeServer.create();
 
-		server2.respond(); 
+  server2.respondWith("POST", fakeUrl,
+  [200, { "Content-Type": "application/json" }, JSON.stringify({"Success":"Yes"})]);
 
-		expect(server2.requests[0].requestBody).toEqual("Dataset=Alaska&COVERAGE=AlaskaLayer1&ImageFormat=BMP");
-	
-		server2.restore(); 
-	});
+  form.submitRequest();
+
+  server2.respond();
+
+  expect(server2.requests[0].requestBody).toEqual("Dataset=Alaska&COVERAGE=AlaskaLayer1&ImageFormat=BMP");
+
+  server2.restore();
+});
 });
 
 describe("Parse the XML document", function() {
-	it("Parse the Coverage XML by hand", function() {
-		var ac = australia_coverage;
+  it("Parse the Coverage XML by hand", function() {
+    var ac = australia_coverage;
 
-		var formats = $(ac).find('supportedFormats').children();
-		var formatList = [];
-		_.each(formats, function(e) {
-			formatList.push($(e).text());
-		});
-
-
-		var interp = $(ac).find('supportedInterpolations').children();
-		var interpList = [];
-		_.each(interp, function(e) {
-			interpList.push($(e).text());
-		});
+    var formats = $(ac).find('supportedFormats').children();
+    var formatList = [];
+    _.each(formats, function(e) {
+      formatList.push($(e).text());
+    });
 
 
-		expect(interpList.length).toEqual(2);
-		expect(interpList[0]).toBe("nearest neighbor");
-		expect(interpList[1]).toBe("bilinear");
-
-		var proj = $(ac).find('supportedCRSs').children();
-		var projHash = [];
-		_.each(proj, function(e) {
-			projHash[$(e).text()] = 1;
-		});
-		var projList = [];
-		for (key in projHash) {
-			projList.push(key);
-		}
-		expect(projList.length).toEqual(1);
-		expect(projList[0]).toBe("EPSG:4326");
+    var interp = $(ac).find('supportedInterpolations').children();
+    var interpList = [];
+    _.each(interp, function(e) {
+      interpList.push($(e).text());
+    });
 
 
-	});
-	
-	it("Parse the Capabilities XML by Hand", function() {
-		var ac = australia_capabilities;
+    expect(interpList.length).toEqual(2);
+    expect(interpList[0]).toBe("nearest neighbor");
+    expect(interpList[1]).toBe("bilinear");
 
-		var WCSURL=$(australia_capabilities).find('GetCoverage').find('http').find('get').find('onlineresource').attr('xlink:href');
-		expect(WCSURL).toBe("http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?");
-	});
+    var proj = $(ac).find('supportedCRSs').children();
+    var projHash = [];
+    _.each(proj, function(e) {
+      projHash[$(e).text()] = 1;
+    });
+    var projList = [];
+    for (key in projHash) {
+      projList.push(key);
+    }
+    expect(projList.length).toEqual(1);
+    expect(projList[0]).toBe("EPSG:4326");
 
 
-	
+  });
+
+  it("Parse the Capabilities XML by Hand", function() {
+    var ac = australia_capabilities;
+
+    var WCSURL=$(australia_capabilities).find('GetCoverage').find('http').find('get').find('onlineresource').attr('xlink:href');
+    expect(WCSURL).toBe("http://testmapserver.daac.asf.alaska.edu/wcs/GRFMP/australia?");
+  });
+
+
+
 });
 
 

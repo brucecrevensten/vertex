@@ -2,12 +2,10 @@
 describe("Download Queue", function() {
   it("should allow items to be added to it", function() {
     dq = new DownloadQueue();
-    dp = new DataProduct(
-      {"id":1,"GRANULENAME":"ALPSRP234721390","PRODUCTNAME":"ALPSRP234721390","PLATFORM":"ALOS","SENSOR":"SAR","BEAMMODETYPE":"FBD","BEAMMODEDESC":"ALOS PALSAR sensor: High Resolution Observation Mode (dual polarization)","ORBIT":23472,"PATHNUMBER":158,"FRAMENUMBER":1390,"ACQUISITIONDATE":"2010-06-21 04:27:26","PROCESSINGDATE":"2011-01-11 22:56:57","PROCESSINGTYPE":"BROWSE","STARTTIME":"2010-06-21 04:27:22","ENDTIME":"2010-06-21 04:27:26","CENTERLAT":69.52,"CENTERLON":-98.4504,"NEARSTARTLAT":69.207,"NEARSTARTLON":-99.103,"NEARENDLAT":69.699,"NEARENDLON":-99.437,"FARSTARTLAT":69.336,"FARSTARTLON":-97.48,"FARENDLAT":69.83,"FARENDLON":-97.778,"FARADAYROTATION":3.091217,"ASCENDINGDESCENDING":"ASCENDING","URL":"http://testdatapool.daac.asf.alaska.edu:80/BROWSE/A3/ALPSRP234721390.jpg","BYTES":542548,"FILESIZE":.52,"OFFNADIRANGLE":34.3,"MD5SUM":"c910145b9b9e7965f19e9990d1a7c367","GRANULEDESC":"ALOS PALSAR scene","GRANULETYPE":"ALOS_PALSAR_SCENE","FILENAME":"ALPSRP234721390.jpg","SHAPE":{"SDO_GTYPE":2003,"SDO_SRID":8307,"SDO_ELEM_INFO":[1,1003,1],"SDO_ORDINATES":[-99.103,69.207,-97.48,69.336,-97.778,69.83,-99.437,69.699,-99.103,69.207]}
-      });
+    dp = new DataProduct(searchReturn[0]);
     dq.add( dp );
     expect( dq.length ).toEqual( 1 );
-    expect( dq.get(1).toJSON().GRANULENAME ).toEqual( 'ALPSRP234721390' );
+    expect( dq.at(0).toJSON().GRANULENAME ).toEqual( 'E2_81917_STD_F305' );
   });
 
   it("should allow you to remove items from the queue", function() {
@@ -69,7 +67,7 @@ describe("Download Queue", function() {
 
       dp1 = new DataProduct( { "BYTES":500 } );
       dq.add( dp1 );
-      expect( dq.length ).toEqual( 1 ); 
+      expect( dq.length ).toEqual( 1 );
       expect( dqsv.render().el.innerHTML ).toContain('Download queue <span class="nonempty">(1 item, 500 B)</span>');
       dp2 = new DataProduct( { "BYTES":10000 } );
       dp3 = new DataProduct( { "BYTES":20000 } );
@@ -77,14 +75,14 @@ describe("Download Queue", function() {
       dp5 = new DataProduct( { "BYTES":5500000000 } );
       dp6 = new DataProduct( { "BYTES":1900000000000 } );
       dq.add( [ dp2, dp3, dp4, dp5, dp6 ] );
-      expect( dq.length ).toEqual( 6 ); 
+      expect( dq.length ).toEqual( 6 );
       expect( dqsv.render().el.innerHTML ).toContain('Download queue <span class="nonempty">(6 items, 1.73 TB)</span>');
 
       });
   });
 
   describe("Download Queue modal popup", function() {
-  
+
     describe("Download Queue table of queue contents", function() {
 
       dq = new DownloadQueue();
@@ -102,7 +100,7 @@ describe("Download Queue", function() {
       r = dqv.render().el.innerHTML;
 
       it("lists the products in the queue", function() {
-      
+
         expect( r ).toContain('granule1');
         expect( r ).toContain('granule2');
         expect( r ).toContain('granule3');
@@ -121,8 +119,23 @@ describe("Download Queue", function() {
 
       it("has a download button that fires an async request to the API", function() {
         expect( r ).toContain('Download');
+
+        this.xhr = sinon.useFakeXMLHttpRequest();
+        var requests = this.requests = [];
+
+        this.xhr.onCreate = function (xhr) {
+          requests.push(xhr);
+        };
+
+        expect(this.requests.length).toEqual(1);
+
+        console.log(requests[0]);
+
+        this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "UNIVERSAL", "user_first_name":"Tester"}');
+
+        this.xhr.restore();
       });
     });
-  });  
+  });
 });
 
