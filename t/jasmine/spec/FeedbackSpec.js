@@ -3,8 +3,6 @@ describe("Feedback.js", function(){
   describe("Feedback: Backbone.Model", function(){
     it('Can be created with default values for its attributes.', function() {
       var fb = new Feedback();
-      console.log('feedback');
-      console.log(fb);
       expect(fb.get("name")).toBe('unknown');
       expect(fb.get("email")).toBe('unknown');
     });

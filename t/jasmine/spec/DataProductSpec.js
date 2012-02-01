@@ -3,8 +3,8 @@ describe("DataProduct.js", function(){
     //$.storage.del('q_cookie_');
     jasmine.getFixtures().fixturesPath = 'spec/fixtures/';
     loadFixtures('SearchApp.html');
-    loadFixtures('searchReturn.js');
-    window.SearchApp = new SearchAppView();
+    SearchApp = new SearchAppView();
+    SearchApp.searchResults = searchResults;
 
   });
 
@@ -14,10 +14,11 @@ describe("DataProduct.js", function(){
 
   describe("DataProductFile: Backbone.Model", function(){
     it('Can be created with default values for its attributes.', function() {
-      var productFile = new DataProductFile(searchReturn[0]);
+      var productFile = new DataProductFile(searchResults[0]);
+      console.log(productFile);
       expect(productFile.get("SENSOR")).toBe("SAR");
-      expect(productFile.get("GRANULENAME")).toBe("E2_81917_STD_F305");
-      expect(productFile.get("sizeText")).toBe("E2_81917_STD_F305");
+      expect(productFile.get("GRANULENAME")).toBe("ALPSRS258452300");
+
 
     });
 
