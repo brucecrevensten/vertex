@@ -17,12 +17,15 @@ describe("DataProduct.js", function(){
       var productFile = new DataProductFile(searchReturn[0]);
       expect(productFile.get("SENSOR")).toBe("SAR");
       expect(productFile.get("GRANULENAME")).toBe("E2_81917_STD_F305");
+      expect(productFile.get("sizeText")).toBe("E2_81917_STD_F305");
+
     });
 
     it('Will set passed attributes on the model instance when created.', function() {
       var productFile = new DataProductFile({ productId: 'granule name' });
       expect(productFile.get('productId')).toBe('granule name');
     });
+
   });
 
   describe("DataProductFiles: Backbone.Collection", function(){
