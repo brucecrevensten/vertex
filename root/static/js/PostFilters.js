@@ -20,7 +20,7 @@ var PostFilters = Backbone.Model.extend(
         this.postFilters[i].trigger('reset');
       }
     },
-    
+
     applyFilters: function( data ) {
     }
   }
@@ -48,27 +48,27 @@ var PostFiltersView = Backbone.View.extend(
 
   // platforms: array of platform names present in search results
   render: function(platforms) {
-   
+
 	  this.model.reset();
     var el = $(this.el);
     var render = false;
-    
+
     el.accordion("destroy");
     el.empty();
-    
+
     var u = jQuery('<ul/>');
 
     for ( var i in this.widgets ) {
       if( -1 != _.indexOf( _.uniq(this.options.searchResults.pluck('platform')), this.widgets[i].name )) {
         u.append( jQuery('<li/>').append( this.widgets[i].render().el) );
         render = true;
-      } 
+      }
     }
     if ( render ) {
           this.trigger('render');
 
       var d = jQuery('<div/>');
-      
+
       var r = jQuery('<button/>').click( jQuery.proxy( function(e) {
         this.model.reset();
         SearchApp.dataTable.fnDraw();
@@ -76,7 +76,7 @@ var PostFiltersView = Backbone.View.extend(
 
       d.append(u);
       d.append(r);
-      
+
       el.append( jQuery('<h3><a href="#">Filter By Platform</a></h3>')).append(d).accordion();
     }
     return this;
@@ -111,15 +111,15 @@ var PlatformFacet = BaseFilter.extend( {
     return a;
   }
 
-} ); 
+} );
 
 var PlatformFacetView = BaseWidget.extend( {
   // selected = this.model.toJSON
   // key = key name to use in selected.key
-  // container = element into which all these items should be appended
+  // el = element into which all these items should be appended
   // source = data structure in format: [ { title:string, group:string, modes: [ { label:label, value:inputValue }, ... ] }, ... ]
   // id = string, ID fragment to prepend in dynamically-generated elements
-  // param = string, name of http parameter
+  // name = string, name of http parameter
   renderButtonset: function( selected, key, el, source, id, name) {
     el = $(el);
     for( var i in source ) {
@@ -131,7 +131,7 @@ var PlatformFacetView = BaseWidget.extend( {
       newEl.prop('beam', source[i].group);
       for( var j in source[i].modes ) {
         idVal = source[i].modes[j].value.replace('.','_');
-        newEl.append( 
+        newEl.append(
           _.template(
             '<input type="checkbox" class="beamSelector" name="<%= name %>[]" value="<%= value %>" <%= ifChecked %> id="<%= id %>_<%= group %>_<%= idValue %>" /><label for="<%= id %>_<%= group %>_<%= idValue %>"><%= label %></label>',
             {
@@ -164,7 +164,7 @@ var AlosFacet = PlatformFacet.extend(
       direction: 'any',
       beamoffnadir: [
       /* To make a checkbox default to on, place it's value in here
-       ie   
+       ie
 
         'FBS 21.5',
         'FBS 34.3',
@@ -218,14 +218,14 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
 
-  events: { 
+  events: {
     "change input" : "changed",
   },
 
   initialize: function() {
     _.bindAll(this);
-    this.model.bind('change', this.renderHtml, this);  
-    this.model.bind('reset', this.renderHtml, this);  
+    this.model.bind('change', this.renderHtml, this);
+    this.model.bind('reset', this.renderHtml, this);
   },
 
   changed: function(e) {
@@ -272,7 +272,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
     },
   ],
   renderHtml: function() {
-      
+
       var el = $(this.el);
       el.empty();
       var b = jQuery('<div/>');
@@ -297,10 +297,11 @@ var AlosFacetDialog = PlatformFacetView.extend( {
 
   },
   setFilters: function() {
+    var el = $(this.el);
     this.model.reset();
     this.model.active = false;
     // Beam Modes
-    $(this.el).find('input.beamSelector').each(jQuery.proxy(function(i, row) {
+    el.find('input.beamSelector').each(jQuery.proxy(function(i, row) {
       var e = $(row);
       if(e.attr('checked') === 'checked') {
         var a = this.model.get('beamoffnadir');
@@ -310,21 +311,21 @@ var AlosFacetDialog = PlatformFacetView.extend( {
         this.model.active = true;
       }
     }, this));
-    $(this.el).find('input[name=direction]').each(jQuery.proxy(function(i, row){
+    el.find('input[name=direction]').each(jQuery.proxy(function(i, row){
       var e = $(row);
       if((e.attr('checked') === 'checked') && (e.val() != 'any')) {
         this.model.set({'direction': e.val()}, {'silent': true});
         this.model.active = true;
       }
     }, this));
-    $(this.el).find('input[name=path]').each(jQuery.proxy(function(i, row) {
+    el.find('input[name=path]').each(jQuery.proxy(function(i, row) {
       var e = $(row);
       if(e.val() != '') {
         this.model.set({'path': e.val()}, {'silent': true});
         this.model.active = true;
       }
     }, this));
-    $(this.el).find('input[name=frame]').each(jQuery.proxy(function(i, row) {
+    el.find('input[name=frame]').each(jQuery.proxy(function(i, row) {
       var e = $(row);
       if(e.val() != '') {
         this.model.set({'frame': e.val()}, {'silent': true});
@@ -335,7 +336,7 @@ var AlosFacetDialog = PlatformFacetView.extend( {
   render: function() {
 
     if( true !== this.hasRendered ) {
-        this.renderHtml();        
+        this.renderHtml();
     }
 
     $(this.el).dialog({
@@ -346,8 +347,8 @@ var AlosFacetDialog = PlatformFacetView.extend( {
       title: "ALOS PALSAR Options",
       position: [30,100],
       buttons: {
-        "Apply": jQuery.proxy(function() 
-                 { 
+        "Apply": jQuery.proxy(function()
+                 {
                     this.setFilters();
                     SearchApp.dataTable.fnDraw();
                   },this),
@@ -357,14 +358,14 @@ var AlosFacetDialog = PlatformFacetView.extend( {
           SearchApp.dataTable.fnDraw();
         }, this)
       }
-    }); 
-   
-    
-     
+    });
+
+
+
   }
-  
+
 });
- 
+
 var AlosFacetButton = PlatformFacetView.extend( {
   name: "ALOS",
   tagName: "button",
@@ -432,7 +433,7 @@ var RadarsatFacet = PlatformFacet.extend(
     getWidget: function() {
       return new RadarsatFacetButton({model: this});
     },
-    
+
     filter: function(data) {
       var ret = false;
       var beam = data.beamModeType;
@@ -472,7 +473,7 @@ var RadarsatFacetButton = PlatformFacetView.extend( {
     return this;
   }
 });
-                                           
+
 var RadarsatFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
@@ -564,10 +565,11 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
     this.setFilters();
   },
   setFilters: function() {
+    var el = $(this.el);
     this.model.reset();
     this.model.active = false;
-    
-    $(this.el).find('input.beamSelector').each(jQuery.proxy(function(i, row) { 
+
+    el.find('input.beamSelector').each(jQuery.proxy(function(i, row) {
       var e = $(row);
       if(e.attr('checked') === 'checked') {
         var a = this.model.get('beam');
@@ -577,21 +579,21 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
         this.model.active = true;
       }
     }, this));
-    $(this.el).find('input[name=direction]').each(jQuery.proxy(function(i, row){
+    el.find('input[name=direction]').each(jQuery.proxy(function(i, row){
       var e = $(row);
       if((e.attr('checked') === 'checked') && (e.val() != 'any')) {
         this.model.set({'direction': e.val()}, {'silent': true});
         this.model.active = true;
       }
     }, this));
-    $(this.el).find('input[name=path]').each(jQuery.proxy(function(i, row) {
+    el.find('input[name=path]').each(jQuery.proxy(function(i, row) {
       var e = $(row);
       if(e.val() != '') {
         this.model.set({'path': e.val()}, {'silent': true});
         this.model.active = true;
       }
     }, this));
-    $(this.el).find('input[name=frame]').each(jQuery.proxy(function(i, row) {
+    el.find('input[name=frame]').each(jQuery.proxy(function(i, row) {
       var e = $(row);
       if(e.val() != '') {
         this.model.set({'frame': e.val()}, {'silent': true});
@@ -600,11 +602,11 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
     }, this));
   },
   render: function() {
-    
+
     if( true !== this.hasRendered ) {
       this.renderHtml();
     }
-    
+
     $(this.el).dialog({
       width: 700,
       modal: false,
@@ -613,7 +615,7 @@ var RadarsatFacetDialog = PlatformFacetView.extend( {
       title: "RADARSAT-1 Platform Options",
       position: [40,110],
       buttons: {
-        "Apply": jQuery.proxy(function() { 
+        "Apply": jQuery.proxy(function() {
           this.setFilters();
           SearchApp.dataTable.fnDraw();
         }, this),
@@ -684,7 +686,7 @@ var LegacyFacetButton = PlatformFacetView.extend( {
     return this;
   }
 });
-                                           
+
 var LegacyFacetDialog = PlatformFacetView.extend( {
   className: "platformFacet",
   tagName: "form",
@@ -712,24 +714,25 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
   },
 
   setFilters: function() {
+    var el = $(this.el);
     this.model.reset();
     this.model.active = false;
-    
-    $(this.el).find('input[name=direction]').each(jQuery.proxy(function(i, row){
+
+    el.find('input[name=direction]').each(jQuery.proxy(function(i, row){
       var e = $(row);
       if((e.attr('checked') === 'checked') && (e.val() != 'any')) {
         this.model.set({'direction': e.val()}, {'silent': true});
         this.model.active = true;
       }
     }, this));
-    $(this.el).find('input[name=path]').each(jQuery.proxy(function(i, row) {
+    el.find('input[name=path]').each(jQuery.proxy(function(i, row) {
       var e = $(row);
       if(e.val() != '') {
         this.model.set({'path': e.val()}, {'silent': true});
         this.model.active = true;
       }
     }, this));
-    $(this.el).find('input[name=frame]').each(jQuery.proxy(function(i, row) {
+    el.find('input[name=frame]').each(jQuery.proxy(function(i, row) {
       var e = $(row);
       if(e.val() != '') {
         this.model.set({'frame': e.val()}, {'silent': true});
@@ -750,7 +753,7 @@ var LegacyFacetDialog = PlatformFacetView.extend( {
       title: this.model.platform + " Platform Options",
       position: [50 + this.model.offset, 120 + this.model.offset ],
       buttons: {
-        "Apply": jQuery.proxy(function() {  
+        "Apply": jQuery.proxy(function() {
           this.setFilters();
           SearchApp.dataTable.fnDraw();
           }, this),
