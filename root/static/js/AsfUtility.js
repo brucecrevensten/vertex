@@ -20,11 +20,11 @@ var AsfUtility = {
 
     } else if (bytes >= terabyte) {
       return (bytes / terabyte).toFixed(precision) + ' TB';
-    } 
+    }
   },
   rtrim: function(str, charlist) {
-    // Removes trailing whitespace  
-    // 
+    // Removes trailing whitespace
+    //
     // version: 1103.1210
     // discuss at: http://phpjs.org/functions/rtrim    // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
     // +      input by: Erkekjetter
@@ -40,5 +40,32 @@ var AsfUtility = {
     str += '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
-}
+};
+
+
+JSON.stringify = JSON.stringify || function (obj) {
+  var t = typeof (obj);
+  if (t != "object" || obj === null) {
+
+    if (t == "string") obj = '"'+obj+'"';
+    return String(obj);
+  }
+  else {
+
+    var n, v, json = [], arr = (obj && obj.constructor == Array);
+    for (n in obj) {
+      v = obj[n]; t = typeof(v);
+      if (t == "string") v = '"'+v+'"';
+      else if (t == "object" && v !== null) v = JSON.stringify(v);
+      json.push((arr ? "" : '"' + n + '":') + String(v));
+    }
+    return (arr ? "[" : "{") + String(json) + (arr ? "]" : "}");
+  }
+};
+
+JSON.parse = JSON.parse || function (str) {
+  if (str === "") str = '""';
+  eval("var p=" + str + ";");
+  return p;
+};
 
