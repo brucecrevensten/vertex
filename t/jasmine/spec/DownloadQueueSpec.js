@@ -2,17 +2,17 @@
 describe("Download Queue", function() {
   it("should allow items to be added to it", function() {
     dq = new DownloadQueue();
-    dp = new DataProduct(searchReturn[0]);
+    dp = new DataProduct(searchResults[0]);
     dq.add( dp );
     expect( dq.length ).toEqual( 1 );
-    expect( dq.at(0).toJSON().GRANULENAME ).toEqual( 'E2_81917_STD_F305' );
+    expect( dq.at(0).toJSON().GRANULENAME ).toEqual( 'ALPSRS258452300' );
   });
 
   it("should allow you to remove items from the queue", function() {
     dq = new DownloadQueue();
-    dp1 = new DataProduct();
-    dp2 = new DataProduct();
-    dp3 = new DataProduct();
+    dp1 = new DataProduct(searchResults[0]);
+    dp2 = new DataProduct(searchResults[1]);
+    dp3 = new DataProduct(searchResults[2]);
     dq.add( [ dp1, dp2, dp3 ] );
     expect( dq.length).toEqual( 3 );
     dq.remove( dp1 );
