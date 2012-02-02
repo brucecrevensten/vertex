@@ -1,40 +1,31 @@
 var DataProductFile = Backbone.Model.extend( {
- /* Structure of this model:
-  {
-          thumbnail: data[i].thumbnail,
-          granuleName: data[i].granuleName,
-          id: data[i].id,
-          processingType: data[i].processingType,
-          processingTypeDisplay: data[i].processingTypeDisplay,
-          processingLevel: data[i].processingLevel,
-          processingTypeDescription: data[i].processingTypeDescription,
-          url: data[i].url,
-          platform: data[i].platform,
-          acquisitionDate: data[i].acquisitionDate,
-          bytes: data[i].bytes,
-          sizeText: AsfUtility.bytesToString(data[i].bytes),
-          md5sum: data[i].md5sum,
-          filename: data[i].fileName
+/*
+{
+    "URL":"http://testdatapool.daac.asf.alaska.edu:80/L1.0/A3/ALPSRS258452300-L1.0.zip",
+    "PROCESSINGTYPE":"L1.0",
+    "MD5SUM":"53b8049791442b0ca2e2a4f5d6f4f90d",
+    "PROCESSINGLEVEL":"L0",
+    "PROCESSINGTYPEDISPLAY":"Level 1.0",
+    "product_file_id":"ALPSRS258452300_L1.0",
+    "GRANULENAME":"ALPSRS258452300",
+    "PROCESSINGTYPEDESCRIPTION":null,
+    "BYTES":570247589,
+    "FILENAME":"ALPSRS258452300-L1.0.zip",
+    "PROCESSINGDATE":"2011-06-03 19:40:45"
   }
- */
+*/
   initialize: function() {
-    if(window.SearchApp && SearchApp.searchResults.get(this.get('granuleName'))) {
-      var obj = SearchApp.searchResults.get(this.get('granuleName'));
-      this.set( {
-         'acquisitionDateText': obj.get('acquisitionDate').substring(0,10),
-         'thumbnail': obj.get('thumbnail'),
-         'id': this.get('product_file_id'),
-         'platform': obj.get('platform'),
-         'sizeText': AsfUtility.bytesToString(this.get('bytes'))
-      });
-    }
+    this.set( {
+       'processingDateText': this.get('PROCESSINGDATE').substring(0,10),
+       'sizeText': AsfUtility.bytesToString(this.get('BYTES'))
+    });
   }
-} );
+});
 
-var DataProductFiles = Backbone.Collection.extend( { 
+var DataProductFiles = Backbone.Collection.extend( {
   model: DataProductFile,
   comparator: function(m) {
-    var ptype = m.get('processingType');
+    var ptype = m.get('PROCESSINGTYPE');
     var porder = {
       'L0': 0,
       'L1': 1,
@@ -45,7 +36,7 @@ var DataProductFiles = Backbone.Collection.extend( {
       'STOKES': 6,
       'COMPLEX': 7,
       'PROJECTED': 8,
-      'KMZ': 9,
+      'KMZ': 9
     };
     return porder[ptype];
   }
@@ -55,7 +46,7 @@ var DataProductFilesView = Backbone.View.extend( {
 
   renderForProfile: function(o) {
     var disabled = false;
-    if( _.isUndefined( o ) ) { 
+    if( _.isUndefined( o ) ) {
       disabled = false;
     } else {
       disabled = (o.disabled == true) ? true : false;
@@ -67,7 +58,7 @@ var DataProductFilesView = Backbone.View.extend( {
       if( 'BROWSE' == el.processingType ) { return; }
 
       el.sizeText = AsfUtility.bytesToString(el.bytes);
-   
+
       var li = jQuery('<li/>');
       if(disabled) {
         li.append(jQuery('<div/>', {
@@ -76,7 +67,7 @@ var DataProductFilesView = Backbone.View.extend( {
           'disabled': true,
           'icons': {
               'primary': "ui-icon-circle-arrow-s"
-            }, 
+            },
             label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", el) }) );
       } else {
         li.append( jQuery('<a/>', {
@@ -87,7 +78,7 @@ var DataProductFilesView = Backbone.View.extend( {
           'icons': {
             'primary': "ui-icon-circle-arrow-s"
           },
-          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", el) 
+          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", el)
         }).click(function() {
           if(typeof ntptEventTag == 'function') {
             ntptEventTag('ev=downloadProduct');
@@ -143,7 +134,7 @@ var DataProductFilesView = Backbone.View.extend( {
 var DataProduct = Backbone.Model.extend({
   initialize: function() {
     this.name = 'DataProduct';
-    this.files = new DataProductFiles();
+    this.files = new DataProductFiles(this.get('FILES'));
     var fdr = parseFloat(this.get('faradayRotation'));
     if(_.isNumber(fdr)) {
       fdr = fdr.toFixed(2);
@@ -151,8 +142,8 @@ var DataProduct = Backbone.Model.extend({
       fdr = this.get('faradayRotation');
     }
     this.set({
-      'ascendingDescending': AsfUtility.ucfirst( this.get('ascendingDescending')),
-      'acquisitionDateText': this.get('acquisitionDate').substr(0,10),
+      'ascendingDescending': AsfUtility.ucfirst( this.get('ASCENDINGDESCENDING')),
+      'acquisitionDateText': this.get('ACQUISITIONDATE').substr(0,10),
       'faradayRotation': fdr
     });
     if(this.get('beamModeType') == 'POL') {
@@ -167,10 +158,10 @@ window.stopEventPropagation = function(event) {
     } else {
         event.cancelBubble = true;
     }
-}
+};
 
 window.showInlineProductFiles = function(event, product) {
-  
+
   stopEventPropagation( event );
 
   if( true !== _.isUndefined( SearchApp.searchResultsView.currentProduct )
@@ -190,7 +181,7 @@ window.showInlineProductFiles = function(event, product) {
 
     var c = $('<ul/>', { 'class':'granuleProductList', 'id':'gpl_'+product } );
     _.each(model.get('files'), function(file) {
-      
+
       // skip if BROWSE
       if( 'BROWSE' == file.processingType) { return; }
 
@@ -242,7 +233,7 @@ window.showInlineProductFiles = function(event, product) {
         c.append(lit);
     });
     $('#result_row_'+product).append(c);
-  }        
+  }
 }
 
 window.showProductProfile = function(product) {
