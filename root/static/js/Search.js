@@ -14,12 +14,12 @@ var SearchParameters = Backbone.Model.extend(
 
 	getGeographicFilter: function() {
 		return this.filters[0];
-	},	
-	
+	},
+
 	getGranuleFilter: function() {
 		return this.filters[3];
 	},
-	
+
     setupPreFilters: function() {
       this.filters = [
         new GeographicFilter(),
@@ -47,9 +47,9 @@ var SearchParameters = Backbone.Model.extend(
       for( var i in this.filters ) {
         this.filters[i].reset();
 		this.setAttr(this.filters[i].toJSON());
-	
+
       }
-   
+
  	},
 
 	setAttr: function(json) {
@@ -62,7 +62,7 @@ var SearchParameters = Backbone.Model.extend(
 				}
 			}
 		}
-		
+
 		if (set) {
 			this.set( json );
 		}
@@ -113,7 +113,7 @@ var SearchParametersView = Backbone.View.extend(
     });
 
     return this;
-  } 
+  }
 
 });
 
@@ -141,7 +141,7 @@ var BaseFilter = Backbone.Model.extend(
     this.trigger('reset');
   },
   update: function() {
-	
+
   }
 }
 );
@@ -218,7 +218,7 @@ var GeographicWidget = BaseWidget.extend(
   titleId: "geographic_widget_title",
   id: "geographic_widget",
   clickListener: null,
-  
+
   initialize: function() {
 
     _.bindAll(this, 'changed');
@@ -227,7 +227,7 @@ var GeographicWidget = BaseWidget.extend(
   events : {
     "change input" : "changed"
   },
-  
+
   changed: function(evt) {
     this.model.reset();
     this.model.set( { "bbox": $('#filter_bbox').val() }, {
@@ -246,13 +246,13 @@ var GeographicWidget = BaseWidget.extend(
       return;
     }
     bbox.reverse();
-    
+
     while(bbox.length) {
       var lng = bbox.pop();
       var lat = bbox.pop();
 
       var point = new google.maps.LatLng(lat,lng);
-      
+
       var marker = new google.maps.Marker({
         position: point,
         map: searchMap,
@@ -283,7 +283,7 @@ var GeographicWidget = BaseWidget.extend(
 <label for="filter_bbox">Bounding box:</label>\
 <input type="text" id="filter_bbox" name="bbox" value="<%= bbox %>">\
 ', {bbox: pBbox}));
-				
+
     this.renderMap();
     return this;
   },
@@ -336,7 +336,7 @@ var GeographicWidget = BaseWidget.extend(
     fillOpacity: 0.5,
     clickable: false,
     zIndex: 10000 //always be above the granule overlays, which start at 1000
-  }), 
+  }),
 
   updateSearchAreaOverlay: function() {
     if(this.model.markers.length == 2) {
@@ -391,8 +391,8 @@ var GeographicWidget = BaseWidget.extend(
 );
 
 var DateFilter = BaseFilter.extend(
-{ 
-	
+{
+
   name: "DateFilter",
 
 	format_date: function(this_date) {
@@ -409,7 +409,7 @@ var DateFilter = BaseFilter.extend(
 	    var date_str =  year + "-" + month + "-" + day;
 		return date_str;
 	},
-	
+
 	get_date_N_years_ago: function(N) {
 		var num_days = 365*N;
 		var begin_date = new Date();
@@ -422,13 +422,13 @@ var DateFilter = BaseFilter.extend(
     this.set({"start":this.format_date(this.get_date_N_years_ago(2))});
     this.set({"end":this.format_date(today)});
   },
-	
+
 	initialize: function() {
 
     this.reset();
 	},
 
-  getWidget: function() { 
+  getWidget: function() {
     return new DateWidget({model:this});
   }
 });
@@ -465,7 +465,7 @@ var DateWidget = BaseWidget.extend(
         $('#season_start').trigger('change');
         $('#season_end').trigger('change');
       }
-      
+
       if(target.attr('id') == 'season_start') {
         var emon = $('#season_end option:selected').val();
         var months = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
@@ -535,7 +535,7 @@ var DateWidget = BaseWidget.extend(
 
     $(this.el).find('#repeat_start option:first').attr('selected', true);
     $(this.el).find('#repeat_end option:last').attr('selected', true);
-    
+
     var months = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
     $(this.el).find('#season_end').empty();
     var smon = parseInt($('#season_start option:selected').val()) - 1;
@@ -545,7 +545,7 @@ var DateWidget = BaseWidget.extend(
         text(months[((smon + ii) % 12)])
       );
     }
-    
+
     return this;
   },
   toggleRepeat: function() {
@@ -555,13 +555,13 @@ var DateWidget = BaseWidget.extend(
     } else {
       $('#non-seasonal_search').show();
       $('#seasonal_search').hide();
-    }	
+    }
   }
 });
 
 var PlatformFilter = BaseFilter.extend(
   {
-    inifialize: function() {
+    initialize: function() {
 
     },
     name: "PlatformFilter",
@@ -620,7 +620,7 @@ var PlatformWidget = BaseWidget.extend(
             $(this).button( "option", "icons", {} );
           }
         });
-       
+
         $(i).find('input:checkbox:checked').button( "option", "icons", { primary: "ui-icon-check" }).prop('checked', true);
         $(i).find('button').button( { icons: { primary: "ui-icon-info"}, text: false}).click( this.renderPlatformInfo );
         $(this.el).append(i);
@@ -668,8 +668,8 @@ var PlatformWidget = BaseWidget.extend(
 );
 
 var GranuleFilter = BaseFilter.extend(
-{ 
-	
+{
+
   name: "GranuleFilter",
   reset: function() {
     this.set({"granule_list":""});
@@ -677,7 +677,7 @@ var GranuleFilter = BaseFilter.extend(
   initialize: function() {
     this.reset();
   },
-  getWidget: function() { 
+  getWidget: function() {
     return new GranuleWidget({model:this});
   },
   update: function() {
@@ -716,9 +716,9 @@ var GranuleWidget = BaseWidget.extend(
 	        <p>Enter a list of granule names. Note: this option will supercede other search parameters.</p>\
 	        <label for="filter_granule_list">Granule list:</label>\
 	        <textarea cols=35 rows=10 style="resize: none;" id="filter_granule_list" name="filter_granule_list"><%= granule_list %></textarea>', this.model.toJSON())
-	    ).find('textarea').bind('input',jQuery.proxy(function() {	
-				this.model.trigger('update');	
-		
+	    ).find('textarea').bind('input',jQuery.proxy(function() {
+				this.model.trigger('update');
+
 		},this));
 
 	return this;
@@ -735,16 +735,16 @@ var SearchButtonView = Backbone.View.extend({
   xhr: null,
   initialize: function() {
 		_.bindAll(this);
-		
+
    	 	this.el2 = this.options.el2;
 		this.geographicFilter = this.options.geographicFilter;
 		this.granuleFilter = this.options.granuleFilter;
-		
+
 	  this.model.bind('change', this.render, this);
-	
+
 		this.geographicFilter.bind('update', this.toggleButton);
 		this.granuleFilter.bind('update', this.toggleButton);
-		
+
 	    $(this.el).button({
 	      icons: {
 	        primary: "ui-icon-search"
@@ -759,18 +759,18 @@ var SearchButtonView = Backbone.View.extend({
 	      SearchApp.searchResultsView.showSearching();
         SearchApp.postFilters.reset(); // flush any filters the user had set up previously
         $("#con").html('');
-        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>'); 
-	      
+        $("#con").html('<table id="searchResults" style="margin:20px 0px 20px 0px;"></table>');
+
        this.xhr = SearchApp.searchResults.fetchSearchResults
-                        (AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON());  
+                        (AsfDataportalConfig.apiUrl, SearchApp.searchResults.searchParameters.toJSON());
 
         this.model.set({'state': 'stopButtonState'});
-       
+
 	    }, this)).focus();
 
 	    this.bind('abortSearch', function() {
         if(typeof ntptEventTag == 'function') {
-         ntptEventTag('ev=stopSearch'); 
+         ntptEventTag('ev=stopSearch');
         }
 	      this.xhr.abort();
 	    });
@@ -814,7 +814,7 @@ var SearchButtonView = Backbone.View.extend({
         disabled: buttonDisabled
       }
     );
-			
+
 		if ( ($('#filter_bbox').val() != "" && $('#filter_granule_list').val() != "")) {
       $('#triggerSearch').button('disable');
       $('#searchMessageError').empty();
@@ -827,7 +827,7 @@ var SearchButtonView = Backbone.View.extend({
     if (this.model.get('state') == 'searchButtonState') {
       $(this.el).show();
       $(this.el2).hide();
-    } 
+    }
     if (this.model.get('state') == 'stopButtonState')  {
       $(this.el2).show();
       $(this.el).hide();
