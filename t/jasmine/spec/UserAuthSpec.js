@@ -66,7 +66,7 @@ describe("UserAuth.js", function(){
       expect(this.requests.length).toEqual(1);
 
       this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "UNIVERSAL", "user_first_name":"Tester"}');
-      console.log(this.user);
+
       expect(this.user.get("authenticated")).toBeTruthy();
       expect(this.user.get("authType")).toBe("UNIVERSAL");
       expect(true).toBe(false);

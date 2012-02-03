@@ -25,8 +25,8 @@ describe("Create a sinon server", function() {
 	  }
     });
 
-    server.respond(); 
-	
+    server.respond();
+
     expect(callback.calledOnce).toBeTruthy();
 
   });
@@ -37,7 +37,7 @@ it("Should create a datatable and load it with fixture data via ajax request to 
 
 // In order to render the results we have to satisfy dependencies between various objects in the application
 // SearchResults will make the request to sinon server and genereate dataproduct objects from the servers response
-// and render the dataproduct objects into an html table.  
+// and render the dataproduct objects into an html table.
 	var searchResults = new SearchResults();
 	var searchParameters = new SearchParameters();
 	searchResults.searchParameters = searchParameters;
@@ -57,8 +57,8 @@ it("Should create a datatable and load it with fixture data via ajax request to 
     );
 
 
-	// Various objects invoke calls to other objects' methods through this staticy object, SearchApp. These dependencies 
-	// should probably be removed so that instantiation is not as crazy. 
+	// Various objects invoke calls to other objects' methods through this staticy object, SearchApp. These dependencies
+	// should probably be removed so that instantiation is not as crazy.
 	window.SearchApp = {};
 	window.SearchApp.searchResults = this.searchResults;
 	window.SearchApp.user = this.user;
@@ -69,12 +69,12 @@ it("Should create a datatable and load it with fixture data via ajax request to 
 	$.fn.dataTableExt.afnFiltering.push(
 	    jQuery.proxy( function( oSettings, aData, iDataIndex ) {
 	       // var iMin = document.getElementById('min').value * 1;
-	   
+
 	    	if (this.searchResults.bool) {
 	    		//console.log(aData);
 	    		var h = $(aData[0]);
 	    		var c = h.find("div").attr("product_id");
-	    		console.log(c);
+	    		//console.log(c);
 	    		if (this.searchResults.get(c).id =="E2_81938_STD_F143") {
 	    		//h.find('#pid')
 	    		//E2_81938_STD_F143
@@ -82,14 +82,14 @@ it("Should create a datatable and load it with fixture data via ajax request to 
 	    	}
 			}
 
-			return true;	
-	    	
+			return true;
+
 	    }, this)
 	);
 
 
 	// Create the sinon server and respond with fixture data
-	var server;		
+	var server;
 	var fakeUrl = "/fakeUrl";
     server = sinon.fakeServer.create();
 
@@ -100,14 +100,14 @@ it("Should create a datatable and load it with fixture data via ajax request to 
     var callback = sinon.spy();
 
 	// Make the actual search request to the fake url and pass a callback to detect success
-    this.searchResults.fetchSearchResults(fakeUrl, null, callback); 
+    this.searchResults.fetchSearchResults(fakeUrl, null, callback);
 
    	server.respond();
-	
+
 	// The call back is called inside the success method of the xhr ajax request object. So if it is called
 	// it means the request was successful.
 	expect(callback.calledOnce).toBeTruthy();
-	
+
 	// Make sure that the SearchResults Collection has data
 	expect(this.searchResults.size()).toBeGreaterThan(0);
 
@@ -119,15 +119,15 @@ it("Should create a datatable and load it with fixture data via ajax request to 
 	        primary: "ui-icon-refresh"},
 	        label: "Filter"
 	    }).bind("click", jQuery.proxy( function(e) {
-	      		
+
 	      	this.searchResults.bool = !this.searchResults.bool;
 	      	this.searchResultsView.dataTable.fnDraw();
-	      
+
 	    }, this));
 
 	    $('#filterButtonContainer').append(button);
 
- });	
+ });
 
 });
-	
+
