@@ -10,7 +10,7 @@ use base 'URSA2::Model::Search';
 
 sub getSelect {
   my ($self) = @_;
-  
+
   return q~
   select
   ~ . $self->getSelectFields() . q~
@@ -121,6 +121,7 @@ sub doQuery {
       'url'                       => $row->{'URL'},
       'bytes'                     => $row->{'BYTES'} + 0,
       'md5sum'                    => $row->{'MD5SUM'},
+      'thumbnail'           => $row->{'THUMBNAIL'},
     });
   }
   return(JSON::XS->new->utf8->encode([@{$res}{keys %{$res}}]));
