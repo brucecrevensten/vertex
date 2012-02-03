@@ -323,7 +323,7 @@ var SearchResultsView = Backbone.View.extend(
         }
       });
     });
-    this.procTypes = new ProcessingTypes(a);
+    this.collection.procTypes = new ProcessingTypes(a);
     this.collection.trigger('refreshProcTypes');
   },
 
