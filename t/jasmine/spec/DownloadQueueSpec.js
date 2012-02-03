@@ -120,28 +120,38 @@ describe("Download Queue", function() {
   describe("Download Queue modal popup", function() {
 
     describe("Download Queue table of queue contents", function() {
-      var files = searchResults[1].FILES;
-      var moreFiles = searchResults[2].FILES;
+      beforeEach( function() {
+        $.storage.del('q_cookie_');
+        jasmine.getFixtures().fixturesPath = 'spec/fixtures';
+        loadFixtures('SearchApp.html');
 
-      dq = new DownloadQueue();
-      dqv = new DownloadQueueView( { collection: dq } );
+        var files = searchResults[1].FILES;
+        var moreFiles = searchResults[2].FILES;
 
-      dp1 = new DataProductFile( files[0] );
-      dp1.set({ "BYTES":500 } );
-      dp2 = new DataProductFile( files[1] );
-      dp2.set({ "BYTES":10000 } );
-      dp3 = new DataProductFile( files[2] );
-      dp3.set({ "BYTES":20000 } );
-      dp4 = new DataProductFile( moreFiles[0] );
-      dp3.set({ "BYTES":1100000 } );
-      dp5 = new DataProductFile( moreFiles[1] );
-      dp5.set({ "BYTES":5500000000 } );
-      dp6 = new DataProductFile( moreFiles[2] );
-      dp6.set({ "BYTES":1900000000000 } );
+        dq = new DownloadQueue();
+        dqv = new DownloadQueueView( { collection: dq } );
 
-      dq.add( [ dp1, dp2, dp3, dp4, dp5, dp6 ] );
+        dp1 = new DataProductFile( files[0] );
+        dp1.set({ "BYTES":500 } );
+        dp2 = new DataProductFile( files[1] );
+        dp2.set({ "BYTES":10000 } );
+        dp3 = new DataProductFile( files[2] );
+        dp3.set({ "BYTES":20000 } );
+        dp4 = new DataProductFile( moreFiles[0] );
+        dp3.set({ "BYTES":1100000 } );
+        dp5 = new DataProductFile( moreFiles[1] );
+        dp5.set({ "BYTES":5500000000 } );
+        dp6 = new DataProductFile( moreFiles[2] );
+        dp6.set({ "BYTES":1900000000000 } );
 
-      r = dqv.render().el.innerHTML;
+        dq.add( [ dp1, dp2, dp3, dp4, dp5, dp6 ] );
+
+        var r = dqv.render().el.innerHTML;
+      });
+
+      afterEach( function() {
+        $.storage.del('q_cookie_');
+      });
 
       it("lists the products in the queue", function() {
 
