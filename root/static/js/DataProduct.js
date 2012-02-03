@@ -294,6 +294,15 @@ var DataProductView = Backbone.View.extend(
 <li><span>Polarization</span>: <%= polarization %></li>\
 </ul>\
 ';
+        case 'AIRSAR': return '\
+ <ul class="metadata">\
+ <li><span>Mission</span>: <%= missionName %></li>\
+<li><span>Beam mode</span>: <%= beamModeDesc %></li>\
+<li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
+<li><span>Frequency</span>: L-Band</li>\
+<li><span>Polarization</span>: <%= polarization %></li>\
+</ul>\
+';
         case 'JERS-1': return '\
 <ul class="metadata">\
 <li><span>Beam mode</span>: <span class="beamModeHelp" title="<%= beamModeDesc %>"><%= beamModeType %></span></li>\

@@ -346,14 +346,45 @@ var GeographicWidget = BaseWidget.extend(
       var s = Math.min(sw.lat(), ne.lat()).toFixed(2);
       var e = Math.max(sw.lng(), ne.lng()).toFixed(2);
       var n = Math.max(sw.lat(), ne.lat()).toFixed(2);
+      var x;
+      var y;
       if(e - w > 180.0) {  // swap if it spans the antemeridian so we always use the shortest path
         var t = w; w = e; e = t;
         t = n; n = s; s = t;
       }
+
+      if(n > s) { 
+        x = n - s;
+      } else {
+        x = s - n;
+      }
+      
+      if(w > e) {
+        y = w - e;
+      } else {
+        y = e - w;
+      }
+
+      if (x < 0) {
+        x = x * -1;
+      }
+      if (y < 0) {
+       y = y * -1;
+      }
+      
+      if( x * y > 100) { 
+        this.searchAreaOverlay.setOptions({ fillColor: '#CD2626' });
+        $('#searchMessage').html('<div style=font-weight:bold;>Warning: </div> The search area you have entered is quite large; returns from this area may take a few minutes.  For faster results, reduce your search area by dragging the corner of the bounding box until the area within is blue.');
+      } else {
+        this.searchAreaOverlay.setOptions({ fillColor: '#0066CC' });
+        $('#searchMessage').empty();
+      }
+
       var latLngBounds = new google.maps.LatLngBounds(
         new google.maps.LatLng(s, w),
         new google.maps.LatLng(n, e));
       this.searchAreaOverlay.setBounds(latLngBounds);
+      
       var target = $('#filter_bbox');
       target.val([w, s, e, n].join(','));
     }
