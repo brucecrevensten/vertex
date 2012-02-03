@@ -374,7 +374,7 @@ var GeographicWidget = BaseWidget.extend(
       
       if( x * y > 100) { 
         this.searchAreaOverlay.setOptions({ fillColor: '#CD2626' });
-        $('#searchMessage').text('Warning: The search area you have entered is very large and may take a while to return.');
+        $('#searchMessage').html('<div style=font-weight:bold;>Warning: </div> The search area you have entered is quite large; returns from this area may take a few minutes.  For faster results, reduce your search area by dragging the corner of the bounding box until the area within is blue.');
       } else {
         this.searchAreaOverlay.setOptions({ fillColor: '#0066CC' });
         $('#searchMessage').empty();
