@@ -1,23 +1,23 @@
 var DataProductFile = Backbone.Model.extend( {
 /*
 {
-    "URL":"http://testdatapool.daac.asf.alaska.edu:80/L1.0/A3/ALPSRS258452300-L1.0.zip",
-    "PROCESSINGTYPE":"L1.0",
-    "MD5SUM":"53b8049791442b0ca2e2a4f5d6f4f90d",
-    "PROCESSINGLEVEL":"L0",
-    "PROCESSINGTYPEDISPLAY":"Level 1.0",
-    "product_file_id":"ALPSRS258452300_L1.0",
-    "GRANULENAME":"ALPSRS258452300",
-    "PROCESSINGTYPEDESCRIPTION":null,
-    "BYTES":570247589,
-    "FILENAME":"ALPSRS258452300-L1.0.zip",
-    "PROCESSINGDATE":"2011-06-03 19:40:45"
-  }
+  "bytes":137988125,
+  "fileName":"E2_81431_STD_L0_F289.zip",
+  "md5sum":"fb7da6770d271d1e22059d08e5f249b3",
+  "processingLevel":"L0",
+  "granuleName":"E2_81431_STD_F289",
+  "product_file_id":"E2_81431_STD_F289_L0",
+  "processingTypeDisplay":"Level Zero",
+  "url":"http://testdatapool.daac.asf.alaska.edu:80/L0/E2/E2_81431_STD_L0_F289.zip",
+  "processingType":"L0",
+  "processingDate":"2010-12-24 09:58:12",
+  "processingTypeDescription":null
+}
 */
   initialize: function() {
     this.set( {
-       'processingDateText': this.get('PROCESSINGDATE').substring(0,10),
-       'sizeText': AsfUtility.bytesToString(this.get('BYTES'))
+       'processingDateText': this.get('processingDate').substring(0,10),
+       'sizeText': AsfUtility.bytesToString(this.get('bytes'))
     });
   }
 });
@@ -25,7 +25,7 @@ var DataProductFile = Backbone.Model.extend( {
 var DataProductFiles = Backbone.Collection.extend( {
   model: DataProductFile,
   comparator: function(m) {
-    var ptype = m.get('PROCESSINGTYPE');
+    var ptype = m.get('processingType');
     var porder = {
       'L0': 0,
       'L1': 1,
@@ -134,7 +134,7 @@ var DataProductFilesView = Backbone.View.extend( {
 var DataProduct = Backbone.Model.extend({
   initialize: function() {
     this.name = 'DataProduct';
-    this.files = new DataProductFiles(this.get('FILES'));
+    this.files = new DataProductFiles(this.get('files'));
     var fdr = parseFloat(this.get('faradayRotation'));
     if(_.isNumber(fdr)) {
       fdr = fdr.toFixed(2);
@@ -142,8 +142,8 @@ var DataProduct = Backbone.Model.extend({
       fdr = this.get('faradayRotation');
     }
     this.set({
-      'ascendingDescending': AsfUtility.ucfirst( this.get('ASCENDINGDESCENDING')),
-      'acquisitionDateText': this.get('ACQUISITIONDATE').substr(0,10),
+      'ascendingDescending': AsfUtility.ucfirst( this.get('ascendingDescending')),
+      'acquisitionDateText': this.get('acquisitionDate').substr(0,10),
       'faradayRotation': fdr
     });
     if(this.get('beamModeType') == 'POL') {

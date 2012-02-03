@@ -1,92 +1,97 @@
 
 describe("Download Queue", function() {
-  it("should allow items to be added to it", function() {
-    dq = new DownloadQueue();
 
-    var files = searchResults[0].FILES;
+  describe("Initialization Tests", function(){
 
-    dp = new DataProductFile(files[0]);
-    dq.add( dp );
+    it("should allow items to be added to it", function() {
+      dq = new DownloadQueue();
 
-    expect( dq.length ).toEqual( 1 );
-    expect( dq.at(0).get('GRANULENAME') ).toEqual( 'ALPSRS258452300' );
-  });
+      var files = searchResults[0].files;
 
-  it("should allow you to remove items from the queue", function() {
-    dq = new DownloadQueue();
+      dp = new DataProductFile(files[0]);
+      dq.add( dp );
 
-    // these need to be DataProductFile models, not DataProduct models
-    var files = searchResults[1].FILES;
+      expect( dq.length ).toEqual( 1 );
+      expect( dq.at(0).get('granuleName') ).toEqual( 'E2_81431_STD_F289' );
+    });
 
-    dp1 = new DataProductFile(files[0]);
-    dp2 = new DataProductFile(files[1]);
-    dp3 = new DataProductFile(files[2]);
+    it("should allow you to remove items from the queue", function() {
+      dq = new DownloadQueue();
 
-    dq.add( [ dp1, dp2, dp3 ] );
-    expect( dq.length).toEqual( 3 );
+      // these need to be DataProductFile models, not DataProduct models
+      var files = searchResults[0].files;
 
-    dq.remove( dp1 );
-    expect( dq.length).toEqual( 2 );
+      dp1 = new DataProductFile(files[0]);
+      dp2 = new DataProductFile(files[1]);
+      dp3 = new DataProductFile(files[2]);
 
-    dq.remove( [ dp2, dp3 ] );
-    expect( dq.length).toEqual( 0 ) ;
+      dq.add( [ dp1, dp2, dp3 ] );
+      expect( dq.length).toEqual( 3 );
 
-  });
+      dq.remove( dp1 );
+      expect( dq.length).toEqual( 2 );
 
-  it("should know the size (in bytes) of the queue, and show that as a nicely formatted string", function() {
-    dq = new DownloadQueue();
+      dq.remove( [ dp2, dp3 ] );
+      expect( dq.length).toEqual( 0 ) ;
 
-    var files = searchResults[1].FILES;
-    var moreFiles = searchResults[2].FILES;
+    });
 
-    expect( dq.length ).toEqual( 0 );
-    expect( dq.getSizeInBytes() ).toEqual( 0 );
-    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "0 B" );
+    it("should know the size (in bytes) of the queue, and show that as a nicely formatted string", function() {
+      dq = new DownloadQueue();
 
-    dp1 = new DataProductFile( files[0] );
-    dp1.set( { "BYTES":500 } );
-    dq.add( dp1 );
-    expect( dq.length ).toEqual( 1 );
-    expect( dq.getSizeInBytes() ).toEqual( 500 );
-    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "500 B" );
+      var files = searchResults[0].files;
+      var moreFiles = searchResults[2].files;
 
-    dp2 = new DataProductFile( files[1]);
-    dp2.set({ "BYTES":10000 } );
-    dp3 = new DataProductFile( files[2]);
-    dp3.set({ "BYTES":20000 } );
-    dq.add( [ dp2, dp3 ] );
-    expect( dq.length ).toEqual( 3 );
-    expect( dq.getSizeInBytes() ).toEqual( 30500 );
-    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "29.79 KB" );
+      expect( dq.length ).toEqual( 0 );
+      expect( dq.getSizeInBytes() ).toEqual( 0 );
+      expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "0 B" );
 
-    dp4 = new DataProductFile( moreFiles[0] );
-    dp4.set({ "BYTES":1100000 } );
-    dq.add( dp4 );
-    expect( dq.length ).toEqual( 4 );
-    expect( dq.getSizeInBytes() ).toEqual( 1130500 );
-    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "1.08 MB" );
+      dp1 = new DataProductFile( files[0] );
+      dp1.set( { "bytes":500 } );
+      dq.add( dp1 );
+      expect( dq.length ).toEqual( 1 );
+      expect( dq.getSizeInBytes() ).toEqual( 500 );
+      expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "500 B" );
 
-    dp5 = new DataProductFile( moreFiles[1] );
-    dp5.set( { "BYTES":5500000000 } );
-    dq.add( dp5 );
-    expect( dq.length ).toEqual( 5 );
-    expect( dq.getSizeInBytes() ).toEqual( 5501130500 );
-    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "5.12 GB" );
+      dp2 = new DataProductFile( files[1]);
+      dp2.set({ "bytes":10000 } );
+      dp3 = new DataProductFile( files[2]);
+      dp3.set({ "bytes":20000 } );
+      dq.add( [ dp2, dp3 ] );
+      expect( dq.length ).toEqual( 3 );
+      expect( dq.getSizeInBytes() ).toEqual( 30500 );
+      expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "29.79 KB" );
 
-    dp6 = new DataProductFile( moreFiles[2] );
-    dp6.set( { "BYTES":1900000000000 } );
-    dq.add( dp6 );
-    expect( dq.length ).toEqual( 6 );
-    expect( dq.getSizeInBytes() ).toEqual( 1905501130500 );
-    expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "1.73 TB" );
+      dp4 = new DataProductFile( moreFiles[0] );
+      dp4.set({ "bytes":1100000 } );
+      dq.add( dp4 );
+      expect( dq.length ).toEqual( 4 );
+      expect( dq.getSizeInBytes() ).toEqual( 1130500 );
+      expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "1.08 MB" );
+
+      dp5 = new DataProductFile( moreFiles[1] );
+      dp5.set( { "bytes":5500000000 } );
+      dq.add( dp5 );
+      expect( dq.length ).toEqual( 5 );
+      expect( dq.getSizeInBytes() ).toEqual( 5501130500 );
+      expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "5.12 GB" );
+
+      dp6 = new DataProductFile( moreFiles[2] );
+      dp6.set( { "bytes":1900000000000 } );
+      dq.add( dp6 );
+      expect( dq.length ).toEqual( 6 );
+      expect( dq.getSizeInBytes() ).toEqual( 1905501130500 );
+      expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "1.73 TB" );
+
+    });
 
   });
 
   describe("Download queue summary button", function() {
 
     it("can render a 'Download Queue' summary button that describes the current state of the queue", function() {
-      var files = searchResults[1].FILES;
-      var moreFiles = searchResults[2].FILES;
+      var files = searchResults[0].files;
+      var moreFiles = searchResults[2].files;
 
       dq = new DownloadQueue();
       dqsv = new DownloadQueueSummaryView( { collection: dq } );
@@ -94,21 +99,21 @@ describe("Download Queue", function() {
       expect( dqsv.render().el.innerHTML ).toContain('Download queue <span class="empty">(empty)</span>');
 
       dp1 = new DataProductFile( files[0] );
-      dp1.set({ "BYTES":500 } );
+      dp1.set({ "bytes":500 } );
       dq.add( dp1 );
       expect( dq.length ).toEqual( 1 );
       expect( dqsv.render().el.innerHTML ).toContain('Download queue <span class="nonempty">(1 item, 500 B)</span>');
 
       dp2 = new DataProductFile( files[1] );
-      dp2.set({ "BYTES":10000 } );
+      dp2.set({ "bytes":10000 } );
       dp3 = new DataProductFile( files[2] );
-      dp3.set({ "BYTES":20000 } );
+      dp3.set({ "bytes":20000 } );
       dp4 = new DataProductFile( moreFiles[0] );
-      dp3.set({ "BYTES":1100000 } );
+      dp3.set({ "bytes":1100000 } );
       dp5 = new DataProductFile( moreFiles[1] );
-      dp5.set({ "BYTES":5500000000 } );
+      dp5.set({ "bytes":5500000000 } );
       dp6 = new DataProductFile( moreFiles[2] );
-      dp6.set({ "BYTES":1900000000000 } );
+      dp6.set({ "bytes":1900000000000 } );
       dq.add( [ dp2, dp3, dp4, dp5, dp6 ] );
       expect( dq.length ).toEqual( 6 );
       expect( dqsv.render().el.innerHTML ).toContain('Download queue <span class="nonempty">(6 items, 1.73 TB)</span>');
@@ -125,24 +130,24 @@ describe("Download Queue", function() {
         jasmine.getFixtures().fixturesPath = 'spec/fixtures';
         loadFixtures('SearchApp.html');
 
-        var files = searchResults[1].FILES;
-        var moreFiles = searchResults[2].FILES;
+        var files = searchResults[0].files;
+        var moreFiles = searchResults[2].files;
 
         dq = new DownloadQueue();
         dqv = new DownloadQueueView( { collection: dq } );
 
         dp1 = new DataProductFile( files[0] );
-        dp1.set({ "BYTES":500 } );
+        dp1.set({ "bytes":500 } );
         dp2 = new DataProductFile( files[1] );
-        dp2.set({ "BYTES":10000 } );
+        dp2.set({ "bytes":10000 } );
         dp3 = new DataProductFile( files[2] );
-        dp3.set({ "BYTES":20000 } );
+        dp3.set({ "bytes":20000 } );
         dp4 = new DataProductFile( moreFiles[0] );
-        dp3.set({ "BYTES":1100000 } );
+        dp3.set({ "bytes":1100000 } );
         dp5 = new DataProductFile( moreFiles[1] );
-        dp5.set({ "BYTES":5500000000 } );
+        dp5.set({ "bytes":5500000000 } );
         dp6 = new DataProductFile( moreFiles[2] );
-        dp6.set({ "BYTES":1900000000000 } );
+        dp6.set({ "bytes":1900000000000 } );
 
         dq.add( [ dp1, dp2, dp3, dp4, dp5, dp6 ] );
 

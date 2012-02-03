@@ -5,7 +5,7 @@ var DownloadQueue = Backbone.Collection.extend(
 
   getSizeInBytes:function() {
     return _.reduce(
-      this.pluck("BYTES"),
+      this.pluck("bytes"),
       function(memo, size) {
         return memo + size;
       },
