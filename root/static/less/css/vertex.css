@@ -166,6 +166,7 @@ input.login_fields{display:block;position:relative;}
 #clear_queue_all{float:right;}
 #feedbackButton:hover{cursor:pointer;}
 #feedbackForm p{line-height:120% !important;}
+#searchMessage{color:#cd2626;}
 #feedbackForm p.alert{color:#00ebf5;}
 #feedbackForm a{color:#00ebf5;text-decoration:underline;}
 #feedbackForm label{display:block;}
