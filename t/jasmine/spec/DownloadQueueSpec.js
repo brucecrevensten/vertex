@@ -2,21 +2,32 @@
 describe("Download Queue", function() {
   it("should allow items to be added to it", function() {
     dq = new DownloadQueue();
-    dp = new DataProduct(searchResults[0]);
+
+    var files = searchResults[0].FILES;
+
+    dp = new DataProductFile(files[0]);
     dq.add( dp );
+
     expect( dq.length ).toEqual( 1 );
-    expect( dq.at(0).toJSON().GRANULENAME ).toEqual( 'ALPSRS258452300' );
+    expect( dq.at(0).get('GRANULENAME') ).toEqual( 'ALPSRS258452300' );
   });
 
   it("should allow you to remove items from the queue", function() {
     dq = new DownloadQueue();
-    dp1 = new DataProduct(searchResults[0]);
-    dp2 = new DataProduct(searchResults[1]);
-    dp3 = new DataProduct(searchResults[2]);
+
+    // these need to be DataProductFile models, not DataProduct models
+    var files = searchResults[1].FILES;
+
+    dp1 = new DataProductFile(files[0]);
+    dp2 = new DataProductFile(files[1]);
+    dp3 = new DataProductFile(files[2]);
+
     dq.add( [ dp1, dp2, dp3 ] );
     expect( dq.length).toEqual( 3 );
+
     dq.remove( dp1 );
     expect( dq.length).toEqual( 2 );
+
     dq.remove( [ dp2, dp3 ] );
     expect( dq.length).toEqual( 0 ) ;
 
@@ -24,30 +35,39 @@ describe("Download Queue", function() {
 
   it("should know the size (in bytes) of the queue, and show that as a nicely formatted string", function() {
     dq = new DownloadQueue();
+
+    var files = searchResults[1].FILES;
+
     expect( dq.length ).toEqual( 0 );
     expect( dq.getSizeInBytes() ).toEqual( 0 );
     expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "0 B" );
-    dp1 = new DataProduct( { "BYTES":500 } );
+
+    dp1 = new DataProductFile( files[0] );
+    dp1.set( { "BYTES":500 } );
     dq.add( dp1 );
     expect( dq.length ).toEqual( 1 );
     expect( dq.getSizeInBytes() ).toEqual( 500 );
     expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "500 B" );
+
     dp2 = new DataProduct( { "BYTES":10000 } );
     dp3 = new DataProduct( { "BYTES":20000 } );
     dq.add( [ dp2, dp3 ] );
     expect( dq.length ).toEqual( 3 );
     expect( dq.getSizeInBytes() ).toEqual( 30500 );
     expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "29.79 KB" );
+
     dp4 = new DataProduct( { "BYTES":1100000 } );
     dq.add( dp4 );
     expect( dq.length ).toEqual( 4 );
     expect( dq.getSizeInBytes() ).toEqual( 1130500 );
     expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "1.08 MB" );
+
     dp5 = new DataProduct( { "BYTES":5500000000 } );
     dq.add( dp5 );
     expect( dq.length ).toEqual( 5 );
     expect( dq.getSizeInBytes() ).toEqual( 5501130500 );
     expect( AsfUtility.bytesToString( dq.getSizeInBytes() )).toEqual( "5.12 GB" );
+
     dp6 = new DataProduct( { "BYTES":1900000000000 } );
     dq.add( dp6 );
     expect( dq.length ).toEqual( 6 );
