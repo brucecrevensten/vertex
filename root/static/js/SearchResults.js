@@ -88,15 +88,15 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
     });
 
     var m = $('<ul/>', { 'id':'addProductsByType', 'class':'ui-helper-reset ui-widget-content ui-corner-bottom', 'style':'width: 300px; display: none; position: absolute; z-index: 1000'});
-    _.each( this.collection.procTypes, function( p, i, l ) {
+    this.collection.procTypes.each(function(p) {
 
       // Don't display browse images for download.
-      if( 'BROWSE' == p ) { return; }
+      if( 'BROWSE' == p.get('processingType')) { return; }
 
       var li = $('<li/>');
-      var ab = $('<button/>', { 'processing':p }).button(
+      var ab = $('<button/>', { 'processing':p.get('processingType') }).button(
         {
-          'label': processingTypes.get(p).get('display'),
+          'label': p.get('processingTypeDisplay'),
           'icons': {
             'primary':'ui-icon-circle-plus'
           }
@@ -309,12 +309,21 @@ var SearchResultsView = Backbone.View.extend(
     $('img.lazy-thumbnail').lazyload({
       'container': $('div.dataTables_scrollBody')
     });
-    var a = []
+    var a = [];
     _.each(oSettings.aiDisplay, function(val, key) {
-      a = _.union(_.pluck(oSettings.aoData[val]._aData.files,
-        'processingType'), a);
+      _.each(oSettings.aoData[val]._aData.files, function(i, k) {
+        var procType = {
+          'processingType': i.processingType,
+          'processingTypeDisplay': i.processingTypeDisplay
+        };
+        if(!_.any(a, function(obj) {
+          return(_.isEqual(obj, procType));
+        })) {
+          a.push(procType);
+        }
+      });
     });
-    this.collection.procTypes = a;
+    this.collection.procTypes = new ProcessingTypes(a);
     this.collection.trigger('refreshProcTypes');
   },
 

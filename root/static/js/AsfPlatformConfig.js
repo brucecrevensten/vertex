@@ -1,5 +1,5 @@
 var AsfPlatformConfig = {
-	platform: ["UA","A3","R1","E1","E2","J1"], // keep order the same as platformTypes here!
+	platform: ["UA","A3","R1","E1","E2","J1","AS"], // keep order the same as platformTypes here!
 	platformTypes: {
       // value : display name -- order is respected, here
       "UA" : "UAVSAR",
@@ -7,10 +7,26 @@ var AsfPlatformConfig = {
       "R1" : "RADARSAT-1",
       "E1" : "ERS-1",
       "E2" : "ERS-2",
-      "J1" : "JERS-1"
+      "J1" : "JERS-1",
+      "AS" : "AIRSAR"
     },
 	
     platformInformation: {
+      'AS' : {
+	name: "AIRSAR",
+	imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/airsar.png",
+	launchDate: "1988",
+	altitude: "8 km typical",
+	cycle: "Non-cyclic",
+	status: "Out of service, 2004",
+	website: "http://airsar.jpl.nasa.gov/",
+	description: "The AIRSAR instrument was mounted aboard a modified NASA DC-8 aircraft. AIRSAR was an all-weather imaging tool able to penetrate through clouds and collect data at night. The longer wavelengths could also penetrate into the forest canopy and in extremely dry areas, through thin sand cover and dry snow pack.<br/><br/>AIRSAR served as a NASA radar technology testbed for demonstrating new radar technology and acquiring data for the development of radar processing techniques and applications.",
+	dataDescription: "AIRSAR data are unrestricted and available as JPL pre-processed products through Vertex <br/><br/>AIRSAR data are grouped into three operational modes and have been packaged according to relevant file types ",
+	processingType1: "POLSAR Mode: Fully polarimetric AIRSAR data acquired at all three frequencies in P-, L-, C-band  40 Mhz or 20 Mhz. The L-band also provides 80 MHz bandwidth data.<br/>* C-, L- and P-band Compressed Stokes Matrix (SLC) file packages<br/>* 3-Frequency Polarimetry file packages",
+	processingType2: "TOPSAR Mode: TOPSAR mode is interferometric AIRSAR data collected using C- and L-band vertically-displaced antenna pairs to produce digital elevation models (DEMs). The radars which are not being used for interferometry collect quad-pol data co-registered with the C-band DEM. Interferometric data can be collected in \"ping-pong\" mode, where each antenna is used alternately to transmit and the effective baseline is doubled, and in \"common-transmitter\" mode where only one antenna is used to transmit.<br/>* C-, L- and P-band Compressed Stokes Matrix (SLC) file packages<br/>* C-, L- and P-band TIF file packages<br/>* TopSAR DEM file packages",
+	processingType3: "Along-Track Interferometry (ATI) Mode: ATI mode data can be used to measure velocities of moving targets. Two pairs of antennas, one C-band and one L-band, separated along the body of the plane, were used to collect ATI data.<br/>* Along-Track Interferometry file packages<br/>* Along-Track Interferometry JPGs",
+	processingFooter: ' '
+	},
       'A3': {
         name: "ALOS",
         imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/alos.png",
