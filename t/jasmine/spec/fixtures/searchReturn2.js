@@ -15,7 +15,9 @@ var searchResults = [{
     "url":"http://testdatapool.daac.asf.alaska.edu:80/L0/E2/E2_81431_STD_L0_F289.zip",
     "processingType":"L0",
     "processingDate":"2010-12-24 09:58:12",
-    "processingTypeDescription":null
+    "processingTypeDescription":null,
+    "thumbnail":"http://testdatapool.daac.asf.alaska.edu:80/THUMBNAIL/E2/E2_81431_STD_F289_THUMBNAIL.jpg",
+    "acquisitionDate":"2010-11-16 21:11:05"
     },
     {
     "bytes":425921,
@@ -28,7 +30,9 @@ var searchResults = [{
     "url":"http://testdatapool.daac.asf.alaska.edu:80/BROWSE/E2/E2_81431_STD_F289.jpg",
     "processingType":"BROWSE",
     "processingDate":"2010-12-24 10:50:26",
-    "processingTypeDescription":null
+    "processingTypeDescription":null,
+    "thumbnail":"http://testdatapool.daac.asf.alaska.edu:80/THUMBNAIL/E2/E2_81431_STD_F289_THUMBNAIL.jpg",
+    "acquisitionDate":"2010-11-16 21:11:05"
     },
     {
     "bytes":43915004,
@@ -41,7 +45,9 @@ var searchResults = [{
     "url":"http://testdatapool.daac.asf.alaska.edu:80/L1/E2/E2_81431_STD_F289.zip",
     "processingType":"L1",
     "processingDate":"2010-12-24 10:50:34",
-    "processingTypeDescription":null
+    "processingTypeDescription":null,
+    "thumbnail":"http://testdatapool.daac.asf.alaska.edu:80/THUMBNAIL/E2/E2_81431_STD_F289_THUMBNAIL.jpg",
+    "acquisitionDate":"2010-11-16 21:11:05"
     }],
 "sensor":"SAR",
 "offNadirAngle":"NA",
@@ -87,7 +93,9 @@ var searchResults = [{
     "url":"http://testdatapool.daac.asf.alaska.edu:80/L1.5/A3/ALPSRS258452300-L1.5.zip",
     "processingType":"L1.5",
     "processingDate":"2011-06-03 19:54:38",
-    "processingTypeDescription":null
+    "processingTypeDescription":null,
+    "thumbnail":"none",
+    "acquisitionDate":"2010-11-30 20:56:41"
     },
     {
     "bytes":570247589,
@@ -100,7 +108,9 @@ var searchResults = [{
     "url":"http://testdatapool.daac.asf.alaska.edu:80/L1.0/A3/ALPSRS258452300-L1.0.zip",
     "processingType":"L1.0",
     "processingDate":"2011-06-03 19:40:45",
-    "processingTypeDescription":null
+    "processingTypeDescription":null,
+    "thumbnail":"none",
+    "acquisitionDate":"2010-11-30 20:56:41"
     }],
 "sensor":"SAR",
 "offNadirAngle":"27.1",
@@ -146,7 +156,9 @@ var searchResults = [{
     "url":"http://testdatapool.daac.asf.alaska.edu:80/BROWSE/E2/E2_78554_STD_F283.jpg",
     "processingType":"BROWSE",
     "processingDate":"2011-08-20 23:27:29",
-    "processingTypeDescription":null
+    "processingTypeDescription":null,
+    "thumbnail":"http://testdatapool.daac.asf.alaska.edu:80/THUMBNAIL/E2/E2_78554_STD_F283_THUMBNAIL.jpg",
+    "acquisitionDate":"2010-04-29 21:26:42"
     },
     {
     "bytes":48967081,
@@ -159,7 +171,9 @@ var searchResults = [{
     "url":"http://testdatapool.daac.asf.alaska.edu:80/L1/E2/E2_78554_STD_F283.zip",
     "processingType":"L1",
     "processingDate":"2011-08-20 23:27:39",
-    "processingTypeDescription":null
+    "processingTypeDescription":null,
+    "thumbnail":"http://testdatapool.daac.asf.alaska.edu:80/THUMBNAIL/E2/E2_78554_STD_F283_THUMBNAIL.jpg",
+    "acquisitionDate":"2010-04-29 21:26:42"
     },
     {
     "bytes":159764482,
@@ -172,7 +186,9 @@ var searchResults = [{
     "url":"http://testdatapool.daac.asf.alaska.edu:80/L0/E2/E2_78554_STD_L0_F283.zip",
     "processingType":"L0",
     "processingDate":"2011-08-20 23:42:37",
-    "processingTypeDescription":null
+    "processingTypeDescription":null,
+    "thumbnail":"http://testdatapool.daac.asf.alaska.edu:80/THUMBNAIL/E2/E2_78554_STD_F283_THUMBNAIL.jpg",
+    "acquisitionDate":"2010-04-29 21:26:42"
     }],
 "sensor":"SAR",
 "offNadirAngle":"NA",

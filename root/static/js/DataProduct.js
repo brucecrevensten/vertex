@@ -11,12 +11,14 @@ var DataProductFile = Backbone.Model.extend( {
   "url":"http://testdatapool.daac.asf.alaska.edu:80/L0/E2/E2_81431_STD_L0_F289.zip",
   "processingType":"L0",
   "processingDate":"2010-12-24 09:58:12",
-  "processingTypeDescription":null
+  "processingTypeDescription":null,
+  "thumbnail":"http://testdatapool.daac.asf.alaska.edu:80/THUMBNAIL/E2/E2_81431_STD_F289_THUMBNAIL.jpg",
+  "acquisitionDate":"2010-11-16 21:11:05"
 }
 */
   initialize: function() {
     this.set( {
-       'processingDateText': this.get('processingDate').substring(0,10),
+       'acquisitionDateText': this.get('acquisitionDate').substring(0,10),
        'sizeText': AsfUtility.bytesToString(this.get('bytes'))
     });
   }
