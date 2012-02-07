@@ -75,7 +75,7 @@ var UnrestrictedWidgetRenderer = Backbone.View.extend({
 		}
 	},
 	ppFileList: function( m ) {
-    if ( 'UAVSAR' == m.get('platform') ) {
+    if ( 'UAVSAR' == m.get('platform') || 'AIRSAR' == m.get('platform') ) {
       return new DataProductFilesView( { files: m.get('files') } ).renderForProfile();
     } else {
       return $('<div/>').html( this.restrictedProductNote ).append( new DataProductFilesView( { files: m.get('files') } ).renderForProfile( { 'disabled': true }));
