@@ -175,6 +175,18 @@ var SearchResultsView = Backbone.View.extend(
           <span class="date"><%= acquisitionDateText %></span>\
         </h4>\
         <p><%= missionName %></p>\
+      <% } else if("AIRSAR" == platform) { %>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %>\
+          <% if("XTI" == beamModeType) { %>\
+            <span class="beam">TOPSAR</span>\
+          <% } else if("3FP" == beamModeType) { %>\
+            <span class="beam">PoLSAR</span>\
+          <% } else { %>\
+            <span class="beam"><%= beamModeType %></span>\
+          <% } %>\
+          <span class="date"><%= acquisitionDateText %></span>\
+        </h4>\
+        <p><%= missionName %></p>\
       <% } else { %>\
         <h4 title="<%= beamModeDesc %>"><%= platform %> \
           <span class="beam"><%= beamModeType %></span>\
