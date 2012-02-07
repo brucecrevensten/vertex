@@ -14,7 +14,7 @@ var AsfPlatformConfig = {
     platformInformation: {
       'AS' : {
 	name: "AIRSAR",
-	imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/airsar.png",
+	imageUrl: "static/images/airsar.jpg",
 	launchDate: "1988",
 	altitude: "8 km typical",
 	cycle: "Non-cyclic",
