@@ -151,6 +151,12 @@ var DataProduct = Backbone.Model.extend({
     if(this.get('beamModeType') == 'POL') {
       this.set({'beamModeType': 'PolSAR'});
     }
+     if(this.get('beamModeType') == 'XTI') {
+        this.set({'beamModeType': 'TOPSAR'});
+      }
+      if(this.get('beamModeType') == '3FP') {
+        this.set({'beamModeType': 'PolSAR'});
+      }
   }
 });
 
