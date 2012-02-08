@@ -139,6 +139,6 @@ var UniversalUserWidgetRenderer = UnrestrictedWidgetRenderer.extend({
   },
   
   ppFileList: function( m ) {
-    return new DataProductFilesView( { collection: m.files } ).renderForProfile();
+    return new DataProductFilesView( { files: m.get('files') } ).renderForProfile();
   }
 });
