@@ -1,6 +1,6 @@
 var AsfPlatformConfig = {
-	platform: ["UA","A3","R1","E1","E2","J1","AS"], // keep order the same as platformTypes here!
-	platformTypes: {
+    platform: ["UA","A3","R1","E1","E2","J1","AS"], // keep order the same as platformTypes here!
+    platformTypes: {
       // value : display name -- order is respected, here
       "UA" : "UAVSAR",
       "A3" : "ALOS PALSAR",
@@ -10,26 +10,26 @@ var AsfPlatformConfig = {
       "J1" : "JERS-1",
       "AS" : "AIRSAR"
     },
-	
+
     platformInformation: {
       'AS' : {
-	name: "AIRSAR",
-	imageUrl: "static/images/airsar.jpg",
-	launchDate: "1988",
-	altitude: "8 km typical",
-	cycle: "Non-cyclic",
-	status: "Out of service, 2004",
-	website: "http://airsar.jpl.nasa.gov/",
-	description: "The AIRSAR instrument was mounted aboard a modified NASA DC-8 aircraft. AIRSAR was an all-weather imaging tool able to penetrate through clouds and collect data at night. The longer wavelengths could also penetrate into the forest canopy and in extremely dry areas, through thin sand cover and dry snow pack.<br/><br/>AIRSAR served as a NASA radar technology testbed for demonstrating new radar technology and acquiring data for the development of radar processing techniques and applications.",
-	dataDescription: "AIRSAR data are unrestricted and available as JPL pre-processed products through Vertex <br/><br/>AIRSAR data are grouped into three operational modes and have been packaged according to relevant file types ",
-	processingType1: "POLSAR Mode: Fully polarimetric AIRSAR data acquired at all three frequencies in P-, L-, C-band  40 Mhz or 20 Mhz. The L-band also provides 80 MHz bandwidth data.<br/>* C-, L- and P-band Compressed Stokes Matrix (SLC) file packages<br/>* 3-Frequency Polarimetry file packages",
-	processingType2: "TOPSAR Mode: TOPSAR mode is interferometric AIRSAR data collected using C- and L-band vertically-displaced antenna pairs to produce digital elevation models (DEMs). The radars which are not being used for interferometry collect quad-pol data co-registered with the C-band DEM. Interferometric data can be collected in \"ping-pong\" mode, where each antenna is used alternately to transmit and the effective baseline is doubled, and in \"common-transmitter\" mode where only one antenna is used to transmit.<br/>* C-, L- and P-band Compressed Stokes Matrix (SLC) file packages<br/>* C-, L- and P-band TIF file packages<br/>* TopSAR DEM file packages",
-	processingType3: "Along-Track Interferometry (ATI) Mode: ATI mode data can be used to measure velocities of moving targets. Two pairs of antennas, one C-band and one L-band, separated along the body of the plane, were used to collect ATI data.<br/>* Along-Track Interferometry file packages<br/>* Along-Track Interferometry JPGs",
-	processingFooter: ' '
-	},
+        name: "AIRSAR",
+        imageUrl: "static/images/airsar.jpg",
+        launchDate: "1988",
+        altitude: "8 km typical",
+        cycle: "Non-cyclic",
+        status: "Out of service, 2004",
+        website: "http://airsar.jpl.nasa.gov/",
+        description: "The AIRSAR instrument was mounted aboard a modified NASA DC-8 aircraft. AIRSAR was an all-weather imaging tool able to penetrate through clouds and collect data at night. The longer wavelengths could also penetrate into the forest canopy and in extremely dry areas, through thin sand cover and dry snow pack.<br/><br/>AIRSAR served as a NASA radar technology testbed for demonstrating new radar technology and acquiring data for the development of radar processing techniques and applications.",
+        dataDescription: "AIRSAR data are unrestricted and available as JPL pre-processed products through Vertex <br/><br/>AIRSAR data are grouped into three operational modes and have been packaged according to relevant file types ",
+        processingType1: "POLSAR Mode: Fully polarimetric AIRSAR data acquired at all three frequencies in P-, L-, C-band  40 Mhz or 20 Mhz. The L-band also provides 80 MHz bandwidth data.<br/>* C-, L- and P-band Compressed Stokes Matrix (SLC) file packages<br/>* 3-Frequency Polarimetry file packages",
+        processingType2: "TOPSAR Mode: TOPSAR mode is interferometric AIRSAR data collected using C- and L-band vertically-displaced antenna pairs to produce digital elevation models (DEMs). The radars which are not being used for interferometry collect quad-pol data co-registered with the C-band DEM. Interferometric data can be collected in \"ping-pong\" mode, where each antenna is used alternately to transmit and the effective baseline is doubled, and in \"common-transmitter\" mode where only one antenna is used to transmit.<br/>* C-, L- and P-band Compressed Stokes Matrix (SLC) file packages<br/>* C-, L- and P-band TIF file packages<br/>* TopSAR DEM file packages",
+        processingType3: "Along-Track Interferometry (ATI) Mode: ATI mode data can be used to measure velocities of moving targets. Two pairs of antennas, one C-band and one L-band, separated along the body of the plane, were used to collect ATI data.<br/>* Along-Track Interferometry file packages<br/>* Along-Track Interferometry JPGs",
+        processingFooter: ' '
+        },
       'A3': {
         name: "ALOS",
-        imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/alos.png",
+        imageUrl: "static/images/alos.png",
         launchDate: "24 Jan 2006",
         altitude: "700 km",
         cycle: "46 Days",
@@ -44,7 +44,7 @@ var AsfPlatformConfig = {
       },
       'E1': {
         name: "ERS-1",
-        imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/ers1.png",
+        imageUrl: "static/images/ers1.png",
         launchDate: "17 Jan 1991",
         altitude: "785 km",
         cycle: "35 Days",
@@ -59,7 +59,7 @@ var AsfPlatformConfig = {
       },
       'E2': {
         name: "ERS-2",
-        imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/ers2.png",
+        imageUrl: "static/images/ers2.png",
         launchDate: "20 April 1995",
         altitude: "783 km",
         cycle: "35 Days",
@@ -74,7 +74,7 @@ var AsfPlatformConfig = {
        },
       'J1': {
         name: "JERS-1",
-        imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/jers1.png",
+        imageUrl: "static/images/jers1.png",
         launchDate: "11 Feb 1992",
         altitude: "565&ndash;580 km",
         cycle: "44 Days",
@@ -89,7 +89,7 @@ var AsfPlatformConfig = {
        },
       'R1': {
         name: "RADARSAT-1",
-        imageUrl: "http://www.asf.alaska.edu/sites/all/files/images/satellites/radarsat-1.png",
+        imageUrl: "static/images/radarsat-1.png",
         launchDate: "4 Nov 1995",
         altitude: "798 km (793-821 km)",
         cycle: "24 Days (343 orbits)",
@@ -104,7 +104,7 @@ var AsfPlatformConfig = {
        },
       'UA': {
         name: 'UAVSAR Uninhabited Aerial Vehicle Synthetic Aperture Radar',
-        imageUrl: 'http://www.asf.alaska.edu/sites/all/files/images/satellites/uavsar.png',
+        imageUrl: 'static/images/uavsar.png',
         launchDate: '18 Sept 2007',
         altitude: 'Variable',
         cycle: 'Non-cyclic',
