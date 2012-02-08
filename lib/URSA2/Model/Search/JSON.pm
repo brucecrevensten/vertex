@@ -121,7 +121,8 @@ sub doQuery {
       'url'                       => $row->{'URL'},
       'bytes'                     => $row->{'BYTES'} + 0,
       'md5sum'                    => $row->{'MD5SUM'},
-      'thumbnail'           => $row->{'THUMBNAIL'},
+      'thumbnail'                 => $row->{'THUMBNAIL'},
+      'acquisitionDate'           => $row->{'ACQUISITIONDATE'},
     });
   }
   return(JSON::XS->new->utf8->encode([@{$res}{keys %{$res}}]));
