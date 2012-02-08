@@ -8,7 +8,7 @@ var AsfUtility = {
     var precision = 2;
 
     if (bytes < kilobyte) {
-      return bytes + ' B';
+      return Math.round(bytes) + ' B';
     } else if ((bytes >= kilobyte) && (bytes < megabyte)) {
       return (bytes / kilobyte).toFixed(precision) + ' KB';
 
