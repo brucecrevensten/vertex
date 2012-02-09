@@ -86,7 +86,7 @@
 
 	<div>
     <img style="float: left;" src="[% c.uri_for('/static/images/asf-logo-header.png') %]" />
- 	  <h1><a href="#">&nbsp;Vertex <span>ASF&rsquo;s Data Portal<span>&nbsp;&beta;eta</span></a></h1>
+ 	  <h1><a href="#">&nbsp;Vertex <span>ASF&rsquo;s Data Portal</a></h1>
     <div id="tools_menu">
 		  <div id="login_msg"></div>
       <div id="user_tools"></div>
@@ -119,7 +119,7 @@
 	    <ul class="yui-nav">
 	        <li class="selected"><a href="#contents"><em>ASF Datapool</em></a></li>
 	        <li><a href="#subsetter"><em>ASF Subsetter</em></a></li>
-	    </ul>            
+	    </ul>
 	    <div class="yui-content">
 	        [% INCLUDE content1.inc %]
 	        [% INCLUDE WCSFormSubmitterWidget.inc %]
