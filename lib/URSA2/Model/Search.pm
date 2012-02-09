@@ -83,13 +83,11 @@ sub getSelectFields {
     faradayRotation,
     ascendingDescending,
     url,
-    nvl((select min(url) from data_product where granulename = dp.granulename
+    nvl((select max(url) from data_product where granulename = dp.granulename
      and processingtype = 'THUMBNAIL'), 'none') AS thumbnail,
-    coalesce((select min(url) from data_product where granulename = dp.granulename
+    coalesce((select max(url) from data_product where granulename = dp.granulename
      and processingtype = 'BROWSE512'),
-     (select url from data_product where granulename = dp.granulename and
-      filename like '%.int.png'),
-     (select min(url) from data_product where granulename = dp.granulename
+     (select max(url) from data_product where granulename = dp.granulename
       and processingtype = 'BROWSE'), 'none') AS browse,
     bytes,
     ROUND( bytes/1024/1024, 2 ) AS fileSize,
