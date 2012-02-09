@@ -29,15 +29,6 @@ describe("AsfUtility", function(){
 
   });
 
-  describe("rtrim()", function(){
-
-    it("should remove all whitespace to the right of the characters", function(){
-      var someText = '   i should pass    ';
-      expect(AsfUtility.rtrim(someText)).toEqual('   i should pass');
-    });
-
-  });
-
   describe("ucfirst()", function(){
 
     it("should make the first character uppercase", function(){
