@@ -1,37 +1,30 @@
 var DataProductFile = Backbone.Model.extend( {
- /* Structure of this model:
-  {
-          thumbnail: data[i].thumbnail,
-          granuleName: data[i].granuleName,
-          id: data[i].id,
-          processingType: data[i].processingType,
-          processingTypeDisplay: data[i].processingTypeDisplay,
-          processingLevel: data[i].processingLevel,
-          processingTypeDescription: data[i].processingTypeDescription,
-          url: data[i].url,
-          platform: data[i].platform,
-          acquisitionDate: data[i].acquisitionDate,
-          bytes: data[i].bytes,
-          sizeText: AsfUtility.bytesToString(data[i].bytes),
-          md5sum: data[i].md5sum,
-          filename: data[i].fileName
-  }
- */
+/*
+{
+  "bytes":137988125,
+  "fileName":"E2_81431_STD_L0_F289.zip",
+  "md5sum":"fb7da6770d271d1e22059d08e5f249b3",
+  "processingLevel":"L0",
+  "granuleName":"E2_81431_STD_F289",
+  "product_file_id":"E2_81431_STD_F289_L0",
+  "processingTypeDisplay":"Level Zero",
+  "url":"http://testdatapool.daac.asf.alaska.edu:80/L0/E2/E2_81431_STD_L0_F289.zip",
+  "processingType":"L0",
+  "processingDate":"2010-12-24 09:58:12",
+  "processingTypeDescription":null,
+  "thumbnail":"http://testdatapool.daac.asf.alaska.edu:80/THUMBNAIL/E2/E2_81431_STD_F289_THUMBNAIL.jpg",
+  "acquisitionDate":"2010-11-16 21:11:05"
+}
+*/
   initialize: function() {
-    if(window.SearchApp && SearchApp.searchResults.get(this.get('granuleName'))) {
-      var obj = SearchApp.searchResults.get(this.get('granuleName'));
-      this.set( {
-         'acquisitionDateText': obj.get('acquisitionDate').substring(0,10),
-         'thumbnail': obj.get('thumbnail'),
-         'id': this.get('product_file_id'),
-         'platform': obj.get('platform'),
-         'sizeText': AsfUtility.bytesToString(this.get('bytes'))
-      });
-    }
+    this.set( {
+       'acquisitionDateText': this.get('acquisitionDate').substring(0,10),
+       'sizeText': AsfUtility.bytesToString(this.get('bytes'))
+    });
   }
-} );
+});
 
-var DataProductFiles = Backbone.Collection.extend( { 
+var DataProductFiles = Backbone.Collection.extend( {
   model: DataProductFile,
   comparator: function(m) {
     var ptype = m.get('processingType');
@@ -45,7 +38,7 @@ var DataProductFiles = Backbone.Collection.extend( {
       'STOKES': 6,
       'COMPLEX': 7,
       'PROJECTED': 8,
-      'KMZ': 9,
+      'KMZ': 9
     };
     return porder[ptype];
   }
@@ -55,7 +48,7 @@ var DataProductFilesView = Backbone.View.extend( {
 
   renderForProfile: function(o) {
     var disabled = false;
-    if( _.isUndefined( o ) ) { 
+    if( _.isUndefined( o ) ) {
       disabled = false;
     } else {
       disabled = (o.disabled == true) ? true : false;
@@ -67,7 +60,7 @@ var DataProductFilesView = Backbone.View.extend( {
       if( 'BROWSE' == el.processingType ) { return; }
 
       el.sizeText = AsfUtility.bytesToString(el.bytes);
-   
+
       var li = jQuery('<li/>');
       if(disabled) {
         li.append(jQuery('<div/>', {
@@ -76,7 +69,7 @@ var DataProductFilesView = Backbone.View.extend( {
           'disabled': true,
           'icons': {
               'primary': "ui-icon-circle-arrow-s"
-            }, 
+            },
             label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", el) }) );
       } else {
         li.append( jQuery('<a/>', {
@@ -87,7 +80,7 @@ var DataProductFilesView = Backbone.View.extend( {
           'icons': {
             'primary': "ui-icon-circle-arrow-s"
           },
-          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", el) 
+          label: _.template("&nbsp;&nbsp;&nbsp;<%= processingTypeDisplay %> (<%= sizeText %>)", el)
         }).click(function() {
           if(typeof ntptEventTag == 'function') {
             ntptEventTag('ev=downloadProduct');
@@ -143,7 +136,7 @@ var DataProductFilesView = Backbone.View.extend( {
 var DataProduct = Backbone.Model.extend({
   initialize: function() {
     this.name = 'DataProduct';
-    this.files = new DataProductFiles();
+    this.files = new DataProductFiles(this.get('files'));
     var fdr = parseFloat(this.get('faradayRotation'));
     if(_.isNumber(fdr)) {
       fdr = fdr.toFixed(2);
@@ -158,6 +151,12 @@ var DataProduct = Backbone.Model.extend({
     if(this.get('beamModeType') == 'POL') {
       this.set({'beamModeType': 'PolSAR'});
     }
+     if(this.get('beamModeType') == 'XTI') {
+        this.set({'beamModeType': 'TOPSAR'});
+      }
+      if(this.get('beamModeType') == '3FP') {
+        this.set({'beamModeType': 'PolSAR'});
+      }
   }
 });
 
@@ -167,10 +166,10 @@ window.stopEventPropagation = function(event) {
     } else {
         event.cancelBubble = true;
     }
-}
+};
 
 window.showInlineProductFiles = function(event, product) {
-  
+
   stopEventPropagation( event );
 
   if( true !== _.isUndefined( SearchApp.searchResultsView.currentProduct )
@@ -190,7 +189,7 @@ window.showInlineProductFiles = function(event, product) {
 
     var c = $('<ul/>', { 'class':'granuleProductList', 'id':'gpl_'+product } );
     _.each(model.get('files'), function(file) {
-      
+
       // skip if BROWSE
       if( 'BROWSE' == file.processingType) { return; }
 
@@ -242,7 +241,7 @@ window.showInlineProductFiles = function(event, product) {
         c.append(lit);
     });
     $('#result_row_'+product).append(c);
-  }        
+  }
 }
 
 window.showProductProfile = function(product) {

@@ -2,7 +2,7 @@ var SearchResults = Backbone.Collection.extend(
   {
     url: AsfDataportalConfig.apiUrl,
     model: DataProduct,
-    
+
     error: '',
 
     initialize: function() {
@@ -23,7 +23,7 @@ var SearchResults = Backbone.Collection.extend(
     },
 
     fetchSearchResults: function(searchURL, searchData, callback) {
-      
+
 	   var xhr = $.ajax(
         {
           type: "POST",
@@ -52,7 +52,7 @@ var SearchResults = Backbone.Collection.extend(
           }
         }, this)
       });
-		  
+
 		return xhr;
 
     },
@@ -102,7 +102,7 @@ var SearchResultsProcessingWidget = Backbone.View.extend(
           }
         }
       ).click( function(e) {
-       
+
         var pl = $(this).attr('processing');
 
         if(typeof ntptEventTag == 'function') {
@@ -175,6 +175,12 @@ var SearchResultsView = Backbone.View.extend(
           <span class="date"><%= acquisitionDateText %></span>\
         </h4>\
         <p><%= missionName %></p>\
+      <% } else if("AIRSAR" == platform) { %>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %>\
+            <span class="beam"><%= beamModeType %></span>\
+            <span class="date"><%= acquisitionDateText %></span>\
+        </h4>\
+        <p><%= missionName %></p>\
       <% } else { %>\
         <h4 title="<%= beamModeDesc %>"><%= platform %> \
           <span class="beam"><%= beamModeType %></span>\
@@ -213,7 +219,8 @@ var SearchResultsView = Backbone.View.extend(
     $('#platform_facets').show();
     $("#error-message").hide();
     $("#results-banner").hide();
-    $('#srProcLevelTool').show(); 
+    $('#srProcLevelTool').show();
+    $('#searchMessage').empty();
   },
 
   showSearching: function() {
@@ -254,7 +261,7 @@ var SearchResultsView = Backbone.View.extend(
     $("#error-message").hide();
     $("#platform_facet").hide();
     $('#platform_facets').hide();
-    
+
     this.clearOverlays();
   },
 
@@ -262,7 +269,7 @@ var SearchResultsView = Backbone.View.extend(
     this.trigger('render');
     this.dataTable = null;
 
-	// Do not show no results message if we're logging in. 
+	// Do not show no results message if we're logging in.
     if( 0 == this.collection.length) {
       this.clearOverlays();
       if (args != "authSuccess") {
@@ -270,7 +277,7 @@ var SearchResultsView = Backbone.View.extend(
   	  }
       return this;
     }
-    this.dataTable = $('#searchResults').dataTable({ 
+    this.dataTable = $('#searchResults').dataTable({
       'aaData': this.collection.toJSON(),
       'aoColumnDefs': [
           { 'fnRender': this.dtCell, 'aTargets': [0] }
@@ -342,7 +349,7 @@ var SearchResultsView = Backbone.View.extend(
     var p2 = new google.maps.LatLng(aData.farStartLat, aData.farStartLon);
     var p3 = new google.maps.LatLng(aData.farEndLat, aData.farEndLon);
     var p4 = new google.maps.LatLng(aData.nearEndLat, aData.nearEndLon);
-    
+
     var polyOptions = _.clone(this.polygonDefault);
     polyOptions.paths = [p1, p2, p3, p4];
 
@@ -373,7 +380,7 @@ var SearchResultsView = Backbone.View.extend(
     _.each(this.mo, function(e) {
       e.setMap(null);
     });
-    this.mo = {}; 
+    this.mo = {};
     this.activePoly = null;
     this.mapBounds = new google.maps.LatLngBounds();
   },
@@ -407,7 +414,7 @@ var SearchResultsView = Backbone.View.extend(
   removeHighlight: function(e) {
     // switch back to 'selected' or 'inactive' state depending on if it's in the DQ or not
     if ( -1 != _.indexOf( SearchApp.downloadQueue.pluck('granuleName'), $(e.currentTarget).attr("product_id") )) {
-      // It's in the DQ, turn it blue again  
+      // It's in the DQ, turn it blue again
       this.mo[this.activePoly].setOptions(this.polygonInQueue);
     } else {
       this.mo[this.activePoly].setOptions(this.polygonDefault);

@@ -108,7 +108,7 @@ legend{font-weight:bold;margin:0 0 1ex -2em !important;padding:0 0 1ex 0;}
 label.hover{cursor:pointer;}
 #product_profile ul{margin-top:1ex;padding:0 0 1em 1em;}
 #product_profile #hanger{float:left;text-align:left;margin:1ex 1ex 1ex 1em;width:450px;}
-#product_profile li{margin:1ex 0;text-indent:-1em;text-align:left;}
+#product_profile li{margin:1ex 0;text-indent:-1em;text-align:left;list-style:none;}
 #product_profile img{display:block;margin:1em auto;}
 #product_profile span.beamModeHelp{cursor:help;}
 #async-spinner,#results-banner,#error-message,#before-search-msg,#active-filters{margin:0 0 1em 0;padding:1ex 2ex;display:none;}
@@ -132,6 +132,7 @@ button.tool_enqueuer:hover{background-color:#066ba0 !important;}
 button.tool_enqueuer.tool-dequeue{background-color:#f58400 !important;}
 button.tool_enqueuer.tool-dequeue:hover{background-color:#b03000 !important;}
 .platformFacet fieldset h5{margin:1ex 0;}
+#platform_facets ul{list-style:none outside none;padding:0;}
 #platform_facets li button{width:190px;text-align:left;margin:0 0 1ex 0;}
 .platformFacet.ui-dialog-content{padding:0 0 0 1ex;}
 #filters div.composite_checkbox_wrapper input+label{display:inline-block !important;}
