@@ -81,6 +81,7 @@ sub doQuery {
         'ascendingDescending' => $row->{'ASCENDINGDESCENDING'},
         'beamModeDesc'        => $row->{'BEAMMODEDESC'},
         'beamModeType'        => $row->{'BEAMMODETYPE'},
+        'flightLine'          => $row->{'FLIGHTLINE'},
         'browse'              => $row->{'BROWSE'},
         'centerLat'           => $row->{'CENTERLAT'} + 0,
         'centerLon'           => $row->{'CENTERLON'} + 0,
