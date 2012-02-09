@@ -57,6 +57,7 @@ sub getSelectFields {
     sensor,
     beamModeType,
     TRIM(beamModeDesc) beamModeDesc,
+    flightLine,
     polarization,
     orbit,
     pathNumber,
