@@ -204,7 +204,7 @@ var DownloadQueueView = Backbone.View.extend(
 <td><%= acquisitionDateText %></td>\
 <td><%= sizeText %></td>\
 <td>\
-<a product_file_id="<%= id %>" product_id="<%= granuleName %>" class="remove">Remove from queue</a>\
+<a product_file_id="<%= product_file_id %>" product_id="<%= granuleName %>" class="remove">Remove from queue</a>\
 <input type="hidden" name="products[]" value="<%= fileName %>" />\
 </td>\
 </tr>\

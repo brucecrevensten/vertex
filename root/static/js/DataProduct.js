@@ -19,7 +19,8 @@ var DataProductFile = Backbone.Model.extend( {
   initialize: function() {
     this.set( {
        'acquisitionDateText': this.get('acquisitionDate').substring(0,10),
-       'sizeText': AsfUtility.bytesToString(this.get('bytes'))
+       'sizeText': AsfUtility.bytesToString(this.get('bytes')),
+       'id': this.get('product_file_id')
     });
   }
 });
