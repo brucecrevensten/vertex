@@ -57,17 +57,9 @@
 
 <!--scripts/links needed by the form subsetter-->
 
-<script src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-modal-min.js') %]"></script>
-<script src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-twipsy-min.js') %]"></script>
-<script src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-popover-min.js') %]"></script>
-
-<!--<link rel="stylesheet" type="text/css" href="[% c.uri_for('/static/css/ui-darkness/jquery-ui-1.8.16.custom.css') %]" />-->
-<!--<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.6.4.min.js') %]"></script>-->
-<script type="text/javascript" src="[% c.uri_for('/static/js/underscore-min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-ui-1.8.16.custom.min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/backbone-min.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/sinon-1.2.0.js') %]"></script>
-<script type="text/javascript" src="[% c.uri_for('/static/js/Dictionary.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-modal-min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-twipsy-min.js') %]"></script>
+<script type="text/javascript" src="[% c.uri_for('/static/js/bootstrap/js/min/bootstrap-popover-min.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/MapServerRequest.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/WCSForm.js') %]"></script>
 <script type="text/javascript" src="[% c.uri_for('/static/js/OpenLayers-2.11/OpenLayers.js') %]"></script><!--FIXME-->
@@ -119,7 +111,7 @@
 	    <ul class="yui-nav">
 	        <li class="selected"><a href="#contents"><em>ASF Datapool</em></a></li>
 	        <li><a href="#subsetter"><em>ASF Subsetter</em></a></li>
-	    </ul>            
+	    </ul>
 	    <div class="yui-content">
 	        [% INCLUDE content1.inc %]
 	        [% INCLUDE WCSFormSubmitterWidget.inc %]
