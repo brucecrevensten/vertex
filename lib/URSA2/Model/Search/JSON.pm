@@ -123,6 +123,7 @@ sub doQuery {
       'md5sum'                    => $row->{'MD5SUM'},
       'thumbnail'                 => $row->{'THUMBNAIL'},
       'acquisitionDate'           => $row->{'ACQUISITIONDATE'},
+      'platform'                  => $row->{'PLATFORM'}
     });
   }
   return(JSON::XS->new->utf8->encode([@{$res}{keys %{$res}}]));
