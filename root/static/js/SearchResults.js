@@ -175,6 +175,12 @@ var SearchResultsView = Backbone.View.extend(
           <span class="date"><%= acquisitionDateText %></span>\
         </h4>\
         <p><%= missionName %></p>\
+      <% } else if("AIRSAR" == platform) { %>\
+        <h4 title="<%= beamModeDesc %>"><%= platform %>\
+            <span class="beam"><%= beamModeType %></span>\
+            <span class="date"><%= acquisitionDateText %></span>\
+        </h4>\
+        <p><%= missionName %></p>\
       <% } else { %>\
         <h4 title="<%= beamModeDesc %>"><%= platform %> \
           <span class="beam"><%= beamModeType %></span>\
