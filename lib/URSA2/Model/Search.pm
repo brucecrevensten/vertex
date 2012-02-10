@@ -57,6 +57,7 @@ sub getSelectFields {
     sensor,
     beamModeType,
     TRIM(beamModeDesc) beamModeDesc,
+    flightLine,
     polarization,
     orbit,
     pathNumber,
@@ -83,11 +84,11 @@ sub getSelectFields {
     faradayRotation,
     ascendingDescending,
     url,
-    nvl((select url from data_product where granulename = dp.granulename
+    nvl((select max(url) from data_product where granulename = dp.granulename
      and processingtype = 'THUMBNAIL'), 'none') AS thumbnail,
-    coalesce((select url from data_product where granulename = dp.granulename
-     and processingtype = 'BROWSE512'), 
-     (select url from data_product where granulename = dp.granulename
+    coalesce((select max(url) from data_product where granulename = dp.granulename
+     and processingtype = 'BROWSE512'),
+     (select max(url) from data_product where granulename = dp.granulename
       and processingtype = 'BROWSE'), 'none') AS browse,
     bytes,
     ROUND( bytes/1024/1024, 2 ) AS fileSize,

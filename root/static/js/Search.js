@@ -353,12 +353,12 @@ var GeographicWidget = BaseWidget.extend(
         t = n; n = s; s = t;
       }
 
-      if(n > s) { 
+      if(n > s) {
         x = n - s;
       } else {
         x = s - n;
       }
-      
+
       if(w > e) {
         y = w - e;
       } else {
@@ -371,8 +371,8 @@ var GeographicWidget = BaseWidget.extend(
       if (y < 0) {
        y = y * -1;
       }
-      
-      if( x * y > 100) { 
+
+      if( x * y > 100) {
         this.searchAreaOverlay.setOptions({ fillColor: '#CD2626' });
         $('#searchMessage').html('<div style=font-weight:bold;>Warning: </div> The search area you have entered is quite large; returns from this area may take a few minutes.  For faster results, reduce your search area by dragging the corner of the bounding box until the area within is blue.');
       } else {
@@ -384,7 +384,7 @@ var GeographicWidget = BaseWidget.extend(
         new google.maps.LatLng(s, w),
         new google.maps.LatLng(n, e));
       this.searchAreaOverlay.setBounds(latLngBounds);
-      
+
       var target = $('#filter_bbox');
       target.val([w, s, e, n].join(','));
     }
@@ -841,7 +841,7 @@ var SearchButtonView = Backbone.View.extend({
         icons: {
           primary: "ui-icon-search"
         },
-        labal: "Search",
+        label: "Search",
         disabled: buttonDisabled
       }
     );

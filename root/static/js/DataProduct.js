@@ -296,7 +296,8 @@ var DataProductView = Backbone.View.extend(
 ';
         case 'AIRSAR': return '\
  <ul class="metadata">\
- <li><span>Mission</span>: <%= missionName %></li>\
+<li><span>Mission</span>: <%= missionName %></li>\
+<li><span>Flight Line</span>: <%= flightLine %></li>\
 <li><span>Beam mode</span>: <%= beamModeDesc %></li>\
 <li><span>Acquisition Date</span>: <%= acquisitionDateText %></li>\
 <li><span>Frequency</span>: L-Band</li>\
