@@ -151,22 +151,20 @@ describe("Download Queue", function() {
       });
 
       it("lists the products in the queue", function() {
-        $('body').append('<div id="test"><table id="download_queue_table" style="width: 100%"></table></div>');
-        this.dq2 = new DownloadQueue([dp1, dp2, dp3, dp4, dp5, dp6]);
-        this.view = new DownloadQueueView({el: '#test', collection: this.dq2});
-        this.view.render();
-        //console.log(this.r);
+
         expect( this.r ).toContain('E2_81431_STD_L0_F289.zip');
-        expect( this.r ).toContain('E2_81431_STD_F289');
-        expect( this.r ).toContain('E2_78554_STD_F283');
-        expect( this.r ).toContain('E2_78554_STD_L0_F283');
+        expect( this.r ).toContain('E2_81431_STD_F289.jpg');
+        expect( this.r ).toContain('E2_81431_STD_F289.zip');
+        expect( this.r ).toContain('E2_78554_STD_F283.jpg');
+        expect( this.r ).toContain('E2_78554_STD_F283.zip');
+        expect( this.r ).toContain('E2_78554_STD_L0_F283.zip');
       });
 
       it("has radio buttons to let user choose download format", function() {
 
-        expect( r ).toContain('Bulk Download (.metalink)');
-        expect( r ).toContain('Spreadsheet (.csv)');
-        expect( r ).toContain('Google Earth (.kml)');
+        expect( this.r ).toContain('Bulk Download (.metalink)');
+        expect( this.r ).toContain('Download Metadata (.csv)');
+        expect( this.r ).toContain('Google Earth (.kml)');
 
       });
 
