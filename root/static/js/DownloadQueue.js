@@ -251,7 +251,7 @@ This search tool uses the <strong>.metalink</strong> format to support bulk down
 <div class="footer_controls" style="margin-top: 1em; padding-top: 1ex; border-top: 1px solid #888">\
 <div id="download_queue_formats">\
 <input type="hidden" name="format" value="metalink" id="format_specifier" />\
-<input class="downloader" type"button" value="metalink" id="download_type_metalink" />\
+<input class="downloader" type="button" value="metalink" id="download_type_metalink" />\
 <input class="downloader" type="button" value="csv" id="download_type_csv" />\
 <input class="downloader" type="button" value="kml" id="download_type_kml" />\
 </div>\
