@@ -16,7 +16,7 @@ describe("Download Queue", function() {
   dp5.set( { "bytes":5500000000 } );
   dp6.set( { "bytes":1900000000000 } );
 
-  describe("Initialization Tests", function(){
+  describe("Initialization Tests for DownloadQueue: Backbone.Collection", function(){
 
     it("should allow items to be added to it", function() {
       this.dq = new DownloadQueue();
@@ -169,20 +169,19 @@ describe("Download Queue", function() {
       });
 
       it("has a download button that fires an async request to the API", function() {
-        expect( r ).toContain('Download');
+        expect( this.r ).toContain('Download');
 
-        this.xhr = sinon.useFakeXMLHttpRequest();
-        var requests = this.requests = [];
+        spyOnEvent($('#download_type_csv'), 'click');
 
-        this.xhr.onCreate = function (xhr) {
-          requests.push(xhr);
-        };
+        spyOn($, "ajax").andCallFake(function(options) {
+          options.success();
+        });
 
-        expect(this.requests.length).toEqual(1);
+        //$('#download_type_csv').click();
 
-        this.requests[0].respond(200, { "Content-Type": "application/json" },'{"authenticated": true, "authType": "UNIVERSAL", "user_first_name":"Tester"}');
+        expect('click').toHaveBeenTriggeredOn($('#download_type_csv'));
+        expect($.ajax.mostRecentCall.args[0]["url"]).toEqual("/todos/15");
 
-        this.xhr.restore();
       });
     });
   });

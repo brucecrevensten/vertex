@@ -2,10 +2,26 @@ describe("SearchResults.js", function(){
 
   describe("SearchResults: Backbone.Collection", function(){
     it("Can add Model instances as objects and arrays", function(){
-      expect(true).toEqual(false);
+      this.dp = searchResults;
+      this.sr = new SearchResults();
+      expect(this.sr.length).toBe(0);
+
+      this.sr.add(this.dp[0]);
+      expect(this.sr.length).toBe(1);
+
+      this.sr.add([this.dp[1], this.dp[2]]);
+      expect(this.sr.length).toBe(3);
     });
 
-    it("Comparator function returns the processing type as a string", function(){
+    it('Can have a url property to define the basic url structure for all contained models.', function() {
+      this.dp = searchResults;
+      this.sr = new SearchResults(this.dp);
+
+      // what has been specified as the url base in our model?
+      expect(this.sr.url).toBe('http://localhost/services/search/json');
+    });
+
+    it('Can fetch information from the server', function(){
       expect(true).toEqual(false);
     });
 
@@ -14,16 +30,11 @@ describe("SearchResults.js", function(){
   describe('SearchResultsProcessingWidget: Backbone.View', function() {
 
     beforeEach(function() {
-      setFixtures('<div id="srProcLevelTool"></div>');
+      $('body').append('<div id="srProcLevelTool"></div>');
+      this.dp = searchResults;
+      this.sr = new SearchResults(this.dp);
 
-      //create a model to test against
-      this.model = new SearchResults({
-        text: "My Todo",
-        order: 1,
-        done: false
-      });
-
-      this.view = new SearchResultsProcessingWidget({ model: this.model });
+      this.view = new SearchResultsProcessingWidget({ el: '#srProcLevelTool', collection: this.sr });
       $('#srProcLevelTool').append(this.view.render().el);
     });
 
@@ -42,11 +53,11 @@ describe("SearchResults.js", function(){
       expect($(this.view.el)).toHaveClass('searchResults');  //double check this class assignment
     });
 
-    it('Is backed by a model instance, which provides the data.', function() {
-      expect(this.view.model).toBeDefined();
+    it('Is backed by a collection instance, which provides the data.', function() {
+      expect(this.view.collection).toBeDefined();
 
-      // what's the value for Todo.get('done') here?  ie. test some model attribute
-      expect(this.view.model.get('done')).toBe(false); //or toBeFalsy()
+      // test some collection.model attribute
+      expect(this.view.collection[0].get('granuleName')).toBe('E2_81431_STD_F289');
     });
 
     describe("Rendering", function() {
